@@ -9,3 +9,5 @@ fun test() {
     val s = MyClass().foo()
     s.<!UNRESOLVED_REFERENCE!>inc<!>() // should be an error
 }
+
+/* GENERATED_FIR_TAGS: functionDeclaration, localProperty, propertyDeclaration */

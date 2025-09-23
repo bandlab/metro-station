@@ -3,11 +3,13 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.kotlinx.binary-compatibility-validator")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.binaryCompatibilityValidator)
 }
 
 kotlin {
+    jvmToolchain(21)
+
     explicitApi()
 
     androidNativeArm32()

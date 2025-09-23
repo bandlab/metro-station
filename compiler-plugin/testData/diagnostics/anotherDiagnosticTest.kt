@@ -20,3 +20,5 @@ fun test() {
     takeInt(10)
     takeInt(<!ARGUMENT_TYPE_MISMATCH!>"Hello"<!>)
 }
+
+/* GENERATED_FIR_TAGS: functionDeclaration, integerLiteral, stringLiteral */
