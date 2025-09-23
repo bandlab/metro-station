@@ -19,12 +19,12 @@ FILE fqName:foo.bar fileName:/simple.kt
                 CONST String type=kotlin.String value="Fail: "
                 GET_VAR 'val result: kotlin.String declared in foo.bar.box' type=kotlin.String origin=null
 FILE fqName:foo.bar fileName:__GENERATED DECLARATIONS__.kt
-  CLASS GENERATED[org.jetbrains.kotlin.compiler.plugin.template.fir.SimpleClassGenerator.Key] CLASS name:MyClass modality:FINAL visibility:public superTypes:[kotlin.Any]
+  CLASS GENERATED[com.bandlab.metro.station.fir.SimpleClassGenerator.Key] CLASS name:MyClass modality:FINAL visibility:public superTypes:[kotlin.Any]
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:foo.bar.MyClass
-    CONSTRUCTOR GENERATED[org.jetbrains.kotlin.compiler.plugin.template.fir.SimpleClassGenerator.Key] visibility:public returnType:foo.bar.MyClass
+    CONSTRUCTOR GENERATED[com.bandlab.metro.station.fir.SimpleClassGenerator.Key] visibility:public returnType:foo.bar.MyClass
       BLOCK_BODY
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
-        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS GENERATED[org.jetbrains.kotlin.compiler.plugin.template.fir.SimpleClassGenerator.Key] CLASS name:MyClass modality:FINAL visibility:public superTypes:[kotlin.Any]' type=foo.bar.MyClass
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS GENERATED[com.bandlab.metro.station.fir.SimpleClassGenerator.Key] CLASS name:MyClass modality:FINAL visibility:public superTypes:[kotlin.Any]' type=foo.bar.MyClass
     FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -38,7 +38,7 @@ FILE fqName:foo.bar fileName:__GENERATED DECLARATIONS__.kt
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-    FUN GENERATED[org.jetbrains.kotlin.compiler.plugin.template.fir.SimpleClassGenerator.Key] name:foo visibility:public modality:FINAL returnType:kotlin.String
+    FUN GENERATED[com.bandlab.metro.station.fir.SimpleClassGenerator.Key] name:foo visibility:public modality:FINAL returnType:kotlin.String
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:foo.bar.MyClass
       BLOCK_BODY
         RETURN type=kotlin.Nothing from='public final fun foo (): kotlin.String declared in foo.bar.MyClass'

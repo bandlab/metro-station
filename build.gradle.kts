@@ -6,6 +6,6 @@ plugins {
 }
 
 allprojects {
-    group = "org.jetbrains.kotlin.compiler.plugin.template"
+    group = "com.bandlab.metro.station"
     version = "0.1.0-SNAPSHOT"
 }

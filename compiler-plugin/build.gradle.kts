@@ -86,7 +86,7 @@ val generateTests by tasks.registering(JavaExec::class) {
         .withPropertyName("generatedTests")
 
     classpath = sourceSets.testFixtures.get().runtimeClasspath
-    mainClass.set("org.jetbrains.kotlin.compiler.plugin.template.GenerateTestsKt")
+    mainClass.set("com.bandlab.metro.station.GenerateTestsKt")
     workingDir = rootDir
 }
 

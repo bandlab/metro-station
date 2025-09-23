@@ -12,7 +12,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "compiler-plugin-template"
+rootProject.name = "metro-station"
 
 include("compiler-plugin")
 include("gradle-plugin")

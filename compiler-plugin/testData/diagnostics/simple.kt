@@ -2,7 +2,7 @@
 
 package foo.bar
 
-import org.jetbrains.kotlin.compiler.plugin.template.SomeAnnotation
+import com.bandlab.metro.station.SomeAnnotation
 
 @SomeAnnotation
 fun test() {

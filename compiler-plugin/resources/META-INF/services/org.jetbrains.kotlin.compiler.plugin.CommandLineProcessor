@@ -1,1 +1,1 @@
-org.jetbrains.kotlin.compiler.plugin.template.SimpleCommandLineProcessor
+com.bandlab.metro.station.MetroStationCommandLineProcessor

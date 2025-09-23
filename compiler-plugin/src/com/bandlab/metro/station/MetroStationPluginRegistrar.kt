@@ -1,0 +1,10 @@
+package com.bandlab.metro.station
+
+import com.bandlab.metro.station.fir.SimpleClassGenerator
+import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
+
+class MetroStationPluginRegistrar : FirExtensionRegistrar() {
+    override fun ExtensionRegistrarContext.configurePlugin() {
+        +::SimpleClassGenerator
+    }
+}
