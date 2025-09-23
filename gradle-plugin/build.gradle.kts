@@ -31,7 +31,7 @@ buildConfig {
     buildConfigField("String", "KOTLIN_PLUGIN_NAME", "\"${pluginProject.name}\"")
     buildConfigField("String", "KOTLIN_PLUGIN_VERSION", "\"${pluginProject.version}\"")
 
-    val annotationsProject = project(":plugin-annotations")
+    val annotationsProject = project(":runtime")
     buildConfigField(
         type = "String",
         name = "ANNOTATIONS_LIBRARY_COORDINATES",

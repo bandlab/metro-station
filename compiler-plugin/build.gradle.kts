@@ -32,7 +32,7 @@ dependencies {
     testFixturesApi(libs.kotlin.compilerTestFramework)
     testFixturesApi(libs.kotlin.compiler)
 
-    annotationsRuntimeClasspath(project(":plugin-annotations"))
+    annotationsRuntimeClasspath(project(":runtime"))
 
     // Dependencies required to run the internal test framework.
     testRuntimeOnly(libs.junit)
