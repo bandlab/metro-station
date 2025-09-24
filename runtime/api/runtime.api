@@ -1,3 +1,15 @@
-public abstract interface annotation class com/bandlab/metro/station/SomeAnnotation : java/lang/annotation/Annotation {
+public abstract interface annotation class com/bandlab/metro/station/MetroStation : java/lang/annotation/Annotation {
+	public abstract fun additionalScopes ()[Ljava/lang/Class;
+	public abstract fun bindingContainers ()[Ljava/lang/Class;
+	public abstract fun excludes ()[Ljava/lang/Class;
+	public abstract fun scope ()Ljava/lang/Class;
+}
+
+public abstract interface annotation class com/bandlab/metro/station/StationEntry : java/lang/annotation/Annotation {
+	public abstract fun additionalScopes ()[Ljava/lang/Class;
+	public abstract fun bindingContainers ()[Ljava/lang/Class;
+	public abstract fun excludes ()[Ljava/lang/Class;
+	public abstract fun parentScope ()Ljava/lang/Class;
+	public abstract fun scope ()Ljava/lang/Class;
 }
 
