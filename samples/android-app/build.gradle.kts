@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.metro)
+    id("com.bandlab.metro.station")
 }
 
 android {
@@ -31,8 +33,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity)
     implementation(platform(libs.compose.bom))
-    implementation(libs.compose.foundation)
     implementation(libs.compose.ui)
-    implementation(libs.compose.ui.tooling)
     implementation(libs.compose.material3)
 }

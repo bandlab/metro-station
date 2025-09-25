@@ -5,6 +5,7 @@ compose-bom = "2025.09.00"
 jdk = "23"
 jvmTarget = "11"
 kotlin = "2.2.20"
+metro = "0.6.6"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -17,7 +18,7 @@ binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibilit
 
 buildConfig = { id = "com.github.gmazzo.buildconfig", version = "5.6.8" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
-spotless = { id = "com.diffplug.spotless", version = "8.0.0" }
+metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 
 [libraries]
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
@@ -47,10 +48,7 @@ androidx-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", versio
 androidx-work = "androidx.work:work-runtime:2.10.4"
 
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
-compose-runtime = { module = "androidx.compose.runtime:runtime" }
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui = { module = "androidx.compose.ui:ui" }
-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 
 junit = { module = "junit:junit", version = "4.13.2" }
