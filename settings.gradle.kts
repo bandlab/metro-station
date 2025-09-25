@@ -1,19 +1,22 @@
 pluginManagement {
     repositories {
         mavenCentral()
+        google()
         gradlePluginPortal()
     }
-    
 }
 
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        google()
     }
 }
 
 rootProject.name = "metro-station"
 
-include("compiler-plugin")
-include("gradle-plugin")
-include("runtime")
+include(
+    ":compiler-plugin",
+    ":gradle-plugin",
+    ":runtime"
+)

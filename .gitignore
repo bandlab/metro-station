@@ -3,5 +3,8 @@
 !.idea/kotlinTestDataPluginTestDataPaths.xml
 .gradle/
 .kotlin/
+.idea/
+.DS_Store
 build/
 out/
+local.properties
