@@ -6,6 +6,7 @@ import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -21,15 +22,19 @@ public class JvmBoxTestGenerated extends AbstractJvmBoxTest {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
   }
 
-  @Test
-  @TestMetadata("anotherBoxTest.kt")
-  public void testAnotherBoxTest() {
-    runTest("compiler-plugin/testData/box/anotherBoxTest.kt");
-  }
+  @Nested
+  @TestMetadata("compiler-plugin/testData/box/stationentry")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Stationentry {
+    @Test
+    public void testAllFilesPresentInStationentry() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/stationentry"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
 
-  @Test
-  @TestMetadata("simple.kt")
-  public void testSimple() {
-    runTest("compiler-plugin/testData/box/simple.kt");
+    @Test
+    @TestMetadata("Simple.kt")
+    public void testSimple() {
+      runTest("compiler-plugin/testData/box/stationentry/Simple.kt");
+    }
   }
 }

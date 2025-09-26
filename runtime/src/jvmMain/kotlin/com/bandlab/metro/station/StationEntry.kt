@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
  */
 @Target(AnnotationTarget.CLASS)
 public annotation class StationEntry(
-    val parentScope: KClass<*>,
+    val parentScope: KClass<*> = Nothing::class,
     val scope: KClass<*> = Nothing::class,
     val additionalScopes: Array<KClass<*>> = [],
     val excludes: Array<KClass<*>> = [],

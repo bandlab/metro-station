@@ -1,0 +1,23 @@
+FILE: Simple.kt
+    @R|com/bandlab/metro/station/StationEntry|() public final class MyActivity : R|kotlin/Any| {
+        public constructor(): R|MyActivity| {
+            super<R|kotlin/Any|>()
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval factory: R|<anonymous>| = object : R|MyActivityGraphExtension| {
+            private constructor(): R|<anonymous>| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+        ^box String(OK)
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    @R|dev/zacsweers/metro/GraphExtension|() public abstract interface MyActivityGraphExtension : R|kotlin/Any| {
+        @R|dev/zacsweers/metro/ContributesTo|() @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
+        }
+
+    }

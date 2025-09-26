@@ -17,6 +17,7 @@ open class AbstractJvmBoxTest : AbstractFirBlackBoxCodegenTestBase(FirParser.Lig
     }
 
     override fun configure(builder: TestConfigurationBuilder) {
+        println("SYSTEM PROPERTY CHECK: kotlin.test.overwrite.expected.files = " + System.getProperty("kotlin.test.overwrite.expected.files"))
         super.configure(builder)
 
         with(builder) {
@@ -42,6 +43,10 @@ open class AbstractJvmBoxTest : AbstractFirBlackBoxCodegenTestBase(FirParser.Lig
             useConfigurators(
                 ::PluginAnnotationsProvider,
                 ::ExtensionRegistrarConfigurator
+            )
+
+            useSourcePreprocessor(
+                ::MetroStationDefaultImportPreprocessor
             )
         }
     }
