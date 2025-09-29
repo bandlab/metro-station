@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.fir.declarations.hasAnnotation
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotation
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.expressions.builder.buildClassReferenceExpression
+import org.jetbrains.kotlin.fir.expressions.impl.FirEmptyAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.FirSupertypeGenerationExtension.TypeResolveService
 import org.jetbrains.kotlin.fir.packageFqName
@@ -125,17 +126,24 @@ class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExten
         classSymbol: FirClassSymbol<*>,
         context: NestedClassGenerationContext
     ): Set<Name> {
-        if (!classSymbol.hasAnnotation(Symbols.ClassIds.graphExtension, session)) {
-            return emptySet()
+        return if (classSymbol.hasAnnotation(Symbols.ClassIds.graphExtension, session)) {
+            setOf(Symbols.Names.FactoryClass)
+        } else {
+            emptySet()
         }
-        return setOf(Symbols.Names.FactoryClass)
     }
 
     override fun generateNestedClassLikeDeclaration(
         owner: FirClassSymbol<*>,
         name: Name,
         context: NestedClassGenerationContext
-    ): FirClassLikeSymbol<*> {
+    ): FirClassLikeSymbol<*>? {
+        val originalSymbol = symbols.getValue(Unit)[owner.classId] ?: return null
+        val stationEntryAnnotation =
+            originalSymbol.getAnnotationByClassId(Symbols.ClassIds.stationEntry, session) ?: return null
+        val parentScope = stationEntryAnnotation.argumentMapping.mapping[Name.identifier("parentScope")]
+            ?: return null
+
         val factory = createNestedClass(owner, name, Key, classKind = ClassKind.INTERFACE) {
             modality = Modality.ABSTRACT
         }
@@ -145,7 +153,7 @@ class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExten
                 coneType = Symbols.ClassIds.contributesTo.constructClassLikeType()
             }
             argumentMapping = buildAnnotationArgumentMapping {
-                //TODO: params
+                mapping[Name.identifier("scope")] = parentScope
             }
         }
 
@@ -153,9 +161,7 @@ class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExten
             annotationTypeRef = buildResolvedTypeRef {
                 coneType = Symbols.ClassIds.graphExtensionFactory.constructClassLikeType()
             }
-            argumentMapping = buildAnnotationArgumentMapping {
-                //TODO: params
-            }
+            argumentMapping = FirEmptyAnnotationArgumentMapping
         }
         factory.replaceAnnotations(
             listOf(contributesToAnnotation, factoryAnnotation)

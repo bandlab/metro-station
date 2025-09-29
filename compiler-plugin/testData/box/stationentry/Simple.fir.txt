@@ -23,12 +23,12 @@ FILE: Simple.kt
     }
 FILE: __GENERATED DECLARATIONS__.kt
     @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(R|MyActivity|)) public abstract interface MyActivityGraphExtension : R|kotlin/Any| {
-        @R|dev/zacsweers/metro/ContributesTo|() @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
+        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|kotlin/Unit|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
         }
 
     }
     @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|kotlin/Int|)) public abstract interface MyFragmentGraphExtension : R|kotlin/Any| {
-        @R|dev/zacsweers/metro/ContributesTo|() @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
+        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|kotlin/Unit|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
         }
 
     }
