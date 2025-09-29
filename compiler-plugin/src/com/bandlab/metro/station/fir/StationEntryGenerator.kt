@@ -2,16 +2,21 @@ package com.bandlab.metro.station.fir
 
 import com.bandlab.metro.station.Predicates
 import com.bandlab.metro.station.Symbols
-import com.bandlab.metro.station.mapToSet
 import com.bandlab.metro.station.plus
 import org.jetbrains.kotlin.GeneratedDeclarationKey
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.caches.FirCache
+import org.jetbrains.kotlin.fir.caches.firCachesFactory
+import org.jetbrains.kotlin.fir.caches.getValue
+import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.declarations.hasAnnotation
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotation
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
+import org.jetbrains.kotlin.fir.expressions.builder.buildClassReferenceExpression
 import org.jetbrains.kotlin.fir.extensions.*
+import org.jetbrains.kotlin.fir.extensions.FirSupertypeGenerationExtension.TypeResolveService
 import org.jetbrains.kotlin.fir.packageFqName
 import org.jetbrains.kotlin.fir.plugin.createNestedClass
 import org.jetbrains.kotlin.fir.plugin.createTopLevelClass
@@ -19,9 +24,13 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
+import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
+import org.jetbrains.kotlin.fir.types.resolvedType
+import org.jetbrains.kotlin.fir.types.type
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.StandardClassIds
 
 /**
  * Generates a Metro GraphExtension interface for each class annotated with @StationEntry:
@@ -41,27 +50,35 @@ import org.jetbrains.kotlin.name.Name
  */
 class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
+    private val symbols: FirCache<Unit, Map<ClassId, FirRegularClassSymbol>, TypeResolveService?> =
+        session.firCachesFactory.createCache { _, _ ->
+            session.predicateBasedProvider
+                .getSymbolsByPredicate(Predicates.stationEntry)
+                // TODO: FIR checker to report non-regular class usages
+                .filterIsInstance<FirRegularClassSymbol>()
+                .associateBy {
+                    ClassId(
+                        packageFqName = it.packageFqName(),
+                        topLevelName = it.name + Symbols.Names.GraphExtensionClass
+                    )
+                }
+        }
+
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Predicates.stationEntry)
     }
 
     @ExperimentalTopLevelDeclarationsGenerationApi
     override fun getTopLevelClassIds(): Set<ClassId> {
-        return session
-            .predicateBasedProvider
-            .getSymbolsByPredicate(Predicates.stationEntry)
-            // TODO: FIR checker to report non-regular class usages
-            .filterIsInstance<FirRegularClassSymbol>()
-            .mapToSet {
-                ClassId(
-                    packageFqName = it.packageFqName(),
-                    topLevelName = it.name + Symbols.Names.GraphExtensionClass
-                )
-            }
+        return symbols.getValue(Unit).keys
     }
 
     @ExperimentalTopLevelDeclarationsGenerationApi
-    override fun generateTopLevelClassLikeDeclaration(classId: ClassId): FirClassLikeSymbol<*> {
+    override fun generateTopLevelClassLikeDeclaration(classId: ClassId): FirClassLikeSymbol<*>? {
+        val originalSymbol = symbols.getValue(Unit)[classId] ?: return null
+        val stationEntryAnnotation =
+            originalSymbol.getAnnotationByClassId(Symbols.ClassIds.stationEntry, session) ?: return null
+
         val graphExtension = createTopLevelClass(classId, Key, classKind = ClassKind.INTERFACE) {
             modality = Modality.ABSTRACT
         }
@@ -70,8 +87,31 @@ class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExten
             annotationTypeRef = buildResolvedTypeRef {
                 coneType = Symbols.ClassIds.graphExtension.constructClassLikeType()
             }
+
+            val stationEntryArguments = stationEntryAnnotation.argumentMapping.mapping
             argumentMapping = buildAnnotationArgumentMapping {
-                //TODO: params
+                val scopeArgument = stationEntryArguments[Name.identifier("scope")]
+                // Check if the provided scope is Nothing
+                val scopeArgumentType = scopeArgument?.resolvedType?.typeArguments?.single()?.type
+                val isScopeNothing = scopeArgumentType == null || scopeArgumentType.classId == StandardClassIds.Nothing
+
+                mapping[Name.identifier("scope")] = if (isScopeNothing) {
+                    buildClassReferenceExpression {
+                        classTypeRef = buildResolvedTypeRef {
+                            coneType = originalSymbol.classId.constructClassLikeType()
+                        }
+                    }
+                } else {
+                    scopeArgument
+                }
+
+                // Port params into metro's GraphExtension
+                stationEntryArguments[Name.identifier("additionalScopes")]
+                    ?.let { mapping[Name.identifier("additionalScopes")] = it }
+                stationEntryArguments[Name.identifier("excludes")]
+                    ?.let { mapping[Name.identifier("excludes")] = it }
+                stationEntryArguments[Name.identifier("bindingContainers")]
+                    ?.let { mapping[Name.identifier("bindingContainers")] = it }
             }
         }
         graphExtension.replaceAnnotations(
@@ -105,6 +145,7 @@ class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExten
                 coneType = Symbols.ClassIds.contributesTo.constructClassLikeType()
             }
             argumentMapping = buildAnnotationArgumentMapping {
+                //TODO: params
             }
         }
 

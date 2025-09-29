@@ -1,16 +1,16 @@
 // RUN_PIPELINE_TILL: FRONTEND
 
-@StationEntry
+@StationEntry(parentScope = Unit::class)
 interface MyInterface
 
-@StationEntry
+@StationEntry(parentScope = Unit::class)
 abstract class MyAbstractClass
 
-@StationEntry
+@StationEntry(parentScope = Unit::class)
 object MyObject
 
-@StationEntry
+@StationEntry(parentScope = Unit::class)
 enum class MyEnum
 
-@StationEntry
+@StationEntry(parentScope = Unit::class)
 class MyClass

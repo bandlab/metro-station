@@ -1,6 +1,12 @@
 FILE: Simple.kt
-    @R|com/bandlab/metro/station/StationEntry|() public final class MyActivity : R|kotlin/Any| {
+    @R|com/bandlab/metro/station/StationEntry|(parentScope = <getClass>(Q|kotlin/Unit|)) public final class MyActivity : R|kotlin/Any| {
         public constructor(): R|MyActivity| {
+            super<R|kotlin/Any|>()
+        }
+
+    }
+    @R|com/bandlab/metro/station/StationEntry|(parentScope = <getClass>(Q|kotlin/Unit|), scope = <getClass>(Q|kotlin/Int|)) public final class MyFragment : R|kotlin/Any| {
+        public constructor(): R|MyFragment| {
             super<R|kotlin/Any|>()
         }
 
@@ -16,7 +22,12 @@ FILE: Simple.kt
         ^box String(OK)
     }
 FILE: __GENERATED DECLARATIONS__.kt
-    @R|dev/zacsweers/metro/GraphExtension|() public abstract interface MyActivityGraphExtension : R|kotlin/Any| {
+    @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(R|MyActivity|)) public abstract interface MyActivityGraphExtension : R|kotlin/Any| {
+        @R|dev/zacsweers/metro/ContributesTo|() @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
+        }
+
+    }
+    @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|kotlin/Int|)) public abstract interface MyFragmentGraphExtension : R|kotlin/Any| {
         @R|dev/zacsweers/metro/ContributesTo|() @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
         }
 

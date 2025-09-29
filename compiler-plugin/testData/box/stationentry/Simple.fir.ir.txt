@@ -1,12 +1,33 @@
 FILE fqName:<root> fileName:/Simple.kt
   CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[kotlin.Any]
     annotations:
-      StationEntry(parentScope = <null>, scope = <null>, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
+      StationEntry(parentScope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Unit modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<kotlin.Unit>, scope = <null>, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity
     CONSTRUCTOR visibility:public returnType:<root>.MyActivity [primary]
       BLOCK_BODY
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
         INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.Unit
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun hashCode (): kotlin.Int declared in kotlin.Any
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun toString (): kotlin.String declared in kotlin.Any
+  CLASS CLASS name:MyFragment modality:FINAL visibility:public superTypes:[kotlin.Any]
+    annotations:
+      StationEntry(parentScope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Unit modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<kotlin.Unit>, scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:Int modality:FINAL visibility:public superTypes:[kotlin.Number; kotlin.Comparable<kotlin.Int>; java.io.Serializable]' type=kotlin.reflect.KClass<kotlin.Int>, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
+    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyFragment
+    CONSTRUCTOR visibility:public returnType:<root>.MyFragment [primary]
+      BLOCK_BODY
+        DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:MyFragment modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.Unit
     FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -51,6 +72,36 @@ FILE fqName:<root> fileName:__GENERATED DECLARATIONS__.kt
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivityGraphExtension
     CLASS GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[kotlin.Any]
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivityGraphExtension.Factory
+      FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+        VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
+        overridden:
+          public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+      FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+        overridden:
+          public open fun hashCode (): kotlin.Int declared in kotlin.Any
+      FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+        overridden:
+          public open fun toString (): kotlin.String declared in kotlin.Any
+    FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
+      overridden:
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
+    FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun hashCode (): kotlin.Int declared in kotlin.Any
+    FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
+      overridden:
+        public open fun toString (): kotlin.String declared in kotlin.Any
+  CLASS GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] INTERFACE name:MyFragmentGraphExtension modality:ABSTRACT visibility:public superTypes:[kotlin.Any]
+    thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyFragmentGraphExtension
+    CLASS GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[kotlin.Any]
+      thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyFragmentGraphExtension.Factory
       FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
         VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
