@@ -17,18 +17,26 @@ FILE: Simple.kt
                 super<R|kotlin/Any|>()
             }
 
+            public open override fun inject(target: R|MyActivity|): R|kotlin/Unit| {
+                ^inject Q|kotlin/Unit|
+            }
+
         }
 
         ^box String(OK)
     }
 FILE: __GENERATED DECLARATIONS__.kt
     @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(R|MyActivity|)) public abstract interface MyActivityGraphExtension : R|kotlin/Any| {
-        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|kotlin/Unit|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
+        public abstract fun inject(target: R|MyActivity|): R|kotlin/Unit|
+
+        @R|dev/zacsweers/metro/ContributesTo|(parentScope = <getClass>(Q|kotlin/Unit|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
         }
 
     }
     @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|kotlin/Int|)) public abstract interface MyFragmentGraphExtension : R|kotlin/Any| {
-        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|kotlin/Unit|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
+        public abstract fun inject(target: R|MyFragment|): R|kotlin/Unit|
+
+        @R|dev/zacsweers/metro/ContributesTo|(parentScope = <getClass>(Q|kotlin/Unit|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
         }
 
     }

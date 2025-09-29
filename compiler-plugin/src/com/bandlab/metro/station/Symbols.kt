@@ -28,5 +28,14 @@ object Symbols {
     object Names {
         val GraphExtensionClass = "GraphExtension".asName()
         val FactoryClass = "Factory".asName()
+
+        val ParentScopeParam = "parentScope".asName()
+        val ScopeParam = "scope".asName()
+        val AdditionalScopesParam = "additionalScopes".asName()
+        val ExcludesParam = "excludes".asName()
+        val BindingContainersParam = "bindingContainers".asName()
+        val TargetParam = "target".asName()
+
+        val InjectMethod = "inject".asName()
     }
 }

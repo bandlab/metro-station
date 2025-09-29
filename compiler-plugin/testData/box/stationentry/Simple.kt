@@ -10,6 +10,8 @@ class MyActivity
 class MyFragment
 
 fun box(): String {
-    val factory = object : MyActivityGraphExtension {}
+    val factory = object : MyActivityGraphExtension {
+        override fun inject(target: MyActivity) = Unit
+    }
     return "OK"
 }

@@ -64,6 +64,14 @@ FILE fqName:<root> fileName:/Simple.kt
               VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
               overridden:
                 public open fun toString (): kotlin.String declared in <root>.MyActivityGraphExtension
+            FUN name:inject visibility:public modality:OPEN returnType:kotlin.Unit
+              VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.box.<no name provided>
+              VALUE_PARAMETER kind:Regular name:target index:1 type:<root>.MyActivity
+              overridden:
+                public abstract fun inject (target: <root>.MyActivity): kotlin.Unit declared in <root>.MyActivityGraphExtension
+              BLOCK_BODY
+                RETURN type=kotlin.Nothing from='public open fun inject (target: <root>.MyActivity): kotlin.Unit declared in <root>.box.<no name provided>'
+                  GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Unit modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.Unit
           CONSTRUCTOR_CALL 'public constructor <init> () declared in <root>.box.<no name provided>' type=<root>.box.<no name provided> origin=OBJECT_LITERAL
       RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in <root>'
         CONST String type=kotlin.String value="OK"
@@ -98,6 +106,9 @@ FILE fqName:<root> fileName:__GENERATED DECLARATIONS__.kt
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
+    FUN GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] name:inject visibility:public modality:ABSTRACT returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivityGraphExtension
+      VALUE_PARAMETER GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] kind:Regular name:target index:1 type:<root>.MyActivity
   CLASS GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] INTERFACE name:MyFragmentGraphExtension modality:ABSTRACT visibility:public superTypes:[kotlin.Any]
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyFragmentGraphExtension
     CLASS GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[kotlin.Any]
@@ -128,3 +139,6 @@ FILE fqName:<root> fileName:__GENERATED DECLARATIONS__.kt
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
+    FUN GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] name:inject visibility:public modality:ABSTRACT returnType:kotlin.Unit
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyFragmentGraphExtension
+      VALUE_PARAMETER GENERATED[com.bandlab.metro.station.fir.StationEntryGenerator.Key] kind:Regular name:target index:1 type:<root>.MyFragment
