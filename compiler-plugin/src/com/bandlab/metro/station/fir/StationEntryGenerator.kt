@@ -52,13 +52,12 @@ import org.jetbrains.kotlin.name.StandardClassIds
  * }
  * ```
  */
-class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
+internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
     private val symbols: FirCache<Unit, Map<ClassId, FirRegularClassSymbol>, TypeResolveService?> =
         session.firCachesFactory.createCache { _, _ ->
             session.predicateBasedProvider
                 .getSymbolsByPredicate(Predicates.stationEntry)
-                // TODO: FIR checker to report non-regular class usages
                 .filterIsInstance<FirRegularClassSymbol>()
                 .associateBy {
                     ClassId(

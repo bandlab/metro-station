@@ -5,7 +5,6 @@ import com.bandlab.metro.station.services.PluginAnnotationsProvider
 import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives
-import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.runners.AbstractFirPhasedDiagnosticTest
 import org.jetbrains.kotlin.test.services.EnvironmentBasedStandardLibrariesPathProvider
@@ -30,7 +29,6 @@ open class AbstractJvmDiagnosticTest : AbstractFirPhasedDiagnosticTest(FirParser
              * All of them are located in `org.jetbrains.kotlin.test.directives` package
              */
             defaultDirectives {
-                +FirDiagnosticsDirectives.FIR_DUMP
                 +JvmEnvironmentConfigurationDirectives.FULL_JDK
 
                 +CodegenTestDirectives.IGNORE_DEXING // Avoids loading R8 from the classpath.
@@ -39,6 +37,10 @@ open class AbstractJvmDiagnosticTest : AbstractFirPhasedDiagnosticTest(FirParser
             useConfigurators(
                 ::PluginAnnotationsProvider,
                 ::ExtensionRegistrarConfigurator
+            )
+
+            useSourcePreprocessor(
+                ::MetroStationDefaultImportPreprocessor
             )
         }
     }

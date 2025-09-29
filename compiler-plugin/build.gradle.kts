@@ -75,6 +75,7 @@ kotlin {
     compilerOptions {
         optIn.add("org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
         optIn.add("org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI")
+        freeCompilerArgs.add("-Xcontext-parameters")
     }
 }
 
