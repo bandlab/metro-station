@@ -11,22 +11,22 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.FirCache
 import org.jetbrains.kotlin.fir.caches.firCachesFactory
 import org.jetbrains.kotlin.fir.caches.getValue
+import org.jetbrains.kotlin.fir.declarations.builder.buildValueParameterCopy
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotation
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.expressions.builder.buildClassReferenceExpression
-import org.jetbrains.kotlin.fir.expressions.impl.FirEmptyAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.FirSupertypeGenerationExtension.TypeResolveService
 import org.jetbrains.kotlin.fir.packageFqName
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createNestedClass
 import org.jetbrains.kotlin.fir.plugin.createTopLevelClass
+import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
-import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.resolvedType
@@ -54,6 +54,7 @@ import org.jetbrains.kotlin.name.StandardClassIds
  */
 internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
+    // FIR cache for graph extension class ids to original class symbols.
     private val symbols: FirCache<Unit, Map<ClassId, FirRegularClassSymbol>, TypeResolveService?> =
         session.firCachesFactory.createCache { _, _ ->
             session.predicateBasedProvider
@@ -89,9 +90,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
         val graphExtensionAnnotation = buildAnnotation {
             //TODO: Implement scoping
 
-            annotationTypeRef = buildResolvedTypeRef {
-                coneType = ClassIds.GraphExtension.constructClassLikeType()
-            }
+            annotationTypeRef = ClassIds.GraphExtension.firTypeRef()
 
             val stationEntryArguments = stationEntryAnnotation.argumentMapping.mapping
             argumentMapping = buildAnnotationArgumentMapping {
@@ -102,9 +101,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
 
                 mapping[Names.ScopeParam] = if (isScopeNothing) {
                     buildClassReferenceExpression {
-                        classTypeRef = buildResolvedTypeRef {
-                            coneType = originalSymbol.classId.constructClassLikeType()
-                        }
+                        classTypeRef = originalSymbol.classId.firTypeRef()
                     }
                 } else {
                     scopeArgument
@@ -152,32 +149,34 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
         }
 
         val contributesToAnnotation = buildAnnotation {
-            annotationTypeRef = buildResolvedTypeRef {
-                coneType = ClassIds.ContributesTo.constructClassLikeType()
-            }
+            annotationTypeRef = ClassIds.ContributesTo.firTypeRef()
             argumentMapping = buildAnnotationArgumentMapping {
                 mapping[Names.ParentScopeParam] = parentScope
             }
         }
 
-        val factoryAnnotation = buildAnnotation {
-            annotationTypeRef = buildResolvedTypeRef {
-                coneType = ClassIds.GraphExtensionFactory.constructClassLikeType()
-            }
-            argumentMapping = FirEmptyAnnotationArgumentMapping
-        }
         factory.replaceAnnotations(
-            listOf(contributesToAnnotation, factoryAnnotation)
+            listOf(
+                contributesToAnnotation,
+                ClassIds.GraphExtensionFactory.firAnnotation()
+            )
         )
 
         return factory.symbol
     }
 
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
-        return if (classSymbol.classId in symbols.getValue(Unit)) {
-            setOf(Names.InjectMethod)
-        } else {
-            emptySet()
+        val outerClassId = classSymbol.classId.outerClassId
+        return when {
+            classSymbol.classId in symbols.getValue(Unit) -> {
+                setOf(Names.InjectMethod)
+            }
+
+            classSymbol.classId.shortClassName == Names.FactoryClass && outerClassId in symbols.getValue(Unit) -> {
+                setOf(Names.CreateMethod)
+            }
+
+            else -> emptySet()
         }
     }
 
@@ -185,26 +184,63 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
         callableId: CallableId,
         context: MemberGenerationContext?
     ): List<FirNamedFunctionSymbol> {
-        //TODO: Generate create method for Factory
-        if (callableId.callableName != Names.InjectMethod) return emptyList()
-
         val owner = context?.owner ?: return emptyList()
-        val originalSymbol = symbols.getValue(Unit)[owner.classId] ?: return emptyList()
 
-        val injectFunction = createMemberFunction(
-            owner = owner,
-            key = Key,
-            name = callableId.callableName,
-            returnType = session.builtinTypes.unitType.coneType
-        ) {
-            modality = Modality.ABSTRACT
-            valueParameter(
-                name = Names.TargetParam,
-                type = originalSymbol.classId.constructClassLikeType()
-            )
+        when (callableId.callableName) {
+            Names.InjectMethod -> {
+                val originalSymbol = symbols.getValue(Unit)[owner.classId] ?: return emptyList()
+                val injectFunction = createMemberFunction(
+                    owner = owner,
+                    key = Key,
+                    name = callableId.callableName,
+                    returnType = session.builtinTypes.unitType.coneType
+                ) {
+                    modality = Modality.ABSTRACT
+                    valueParameter(
+                        name = Names.TargetParam,
+                        type = originalSymbol.classId.constructClassLikeType(),
+                    )
+                }
+
+                return listOf(injectFunction.symbol)
+            }
+
+            Names.CreateMethod -> {
+                val ownerClassId = owner.classId
+                val outerClassId = ownerClassId.outerClassId
+                if (ownerClassId.shortClassName != Names.FactoryClass || outerClassId == null) {
+                    return emptyList()
+                }
+
+                val originalSymbol = symbols.getValue(Unit)[outerClassId] ?: return emptyList()
+                val createFunction = createMemberFunction(
+                    owner = owner,
+                    key = Key,
+                    name = callableId.callableName,
+                    returnType = outerClassId.defaultType(emptyList())
+                ) {
+                    modality = Modality.ABSTRACT
+                    valueParameter(
+                        name = Names.TargetParam,
+                        type = originalSymbol.classId.constructClassLikeType(),
+                    )
+                }
+
+                // It seems like this is the only way to add an annotation to a function param in FIR,
+                // there is no API to add it during createMemberFunction.
+                // An alternative way is to add the annotation in IR, but not sure metro will be able to read it.
+                val targetParam = createFunction.valueParameters.first()
+                val targetParamWithProvides = buildValueParameterCopy(targetParam) {
+                    symbol = targetParam.symbol
+                    annotations += ClassIds.Provides.firAnnotation()
+                }
+                createFunction.replaceValueParameters(listOf(targetParamWithProvides))
+
+                return listOf(createFunction.symbol)
+            }
+
+            else -> error("Unexpected callable name: ${callableId.callableName.asString()}")
         }
-
-        return listOf(injectFunction.symbol)
     }
 
     object Key : GeneratedDeclarationKey()
