@@ -5,7 +5,7 @@ pluginManagement {
         gradlePluginPortal()
     }
     plugins {
-        id("com.android.settings") version "8.11.2"
+        id("com.android.settings") version "8.12.3"
     }
 }
 
@@ -18,7 +18,7 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.android.settings") version "8.11.2"
+    id("com.android.settings") version "8.12.3"
 }
 
 android {

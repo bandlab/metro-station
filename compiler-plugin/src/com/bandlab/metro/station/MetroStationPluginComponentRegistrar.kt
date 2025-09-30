@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter
 
-class MetroStationPluginComponentRegistrar: CompilerPluginRegistrar() {
+internal class MetroStationPluginComponentRegistrar: CompilerPluginRegistrar() {
     override val supportsK2: Boolean
         get() = true
 

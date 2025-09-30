@@ -185,6 +185,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
         callableId: CallableId,
         context: MemberGenerationContext?
     ): List<FirNamedFunctionSymbol> {
+        //TODO: Generate create method for Factory
         if (callableId.callableName != Names.InjectMethod) return emptyList()
 
         val owner = context?.owner ?: return emptyList()

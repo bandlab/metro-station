@@ -3,7 +3,7 @@ package com.bandlab.metro.station
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 
-object Symbols {
+internal object Symbols {
     object StringNames {
         const val METRO_RUNTIME_PACKAGE = "dev.zacsweers.metro"
         const val METRO_STATION_RUNTIME_PACKAGE = "com.bandlab.metro.station"

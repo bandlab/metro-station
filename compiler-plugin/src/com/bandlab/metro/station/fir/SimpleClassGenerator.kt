@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.name.*
  *     fun foo(): String = "Hello world"
  * }
  */
-class SimpleClassGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
+internal class SimpleClassGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
     companion object {
         val MY_CLASS_ID = ClassId(FqName.fromSegments(listOf("foo", "bar")), Name.identifier("MyClass"))
 

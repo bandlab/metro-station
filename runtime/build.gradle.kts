@@ -8,10 +8,6 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(21)
-
-    explicitApi()
-
     androidNativeArm32()
     androidNativeArm64()
     androidNativeX64()
