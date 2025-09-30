@@ -20,7 +20,7 @@ internal object StationEntryChecker : FirClassChecker(MppCheckerKind.Common) {
 
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirClass) {
-        if (!declaration.hasAnnotation(Symbols.ClassIds.stationEntry, context.session)) return
+        if (!declaration.hasAnnotation(Symbols.ClassIds.StationEntry, context.session)) return
 
         if (declaration.classKind != ClassKind.CLASS || declaration.modality != Modality.FINAL) {
             reporter.reportOn(

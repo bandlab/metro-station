@@ -80,7 +80,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
     override fun generateTopLevelClassLikeDeclaration(classId: ClassId): FirClassLikeSymbol<*>? {
         val originalSymbol = symbols.getValue(Unit)[classId] ?: return null
         val stationEntryAnnotation =
-            originalSymbol.getAnnotationByClassId(ClassIds.stationEntry, session) ?: return null
+            originalSymbol.getAnnotationByClassId(ClassIds.StationEntry, session) ?: return null
 
         val graphExtension = createTopLevelClass(classId, Key, classKind = ClassKind.INTERFACE) {
             modality = Modality.ABSTRACT
@@ -90,7 +90,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
             //TODO: Implement scoping
 
             annotationTypeRef = buildResolvedTypeRef {
-                coneType = ClassIds.graphExtension.constructClassLikeType()
+                coneType = ClassIds.GraphExtension.constructClassLikeType()
             }
 
             val stationEntryArguments = stationEntryAnnotation.argumentMapping.mapping
@@ -143,7 +143,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
 
         val originalSymbol = symbols.getValue(Unit)[owner.classId] ?: return null
         val stationEntryAnnotation =
-            originalSymbol.getAnnotationByClassId(ClassIds.stationEntry, session) ?: return null
+            originalSymbol.getAnnotationByClassId(ClassIds.StationEntry, session) ?: return null
         val parentScope = stationEntryAnnotation.argumentMapping.mapping[Names.ParentScopeParam]
             ?: return null
 
@@ -153,7 +153,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
 
         val contributesToAnnotation = buildAnnotation {
             annotationTypeRef = buildResolvedTypeRef {
-                coneType = ClassIds.contributesTo.constructClassLikeType()
+                coneType = ClassIds.ContributesTo.constructClassLikeType()
             }
             argumentMapping = buildAnnotationArgumentMapping {
                 mapping[Names.ParentScopeParam] = parentScope
@@ -162,7 +162,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
 
         val factoryAnnotation = buildAnnotation {
             annotationTypeRef = buildResolvedTypeRef {
-                coneType = ClassIds.graphExtensionFactory.constructClassLikeType()
+                coneType = ClassIds.GraphExtensionFactory.constructClassLikeType()
             }
             argumentMapping = FirEmptyAnnotationArgumentMapping
         }

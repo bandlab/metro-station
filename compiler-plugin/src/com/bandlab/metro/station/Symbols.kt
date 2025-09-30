@@ -15,14 +15,15 @@ internal object Symbols {
     }
 
     object ClassIds {
-        val metroStation = ClassId(FqNames.metroStationRuntimePackage, "MetroStation".asName())
-        val stationEntry = ClassId(FqNames.metroStationRuntimePackage, "StationEntry".asName())
+        val MetroStation = ClassId(FqNames.metroStationRuntimePackage, "MetroStation".asName())
+        val StationEntry = ClassId(FqNames.metroStationRuntimePackage, "StationEntry".asName())
 
-        val dependencyGraph = ClassId(FqNames.metroRuntimePackage, "DependencyGraph".asName())
-        val dependencyGraphFactory = dependencyGraph.createNestedClassId(Names.FactoryClass)
-        val graphExtension = ClassId(FqNames.metroRuntimePackage, "GraphExtension".asName())
-        val graphExtensionFactory = graphExtension.createNestedClassId(Names.FactoryClass)
-        val contributesTo = ClassId(FqNames.metroRuntimePackage, "ContributesTo".asName())
+        val DependencyGraph = ClassId(FqNames.metroRuntimePackage, "DependencyGraph".asName())
+        val DependencyGraphFactory = DependencyGraph.createNestedClassId(Names.FactoryClass)
+        val GraphExtension = ClassId(FqNames.metroRuntimePackage, "GraphExtension".asName())
+        val GraphExtensionFactory = GraphExtension.createNestedClassId(Names.FactoryClass)
+        val ContributesTo = ClassId(FqNames.metroRuntimePackage, "ContributesTo".asName())
+        val Provides = ClassId(FqNames.metroRuntimePackage, "Provides".asName())
     }
 
     object Names {
@@ -36,6 +37,7 @@ internal object Symbols {
         val BindingContainersParam = "bindingContainers".asName()
         val TargetParam = "target".asName()
 
+        val CreateMethod = "create".asName()
         val InjectMethod = "inject".asName()
     }
 }
