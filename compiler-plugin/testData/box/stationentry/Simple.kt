@@ -1,5 +1,3 @@
-import kotlin.reflect.KClass
-
 @StationEntry(parentScope = Unit::class)
 class MyActivity
 

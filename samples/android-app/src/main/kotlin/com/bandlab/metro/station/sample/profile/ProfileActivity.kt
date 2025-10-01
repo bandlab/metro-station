@@ -11,13 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.bandlab.metro.station.StationEntry
-import com.bandlab.metro.station.sample.HasStationEntry
 import com.bandlab.metro.station.sample.ui.theme.AndroidAppTheme
-import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 
-@StationEntry(parentScope = AppScope::class) //TODO: Currently no-op
+//@StationEntry(parentScope = AppScope::class) //TODO: Currently no-op
 class ProfileActivity : ComponentActivity() {
 
     @Inject
@@ -25,10 +22,10 @@ class ProfileActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO: Injection point will be generated in IR
-        (applicationContext as HasStationEntry)
-            .nowArriving<ProfileGraphExtension.Factory>()
-            .create(this)
-            .inject(this)
+//        (applicationContext as HasStationEntry)
+//            .nowArriving<ProfileActivityGraphExtension.Factory>()
+//            .create(this)
+//            .inject(this)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
