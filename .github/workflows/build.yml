@@ -9,7 +9,7 @@ env:
 
 jobs:
   build-compiler:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
@@ -26,7 +26,7 @@ jobs:
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
   build-samples:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
