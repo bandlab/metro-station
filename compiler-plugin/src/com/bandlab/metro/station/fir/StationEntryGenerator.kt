@@ -15,7 +15,6 @@ import org.jetbrains.kotlin.fir.declarations.builder.buildValueParameterCopy
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotation
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
-import org.jetbrains.kotlin.fir.expressions.builder.buildClassReferenceExpression
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.FirSupertypeGenerationExtension.TypeResolveService
 import org.jetbrains.kotlin.fir.packageFqName
@@ -40,14 +39,18 @@ import org.jetbrains.kotlin.name.StandardClassIds
  * Generates a Metro GraphExtension interface for each class annotated with @StationEntry:
  *
  * ```kotlin
- * @GraphExtension(scope = {Name}::class)
- * interface {Name}GraphExtension {
- *   fun inject(target: {Name})
+ * @StationEntry(parentScope = AppScope::class)
+ * class MyActivity
+ *
+ * // Generated FIR structure:
+ * @GraphExtension(scope = MyActivity::class)
+ * interface MyActivityGraphExtension {
+ *   fun inject(target: MyActivity)
  *
  *   @ContributesTo(AppScope::class)
  *   @GraphExtension.Factory
  *   interface Factory {
- *     fun create(@Provides target: {Name}): {Name}GraphExtension
+ *     fun create(@Provides target: MyActivity): MyActivityGraphExtension
  *   }
  * }
  * ```
@@ -100,9 +103,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
                 val isScopeNothing = scopeArgumentType == null || scopeArgumentType.classId == StandardClassIds.Nothing
 
                 mapping[Names.ScopeParam] = if (isScopeNothing) {
-                    buildClassReferenceExpression {
-                        classTypeRef = originalSymbol.classId.firTypeRef()
-                    }
+                    originalSymbol.getClassCall()
                 } else {
                     scopeArgument
                 }
@@ -151,7 +152,7 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
         val contributesToAnnotation = buildAnnotation {
             annotationTypeRef = ClassIds.ContributesTo.firTypeRef()
             argumentMapping = buildAnnotationArgumentMapping {
-                mapping[Names.ParentScopeParam] = parentScope
+                mapping[Names.ScopeParam] = parentScope
             }
         }
 
