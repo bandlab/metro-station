@@ -1,16 +1,16 @@
 package com.bandlab.metro.station.sample
 
 import android.app.Application
+import com.bandlab.metro.station.HasStationEntries
 import dev.zacsweers.metro.createGraph
 
-class DemoApplication : Application(), HasStationEntry {
+class DemoApplication : Application(), HasStationEntries {
 
     private val appGraph by lazy {
         createGraph<AppGraph>()
     }
 
-    override fun <T> nowArriving(): T {
-        @Suppress("UNCHECKED_CAST")
-        return appGraph as T
+    override fun <T> findEntryFactory(): T {
+        return HasStationEntries.findFrom(appGraph)
     }
 }

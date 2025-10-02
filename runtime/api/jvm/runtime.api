@@ -1,0 +1,24 @@
+public abstract interface class com/bandlab/metro/station/HasStationEntries {
+	public static final field Companion Lcom/bandlab/metro/station/HasStationEntries$Companion;
+	public abstract fun findEntryFactory ()Ljava/lang/Object;
+}
+
+public final class com/bandlab/metro/station/HasStationEntries$Companion {
+	public final fun findFrom (Ljava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface annotation class com/bandlab/metro/station/MetroStation : java/lang/annotation/Annotation {
+	public abstract fun additionalScopes ()[Ljava/lang/Class;
+	public abstract fun bindingContainers ()[Ljava/lang/Class;
+	public abstract fun excludes ()[Ljava/lang/Class;
+	public abstract fun scope ()Ljava/lang/Class;
+}
+
+public abstract interface annotation class com/bandlab/metro/station/StationEntry : java/lang/annotation/Annotation {
+	public abstract fun additionalScopes ()[Ljava/lang/Class;
+	public abstract fun bindingContainers ()[Ljava/lang/Class;
+	public abstract fun excludes ()[Ljava/lang/Class;
+	public abstract fun parentScope ()Ljava/lang/Class;
+	public abstract fun scope ()Ljava/lang/Class;
+}
+
