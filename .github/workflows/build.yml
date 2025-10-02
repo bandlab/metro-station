@@ -9,14 +9,14 @@ env:
 
 jobs:
   build-compiler:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: 21
+          java-version: 23
 
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew check --continue --quiet
@@ -26,14 +26,14 @@ jobs:
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
   build-samples:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: 21
+          java-version: 23
 
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew -p samples check --continue --quiet

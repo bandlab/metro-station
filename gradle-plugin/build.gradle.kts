@@ -41,10 +41,10 @@ buildConfig {
 
 gradlePlugin {
     plugins {
-        create("SimplePlugin") {
+        create("MetroStationGradlePlugin") {
             id = rootProject.group.toString()
-            displayName = "SimplePlugin"
-            description = "SimplePlugin"
+            displayName = "MetroStationGradlePlugin"
+            description = "MetroStationGradlePlugin"
             implementationClass = "com.bandlab.metro.station.MetroStationGradlePlugin"
         }
     }

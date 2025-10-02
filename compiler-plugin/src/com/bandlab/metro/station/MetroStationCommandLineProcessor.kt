@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @Suppress("unused") // Used via reflection.
-class MetroStationCommandLineProcessor : CommandLineProcessor {
+public class MetroStationCommandLineProcessor : CommandLineProcessor {
     override val pluginId: String = BuildConfig.KOTLIN_PLUGIN_ID
 
     override val pluginOptions: Collection<CliOption> = emptyList()

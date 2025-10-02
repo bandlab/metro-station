@@ -1,0 +1,46 @@
+FILE: Simple.kt
+    @R|com/bandlab/metro/station/StationEntry|(parentScope = <getClass>(Q|kotlin/Unit|)) public final class MyActivity : R|kotlin/Any| {
+        public constructor(): R|MyActivity| {
+            super<R|kotlin/Any|>()
+        }
+
+    }
+    @R|com/bandlab/metro/station/StationEntry|(parentScope = <getClass>(Q|kotlin/Unit|), scope = <getClass>(Q|kotlin/Int|)) public final class MyFragment : R|kotlin/Any| {
+        public constructor(): R|MyFragment| {
+            super<R|kotlin/Any|>()
+        }
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval factory: R|<anonymous>| = object : R|MyActivityGraphExtension| {
+            private constructor(): R|<anonymous>| {
+                super<R|kotlin/Any|>()
+            }
+
+            public open override fun inject(target: R|MyActivity|): R|kotlin/Unit| {
+                ^inject Q|kotlin/Unit|
+            }
+
+        }
+
+        ^box String(OK)
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyActivity|)) public abstract interface MyActivityGraphExtension : R|kotlin/Any| {
+        public abstract fun inject(target: R|MyActivity|): R|kotlin/Unit|
+
+        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|kotlin/Unit|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
+            public abstract fun create(@R|dev/zacsweers/metro/Provides|() target: R|MyActivity|): R|MyActivityGraphExtension|
+
+        }
+
+    }
+    @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|kotlin/Int|)) public abstract interface MyFragmentGraphExtension : R|kotlin/Any| {
+        public abstract fun inject(target: R|MyFragment|): R|kotlin/Unit|
+
+        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|kotlin/Unit|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|kotlin/Any| {
+            public abstract fun create(@R|dev/zacsweers/metro/Provides|() target: R|MyFragment|): R|MyFragmentGraphExtension|
+
+        }
+
+    }

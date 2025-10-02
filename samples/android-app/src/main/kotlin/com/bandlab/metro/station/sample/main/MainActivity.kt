@@ -5,13 +5,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.bandlab.metro.station.MetroStation
 import com.bandlab.metro.station.sample.profile.ProfileActivity
 import com.bandlab.metro.station.sample.ui.theme.AndroidAppTheme
@@ -35,17 +35,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             AndroidAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
+                    Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
                     ) {
-                        Text(
-                            text = "Hello from Main screen!",
-                        )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.align(Alignment.Center)
+                        ) {
+                            Text(
+                                text = "Hello from Main screen!",
+                            )
 
-                        Button(onClick = ::openProfile) {
-                            Text(text = "Open Profile")
+                            Button(onClick = ::openProfile) {
+                                Text(text = "Open Profile")
+                            }
                         }
                     }
                 }

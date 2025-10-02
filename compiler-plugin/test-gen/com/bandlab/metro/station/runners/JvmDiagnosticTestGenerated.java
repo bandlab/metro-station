@@ -6,6 +6,7 @@ import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -21,15 +22,19 @@ public class JvmDiagnosticTestGenerated extends AbstractJvmDiagnosticTest {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/diagnostics"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
   }
 
-  @Test
-  @TestMetadata("anotherDiagnosticTest.kt")
-  public void testAnotherDiagnosticTest() {
-    runTest("compiler-plugin/testData/diagnostics/anotherDiagnosticTest.kt");
-  }
+  @Nested
+  @TestMetadata("compiler-plugin/testData/diagnostics/stationentry")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Stationentry {
+    @Test
+    public void testAllFilesPresentInStationentry() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/diagnostics/stationentry"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
 
-  @Test
-  @TestMetadata("simple.kt")
-  public void testSimple() {
-    runTest("compiler-plugin/testData/diagnostics/simple.kt");
+    @Test
+    @TestMetadata("OnlyClassIsAllowed.kt")
+    public void testOnlyClassIsAllowed() {
+      runTest("compiler-plugin/testData/diagnostics/stationentry/OnlyClassIsAllowed.kt");
+    }
   }
 }
