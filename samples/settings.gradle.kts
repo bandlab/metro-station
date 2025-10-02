@@ -3,6 +3,7 @@ pluginManagement {
         mavenCentral()
         google()
         gradlePluginPortal()
+        mavenLocal() // For local testing
     }
     plugins {
         id("com.android.settings") version "8.12.3"
@@ -14,6 +15,7 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         google()
+        mavenLocal() // For local testing
     }
 }
 
