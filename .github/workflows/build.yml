@@ -18,7 +18,7 @@ jobs:
           distribution: 'zulu'
           java-version: 23
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew check --continue --quiet
 
       - uses: mikepenz/action-junit-report@v5
@@ -35,5 +35,5 @@ jobs:
           distribution: 'zulu'
           java-version: 23
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew -p samples check --continue --quiet
