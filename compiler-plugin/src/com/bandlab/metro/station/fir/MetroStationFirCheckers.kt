@@ -9,6 +9,9 @@ internal class MetroStationFirCheckers(session: FirSession) : FirAdditionalCheck
     override val declarationCheckers: DeclarationCheckers =
         object : DeclarationCheckers() {
             override val classCheckers: Set<FirClassChecker>
-                get() = setOf(StationEntryChecker)
+                get() = setOf(
+                    MetroStationChecker,
+                    StationEntryChecker
+                )
         }
 }

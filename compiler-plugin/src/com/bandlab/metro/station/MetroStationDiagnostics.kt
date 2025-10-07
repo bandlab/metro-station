@@ -7,6 +7,7 @@ import org.jetbrains.kotlin.diagnostics.rendering.BaseDiagnosticRendererFactory
 
 internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
 
+    val METRO_STATION_NOT_ON_CLASS by error0(NAME_IDENTIFIER)
     val STATION_ENTRY_NOT_ON_CLASS by error0(NAME_IDENTIFIER)
 
     override fun getRendererFactory(): BaseDiagnosticRendererFactory {
@@ -17,6 +18,10 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
 private object FirMetroStationErrorMessages : BaseDiagnosticRendererFactory() {
     override val MAP by KtDiagnosticFactoryToRendererMap("MetroStation") { map ->
         map.apply {
+            put(
+                MetroStationDiagnostics.METRO_STATION_NOT_ON_CLASS,
+                "@MetroStation can only be applied to classes"
+            )
             put(
                 MetroStationDiagnostics.STATION_ENTRY_NOT_ON_CLASS,
                 "@StationEntry can only be applied to classes"
