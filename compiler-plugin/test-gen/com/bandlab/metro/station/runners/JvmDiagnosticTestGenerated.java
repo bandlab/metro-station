@@ -23,6 +23,22 @@ public class JvmDiagnosticTestGenerated extends AbstractJvmDiagnosticTest {
   }
 
   @Nested
+  @TestMetadata("compiler-plugin/testData/diagnostics/metrostation")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Metrostation {
+    @Test
+    public void testAllFilesPresentInMetrostation() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/diagnostics/metrostation"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
+
+    @Test
+    @TestMetadata("OnlyClassIsAllowed.kt")
+    public void testOnlyClassIsAllowed() {
+      runTest("compiler-plugin/testData/diagnostics/metrostation/OnlyClassIsAllowed.kt");
+    }
+  }
+
+  @Nested
   @TestMetadata("compiler-plugin/testData/diagnostics/stationentry")
   @TestDataPath("$PROJECT_ROOT")
   public class Stationentry {

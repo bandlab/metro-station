@@ -36,43 +36,42 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 
 /**
- * Generates a Metro GraphExtension interface for each class annotated with @StationEntry:
+ * Generates a Metro DependencyGraph interface for each class annotated with @MetroStation:
  *
  * ```kotlin
- * @StationEntry(parentScope = AppScope::class)
+ * @MetroStation
  * class MyActivity
  *
  * // Generated FIR structure:
- * @GraphExtension(scope = MyActivity::class)
- * interface MyActivityGraphExtension {
+ * @DependencyGraph(scope = MyActivity::class)
+ * interface MyActivityDependencyGraph {
  *   fun inject(target: MyActivity)
  *
- *   @ContributesTo(AppScope::class)
- *   @GraphExtension.Factory
+ *   @DependencyGraph.Factory
  *   interface Factory {
- *     fun create(@Provides target: MyActivity): MyActivityGraphExtension
+ *     fun create(@Provides target: MyActivity): MyActivityDependencyGraph
  *   }
  * }
  * ```
  */
-internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
+internal class MetroStationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
-    // FIR cache for graph extension class ids to original class symbols.
+    // FIR cache for dependency graph class ids to original class symbols.
     private val symbols: FirCache<Unit, Map<ClassId, FirRegularClassSymbol>, TypeResolveService?> =
         session.firCachesFactory.createCache { _, _ ->
             session.predicateBasedProvider
-                .getSymbolsByPredicate(Predicates.stationEntry)
+                .getSymbolsByPredicate(Predicates.metroStation)
                 .filterIsInstance<FirRegularClassSymbol>()
                 .associateBy {
                     ClassId(
                         packageFqName = it.packageFqName(),
-                        topLevelName = it.name + Names.GraphExtensionClass
+                        topLevelName = it.name + Names.DependencyGraphClass
                     )
                 }
         }
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
-        register(Predicates.stationEntry)
+        register(Predicates.metroStation)
     }
 
     @ExperimentalTopLevelDeclarationsGenerationApi
@@ -83,21 +82,21 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
     @ExperimentalTopLevelDeclarationsGenerationApi
     override fun generateTopLevelClassLikeDeclaration(classId: ClassId): FirClassLikeSymbol<*>? {
         val originalSymbol = symbols.getValue(Unit)[classId] ?: return null
-        val stationEntryAnnotation =
-            originalSymbol.getAnnotationByClassId(ClassIds.StationEntry, session) ?: return null
+        val metroStationAnnotation =
+            originalSymbol.getAnnotationByClassId(ClassIds.MetroStation, session) ?: return null
 
-        val graphExtension = createTopLevelClass(classId, Key, classKind = ClassKind.INTERFACE) {
+        val dependencyGraph = createTopLevelClass(classId, Key, classKind = ClassKind.INTERFACE) {
             modality = Modality.ABSTRACT
         }
 
-        val graphExtensionAnnotation = buildAnnotation {
+        val dependencyGraphAnnotation = buildAnnotation {
             //TODO: Implement scoping
 
-            annotationTypeRef = ClassIds.GraphExtension.firTypeRef()
+            annotationTypeRef = ClassIds.MetroStation.firTypeRef()
 
-            val stationEntryArguments = stationEntryAnnotation.argumentMapping.mapping
+            val metroStationArguments = metroStationAnnotation.argumentMapping.mapping
             argumentMapping = buildAnnotationArgumentMapping {
-                val scopeArgument = stationEntryArguments[Names.ScopeParam]
+                val scopeArgument = metroStationArguments[Names.ScopeParam]
                 // Check if the provided scope is Nothing
                 val scopeArgumentType = scopeArgument?.resolvedType?.typeArguments?.single()?.type
                 val isScopeNothing = scopeArgumentType == null || scopeArgumentType.classId == StandardClassIds.Nothing
@@ -108,17 +107,17 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
                     scopeArgument
                 }
 
-                // Port params into metro's GraphExtension
-                stationEntryArguments[Names.AdditionalScopesParam]?.let { mapping[Names.AdditionalScopesParam] = it }
-                stationEntryArguments[Names.ExcludesParam]?.let { mapping[Names.ExcludesParam] = it }
-                stationEntryArguments[Names.BindingContainersParam]?.let { mapping[Names.BindingContainersParam] = it }
+                // Port params into metro's DependencyGraph
+                metroStationArguments[Names.AdditionalScopesParam]?.let { mapping[Names.AdditionalScopesParam] = it }
+                metroStationArguments[Names.ExcludesParam]?.let { mapping[Names.ExcludesParam] = it }
+                metroStationArguments[Names.BindingContainersParam]?.let { mapping[Names.BindingContainersParam] = it }
             }
         }
-        graphExtension.replaceAnnotations(
-            listOf(graphExtensionAnnotation)
+        dependencyGraph.replaceAnnotations(
+            listOf(dependencyGraphAnnotation)
         )
 
-        return graphExtension.symbol
+        return dependencyGraph.symbol
     }
 
     override fun getNestedClassifiersNames(
@@ -139,27 +138,13 @@ internal class StationEntryGenerator(session: FirSession) : FirDeclarationGenera
     ): FirClassLikeSymbol<*>? {
         if (name != Names.FactoryClass) return null
 
-        val originalSymbol = symbols.getValue(Unit)[owner.classId] ?: return null
-        val stationEntryAnnotation =
-            originalSymbol.getAnnotationByClassId(ClassIds.StationEntry, session) ?: return null
-        val parentScope = stationEntryAnnotation.argumentMapping.mapping[Names.ParentScopeParam]
-            ?: return null
-
         val factory = createNestedClass(owner, name, Key, classKind = ClassKind.INTERFACE) {
             modality = Modality.ABSTRACT
         }
 
-        val contributesToAnnotation = buildAnnotation {
-            annotationTypeRef = ClassIds.ContributesTo.firTypeRef()
-            argumentMapping = buildAnnotationArgumentMapping {
-                mapping[Names.ScopeParam] = parentScope
-            }
-        }
-
         factory.replaceAnnotations(
             listOf(
-                contributesToAnnotation,
-                ClassIds.GraphExtensionFactory.firAnnotation()
+                ClassIds.DependencyGraphFactory.firAnnotation()
             )
         )
 
