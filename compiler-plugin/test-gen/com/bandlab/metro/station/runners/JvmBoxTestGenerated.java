@@ -23,6 +23,22 @@ public class JvmBoxTestGenerated extends AbstractJvmBoxTest {
   }
 
   @Nested
+  @TestMetadata("compiler-plugin/testData/box/metrostation")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Metrostation {
+    @Test
+    public void testAllFilesPresentInMetrostation() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/metrostation"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
+
+    @Test
+    @TestMetadata("Simple.kt")
+    public void testSimple() {
+      runTest("compiler-plugin/testData/box/metrostation/Simple.kt");
+    }
+  }
+
+  @Nested
   @TestMetadata("compiler-plugin/testData/box/stationentry")
   @TestDataPath("$PROJECT_ROOT")
   public class Stationentry {

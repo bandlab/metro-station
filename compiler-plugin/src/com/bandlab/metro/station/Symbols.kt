@@ -27,6 +27,7 @@ internal object Symbols {
     }
 
     object Names {
+        val DependencyGraphClass = "DependencyGraph".asName()
         val GraphExtensionClass = "GraphExtension".asName()
         val FactoryClass = "Factory".asName()
 
