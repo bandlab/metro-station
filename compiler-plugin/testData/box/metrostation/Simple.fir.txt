@@ -36,7 +36,7 @@ FILE: /MyActivityDependencyGraph.kt
 
     }
 FILE: /MyFragmentDependencyGraph.kt
-    @R|com/bandlab/metro/station/MetroStation|(scope = <getClass>(Q|kotlin/Int|)) public abstract interface MyFragmentDependencyGraph : R|kotlin/Any| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|kotlin/Int|)) public abstract interface MyFragmentDependencyGraph : R|kotlin/Any| {
         public abstract fun inject(target: R|MyFragment|): R|kotlin/Unit|
 
         @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|kotlin/Any| {
