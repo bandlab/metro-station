@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -22,13 +21,14 @@ subprojects {
     }
 
     plugins.withType<KotlinBasePlugin> {
-        project.tasks.withType<KotlinCompilationTask<*>>().configureEach {
+        project.tasks.withType<KotlinCompile>().configureEach {
             compilerOptions {
                 progressiveMode.set(true)
-                if (this is KotlinJvmCompilerOptions) {
-                    jvmTarget.set(libs.versions.jvmTarget.map(JvmTarget::fromTarget))
-                    freeCompilerArgs.add("-Xjvm-default=all")
-                }
+                jvmTarget.set(libs.versions.jvmTarget.map(JvmTarget::fromTarget))
+                freeCompilerArgs.addAll(
+                    "-Xjvm-default=all",
+                    "-Xcompiler-plugin-order=com.bandlab.metro.station>dev.zacsweers.metro.compiler",
+                )
             }
         }
     }
