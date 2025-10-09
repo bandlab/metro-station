@@ -27,6 +27,7 @@ subprojects {
                 jvmTarget.set(libs.versions.jvmTarget.map(JvmTarget::fromTarget))
                 freeCompilerArgs.addAll(
                     "-Xjvm-default=all",
+                    // Our compiler needs to run before metro.
                     "-Xcompiler-plugin-order=com.bandlab.metro.station>dev.zacsweers.metro.compiler",
                 )
             }
