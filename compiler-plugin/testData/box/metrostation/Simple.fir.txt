@@ -26,7 +26,7 @@ FILE: Simple.kt
         ^box String(OK)
     }
 FILE: /MyActivityDependencyGraph.kt
-    @R|com/bandlab/metro/station/MetroStation|(scope = <getClass>(Q|MyActivity|)) public abstract interface MyActivityDependencyGraph : R|kotlin/Any| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyActivity|)) public abstract interface MyActivityDependencyGraph : R|kotlin/Any| {
         public abstract fun inject(target: R|MyActivity|): R|kotlin/Unit|
 
         @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|kotlin/Any| {

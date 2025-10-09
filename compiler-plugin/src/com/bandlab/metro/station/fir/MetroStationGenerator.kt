@@ -92,7 +92,7 @@ internal class MetroStationGenerator(session: FirSession) : FirDeclarationGenera
         val dependencyGraphAnnotation = buildAnnotation {
             //TODO: Implement scoping
 
-            annotationTypeRef = ClassIds.MetroStation.firTypeRef()
+            annotationTypeRef = ClassIds.DependencyGraph.firTypeRef()
 
             val metroStationArguments = metroStationAnnotation.argumentMapping.mapping
             argumentMapping = buildAnnotationArgumentMapping {
