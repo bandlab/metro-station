@@ -18,7 +18,7 @@ import com.bandlab.metro.station.sample.ui.theme.AndroidAppTheme
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.createGraphFactory
 
-@MetroStation //TODO: Currently no-op
+@MetroStation
 class MainActivity : ComponentActivity() {
 
     @Inject
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO: Injection point will be generated in IR
-        createGraphFactory<MainActivityGraph.Factory>()
+        createGraphFactory<MainActivityDependencyGraph.Factory>()
             .create(this)
             .inject(this)
 
