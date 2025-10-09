@@ -5,7 +5,7 @@ compose-bom = "2025.10.00"
 jdk = "23"
 jvmTarget = "11"
 kotlin = "2.3.0-Beta1"
-metro = "0.6.9"
+metro = "0.6.9-bl"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
