@@ -1,19 +1,70 @@
-# Kotlin Compiler Plugin template
+# 🚉 Metro Station
 
-This is a template project for writing a compiler plugin for the Kotlin compiler.
+Metro station is a Kotlin compiler plugin built on [Metro][metro] to simplify members injection for Android components.
 
-## Details
+> **⚠️ This repo is pretty much a wip, there is no release available yet.**
 
-This project has three modules:
-- The [`:compiler-plugin`](compiler-plugin/src) module contains the compiler plugin itself.
-- The [`:plugin-annotations`](plugin-annotations/src/commonMain/kotlin) module contains annotations which can be used in
-user code for interacting with compiler plugin.
-- The [`:gradle-plugin`](gradle-plugin/src) module contains a simple Gradle plugin to add the compiler plugin and
-annotation dependency to a Kotlin project. 
+## Usages
 
-Extension point registration:
-- K2 Frontend (FIR) extensions can be registered in `SimplePluginRegistrar`.
-- All other extensions (including K1 frontend and backend) can be registered in `SimplePluginComponentRegistrar`.
+There are two main annotations located in `:runtime` - [@MetroStation][metro-station] and 
+[@StationEntry][station-entry], they're analogous to metro's [@DependencyGraph][dependency-graph] and 
+[@GraphExtension][graph-extension].
+
+### @MetroStation
+
+Annotate `@MetroStation` on a target where you want a standalone dependency graph.
+
+For example:
+
+```kotlin
+@MetroStation
+class MyActivity
+
+// Generated FIR structure by metro-station
+@DependencyGraph(scope = MyActivity::class)
+interface MyActivityDependencyGraph {
+    fun inject(target: MyActivity)
+
+    @DependencyGraph.Factory
+    interface Factory {
+        fun create(@Provides target: MyActivity): MyActivityDependencyGraph
+    }
+}
+```
+
+We plan to generate injection points automatically for known Android components, like Activities, Fragments, Views,
+Broadcast Receivers and Workers because we know when they should be injected. But this is yet to be implemented.
+(see https://github.com/bandlab/metro-station/issues/22)
+
+
+### @StationEntry
+
+Annotate `@StationEntry` on a target where you want a graph extension, and specify the scope of the dependency graph in
+`parentScope` where you want to contribute the graph extension.
+
+For example:
+
+```kotlin
+@StationEntry(parentScope = AppScope::class)
+class MyActivity
+
+// Generated FIR structure by metro-station
+@GraphExtension(scope = MyActivity::class)
+interface MyActivityGraphExtension {
+    fun inject(target: MyActivity)
+
+    @ContributesTo(scope = AppScope::class)
+    @GraphExtension.Factory
+    interface Factory {
+        fun create(@Provides target: MyActivity): MyActivityGraphExtension
+    }
+}
+```
+
+> **ℹ️ There are more features yet to come:**
+> - Be able to provide params for the target (see https://github.com/bandlab/metro-station/issues/5)
+> - Support custom station types (see https://github.com/bandlab/metro-station/issues/6)
+> - Be able to specify target bound type, custom scope annotation, and default dependencies (see https://github.com/bandlab/metro-station/issues/4)
 
 ## Tests
 
@@ -27,5 +78,10 @@ which is pre-configured in this repository.
 
 [//]: # (Links)
 
+[metro]: https://github.com/zacsweers/metro
+[metro-station]: https://github.com/bandlab/metro-station/blob/main/runtime/src/commonMain/kotlin/com/bandlab/metro/station/MetroStation.kt
+[station-entry]: https://github.com/bandlab/metro-station/blob/main/runtime/src/commonMain/kotlin/com/bandlab/metro/station/StationEntry.kt
+[dependency-graph]: https://github.com/ZacSweers/metro/blob/main/runtime/src/commonMain/kotlin/dev/zacsweers/metro/DependencyGraph.kt
+[graph-extension]: https://github.com/ZacSweers/metro/blob/main/runtime/src/commonMain/kotlin/dev/zacsweers/metro/GraphExtension.kt
 [test-framework]: https://github.com/JetBrains/kotlin/blob/2.1.20/compiler/test-infrastructure/ReadMe.md
 [test-plugin]: https://github.com/JetBrains/kotlin-compiler-devkit
