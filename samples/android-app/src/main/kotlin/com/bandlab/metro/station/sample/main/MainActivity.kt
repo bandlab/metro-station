@@ -12,13 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.bandlab.metro.station.MetroStation
 import com.bandlab.metro.station.sample.profile.ProfileActivity
 import com.bandlab.metro.station.sample.ui.theme.AndroidAppTheme
 import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.createGraphFactory
 
-@MetroStation //TODO: Currently no-op
+//@MetroStation TODO: Doesn't work yet
 class MainActivity : ComponentActivity() {
 
     @Inject
@@ -26,9 +24,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO: Injection point will be generated in IR
-        createGraphFactory<MainActivityGraph.Factory>()
-            .create(this)
-            .inject(this)
+//        createGraphFactory<MainActivityDependencyGraph.Factory>()
+//            .create(this)
+//            .inject(this)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

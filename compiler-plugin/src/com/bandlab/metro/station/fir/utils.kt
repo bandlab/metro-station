@@ -49,6 +49,9 @@ internal fun FirRegularClassSymbol.getClassCall(): FirExpression = buildGetClass
     )
 }
 
+/**
+ * Generates a member inject method for the given class.
+ */
 internal fun FirExtension.generateInjectMethod(
     owner: FirClassSymbol<*>,
     originalSymbol: FirRegularClassSymbol,

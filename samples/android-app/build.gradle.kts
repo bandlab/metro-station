@@ -28,6 +28,10 @@ android {
     }
 }
 
+metro {
+    reportsDestination.set(project.layout.buildDirectory.dir("metro"))
+}
+
 dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.runtime.compose)

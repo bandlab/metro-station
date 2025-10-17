@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.bandlab.metro.station.sample.ui.theme.AndroidAppTheme
 import dev.zacsweers.metro.Inject
 
-//@StationEntry(parentScope = AppScope::class) //TODO: Currently no-op
+//@StationEntry(parentScope = AppScope::class) TODO: Doesn't work yet
 class ProfileActivity : ComponentActivity() {
 
     @Inject
