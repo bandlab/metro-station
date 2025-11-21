@@ -4,7 +4,7 @@ androidx-lifecycle = "2.9.4"
 compose-bom = "2025.10.01"
 jdk = "23"
 jvmTarget = "11"
-kotlin = "2.3.0-Beta2"
+kotlin = "2.3.0-RC"
 metro = "0.7.7"
 
 [plugins]
