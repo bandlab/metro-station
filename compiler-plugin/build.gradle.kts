@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.targets.wasm.d8.D8Plugin
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.autoservice)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.gradle.java.test.fixtures)
     alias(libs.plugins.gradle.idea)
@@ -42,6 +43,7 @@ val annotationsJvmRuntimeClasspath by configurations.resolvable("annotationsJvmR
 
 dependencies {
     compileOnly(libs.kotlin.compiler)
+    compileOnly(libs.metro.compiler)
 
     testFixturesApi(libs.kotlin.test.junit5)
     testFixturesApi(libs.kotlin.test.framework)
@@ -57,6 +59,9 @@ dependencies {
     testArtifacts(libs.kotlin.test)
     testArtifacts(libs.kotlin.script.runtime)
     testArtifacts(libs.kotlin.annotations.jvm)
+
+    // Metro compiler for running Metro tests
+    testImplementation(libs.metro.compiler)
 }
 
 buildConfig {
@@ -94,6 +99,8 @@ tasks.test {
 }
 
 kotlin {
+    explicitApi()
+
     compilerOptions {
         optIn.add("org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
         optIn.add("org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI")

@@ -1,7 +1,7 @@
 package org.jetbrains.kotlin.compiler.plugin.template.services
 
+import com.bandlab.compiler.BandLabPluginComponentRegistrar
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
-import org.jetbrains.kotlin.compiler.plugin.template.SimplePluginComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.model.TestModule
@@ -14,7 +14,7 @@ fun TestConfigurationBuilder.configurePlugin() {
 }
 
 private class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices) {
-    private val registrar = SimplePluginComponentRegistrar()
+    private val registrar = BandLabPluginComponentRegistrar()
     override fun CompilerPluginRegistrar.ExtensionStorage.registerCompilerExtensions(
         module: TestModule,
         configuration: CompilerConfiguration

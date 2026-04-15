@@ -3,7 +3,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-    
 }
 
 dependencyResolutionManagement {
@@ -12,7 +11,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "compiler-plugin-template"
+rootProject.name = "bandlab-android-kotlin-compiler-plugin"
 
 include("compiler-plugin")
 include("gradle-plugin")
