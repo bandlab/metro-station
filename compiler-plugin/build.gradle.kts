@@ -41,6 +41,13 @@ val annotationsJvmRuntimeClasspath by configurations.resolvable("annotationsJvmR
     extendsFrom(annotationsRuntimeClasspath)
 }
 
+val metroRuntimeClasspath by configurations.dependencyScope("metroRuntimeClasspath") {
+    isTransitive = false
+}
+val metroRuntimeResolvable by configurations.resolvable("metroRuntimeResolvable") {
+    extendsFrom(metroRuntimeClasspath)
+}
+
 dependencies {
     compileOnly(libs.kotlin.compiler)
     compileOnly(libs.metro.compiler)
@@ -48,9 +55,11 @@ dependencies {
     testFixturesApi(libs.kotlin.test.junit5)
     testFixturesApi(libs.kotlin.test.framework)
     testFixturesApi(libs.kotlin.compiler)
+    testFixturesApi(libs.metro.compiler)
     testFixturesRuntimeOnly(libs.junit)
 
     annotationsRuntimeClasspath(project(":plugin-annotations"))
+    annotationsRuntimeClasspath(project(":stubs"))
 
     // Dependencies required to run the internal test framework.
     testArtifacts(libs.kotlin.stdlib)
@@ -60,8 +69,8 @@ dependencies {
     testArtifacts(libs.kotlin.script.runtime)
     testArtifacts(libs.kotlin.annotations.jvm)
 
-    // Metro compiler for running Metro tests
-    testImplementation(libs.metro.compiler)
+    // Metro runtime for running Metro tests
+    metroRuntimeClasspath(libs.metro.runtime)
 }
 
 buildConfig {
@@ -76,11 +85,13 @@ buildConfig {
 tasks.test {
     dependsOn(testArtifacts)
     dependsOn(annotationsJvmRuntimeClasspath)
+    dependsOn(metroRuntimeResolvable)
 
     useJUnitPlatform()
     workingDir = rootDir
 
     systemProperty("annotationsRuntime.jvm.classpath", annotationsJvmRuntimeClasspath.asPath)
+    systemProperty("metroRuntime.classpath", metroRuntimeResolvable.asPath)
 
     // Properties required to run the internal test framework.
     setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib", "kotlin-stdlib")
@@ -115,7 +126,7 @@ val generateTests by tasks.registering(JavaExec::class) {
         .withPropertyName("generatedTests")
 
     classpath = sourceSets.testFixtures.get().runtimeClasspath
-    mainClass.set("org.jetbrains.kotlin.compiler.plugin.template.GenerateTestsKt")
+    mainClass.set("com.bandlab.compiler.GenerateTestsKt")
     workingDir = rootDir
 }
 

@@ -216,6 +216,7 @@ public class ConfigSelectorMultibindingFirGen(session: FirSession) : MetroFirDec
             origin = Key.origin
             symbol = functionSymbol
             name = callableId.callableName
+            isLocal = false
             returnTypeRef = debuggableConfigSelectorClassId.firTypeRef()
             dispatchReceiverType = dispatchType
             status = FirResolvedDeclarationStatusImpl(
