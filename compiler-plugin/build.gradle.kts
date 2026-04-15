@@ -1,8 +1,6 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinUsages
 import org.jetbrains.kotlin.gradle.targets.wasm.d8.D8EnvSpec
 import org.jetbrains.kotlin.gradle.targets.wasm.d8.D8Plugin
 
@@ -10,7 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.gradle.java.test.fixtures)
-    alias(libs.plugins.node.gradle)
     alias(libs.plugins.gradle.idea)
 }
 
@@ -42,13 +39,6 @@ val annotationsRuntimeClasspath by configurations.dependencyScope("annotationsRu
 val annotationsJvmRuntimeClasspath by configurations.resolvable("annotationsJvmRuntimeClasspath") {
     extendsFrom(annotationsRuntimeClasspath)
 }
-val annotationsJsRuntimeClasspath by configurations.resolvable("annotationsJsRuntimeClasspath") {
-    extendsFrom(annotationsRuntimeClasspath)
-    attributes {
-        attribute(Usage.USAGE_ATTRIBUTE, objects.named(KotlinUsages.KOTLIN_RUNTIME))
-        attribute(KotlinPlatformType.attribute, KotlinPlatformType.js)
-    }
-}
 
 dependencies {
     compileOnly(libs.kotlin.compiler)
@@ -67,9 +57,6 @@ dependencies {
     testArtifacts(libs.kotlin.test)
     testArtifacts(libs.kotlin.script.runtime)
     testArtifacts(libs.kotlin.annotations.jvm)
-
-    testArtifacts(libs.kotlin.stdlib.js)
-    testArtifacts(libs.kotlin.test.js)
 }
 
 buildConfig {
@@ -84,13 +71,11 @@ buildConfig {
 tasks.test {
     dependsOn(testArtifacts)
     dependsOn(annotationsJvmRuntimeClasspath)
-    dependsOn(annotationsJsRuntimeClasspath)
 
     useJUnitPlatform()
     workingDir = rootDir
 
     systemProperty("annotationsRuntime.jvm.classpath", annotationsJvmRuntimeClasspath.asPath)
-    systemProperty("annotationsRuntime.js.classpath", annotationsJsRuntimeClasspath.asPath)
 
     // Properties required to run the internal test framework.
     setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib", "kotlin-stdlib")
@@ -106,13 +91,6 @@ tasks.test {
     // Properties required to run JS tests from the internal test framework.
     val d8EnvSpec = project.the<D8EnvSpec>()
     with(d8EnvSpec) { dependsOn(project.d8SetupTaskProvider) }
-
-    setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib-js", "kotlin-stdlib-js")
-    setLibraryProperty("org.jetbrains.kotlin.test.kotlin-test-js", "kotlin-test-js")
-
-    systemProperty("javascript.engine.path.V8", d8EnvSpec.executable.get())
-    systemProperty("javascript.engine.path.repl", "${layout.projectDirectory.file("repl.js").asFile}")
-    systemProperty("kotlin.js.test.root.out.dir", "${layout.buildDirectory.get().asFile}/js-test-output")
 }
 
 kotlin {

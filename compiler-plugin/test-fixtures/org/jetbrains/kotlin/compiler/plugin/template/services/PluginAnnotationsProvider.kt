@@ -2,8 +2,6 @@ package org.jetbrains.kotlin.compiler.plugin.template.services
 
 import org.jetbrains.kotlin.cli.jvm.config.addJvmClasspathRoots
 import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.js.config.JSConfigurationKeys
-import org.jetbrains.kotlin.platform.isJs
 import org.jetbrains.kotlin.platform.jvm.isJvm
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.model.TestModule
@@ -25,14 +23,6 @@ private class PluginAnnotationsProvider(testServices: TestServices) : Environmen
             platform.isJvm() -> {
                 configuration.addJvmClasspathRoots(annotationsJvmRuntimeClasspath)
             }
-
-            platform.isJs() -> {
-                val libraries = configuration.getList(JSConfigurationKeys.LIBRARIES)
-                configuration.put(
-                    JSConfigurationKeys.LIBRARIES,
-                    libraries + annotationsJsRuntimeClasspath.map { it.absolutePath },
-                )
-            }
         }
     }
 }
@@ -42,14 +32,12 @@ private class PluginAnnotationsClasspathProvider(testServices: TestServices) : R
         val targetPlatform = module.targetPlatform(testServices)
         return when {
             targetPlatform.isJvm() -> annotationsJvmRuntimeClasspath
-            targetPlatform.isJs() -> annotationsJsRuntimeClasspath
             else -> emptyList()
         }
     }
 }
 
 private val annotationsJvmRuntimeClasspath = classpathFiles("annotationsRuntime.jvm.classpath")
-private val annotationsJsRuntimeClasspath = classpathFiles("annotationsRuntime.js.classpath")
 
 private fun classpathFiles(property: String): List<File> {
     val property = System.getProperty(property)

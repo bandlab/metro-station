@@ -1,6 +1,5 @@
 package org.jetbrains.kotlin.compiler.plugin.template
 
-import org.jetbrains.kotlin.compiler.plugin.template.runners.AbstractJsBoxTest
 import org.jetbrains.kotlin.compiler.plugin.template.runners.AbstractJvmBoxTest
 import org.jetbrains.kotlin.compiler.plugin.template.runners.AbstractJvmDiagnosticTest
 import org.jetbrains.kotlin.generators.dsl.junit5.generateTestGroupSuiteWithJUnit5
@@ -13,10 +12,6 @@ fun main() {
             }
 
             testClass<AbstractJvmBoxTest> {
-                model("box")
-            }
-
-            testClass<AbstractJsBoxTest> {
                 model("box")
             }
         }
