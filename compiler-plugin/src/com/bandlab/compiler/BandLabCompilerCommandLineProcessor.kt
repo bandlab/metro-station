@@ -1,13 +1,13 @@
 package com.bandlab.compiler
 
+import com.fueledbycaffeine.autoservice.AutoService
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOption
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
 import org.jetbrains.kotlin.compiler.plugin.template.BuildConfig
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
-@Suppress("unused")
-// Used via reflection.
+@AutoService
 public class BandLabCompilerCommandLineProcessor : CommandLineProcessor {
     override val pluginId: String
         get() = BuildConfig.KOTLIN_PLUGIN_ID

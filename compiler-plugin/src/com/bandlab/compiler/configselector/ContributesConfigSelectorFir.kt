@@ -1,5 +1,6 @@
 package com.bandlab.compiler.configselector
 
+import com.bandlab.compiler.utils.ClassIds
 import com.bandlab.compiler.utils.asName
 import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
@@ -21,8 +22,6 @@ import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.expressions.builder.*
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
 import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
-import org.jetbrains.kotlin.fir.extensions.predicate.DeclarationPredicate.BuilderContext.annotated
-import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.moduleData
 import org.jetbrains.kotlin.fir.references.builder.buildResolvedNamedReference
@@ -37,11 +36,14 @@ import org.jetbrains.kotlin.fir.types.FirTypeRef
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
-import org.jetbrains.kotlin.name.*
+import org.jetbrains.kotlin.name.CallableId
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.StandardClassIds
 
 /**
  * This FIR declaration generator generates a multibinding contribution for config selectors that are annotated with
- * [contributesConfigSelectorFqName].
+ * [ContributesConfigSelectorIds.contributesConfigSelectorFqName].
  *
  * ```kotlin
  * @ContributesConfigSelector
@@ -56,35 +58,19 @@ import org.jetbrains.kotlin.name.*
  * }
  * ```
  */
-public class ConfigSelectorMultibindingFirGen(session: FirSession) : MetroFirDeclarationGenerationExtension(session) {
+public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclarationGenerationExtension(session) {
 
-    private val contributesConfigSelectorFqName = FqName("com.bandlab.config.api.ContributesConfigSelector")
-    private val nestedContributionName = "MultibindingContribution".asName()
-
-    private val metroPackageFqName = FqName("dev.zacsweers.metro")
-    private val contributesToClassId = ClassId(metroPackageFqName, "ContributesTo".asName())
-    private val appScopeClassId = ClassId(metroPackageFqName, "AppScope".asName())
-    private val bindsClassId = ClassId(metroPackageFqName, "Binds".asName())
-    private val intoSetClassId = ClassId(metroPackageFqName, "IntoSet".asName())
-
-    private val debuggableConfigSelectorClassId = ClassId(
-        packageFqName = FqName("com.bandlab.config.api"),
-        topLevelName = "DebuggableConfigSelector".asName()
-    )
-
-    private val annotationLookupPredicate = LookupPredicate.create {
-        annotated(contributesConfigSelectorFqName)
-    }
+    private val predicate = ContributesConfigSelectorIds.predicate
 
     private val annotatedClasses by lazy {
         session.predicateBasedProvider
-            .getSymbolsByPredicate(annotationLookupPredicate)
+            .getSymbolsByPredicate(predicate)
             .filterIsInstance<FirRegularClassSymbol>()
             .toList()
     }
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
-        register(annotated(contributesConfigSelectorFqName))
+        register(predicate)
     }
 
     override fun getNestedClassifiersNames(
@@ -96,9 +82,10 @@ public class ConfigSelectorMultibindingFirGen(session: FirSession) : MetroFirDec
         val matchesPredicate = classSymbol in annotatedClasses
         val matchesByAnnotation =
             classSymbol.resolvedCompilerAnnotationsWithClassIds.any {
-                it.toAnnotationClassIdSafe(session)?.asSingleFqName() == contributesConfigSelectorFqName
+                it.toAnnotationClassIdSafe(session)
+                    ?.asSingleFqName() == ContributesConfigSelectorIds.contributesConfigSelectorFqName
             }
-        if (matchesPredicate || matchesByAnnotation) return setOf(nestedContributionName)
+        if (matchesPredicate || matchesByAnnotation) return setOf(ContributesConfigSelectorIds.nestedContributionName)
         return emptySet()
     }
 
@@ -107,10 +94,11 @@ public class ConfigSelectorMultibindingFirGen(session: FirSession) : MetroFirDec
         name: Name,
         context: NestedClassGenerationContext,
     ): FirClassLikeSymbol<*>? {
-        if (name != nestedContributionName) return null
+        if (name != ContributesConfigSelectorIds.nestedContributionName) return null
         val matchesByAnnotation =
             owner.resolvedCompilerAnnotationsWithClassIds.any {
-                it.toAnnotationClassIdSafe(session)?.asSingleFqName() == contributesConfigSelectorFqName
+                it.toAnnotationClassIdSafe(session)
+                    ?.asSingleFqName() == ContributesConfigSelectorIds.contributesConfigSelectorFqName
             }
         if (owner !in annotatedClasses && !matchesByAnnotation) return null
 
@@ -142,10 +130,10 @@ public class ConfigSelectorMultibindingFirGen(session: FirSession) : MetroFirDec
             )
             superTypeRefs += session.builtinTypes.anyType
             val appScopeSymbol =
-                session.symbolProvider.getClassLikeSymbolByClassId(appScopeClassId) as FirRegularClassSymbol
+                session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.appScope) as FirRegularClassSymbol
             annotations += buildAnnotationWithScope(
-                classId = contributesToClassId,
-                argName = "scope".asName(),
+                classId = ClassIds.contributesTo,
+                argName = ClassIds.scopeName,
                 scopeArg = appScopeSymbol.getClassCall()
             )
             // Add the function directly to the class declarations
@@ -217,7 +205,7 @@ public class ConfigSelectorMultibindingFirGen(session: FirSession) : MetroFirDec
             symbol = functionSymbol
             name = callableId.callableName
             isLocal = false
-            returnTypeRef = debuggableConfigSelectorClassId.firTypeRef()
+            returnTypeRef = ContributesConfigSelectorIds.debuggableConfigSelectorClassId.firTypeRef()
             dispatchReceiverType = dispatchType
             status = FirResolvedDeclarationStatusImpl(
                 Visibilities.Public,
@@ -233,8 +221,8 @@ public class ConfigSelectorMultibindingFirGen(session: FirSession) : MetroFirDec
                 symbol = FirValueParameterSymbol()
                 containingDeclarationSymbol = functionSymbol
             }
-            annotations += buildSimpleAnnotationCall(bindsClassId, functionSymbol)
-            annotations += buildSimpleAnnotationCall(intoSetClassId, functionSymbol)
+            annotations += buildSimpleAnnotationCall(ClassIds.binds, functionSymbol)
+            annotations += buildSimpleAnnotationCall(ClassIds.intoSet, functionSymbol)
         }
     }
 
@@ -281,6 +269,6 @@ public class ConfigSelectorMultibindingFirGen(session: FirSession) : MetroFirDec
             session: FirSession,
             options: MetroOptions,
             compatContext: CompatContext,
-        ): MetroFirDeclarationGenerationExtension = ConfigSelectorMultibindingFirGen(session)
+        ): MetroFirDeclarationGenerationExtension = ContributesConfigSelectorFir(session)
     }
 }

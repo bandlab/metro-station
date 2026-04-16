@@ -62,8 +62,6 @@ dependencies {
     annotationsRuntimeClasspath(project(":stubs"))
 
     // Dependencies required to run the internal test framework.
-    testArtifacts(libs.kotlin.stdlib)
-    testArtifacts(libs.kotlin.stdlib.jdk8)
     testArtifacts(libs.kotlin.reflect)
     testArtifacts(libs.kotlin.test)
     testArtifacts(libs.kotlin.script.runtime)

@@ -1,0 +1,26 @@
+FILE: basic.kt
+    @R|com/bandlab/config/api/ContributesConfigSelector|() public final object FooConfigSelector : R|com/bandlab/config/api/DebuggableConfigSelector| {
+        private constructor(): R|FooConfigSelector| {
+            super<R|kotlin/Any|>()
+        }
+
+        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MultibindingContribution : R|kotlin/Any| {
+            @R|dev/zacsweers/metro/Binds|() @R|dev/zacsweers/metro/IntoSet|() public abstract fun bind(impl: R|FooConfigSelector|): R|com/bandlab/config/api/DebuggableConfigSelector|
+
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|FooConfigSelector.MultibindingContribution| {
+            }
+
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) public abstract class BindsMirror : R|kotlin/Any| {
+                private constructor(): R|FooConfigSelector.MultibindingContribution.BindsMirror| {
+                    super<R|kotlin/Any|>()
+                }
+
+                private constructor(): R|FooConfigSelector.MultibindingContribution.BindsMirror| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+    }

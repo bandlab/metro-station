@@ -11,5 +11,6 @@ interface AppGraph {
 
 fun box(): String {
     val graph = createGraph<AppGraph>()
+    assertTrue(FooConfigSelector in graph.configs)
     return "OK"
 }

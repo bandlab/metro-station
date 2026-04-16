@@ -1,0 +1,50 @@
+// FILE: basic.kt
+
+@ContributesConfigSelector
+object FooConfigSelector : DebuggableConfigSelector {
+  @ContributesTo(scope = AppScope::class)
+  interface MultibindingContribution {
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @ComptimeOnly
+    abstract class BindsMirror {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @Binds
+      @IntoSet
+      @CallableMetadata(callableName = "bind", propertyName = "", startOffset = -1, endOffset = -1)
+      abstract fun bind_intoset(impl: FooConfigSelector): DebuggableConfigSelector
+
+    }
+
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroContribution(scope = AppScope::class)
+    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : MultibindingContribution {
+    }
+
+    @Binds
+    @IntoSet
+    @ComptimeOnly
+    abstract fun bind(impl: FooConfigSelector): DebuggableConfigSelector {
+      return error(message = "Never called")
+    }
+
+  }
+
+  private constructor() /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+}
+
+// FILE: fooConfigSelectorMultibindingContributionAppScope.kt
+package metro.hints
+
+fun AppScope(contributed: MultibindingContribution) {
+  return error(message = "Never called")
+}
