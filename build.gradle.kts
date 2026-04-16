@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
+
 plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.binary.compatibility.validator) apply false
@@ -13,6 +16,17 @@ allprojects {
 }
 
 subprojects {
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        configure<KotlinJvmExtension> {
+            compilerOptions {
+                jvmTarget.set(JvmTarget.JVM_17)
+            }
+        }
+        configure<JavaPluginExtension> {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+        }
+    }
     plugins.withId("com.vanniktech.maven.publish") {
         configure<PublishingExtension> {
             repositories {
