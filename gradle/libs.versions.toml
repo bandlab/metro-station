@@ -6,7 +6,7 @@ kotlin-binaryCompatibilityValidator = "0.18.1"
 # https://github.com/junit-team/junit4
 junit = "4.13.2"
 # https://github.com/gmazzo/gradle-buildconfig-plugin
-buildconfig = "5.6.5"
+buildconfig = "6.0.9"
 # https://github.com/ZacSweers/metro/releases
 metro = "1.0.0-RC2"
 # https://github.com/joshfriend/autoservice-ir/releases
