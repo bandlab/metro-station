@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.gradle.plugin)
+    alias(libs.plugins.maven.publish)
 }
 
 sourceSets {
@@ -40,11 +41,10 @@ buildConfig {
 
 gradlePlugin {
     plugins {
-        create("SimplePlugin") {
-            id = rootProject.group.toString()
-            displayName = "SimplePlugin"
-            description = "SimplePlugin"
-            implementationClass = "com.bandlab.metro.extensions.SimpleGradlePlugin"
+        register(rootProject.group.toString()) {
+            displayName = "MetroExtensionsGradlePlugin"
+            description = "A gradle plugin to configure Metro Extensions for BandLab Android apps."
+            implementationClass = "com.bandlab.metro.extensions.MetroExtensionsGradlePlugin"
         }
     }
 }
