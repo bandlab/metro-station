@@ -1,6 +1,6 @@
-package com.bandlab.compiler.services
+package com.bandlab.metro.extensions.services
 
-import com.bandlab.compiler.BandLabPluginComponentRegistrar
+import com.bandlab.metro.extensions.BandLabPluginComponentRegistrar
 import dev.zacsweers.metro.compiler.MetroCompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration

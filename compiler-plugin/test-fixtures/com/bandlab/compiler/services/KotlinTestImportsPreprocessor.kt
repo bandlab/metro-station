@@ -1,4 +1,4 @@
-package com.bandlab.compiler.services
+package com.bandlab.metro.extensions.services
 
 import org.jetbrains.kotlin.test.model.TestFile
 import org.jetbrains.kotlin.test.services.ReversibleSourceFilePreprocessor

@@ -3,7 +3,7 @@ FILE fqName:<root> fileName:/basic.kt
     annotations:
       ContributesConfigSelector
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.FooConfigSelector
-    CLASS GENERATED[com.bandlab.compiler.configselector.ContributesConfigSelectorFir.Key] INTERFACE name:MultibindingContribution modality:ABSTRACT visibility:public superTypes:[kotlin.Any]
+    CLASS GENERATED[com.bandlab.metro.extensions.configselector.ContributesConfigSelectorFir.Key] INTERFACE name:MultibindingContribution modality:ABSTRACT visibility:public superTypes:[kotlin.Any]
       annotations:
         ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.FooConfigSelector.MultibindingContribution
@@ -31,7 +31,7 @@ FILE fqName:<root> fileName:/basic.kt
             public open fun toString (): kotlin.String declared in kotlin.Any
         FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] name:bind_intoset visibility:public modality:ABSTRACT returnType:com.bandlab.config.api.DebuggableConfigSelector
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.FooConfigSelector.MultibindingContribution
-          VALUE_PARAMETER GENERATED[com.bandlab.compiler.configselector.ContributesConfigSelectorFir.Key] kind:Regular name:impl index:1 type:<root>.FooConfigSelector
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.extensions.configselector.ContributesConfigSelectorFir.Key] kind:Regular name:impl index:1 type:<root>.FooConfigSelector
           annotations:
             Binds
             IntoSet
@@ -75,9 +75,9 @@ FILE fqName:<root> fileName:/basic.kt
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
         overridden:
           public open fun toString (): kotlin.String declared in kotlin.Any
-      FUN GENERATED[com.bandlab.compiler.configselector.ContributesConfigSelectorFir.Key] name:bind visibility:public modality:ABSTRACT returnType:com.bandlab.config.api.DebuggableConfigSelector
+      FUN GENERATED[com.bandlab.metro.extensions.configselector.ContributesConfigSelectorFir.Key] name:bind visibility:public modality:ABSTRACT returnType:com.bandlab.config.api.DebuggableConfigSelector
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.FooConfigSelector.MultibindingContribution
-        VALUE_PARAMETER GENERATED[com.bandlab.compiler.configselector.ContributesConfigSelectorFir.Key] kind:Regular name:impl index:1 type:<root>.FooConfigSelector
+        VALUE_PARAMETER GENERATED[com.bandlab.metro.extensions.configselector.ContributesConfigSelectorFir.Key] kind:Regular name:impl index:1 type:<root>.FooConfigSelector
         annotations:
           Binds
           IntoSet

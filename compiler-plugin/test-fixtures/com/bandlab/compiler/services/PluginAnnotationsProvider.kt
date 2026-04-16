@@ -1,4 +1,4 @@
-package com.bandlab.compiler.services
+package com.bandlab.metro.extensions.services
 
 import org.jetbrains.kotlin.cli.jvm.config.addJvmClasspathRoots
 import org.jetbrains.kotlin.config.CompilerConfiguration

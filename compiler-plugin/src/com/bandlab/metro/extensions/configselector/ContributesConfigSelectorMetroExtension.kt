@@ -1,6 +1,6 @@
-package com.bandlab.compiler.configselector
+package com.bandlab.metro.extensions.configselector
 
-import com.bandlab.compiler.utils.ClassIds
+import com.bandlab.metro.extensions.utils.ClassIds
 import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroContributionExtension

@@ -44,7 +44,7 @@ gradlePlugin {
             id = rootProject.group.toString()
             displayName = "SimplePlugin"
             description = "SimplePlugin"
-            implementationClass = "com.bandlab.compiler.SimpleGradlePlugin"
+            implementationClass = "com.bandlab.metro.extensions.SimpleGradlePlugin"
         }
     }
 }

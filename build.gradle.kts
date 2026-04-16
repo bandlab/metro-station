@@ -8,7 +8,7 @@ plugins {
 }
 
 allprojects {
-    group = "com.bandlab.compiler"
+    group = "com.bandlab.metro.extensions"
     version = "0.0.1"
 }
 

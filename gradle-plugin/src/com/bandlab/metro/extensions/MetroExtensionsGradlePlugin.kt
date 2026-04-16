@@ -1,6 +1,6 @@
-package com.bandlab.compiler
+package com.bandlab.metro.extensions
 
-import com.bandlab.compiler.BuildConfig.ANNOTATIONS_LIBRARY_COORDINATES
+import com.bandlab.metro.extensions.BuildConfig.ANNOTATIONS_LIBRARY_COORDINATES
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
@@ -9,9 +9,9 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
 @Suppress("unused") // Used via reflection.
-class SimpleGradlePlugin : KotlinCompilerPluginSupportPlugin {
+class MetroExtensionsGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun apply(target: Project) {
-        target.extensions.create("simplePlugin", SimpleGradleExtension::class.java)
+        target.extensions.create("metroExtensions", MetroExtensionsGradleExtension::class.java)
     }
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
@@ -29,13 +29,12 @@ class SimpleGradlePlugin : KotlinCompilerPluginSupportPlugin {
     ): Provider<List<SubpluginOption>> {
         val project = kotlinCompilation.target.project
 
-        kotlinCompilation.dependencies { implementation(ANNOTATIONS_LIBRARY_COORDINATES) }
-        if (kotlinCompilation.implementationConfigurationName == "metadataCompilationImplementation") {
-            project.dependencies.add("commonMainImplementation", ANNOTATIONS_LIBRARY_COORDINATES)
+        kotlinCompilation.defaultSourceSet.dependencies {
+            implementation(ANNOTATIONS_LIBRARY_COORDINATES)
         }
 
         return project.provider {
-            val extension = project.extensions.getByType(SimpleGradleExtension::class.java)
+            val extension = project.extensions.getByType(MetroExtensionsGradleExtension::class.java)
 
             emptyList()
         }

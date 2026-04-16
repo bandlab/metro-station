@@ -1,4 +1,4 @@
-package com.bandlab.compiler
+package com.bandlab.metro.extensions
 
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 

@@ -1,7 +1,7 @@
-package com.bandlab.compiler.runners
+package com.bandlab.metro.extensions.runners
 
-import com.bandlab.compiler.services.configureMetroImports
-import com.bandlab.compiler.services.configurePlugin
+import com.bandlab.metro.extensions.services.configureMetroImports
+import com.bandlab.metro.extensions.services.configurePlugin
 import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives

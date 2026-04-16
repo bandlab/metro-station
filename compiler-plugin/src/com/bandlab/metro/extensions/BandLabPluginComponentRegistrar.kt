@@ -1,4 +1,4 @@
-package com.bandlab.compiler
+package com.bandlab.metro.extensions
 
 import com.fueledbycaffeine.autoservice.AutoService
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar

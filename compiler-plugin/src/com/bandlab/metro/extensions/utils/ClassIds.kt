@@ -1,4 +1,4 @@
-package com.bandlab.compiler.utils
+package com.bandlab.metro.extensions.utils
 
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName

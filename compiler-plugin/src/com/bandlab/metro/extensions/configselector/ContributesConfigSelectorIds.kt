@@ -1,6 +1,6 @@
-package com.bandlab.compiler.configselector
+package com.bandlab.metro.extensions.configselector
 
-import com.bandlab.compiler.utils.asName
+import com.bandlab.metro.extensions.utils.asName
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
