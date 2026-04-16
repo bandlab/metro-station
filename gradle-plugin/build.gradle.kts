@@ -5,6 +5,11 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
+kotlin {
+    explicitApi()
+    jvmToolchain(libs.versions.jdk.get().toInt())
+}
+
 sourceSets {
     main {
         java.setSrcDirs(listOf("src"))

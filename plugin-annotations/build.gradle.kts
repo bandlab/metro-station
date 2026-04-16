@@ -6,4 +6,5 @@ plugins {
 
 kotlin {
     explicitApi()
+    jvmToolchain(libs.versions.jdk.get().toInt())
 }

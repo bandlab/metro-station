@@ -13,6 +13,7 @@ metro = "1.0.0-RC2"
 autoservice = "0.1.4"
 # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
 maven-publish = "0.36.0"
+jdk = "25"
 
 [libraries]
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }

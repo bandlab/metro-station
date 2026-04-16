@@ -11,7 +11,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "bandlab-android-kotlin-compiler-plugin"
+rootProject.name = "metro-extensions"
 
 include("compiler-plugin")
 include("gradle-plugin")
