@@ -2,7 +2,6 @@ package com.bandlab.compiler
 
 import com.fueledbycaffeine.autoservice.AutoService
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
-import org.jetbrains.kotlin.compiler.plugin.template.BuildConfig
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @AutoService

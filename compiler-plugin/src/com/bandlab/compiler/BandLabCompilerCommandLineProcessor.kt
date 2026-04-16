@@ -4,7 +4,6 @@ import com.fueledbycaffeine.autoservice.AutoService
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOption
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
-import org.jetbrains.kotlin.compiler.plugin.template.BuildConfig
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @AutoService
