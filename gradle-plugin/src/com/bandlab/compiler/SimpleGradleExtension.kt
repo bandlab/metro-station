@@ -1,4 +1,4 @@
-package com.bandlab.compiler.plugin.template
+package com.bandlab.compiler
 
 import org.gradle.api.model.ObjectFactory
 

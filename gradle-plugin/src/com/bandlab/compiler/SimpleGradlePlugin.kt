@@ -1,8 +1,8 @@
-package com.bandlab.compiler.plugin.template
+package com.bandlab.compiler
 
+import com.bandlab.compiler.BuildConfig.ANNOTATIONS_LIBRARY_COORDINATES
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
-import org.jetbrains.kotlin.compiler.plugin.template.BuildConfig.ANNOTATIONS_LIBRARY_COORDINATES
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact

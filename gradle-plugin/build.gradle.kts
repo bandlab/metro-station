@@ -44,7 +44,7 @@ gradlePlugin {
             id = rootProject.group.toString()
             displayName = "SimplePlugin"
             description = "SimplePlugin"
-            implementationClass = "org.jetbrains.kotlin.compiler.plugin.template.SimpleGradlePlugin"
+            implementationClass = "com.bandlab.compiler.SimpleGradlePlugin"
         }
     }
 }

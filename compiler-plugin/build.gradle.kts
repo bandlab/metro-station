@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.gradle.java.test.fixtures)
     alias(libs.plugins.gradle.idea)
+    alias(libs.plugins.maven.publish)
 }
 
 project.plugins.apply(D8Plugin::class.java)
