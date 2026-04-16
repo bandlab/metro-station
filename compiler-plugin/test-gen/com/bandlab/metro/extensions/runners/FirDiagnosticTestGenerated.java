@@ -19,4 +19,10 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   public void testAllFilesPresentInDiagnostics() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/diagnostics"), Pattern.compile("^(.+)\\.kt$"), null, true);
   }
+
+  @Test
+  @TestMetadata("dummy.kt")
+  public void testDummy() {
+    runTest("compiler-plugin/testData/diagnostics/dummy.kt");
+  }
 }
