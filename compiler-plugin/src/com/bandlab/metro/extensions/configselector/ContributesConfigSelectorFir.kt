@@ -79,7 +79,6 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
     }
 
     override fun generateNestedClassLikeDeclaration(
-
         owner: FirClassSymbol<*>,
         name: Name,
         context: NestedClassGenerationContext,
@@ -163,7 +162,7 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
     }
 
     /** Build a simple [FirAnnotation] with a scope argument. */
-    internal fun buildAnnotationWithScope(
+    private fun buildAnnotationWithScope(
         classId: ClassId,
         argName: Name,
         scopeArg: FirExpression,

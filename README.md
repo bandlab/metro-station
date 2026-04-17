@@ -1,19 +1,42 @@
-# Kotlin Compiler Plugin template
+# metro-extensions
 
-This is a template project for writing a compiler plugin for the Kotlin compiler.
+This project is a Kotlin compiler plugin implemented based on [Metro's extensions API][metro-fir-api].
 
-## Details
+## Use Cases
+
+### @ContributesConfigSelector
+
+Generates a multibinding contribution for config selectors. Annotating a class with `@ContributesConfigSelector` will
+generate a nested `@ContributesTo(AppScope::class)` interface that binds the annotated class into a
+`Set<DebuggableConfigSelector>` via `@Binds @IntoSet`.
+
+```kotlin
+@ContributesConfigSelector
+object MyConfigSelector : BooleanConfigSelector {
+    
+    // This extension generates:
+    @ContributesTo(AppScope::class)
+    interface MultibindingContribution {
+        @Binds @IntoSet
+        fun bind(impl: MyConfigSelector): DebuggableConfigSelector
+    }
+}
+```
+
+## Project Structure
 
 This project has three modules:
+
 - The [`:compiler-plugin`](compiler-plugin/src) module contains the compiler plugin itself.
-- The [`:plugin-annotations`](plugin-annotations/src/commonMain/kotlin) module contains annotations which can be used in
-user code for interacting with compiler plugin.
-- The [`:gradle-plugin`](gradle-plugin/src) module contains a simple Gradle plugin to add the compiler plugin and
-annotation dependency to a Kotlin project. 
+- The [`:plugin-annotations`](plugin-annotations/src/main/kotlin) module contains annotations which can be used in
+  user code for interacting with compiler plugin.
+- The [`:gradle-plugin`](gradle-plugin/src) module contains a Gradle plugin to add the compiler plugin and
+  annotation dependency to a Kotlin project.
 
 Extension point registration:
-- K2 Frontend (FIR) extensions can be registered in `SimplePluginRegistrar`.
-- All other extensions (including K1 frontend and backend) can be registered in `SimplePluginComponentRegistrar`.
+
+- K2 Frontend (FIR) extensions can be registered in `BandLabCompilerPluginRegistrar`.
+- All other extensions (including K1 frontend and backend) can be registered in `BandLabPluginComponentRegistrar`.
 
 ## Tests
 
@@ -27,5 +50,6 @@ which is pre-configured in this repository.
 
 [//]: # (Links)
 
+[metro-fir-api]: https://github.com/ZacSweers/metro/blob/main/compiler/API.md
 [test-framework]: https://github.com/JetBrains/kotlin/blob/master/compiler/test-infrastructure/ReadMe.md
 [test-plugin]: https://github.com/JetBrains/kotlin-compiler-devkit
