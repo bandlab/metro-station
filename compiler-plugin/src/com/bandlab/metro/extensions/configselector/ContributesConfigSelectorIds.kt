@@ -6,7 +6,9 @@ import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 
 internal object ContributesConfigSelectorIds {
-    val contributesConfigSelectorFqName = FqName("com.bandlab.config.api.ContributesConfigSelector")
+    val contributesConfigSelector =
+        ClassId(FqName("com.bandlab.config.api"), "ContributesConfigSelector".asName())
+    val contributesConfigSelectorFqName = contributesConfigSelector.asSingleFqName()
     val debuggableConfigSelectorClassId = ClassId(
         FqName("com.bandlab.config.api"),
         "DebuggableConfigSelector".asName()

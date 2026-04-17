@@ -61,13 +61,6 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
 
     private val predicate = ContributesConfigSelectorIds.predicate
 
-    private val annotatedClasses by lazy {
-        session.predicateBasedProvider
-            .getSymbolsByPredicate(predicate)
-            .filterIsInstance<FirRegularClassSymbol>()
-            .toList()
-    }
-
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(predicate)
     }
@@ -76,30 +69,25 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
         classSymbol: FirClassSymbol<*>,
         context: NestedClassGenerationContext,
     ): Set<Name> {
-        // Check by classId name as a fallback, since predicate-based provider may not match
-        // when multiple MetroFirDeclarationGenerationExtension instances share a composite.
-        val matchesPredicate = classSymbol in annotatedClasses
-        val matchesByAnnotation =
-            classSymbol.resolvedCompilerAnnotationsWithClassIds.any {
-                it.toAnnotationClassIdSafe(session)
-                    ?.asSingleFqName() == ContributesConfigSelectorIds.contributesConfigSelectorFqName
-            }
-        if (matchesPredicate || matchesByAnnotation) return setOf(ContributesConfigSelectorIds.nestedContributionName)
-        return emptySet()
+        return if (
+            classSymbol.hasAnnotationWithClassId(ContributesConfigSelectorIds.contributesConfigSelector, session)
+        ) {
+            setOf(ContributesConfigSelectorIds.nestedContributionName)
+        } else {
+            emptySet()
+        }
     }
 
     override fun generateNestedClassLikeDeclaration(
+
         owner: FirClassSymbol<*>,
         name: Name,
         context: NestedClassGenerationContext,
     ): FirClassLikeSymbol<*>? {
         if (name != ContributesConfigSelectorIds.nestedContributionName) return null
-        val matchesByAnnotation =
-            owner.resolvedCompilerAnnotationsWithClassIds.any {
-                it.toAnnotationClassIdSafe(session)
-                    ?.asSingleFqName() == ContributesConfigSelectorIds.contributesConfigSelectorFqName
-            }
-        if (owner !in annotatedClasses && !matchesByAnnotation) return null
+        if (!owner.hasAnnotationWithClassId(ContributesConfigSelectorIds.contributesConfigSelector, session)) {
+            return null
+        }
 
         if (!owner.visibility.isPublicAPI) {
             error("${owner.classId.asString()} must be public to be contributed properly.")
@@ -142,11 +130,14 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
     }
 
     override fun getContributionHints(): List<ContributionHint> {
-        return annotatedClasses.map { classSymbol ->
-            val nestedInterfaceClassId = classSymbol.classId
-                .createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
-            ContributionHint(contributingClassId = nestedInterfaceClassId, scope = ClassIds.appScope)
-        }
+        return session.predicateBasedProvider
+            .getSymbolsByPredicate(predicate)
+            .filterIsInstance<FirRegularClassSymbol>()
+            .map { classSymbol ->
+                val nestedInterfaceClassId = classSymbol.classId
+                    .createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
+                ContributionHint(contributingClassId = nestedInterfaceClassId, scope = ClassIds.appScope)
+            }
     }
 
     private fun ClassId.firTypeRef(): FirTypeRef = buildResolvedTypeRef {
