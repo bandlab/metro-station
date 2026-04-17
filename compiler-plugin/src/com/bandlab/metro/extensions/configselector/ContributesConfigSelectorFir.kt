@@ -12,7 +12,6 @@ import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.*
-import org.jetbrains.kotlin.fir.declarations.builder.FirNamedFunctionBuilder
 import org.jetbrains.kotlin.fir.declarations.builder.buildNamedFunction
 import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.builder.buildValueParameter
@@ -142,6 +141,14 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
         return contribution.symbol
     }
 
+    override fun getContributionHints(): List<ContributionHint> {
+        return annotatedClasses.map { classSymbol ->
+            val nestedInterfaceClassId = classSymbol.classId
+                .createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
+            ContributionHint(contributingClassId = nestedInterfaceClassId, scope = ClassIds.appScope)
+        }
+    }
+
     private fun ClassId.firTypeRef(): FirTypeRef = buildResolvedTypeRef {
         coneType = constructClassLikeType()
     }
@@ -198,7 +205,7 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
 
         val functionSymbol = FirNamedFunctionSymbol(callableId)
 
-        return buildFirFunction {
+        return buildNamedFunction {
             resolvePhase = FirResolvePhase.BODY_RESOLVE
             moduleData = session.moduleData
             origin = Key.origin
@@ -257,9 +264,6 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
             annotationResolvePhase = FirAnnotationResolvePhase.Types
         }
     }
-
-    private inline fun buildFirFunction(init: FirNamedFunctionBuilder.() -> Unit): FirNamedFunction =
-        buildNamedFunction(init)
 
     private object Key : GeneratedDeclarationKey()
 
