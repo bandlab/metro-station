@@ -55,16 +55,15 @@ public class ContributesConfigSelectorMetroExtension(private val session: FirSes
                 as? FirRegularClassSymbol ?: return@mapNotNull null
 
             // Access the declared member scope to trigger Metro's FIR generator, which creates the
-            // MetroContribution nested class inside our FeatureFlagContribution. Without this, Metro
+            // MetroContribution nested class inside our MultibindingContribution. Without this, Metro
             // wouldn't see our contribution.
             val scope = contributionSymbol.declaredMemberScope(session, memberRequiredPhase = null)
             val metroContributionName =
                 scope.getClassifierNames().firstOrNull { it.identifier.startsWith("MetroContributionTo") }
                     ?: return@mapNotNull null
 
-            val metroContributionSymbol =
-                scope.getSingleClassifier(metroContributionName) as? FirRegularClassSymbol
-                    ?: return@mapNotNull null
+            val metroContributionSymbol = scope.getSingleClassifier(metroContributionName) as? FirRegularClassSymbol
+                ?: return@mapNotNull null
 
             MetroContributionExtension.Contribution(
                 supertype = metroContributionSymbol.defaultType(),

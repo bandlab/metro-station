@@ -35,6 +35,8 @@ open class AbstractBoxTest : AbstractFirBlackBoxCodegenTestBase(FirParser.LightT
             JvmEnvironmentConfigurationDirectives.JVM_TARGET.with(JvmTarget.JVM_11)
             +ConfigurationDirectives.WITH_STDLIB
             +JvmEnvironmentConfigurationDirectives.FULL_JDK
+            // Comment out dump to avoid too much noise
+            // +FirDiagnosticsDirectives.FIR_DUMP
 
             +CodegenTestDirectives.IGNORE_DEXING // Avoids loading R8 from the classpath.
         }

@@ -35,5 +35,11 @@ public class BoxTestGenerated extends AbstractBoxTest {
     public void testBasic() {
       runTest("compiler-plugin/testData/box/configselector/basic.kt");
     }
+
+    @Test
+    @TestMetadata("crossModule.kt")
+    public void testCrossModule() {
+      runTest("compiler-plugin/testData/box/configselector/crossModule.kt");
+    }
   }
 }
