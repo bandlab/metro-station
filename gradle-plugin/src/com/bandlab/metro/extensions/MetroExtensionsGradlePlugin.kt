@@ -8,9 +8,9 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
+// Used via reflection.
 @Suppress("unused")
-public // Used via reflection.
-class MetroExtensionsGradlePlugin : KotlinCompilerPluginSupportPlugin {
+public class MetroExtensionsGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun apply(target: Project) {
         target.extensions.create("metroExtensions", MetroExtensionsGradleExtension::class.java)
     }

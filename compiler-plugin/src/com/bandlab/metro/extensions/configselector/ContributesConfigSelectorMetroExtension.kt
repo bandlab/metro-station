@@ -52,7 +52,7 @@ public class ContributesConfigSelectorMetroExtension(private val session: FirSes
                 parentSymbol.classId.createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
 
             val contributionSymbol = session.symbolProvider.getClassLikeSymbolByClassId(contributionInterfaceClassId)
-                    as? FirRegularClassSymbol ?: return@mapNotNull null
+                as? FirRegularClassSymbol ?: return@mapNotNull null
 
             // Access the declared member scope to trigger Metro's FIR generator, which creates the
             // MetroContribution nested class inside our FeatureFlagContribution. Without this, Metro
