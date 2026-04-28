@@ -1,6 +1,8 @@
 package com.bandlab.metro.extensions
 
+import com.bandlab.metro.extensions.component.ContributesComponentIr
 import com.fueledbycaffeine.autoservice.AutoService
+import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
@@ -12,6 +14,6 @@ public class BandLabPluginComponentRegistrar : CompilerPluginRegistrar() {
         get() = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
-
+        IrGenerationExtension.registerExtension(ContributesComponentIr())
     }
 }

@@ -22,6 +22,34 @@ public class BoxTestGenerated extends AbstractBoxTest {
   }
 
   @Nested
+  @TestMetadata("compiler-plugin/testData/box/component")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Component {
+    @Test
+    @TestMetadata("activityParam.kt")
+    public void testActivityParam() {
+      runTest("compiler-plugin/testData/box/component/activityParam.kt");
+    }
+
+    @Test
+    public void testAllFilesPresentInComponent() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/component"), Pattern.compile("^(.+)\\.kt$"), null, true);
+    }
+
+    @Test
+    @TestMetadata("basic.kt")
+    public void testBasic() {
+      runTest("compiler-plugin/testData/box/component/basic.kt");
+    }
+
+    @Test
+    @TestMetadata("crossModule.kt")
+    public void testCrossModule() {
+      runTest("compiler-plugin/testData/box/component/crossModule.kt");
+    }
+  }
+
+  @Nested
   @TestMetadata("compiler-plugin/testData/box/configselector")
   @TestDataPath("$PROJECT_ROOT")
   public class Configselector {

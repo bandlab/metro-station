@@ -1,7 +1,6 @@
 package com.bandlab.metro.extensions.configselector
 
-import com.bandlab.metro.extensions.utils.ClassIds
-import com.bandlab.metro.extensions.utils.asName
+import com.bandlab.metro.extensions.utils.*
 import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
@@ -11,23 +10,23 @@ import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.declarations.*
+import org.jetbrains.kotlin.fir.declarations.FirDeclaration
+import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.declarations.builder.buildNamedFunction
 import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.builder.buildValueParameter
+import org.jetbrains.kotlin.fir.declarations.hasAnnotationWithClassId
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
+import org.jetbrains.kotlin.fir.declarations.origin
 import org.jetbrains.kotlin.fir.declarations.utils.visibility
-import org.jetbrains.kotlin.fir.expressions.*
-import org.jetbrains.kotlin.fir.expressions.builder.*
+import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
 import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.moduleData
-import org.jetbrains.kotlin.fir.references.builder.buildResolvedNamedReference
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.scopes.kotlinScopeProvider
-import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
@@ -38,11 +37,11 @@ import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.name.StandardClassIds
+import com.bandlab.metro.extensions.configselector.ContributesConfigSelectorIds as Ids
 
 /**
  * This FIR declaration generator generates a multibinding contribution for config selectors that are annotated with
- * [ContributesConfigSelectorIds.contributesConfigSelectorFqName].
+ * [Ids.contributesConfigSelectorFqName].
  *
  * ```kotlin
  * @ContributesConfigSelector
@@ -59,20 +58,16 @@ import org.jetbrains.kotlin.name.StandardClassIds
  */
 public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclarationGenerationExtension(session) {
 
-    private val predicate = ContributesConfigSelectorIds.predicate
-
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
-        register(predicate)
+        register(Ids.predicate)
     }
 
     override fun getNestedClassifiersNames(
         classSymbol: FirClassSymbol<*>,
         context: NestedClassGenerationContext,
     ): Set<Name> {
-        return if (
-            classSymbol.hasAnnotationWithClassId(ContributesConfigSelectorIds.contributesConfigSelector, session)
-        ) {
-            setOf(ContributesConfigSelectorIds.nestedContributionName)
+        return if (classSymbol.hasAnnotationWithClassId(Ids.contributesConfigSelector, session)) {
+            setOf(Ids.nestedContributionName)
         } else {
             emptySet()
         }
@@ -83,8 +78,8 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
         name: Name,
         context: NestedClassGenerationContext,
     ): FirClassLikeSymbol<*>? {
-        if (name != ContributesConfigSelectorIds.nestedContributionName) return null
-        if (!owner.hasAnnotationWithClassId(ContributesConfigSelectorIds.contributesConfigSelector, session)) {
+        if (name != Ids.nestedContributionName) return null
+        if (!owner.hasAnnotationWithClassId(Ids.contributesConfigSelector, session)) {
             return null
         }
 
@@ -117,10 +112,11 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
             superTypeRefs += session.builtinTypes.anyType
             val appScopeSymbol =
                 session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.appScope) as FirRegularClassSymbol
-            annotations += buildAnnotationWithScope(
+            annotations += buildSimpleAnnotation(
                 classId = ClassIds.contributesTo,
-                argName = ClassIds.scopeName,
-                scopeArg = appScopeSymbol.getClassCall()
+                argumentMapping = buildAnnotationArgumentMapping {
+                    mapping[ClassIds.scopeName] = appScopeSymbol.getClassCall()
+                }
             )
             // Add the function directly to the class declarations
             declarations += bindsFunction
@@ -130,53 +126,17 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
 
     override fun getContributionHints(): List<ContributionHint> {
         return session.predicateBasedProvider
-            .getSymbolsByPredicate(predicate)
+            .getSymbolsByPredicate(Ids.predicate)
             .filterIsInstance<FirRegularClassSymbol>()
             .map { classSymbol ->
                 val nestedInterfaceClassId = classSymbol.classId
-                    .createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
+                    .createNestedClassId(Ids.nestedContributionName)
                 ContributionHint(contributingClassId = nestedInterfaceClassId, scope = ClassIds.appScope)
             }
     }
 
     private fun ClassId.firTypeRef(): FirTypeRef = buildResolvedTypeRef {
         coneType = constructClassLikeType()
-    }
-
-    /**
-     * Returns a `ClassSymbol::class` expression.
-     */
-    private fun FirRegularClassSymbol.getClassCall(): FirExpression = buildGetClassCall {
-        argumentList = buildUnaryArgumentList(
-            buildResolvedQualifier {
-                packageFqName = classId.packageFqName
-                relativeClassFqName = classId.relativeClassName
-                symbol = this@getClassCall
-                resolvedToCompanionObject = false
-                coneTypeOrNull = this@getClassCall.defaultType()
-            }
-        )
-        coneTypeOrNull = StandardClassIds.KClass.constructClassLikeType(
-            arrayOf(this@getClassCall.defaultType())
-        )
-    }
-
-    /** Build a simple [FirAnnotation] with a scope argument. */
-    private fun buildAnnotationWithScope(
-        classId: ClassId,
-        argName: Name,
-        scopeArg: FirExpression,
-    ): FirAnnotation {
-        return buildAnnotation {
-            annotationTypeRef =
-                ConeClassLikeTypeImpl(
-                    ConeClassLikeLookupTagImpl(classId),
-                    emptyArray(),
-                    isMarkedNullable = false,
-                )
-                    .toFirResolvedTypeRef()
-            argumentMapping = buildAnnotationArgumentMapping { mapping[argName] = scopeArg }
-        }
     }
 
     private fun buildBindsFunction(
@@ -202,7 +162,7 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
             symbol = functionSymbol
             name = callableId.callableName
             isLocal = false
-            returnTypeRef = ContributesConfigSelectorIds.debuggableConfigSelectorClassId.firTypeRef()
+            returnTypeRef = Ids.debuggableConfigSelectorClassId.firTypeRef()
             dispatchReceiverType = dispatchType
             status = FirResolvedDeclarationStatusImpl(
                 Visibilities.Public,
@@ -214,44 +174,12 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
                 moduleData = session.moduleData
                 origin = Key.origin
                 returnTypeRef = outerClassType.toFirResolvedTypeRef()
-                this.name = "impl".asName()
+                this.name = Ids.implName
                 symbol = FirValueParameterSymbol()
                 containingDeclarationSymbol = functionSymbol
             }
-            annotations += buildSimpleAnnotationCall(ClassIds.binds, functionSymbol)
-            annotations += buildSimpleAnnotationCall(ClassIds.intoSet, functionSymbol)
-        }
-    }
-
-    /**
-     * Build an annotation as [FirAnnotationCall] so Metro recognizes it. Metro's `metroAnnotations()`
-     * checks `annotation !is FirAnnotationCall` and skips plain [FirAnnotation] instances.
-     */
-    @OptIn(DirectDeclarationsAccess::class)
-    private fun buildSimpleAnnotationCall(
-        classId: ClassId,
-        containingSymbol: FirBasedSymbol<*>,
-    ): FirAnnotationCall {
-        val annotationType = ConeClassLikeTypeImpl(
-            ConeClassLikeLookupTagImpl(classId),
-            emptyArray(),
-            isMarkedNullable = false,
-        )
-        return buildAnnotationCall {
-            annotationTypeRef = annotationType.toFirResolvedTypeRef()
-            argumentMapping = buildAnnotationArgumentMapping()
-            calleeReference = buildResolvedNamedReference {
-                name = classId.shortClassName
-                resolvedSymbol =
-                    session.symbolProvider.getClassLikeSymbolByClassId(classId)!!.let {
-                        (it as FirClassSymbol<*>)
-                            .declarationSymbols
-                            .filterIsInstance<FirConstructorSymbol>()
-                            .first()
-                    }
-            }
-            containingDeclarationSymbol = containingSymbol
-            annotationResolvePhase = FirAnnotationResolvePhase.Types
+            annotations += buildSimpleAnnotationCall(session, ClassIds.binds, functionSymbol)
+            annotations += buildSimpleAnnotationCall(session, ClassIds.intoSet, functionSymbol)
         }
     }
 
