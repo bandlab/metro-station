@@ -1,5 +1,5 @@
 import com.bandlab.common.android.di.ContributesComponent
-import com.bandlab.android.common.CommonActivity
+import com.bandlab.android.common.activity.CommonActivity
 
 @ContributesComponent(appDependencies = MyActivity.ServiceProvider::class)
 class MyActivity : CommonActivity<Unit>() {
@@ -27,7 +27,7 @@ fun box(): String {
         feature = myActivity,
         serviceProvider = appGraph
     )
-    graph.inject(myActivity)
+    graph.injector.injectMembers(myActivity)
     assertEquals("Hello!", myActivity.myDependency.text)
     return "OK"
 }

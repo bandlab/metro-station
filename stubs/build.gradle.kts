@@ -1,7 +1,4 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
-}
-
-dependencies {
-    implementation(libs.metro.runtime)
+    alias(libs.plugins.metro)
 }

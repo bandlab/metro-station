@@ -47,6 +47,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     public void testCrossModule() {
       runTest("compiler-plugin/testData/box/component/crossModule.kt");
     }
+
+    @Test
+    @TestMetadata("defaultDependencies.kt")
+    public void testDefaultDependencies() {
+      runTest("compiler-plugin/testData/box/component/defaultDependencies.kt");
+    }
   }
 
   @Nested

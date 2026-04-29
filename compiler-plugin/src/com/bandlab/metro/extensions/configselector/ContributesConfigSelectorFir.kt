@@ -110,8 +110,7 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
                 Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
             )
             superTypeRefs += session.builtinTypes.anyType
-            val appScopeSymbol =
-                session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.appScope) as FirRegularClassSymbol
+            val appScopeSymbol = session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.appScope)!!
             annotations += buildSimpleAnnotation(
                 classId = ClassIds.contributesTo,
                 argumentMapping = buildAnnotationArgumentMapping {

@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.toEffectiveVisibility
@@ -91,7 +92,7 @@ internal fun buildSimpleAnnotationCall(
 /**
  * Returns a `ClassSymbol::class` expression.
  */
-internal fun FirClassSymbol<*>.getClassCall(): FirExpression = buildGetClassCall {
+internal fun FirClassLikeSymbol<*>.getClassCall(): FirExpression = buildGetClassCall {
     argumentList = buildUnaryArgumentList(
         buildResolvedQualifier {
             packageFqName = classId.packageFqName

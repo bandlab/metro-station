@@ -21,16 +21,18 @@ internal object ContributesComponentIds {
 
     val featureName = "feature".asName()
     val serviceProviderName = "serviceProvider".asName()
-    val createName = "create".asName()
-    val injectName = "inject".asName()
+    val provideBaseTypeName = "provideBaseType".asName()
     val provideParamName = "provideParam".asName()
 
     // Common classes
     private val androidCommon = FqName("com.bandlab.android.common")
+    private val androidCommonActivity = FqName("com.bandlab.android.common.activity")
     val membersInjectorProvider = ClassId(commonAndroidDi, "MembersInjectorProvider".asName())
-    val commonActivity = ClassId(androidCommon, "CommonActivity".asName())
+    val commonActivity = ClassId(androidCommonActivity, "CommonActivity".asName())
     val commonActivityServiceProvider = commonActivity.createNestedClassId("ServiceProvider".asName())
     val defaultScreenServiceProvider = ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
+    val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
+    val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
 
     // Custom feature scopes
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())
