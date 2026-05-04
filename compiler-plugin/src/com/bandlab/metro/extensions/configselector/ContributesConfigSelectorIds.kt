@@ -16,6 +16,7 @@ internal object ContributesConfigSelectorIds {
 
     val nestedContributionName = "MultibindingContribution".asName()
     val implName = "impl".asName()
+    val bindName = "bind".asName()
 
     val predicate = LookupPredicate.create {
         annotated(contributesConfigSelectorFqName)

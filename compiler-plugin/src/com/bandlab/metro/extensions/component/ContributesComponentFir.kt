@@ -1,9 +1,7 @@
 package com.bandlab.metro.extensions.component
 
 import com.bandlab.metro.extensions.component.ContributesComponentIds
-import com.bandlab.metro.extensions.utils.ClassIds
-import com.bandlab.metro.extensions.utils.buildSimpleAnnotation
-import com.bandlab.metro.extensions.utils.getClassCall
+import com.bandlab.metro.extensions.utils.*
 import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
@@ -16,7 +14,6 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
-import org.jetbrains.kotlin.fir.declarations.hasAnnotationWithClassId
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.origin
 import org.jetbrains.kotlin.fir.expressions.*
@@ -28,7 +25,6 @@ import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
 import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.moduleData
-import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.scopes.kotlinScopeProvider
@@ -86,12 +82,14 @@ import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
  * }
  * ```
  */
-public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationGenerationExtension(session) {
+public class ContributesComponentFir(session: FirSession, compatContext: CompatContext) :
+    MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
 
-    private val predicate = Ids.predicate
+    override val enableFirInIde: Boolean
+        get() = true
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
-        register(predicate)
+        register(Ids.predicate)
     }
 
     override fun getNestedClassifiersNames(
@@ -99,7 +97,7 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
         context: NestedClassGenerationContext
     ): Set<Name> {
         return when {
-            classSymbol.hasAnnotationWithClassId(Ids.contributesComponent, session) ->
+            session.predicateBasedProvider.matches(Ids.predicate, classSymbol) ->
                 setOf(Ids.graphName, Ids.featureServiceProviderName)
 
             classSymbol.origin == Key.origin && classSymbol.classId.shortClassName == Ids.graphName ->
@@ -116,7 +114,7 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
     ): FirClassLikeSymbol<*>? {
         // Generate FeatureGraph inside the annotated class
         if (name == Ids.graphName &&
-            owner.hasAnnotationWithClassId(Ids.contributesComponent, session)
+            session.predicateBasedProvider.matches(Ids.predicate, owner)
         ) {
             return generateFeatureGraph(owner)
         }
@@ -129,7 +127,7 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
         }
         // Generate FeatureServiceProvider inside the annotated class
         if (name == Ids.featureServiceProviderName &&
-            owner.hasAnnotationWithClassId(Ids.contributesComponent, session)
+            session.predicateBasedProvider.matches(Ids.predicate, owner)
         ) {
             return generateFeatureServiceProvider(owner)
         }
@@ -142,7 +140,7 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
     ): Set<Name> {
         if (classSymbol.origin != Key.origin) return emptySet()
         if (classSymbol.classId.shortClassName == Ids.graphName) {
-            return setOf(Ids.provideBaseTypeName, Ids.provideParamName)
+            return setOf(Ids.provideBaseTypeName, Ids.provideParamName, Ids.provideParamFlowName)
         }
         return emptySet()
     }
@@ -171,12 +169,24 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
             return listOf(provideParamFunction)
         }
 
+        // Generate "provideParamFlow" function for FeatureGraph (ParamPage only)
+        if (callableId.callableName == Ids.provideParamFlowName &&
+            ownerClassId.shortClassName == Ids.graphName
+        ) {
+            val provideParamFlowFunction = generateProvideParamFlowFunction(owner) ?: return emptyList()
+            return listOf(provideParamFlowFunction)
+        }
+
         return emptyList()
     }
 
     private fun generateFeatureGraph(owner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
         val nestedClassId = owner.classId.createNestedClassId(Ids.graphName)
         val classSymbol = FirRegularClassSymbol(nestedClassId)
+        val annotation = owner.getAnnotationByClassId(Ids.contributesComponent, session) as? FirAnnotationCall
+
+        val commonActivitySuperTypeRef = owner.findSuperTypeRef(Ids.commonActivity)
+        val pageSuperTypeRef = owner.findSuperTypeRef(Ids.paramPage) ?: owner.findSuperTypeRef(Ids.page)
 
         val featureGraph = buildRegularClass {
             resolvePhase = FirResolvePhase.BODY_RESOLVE
@@ -193,31 +203,54 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
                 Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
             )
 
-            superTypeRefs += buildResolvedTypeRef {
-                coneType = Ids.membersInjectorProvider.constructClassLikeType(
-                    arrayOf(owner.defaultType())
-                )
+            if (commonActivitySuperTypeRef != null) {
+                annotations += buildSimpleAnnotation(Ids.activityScope)
+                superTypeRefs += buildResolvedTypeRef {
+                    coneType = Ids.membersInjectorProvider.constructClassLikeType(
+                        arrayOf(owner.defaultType())
+                    )
+                }
+            }
+
+            if (pageSuperTypeRef != null) {
+                annotations += buildSimpleAnnotation(Ids.pageScope)
+                superTypeRefs += buildResolvedTypeRef {
+                    val viewModelType = pageSuperTypeRef.unwrapType()!!
+                    coneType = Ids.pageInjector.constructClassLikeType(arrayOf(viewModelType))
+                }
             }
 
             // Metro's FIR cannot see generated providers inside the graph, so we'll need to annotate the graph
             // with @IROnlyFactoties to generate factories in IR.
             annotations += buildSimpleAnnotation(ClassIds.irOnlyFactories)
 
-            //TODO Scope the feature based on their type
-            annotations += buildSimpleAnnotation(Ids.activityScope)
-
             // @DependencyGraph annotation
-            //TODO: Support custom graphMarker
             annotations += buildSimpleAnnotation(
                 classId = ClassIds.dependencyGraph,
                 argumentMapping = buildAnnotationArgumentMapping {
-                    mapping[ClassIds.scopeName] = owner.getClassCall()
+                    val graphMarkerExpr = annotation?.argumentList?.arguments
+                        ?.filterIsInstance<FirNamedArgumentExpression>()
+                        ?.find { it.name == Ids.graphMarkerName }
+                        ?.expression
+
+                    mapping[ClassIds.scopeName] = graphMarkerExpr ?: owner.getClassCall()
                     mapping[ClassIds.bindingContainersName] = buildCollectionLiteral {
                         val elementType = StandardClassIds.KClass.constructClassLikeType(arrayOf(ConeStarProjection))
                         coneTypeOrNull = StandardClassIds.Array.constructClassLikeType(arrayOf(elementType))
                         argumentList = buildArgumentList {
-                            session.symbolProvider.getClassLikeSymbolByClassId(Ids.defaultActivityDeps)?.let {
+                            val defaultDepsId = when {
+                                commonActivitySuperTypeRef != null -> Ids.defaultActivityDeps
+                                pageSuperTypeRef != null -> Ids.defaultPageDependencies
+                                else -> error("Unsupported Component Type")
+                            }
+
+                            session.symbolProvider.getClassLikeSymbolByClassId(defaultDepsId)?.let {
                                 arguments += it.getClassCall()
+                            }
+
+                            if (pageSuperTypeRef != null) {
+                                session.symbolProvider.getClassLikeSymbolByClassId(Ids.pageGraphDependenciesModule)
+                                    ?.let { arguments += it.getClassCall() }
                             }
                         }
                     }
@@ -233,21 +266,26 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
 
-        //TODO: Handle Page as well
-        annotatedSymbol.resolvedSuperTypes
-            .find { it.classId == Ids.commonActivity }
-            ?: return null
+        val commonActivitySuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.commonActivity }
+        val pageSuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.paramPage }
+            ?: annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.page }
+
+        val baseType = when {
+            commonActivitySuperType != null -> Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
+            pageSuperType != null -> Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
+            else -> return null
+        }
 
         val provideBaseTypeFunction = createMemberFunction(
             owner,
             Key,
             Ids.provideBaseTypeName,
-            Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
+            baseType
         ) {
             valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
         }
         provideBaseTypeFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
-        return provideBaseTypeFunction.symbol
+        return provideBaseTypeFunction.symbol as FirNamedFunctionSymbol
     }
 
     private fun generateProvideParamFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
@@ -256,28 +294,71 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
 
-        //TODO: Handle Page as well
-        val superType = annotatedSymbol.resolvedSuperTypes
-            .find { it.classId == Ids.commonActivity }
+        val commonActivitySuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.commonActivity }
+        val paramPageSuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.paramPage }
+
+        return when {
+            commonActivitySuperType != null -> {
+                val typeArg = commonActivitySuperType.typeArguments.firstOrNull() ?: return null
+                val paramType = typeArg as? ConeKotlinType ?: return null
+                if (paramType.classId == StandardClassIds.Unit) return null
+
+                val provideParamFunction =
+                    createMemberFunction(owner, Key, Ids.provideParamName, paramType) {
+                        valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
+                    }
+                provideParamFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
+                provideParamFunction.symbol as FirNamedFunctionSymbol
+            }
+
+            paramPageSuperType != null -> {
+                // ParamPage<ViewModel, Param> - extract the 2nd type arg (Param)
+                val paramTypeArg = paramPageSuperType.typeArguments.getOrNull(1) ?: return null
+                val paramType = paramTypeArg as? ConeKotlinType ?: return null
+
+                val pageGraphDepsType = Ids.pageGraphDependencies.constructClassLikeType()
+                val provideParamFunction =
+                    createMemberFunction(owner, Key, Ids.provideParamName, paramType) {
+                        valueParameter("pageGraphDependencies".asName(), pageGraphDepsType, key = Key)
+                    }
+                provideParamFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
+                provideParamFunction.symbol as FirNamedFunctionSymbol
+            }
+
+            else -> null
+        }
+    }
+
+    private fun generateProvideParamFlowFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
+        val annotatedClassId = owner.classId.parentClassId ?: return null
+        val annotatedSymbol =
+            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
+                ?: return null
+
+        val paramPageSuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.paramPage }
             ?: return null
 
-        val typeArg = superType.typeArguments.firstOrNull() ?: return null
-        val paramType = typeArg as? ConeKotlinType ?: return null
+        val paramTypeArg = paramPageSuperType.typeArguments.getOrNull(1) ?: return null
+        val paramType = paramTypeArg as? ConeKotlinType ?: return null
 
-        if (paramType.classId == StandardClassIds.Unit) return null
+        val flowOfParamType = Ids.coroutinesFlow.constructClassLikeType(arrayOf(paramType))
+        val pageParamFlowProviderType = Ids.pageParamFlowProvider.constructClassLikeType()
 
-        val provideParamFunction =
-            createMemberFunction(owner, Key, Ids.provideParamName, paramType) {
+        val provideParamFlowFunction =
+            createMemberFunction(owner, Key, Ids.provideParamFlowName, flowOfParamType) {
+                valueParameter("provider".asName(), pageParamFlowProviderType, key = Key)
                 valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
+                valueParameter(Ids.initialParamName, paramType, key = Key)
             }
-        provideParamFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
-        return provideParamFunction.symbol
+        provideParamFlowFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
+        return provideParamFlowFunction.symbol as FirNamedFunctionSymbol
     }
 
     private fun generateFactory(featureGraphOwner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
         val factoryClassId = featureGraphOwner.classId.createNestedClassId(Ids.nestedFactoryName)
         val factorySymbol = FirRegularClassSymbol(factoryClassId)
-        val owner = featureGraphOwner.classId.parentClassId!!
+        val ownerClassId = featureGraphOwner.classId.parentClassId!!
+        val owner = session.symbolProvider.getClassLikeSymbolByClassId(ownerClassId) as FirRegularClassSymbol
 
         val factory = buildRegularClass {
             resolvePhase = FirResolvePhase.BODY_RESOLVE
@@ -295,11 +376,37 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
             )
             annotations += buildSimpleAnnotation(ClassIds.dependencyGraphFactory)
             superTypeRefs += buildResolvedTypeRef {
-                val rootType = owner.constructClassLikeType()
+                val rootType = ownerClassId.constructClassLikeType()
                 val serviceProviderType =
-                    owner.createNestedClassId(Ids.featureServiceProviderName).constructClassLikeType()
+                    ownerClassId.createNestedClassId(Ids.featureServiceProviderName).constructClassLikeType()
                 val graphType = featureGraphOwner.classId.constructClassLikeType()
-                coneType = Ids.graphFactory.constructClassLikeType(arrayOf(rootType, serviceProviderType, graphType))
+
+                coneType = when {
+                    owner.findSuperTypeRef(Ids.commonActivity) != null -> {
+                        Ids.graphFactory.constructClassLikeType(
+                            arrayOf(
+                                rootType,
+                                serviceProviderType,
+                                graphType
+                            )
+                        )
+                    }
+
+                    owner.findSuperTypeRef(Ids.page) != null ||
+                        owner.findSuperTypeRef(Ids.paramPage) != null -> {
+                        Ids.pageGraphFactory.constructClassLikeType(
+                            arrayOf(
+                                rootType,
+                                //TODO: Use extraDependencies from the page if presented
+                                Ids.emptyExtraDependencies.constructClassLikeType(),
+                                serviceProviderType,
+                                graphType
+                            )
+                        )
+                    }
+
+                    else -> error("Unsupported Component Type")
+                }
             }
         }
         return factory.symbol
@@ -309,11 +416,7 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
         val nestedClassId = owner.classId.createNestedClassId(Ids.featureServiceProviderName)
         val classSymbol = FirRegularClassSymbol(nestedClassId)
 
-        //TODO: Add required supertypes based on the annotated class
-        val commonActivitySPSymbol =
-            session.symbolProvider.getClassLikeSymbolByClassId(Ids.commonActivityServiceProvider)
-        val defaultScreenSPSymbol =
-            session.symbolProvider.getClassLikeSymbolByClassId(Ids.defaultScreenServiceProvider)
+        val commonActivitySuperTypeRef = owner.findSuperTypeRef(Ids.commonActivity)
 
         val appScopeSymbol = session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.appScope)!!
 
@@ -335,17 +438,15 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
             superTypeRefs += buildResolvedTypeRef { coneType = owner.requireAppDependencies() }
 
             // Add CommonActivity.ServiceProvider if available
-            if (commonActivitySPSymbol != null) {
+            if (commonActivitySuperTypeRef != null) {
                 superTypeRefs += buildResolvedTypeRef {
                     coneType = Ids.commonActivityServiceProvider.constructClassLikeType()
                 }
             }
 
             // Add DefaultScreenServiceProvider if available
-            if (defaultScreenSPSymbol != null) {
-                superTypeRefs += buildResolvedTypeRef {
-                    coneType = Ids.defaultScreenServiceProvider.constructClassLikeType()
-                }
+            superTypeRefs += buildResolvedTypeRef {
+                coneType = Ids.defaultScreenServiceProvider.constructClassLikeType()
             }
 
             // If no supertypes were added, use Any
@@ -396,7 +497,7 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
             else -> {
                 // At early FIR stages, the argument may not be fully resolved.
                 // Extract the ClassId by collecting name parts from the property access chain.
-                val classId = extractClassIdFromExpression(argument, this.classId.packageFqName)
+                val classId = extractClassIdFromExpression(argument, this.classId)
                     ?: error("Cannot extract ClassId from GetClassCall argument: ${argument::class.simpleName}")
                 classId.constructClassLikeType()
             }
@@ -408,7 +509,7 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
      * `MyActivity.ServiceProvider`. Walks the receiver chain to collect name segments and resolves
      * them against the symbol provider.
      */
-    private fun extractClassIdFromExpression(expr: FirExpression, ownerPackage: FqName): ClassId? {
+    private fun extractClassIdFromExpression(expr: FirExpression, ownerClassId: ClassId): ClassId? {
         val names = mutableListOf<String>()
         var current: FirExpression? = expr
         while (current is FirPropertyAccessExpression) {
@@ -417,6 +518,17 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
             current = current.explicitReceiver
         }
         if (names.isEmpty()) return null
+
+        val ownerPackage = ownerClassId.packageFqName
+
+        // Try as a nested class of the owner first
+        var nestedClassId = ownerClassId
+        for (name in names) {
+            nestedClassId = nestedClassId.createNestedClassId(Name.identifier(name))
+        }
+        if (session.symbolProvider.getClassLikeSymbolByClassId(nestedClassId) != null) {
+            return nestedClassId
+        }
 
         // Try progressively: first name could be a top-level class, then nested classes
         // Also try as a package prefix
@@ -440,12 +552,20 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
                 return classId
             }
         }
-        return null
+
+        // Fallback: If we can't resolve it, just assume the first name is a class in the owner's package
+        // or a completely unresolved name. This prevents an IDE crash and lets the compiler 
+        // report an unresolved reference later if it's truly invalid.
+        var fallbackClassId = ClassId(ownerPackage, Name.identifier(names[0]))
+        for (i in 1 until names.size) {
+            fallbackClassId = fallbackClassId.createNestedClassId(Name.identifier(names[i]))
+        }
+        return fallbackClassId
     }
 
     override fun getContributionHints(): List<ContributionHint> {
         return session.predicateBasedProvider
-            .getSymbolsByPredicate(predicate)
+            .getSymbolsByPredicate(Ids.predicate)
             .filterIsInstance<FirRegularClassSymbol>()
             .map { classSymbol ->
                 val serviceProvider = classSymbol.classId.createNestedClassId(Ids.featureServiceProviderName)
@@ -461,6 +581,6 @@ public class ContributesComponentFir(session: FirSession) : MetroFirDeclarationG
             session: FirSession,
             options: MetroOptions,
             compatContext: CompatContext,
-        ): MetroFirDeclarationGenerationExtension = ContributesComponentFir(session)
+        ): MetroFirDeclarationGenerationExtension = ContributesComponentFir(session, compatContext)
     }
 }

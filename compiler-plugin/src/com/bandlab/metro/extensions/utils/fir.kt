@@ -12,13 +12,14 @@ import org.jetbrains.kotlin.fir.references.builder.buildResolvedNamedReference
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
+import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
-import org.jetbrains.kotlin.fir.types.constructClassLikeType
+import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
@@ -118,4 +119,58 @@ internal fun FirNamedFunction.markAbstract(owner: FirClassSymbol<*>) {
             Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
         )
     )
+}
+
+/**
+ * Finds the supertype reference of the class represented by this [FirClassSymbol] that matches
+ * the given [supertypeClassId].
+ *
+ * The method iterates through all supertypes of the class and checks if any has a corresponding
+ * [ClassId] matching the specified [supertypeClassId].
+ *
+ * @param supertypeClassId the [ClassId] of the desired supertype to search for.
+ * @return the [FirTypeRef] of the matching supertype if found, or `null` otherwise.
+ */
+@OptIn(SymbolInternals::class)
+internal fun FirClassSymbol<*>.findSuperTypeRef(supertypeClassId: ClassId): FirTypeRef? {
+    for (ref in fir.superTypeRefs) {
+        when (ref) {
+            is FirUserTypeRef -> {
+                if (ref.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName) {
+                    return ref
+                }
+            }
+
+            is FirResolvedTypeRef -> {
+                if (ref.coneType.classId == supertypeClassId) {
+                    return ref
+                }
+            }
+        }
+    }
+    return null
+}
+
+/**
+ * Unwraps the type referenced by the given [FirTypeRef] based on its structure and optional index.
+ *
+ * @param index An optional index used to retrieve a specific type argument from the type reference. Defaults to 0.
+ * @return A [ConeTypeProjection] representing the unwrapped type if applicable, or `null` if the type could not be unwrapped.
+ */
+internal fun FirTypeRef.unwrapType(index: Int = 0): ConeTypeProjection? {
+    return when (this) {
+        is FirUserTypeRef -> {
+            val typeArg = qualifier.lastOrNull()?.typeArgumentList?.typeArguments?.getOrNull(index)
+                as? FirTypeProjectionWithVariance
+            val typeRef = typeArg?.typeRef as? FirResolvedTypeRef
+            typeRef?.coneType
+        }
+
+        is FirResolvedTypeRef -> {
+            val coneType = coneType as? ConeClassLikeType
+            coneType?.typeArguments?.firstOrNull()
+        }
+
+        else -> null
+    }
 }

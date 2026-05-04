@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
  *     override fun <T> resolve(): T = HasServiceProvider.resolveFrom(graph)
  *
  *     interface ServiceProvider {
- *         fun myDependency(): MyDependency
+ *         val myDependency: MyDependency
  *     }
  * }
  * ```

@@ -1,14 +1,9 @@
 pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
+    includeBuild("build-logic")
 }
 
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
+plugins {
+    id("com.bandlab.metro.extensions.settings")
 }
 
 rootProject.name = "metro-extensions"

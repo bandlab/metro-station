@@ -18,6 +18,12 @@ jobs:
           distribution: 'zulu'
           java-version: 21
 
+      - name: Write Artifactory credentials to local.properties
+        run: |
+          echo "ARTIFACTORY_URL=${{ secrets.ARTIFACTORY_URL }}" >> local.properties
+          echo "ARTIFACTORY_USERNAME=${{ secrets.ARTIFACTORY_USERNAME }}" >> local.properties
+          echo "ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}" >> local.properties
+
       - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew build --continue
 

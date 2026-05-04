@@ -1,6 +1,9 @@
 package com.bandlab.metro.extensions.configselector
 
-import com.bandlab.metro.extensions.utils.*
+import com.bandlab.metro.extensions.utils.ClassIds
+import com.bandlab.metro.extensions.utils.buildSimpleAnnotation
+import com.bandlab.metro.extensions.utils.buildSimpleAnnotationCall
+import com.bandlab.metro.extensions.utils.getClassCall
 import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
@@ -10,12 +13,9 @@ import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.declarations.FirDeclaration
 import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
-import org.jetbrains.kotlin.fir.declarations.builder.buildNamedFunction
 import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.builder.buildValueParameter
-import org.jetbrains.kotlin.fir.declarations.hasAnnotationWithClassId
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.origin
 import org.jetbrains.kotlin.fir.declarations.utils.visibility
@@ -30,12 +30,8 @@ import org.jetbrains.kotlin.fir.scopes.kotlinScopeProvider
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
-import org.jetbrains.kotlin.fir.types.FirTypeRef
-import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.name.CallableId
-import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 import com.bandlab.metro.extensions.configselector.ContributesConfigSelectorIds as Ids
 
@@ -56,7 +52,14 @@ import com.bandlab.metro.extensions.configselector.ContributesConfigSelectorIds 
  * }
  * ```
  */
-public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclarationGenerationExtension(session) {
+public class ContributesConfigSelectorFir(session: FirSession, compatContext: CompatContext) :
+    MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
+
+    // IDE doesn't work with this because we do not generate the function in the correct phase.
+    // To let metro process the bind function, we need to generate it when creating the nested contribution interface.
+    //TODO: Generate duplicated declaration for the IDE inlay
+    override val enableFirInIde: Boolean
+        get() = true
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.predicate)
@@ -66,7 +69,7 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
         classSymbol: FirClassSymbol<*>,
         context: NestedClassGenerationContext,
     ): Set<Name> {
-        return if (classSymbol.hasAnnotationWithClassId(Ids.contributesConfigSelector, session)) {
+        return if (session.predicateBasedProvider.matches(Ids.predicate, classSymbol)) {
             setOf(Ids.nestedContributionName)
         } else {
             emptySet()
@@ -79,7 +82,7 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
         context: NestedClassGenerationContext,
     ): FirClassLikeSymbol<*>? {
         if (name != Ids.nestedContributionName) return null
-        if (!owner.hasAnnotationWithClassId(Ids.contributesConfigSelector, session)) {
+        if (!session.predicateBasedProvider.matches(Ids.predicate, owner)) {
             return null
         }
 
@@ -93,7 +96,31 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
         // Build the @Binds function and add it directly to the class declarations.
         // This makes it visible to Metro's getNestedClassifiersNames (which checks for @Binds
         // functions to decide whether to generate BindsMirror).
-        val bindsFunction = buildBindsFunction(nestedClassId, owner)
+        val functionSymbol = FirNamedFunctionSymbol(CallableId(nestedClassId, Ids.bindName))
+        val bindsFunction = buildMemberFunction(
+            owner = classSymbol,
+            returnTypeProvider = { Ids.debuggableConfigSelectorClassId.constructClassLikeType() },
+            callableId = functionSymbol.callableId,
+            origin = Key.origin,
+            visibility = Visibilities.Public,
+            modality = Modality.ABSTRACT
+        ) {
+            valueParameters += buildValueParameter {
+                resolvePhase = FirResolvePhase.BODY_RESOLVE
+                moduleData = session.moduleData
+                origin = Key.origin
+                returnTypeRef = owner.defaultType().toFirResolvedTypeRef()
+                this.name = Ids.implName
+                symbol = FirValueParameterSymbol()
+                containingDeclarationSymbol = this@buildMemberFunction.symbol
+            }
+        }
+        bindsFunction.replaceAnnotations(
+            listOf(
+                buildSimpleAnnotationCall(session, ClassIds.binds, functionSymbol),
+                buildSimpleAnnotationCall(session, ClassIds.intoSet, functionSymbol),
+            )
+        )
 
         val contribution = buildRegularClass {
             resolvePhase = FirResolvePhase.BODY_RESOLVE
@@ -134,54 +161,6 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
             }
     }
 
-    private fun ClassId.firTypeRef(): FirTypeRef = buildResolvedTypeRef {
-        coneType = constructClassLikeType()
-    }
-
-    private fun buildBindsFunction(
-        classId: ClassId,
-        outerOwner: FirClassSymbol<*>,
-    ): FirDeclaration {
-        val callableId = CallableId(classId, "bind".asName())
-
-        val outerClassType = outerOwner.defaultType()
-        // Build the dispatch receiver type manually since classSymbol isn't bound to FIR yet
-        val dispatchType = ConeClassLikeTypeImpl(
-            ConeClassLikeLookupTagImpl(classId),
-            emptyArray(),
-            isMarkedNullable = false,
-        )
-
-        val functionSymbol = FirNamedFunctionSymbol(callableId)
-
-        return buildNamedFunction {
-            resolvePhase = FirResolvePhase.BODY_RESOLVE
-            moduleData = session.moduleData
-            origin = Key.origin
-            symbol = functionSymbol
-            name = callableId.callableName
-            isLocal = false
-            returnTypeRef = Ids.debuggableConfigSelectorClassId.firTypeRef()
-            dispatchReceiverType = dispatchType
-            status = FirResolvedDeclarationStatusImpl(
-                Visibilities.Public,
-                Modality.ABSTRACT,
-                Visibilities.Public.toEffectiveVisibility(outerOwner, forClass = true),
-            )
-            this.valueParameters += buildValueParameter {
-                resolvePhase = FirResolvePhase.BODY_RESOLVE
-                moduleData = session.moduleData
-                origin = Key.origin
-                returnTypeRef = outerClassType.toFirResolvedTypeRef()
-                this.name = Ids.implName
-                symbol = FirValueParameterSymbol()
-                containingDeclarationSymbol = functionSymbol
-            }
-            annotations += buildSimpleAnnotationCall(session, ClassIds.binds, functionSymbol)
-            annotations += buildSimpleAnnotationCall(session, ClassIds.intoSet, functionSymbol)
-        }
-    }
-
     private object Key : GeneratedDeclarationKey()
 
     @AutoService
@@ -190,6 +169,6 @@ public class ContributesConfigSelectorFir(session: FirSession) : MetroFirDeclara
             session: FirSession,
             options: MetroOptions,
             compatContext: CompatContext,
-        ): MetroFirDeclarationGenerationExtension = ContributesConfigSelectorFir(session)
+        ): MetroFirDeclarationGenerationExtension = ContributesConfigSelectorFir(session, compatContext)
     }
 }

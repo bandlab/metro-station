@@ -11,8 +11,8 @@ plugins {
 }
 
 allprojects {
-    group = "com.bandlab.metro.extensions"
-    version = "0.1.0"
+    group = project.property("GROUP") as String
+    version = project.property("VERSION_NAME") as String
 }
 
 subprojects {

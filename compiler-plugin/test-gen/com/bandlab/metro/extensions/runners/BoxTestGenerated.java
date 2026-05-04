@@ -26,32 +26,88 @@ public class BoxTestGenerated extends AbstractBoxTest {
   @TestDataPath("$PROJECT_ROOT")
   public class Component {
     @Test
-    @TestMetadata("activityParam.kt")
-    public void testActivityParam() {
-      runTest("compiler-plugin/testData/box/component/activityParam.kt");
-    }
-
-    @Test
     public void testAllFilesPresentInComponent() {
       KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/component"), Pattern.compile("^(.+)\\.kt$"), null, true);
     }
 
-    @Test
-    @TestMetadata("basic.kt")
-    public void testBasic() {
-      runTest("compiler-plugin/testData/box/component/basic.kt");
+    @Nested
+    @TestMetadata("compiler-plugin/testData/box/component/activity")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Activity {
+      @Test
+      @TestMetadata("activityParam.kt")
+      public void testActivityParam() {
+        runTest("compiler-plugin/testData/box/component/activity/activityParam.kt");
+      }
+
+      @Test
+      public void testAllFilesPresentInActivity() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/component/activity"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("compiler-plugin/testData/box/component/activity/basic.kt");
+      }
+
+      @Test
+      @TestMetadata("crossModule.kt")
+      public void testCrossModule() {
+        runTest("compiler-plugin/testData/box/component/activity/crossModule.kt");
+      }
+
+      @Test
+      @TestMetadata("customGraphMarker.kt")
+      public void testCustomGraphMarker() {
+        runTest("compiler-plugin/testData/box/component/activity/customGraphMarker.kt");
+      }
+
+      @Test
+      @TestMetadata("defaultDependencies.kt")
+      public void testDefaultDependencies() {
+        runTest("compiler-plugin/testData/box/component/activity/defaultDependencies.kt");
+      }
     }
 
-    @Test
-    @TestMetadata("crossModule.kt")
-    public void testCrossModule() {
-      runTest("compiler-plugin/testData/box/component/crossModule.kt");
-    }
+    @Nested
+    @TestMetadata("compiler-plugin/testData/box/component/page")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Page {
+      @Test
+      public void testAllFilesPresentInPage() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/component/page"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
 
-    @Test
-    @TestMetadata("defaultDependencies.kt")
-    public void testDefaultDependencies() {
-      runTest("compiler-plugin/testData/box/component/defaultDependencies.kt");
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("compiler-plugin/testData/box/component/page/basic.kt");
+      }
+
+      @Test
+      @TestMetadata("crossModule.kt")
+      public void testCrossModule() {
+        runTest("compiler-plugin/testData/box/component/page/crossModule.kt");
+      }
+
+      @Test
+      @TestMetadata("customGraphMarker.kt")
+      public void testCustomGraphMarker() {
+        runTest("compiler-plugin/testData/box/component/page/customGraphMarker.kt");
+      }
+
+      @Test
+      @TestMetadata("defaultDependencies.kt")
+      public void testDefaultDependencies() {
+        runTest("compiler-plugin/testData/box/component/page/defaultDependencies.kt");
+      }
+
+      @Test
+      @TestMetadata("paramPage.kt")
+      public void testParamPage() {
+        runTest("compiler-plugin/testData/box/component/page/paramPage.kt");
+      }
     }
   }
 

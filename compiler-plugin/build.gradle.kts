@@ -62,6 +62,7 @@ dependencies {
 
     annotationsRuntimeClasspath(project(":plugin-annotations"))
     annotationsRuntimeClasspath(project(":stubs"))
+    annotationsRuntimeClasspath(libs.coroutines.core)
 
     // Dependencies required to run the internal test framework.
     testArtifacts(libs.kotlin.reflect)

@@ -23,6 +23,7 @@ internal object ContributesComponentIds {
     val serviceProviderName = "serviceProvider".asName()
     val provideBaseTypeName = "provideBaseType".asName()
     val provideParamName = "provideParam".asName()
+    val provideParamFlowName = "provideParamFlow".asName()
 
     // Common classes
     private val androidCommon = FqName("com.bandlab.android.common")
@@ -33,6 +34,24 @@ internal object ContributesComponentIds {
     val defaultScreenServiceProvider = ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
+
+    // Page
+    private val commonPageDi = FqName("com.bandlab.common.android.pager.screen.di")
+    val page = ClassId(FqName("com.bandlab.uikit.api.page"), "Page".asName())
+    val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
+    val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
+    val pageGraphDependencies = ClassId(commonPageDi, "PageGraphDependencies".asName())
+    val pageGraphDependenciesModule = ClassId(commonPageDi, "PageGraphDependenciesModule".asName())
+    val navPageDependencies = ClassId(commonPageDi, "NavPageDependencies".asName())
+    val emptyExtraDependencies = ClassId(commonPageDi, "EmptyExtraDependencies".asName())
+    val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
+
+    // ParamPage
+    private val commonPage = FqName("com.bandlab.common.android.pager.screen")
+    val paramPage = ClassId(commonPage, "ParamPage".asName())
+    val pageParamFlowProvider = ClassId(commonPage, "PageParamFlowProvider".asName())
+    val coroutinesFlow = ClassId(FqName("kotlinx.coroutines.flow"), "Flow".asName())
+    val initialParamName = "initialParam".asName()
 
     // Custom feature scopes
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())

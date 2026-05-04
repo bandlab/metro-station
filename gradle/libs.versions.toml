@@ -7,8 +7,10 @@ kotlin-binaryCompatibilityValidator = "0.18.1"
 junit = "4.13.2"
 # https://github.com/gmazzo/gradle-buildconfig-plugin
 buildconfig = "6.0.9"
+# https://github.com/Kotlin/kotlinx.coroutines/releases
+coroutines = "1.10.2"
 # https://github.com/ZacSweers/metro/releases
-metro = "1.0.0"
+metro = "1.0.0-bl"
 # https://github.com/joshfriend/autoservice-ir/releases
 autoservice = "0.1.4"
 # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
@@ -24,6 +26,7 @@ kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annota
 kotlin-compiler = { group = "org.jetbrains.kotlin", name = "kotlin-compiler", version.ref = "kotlin" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-gradle-plugin-api = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin-api", version.ref = "kotlin" }
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 metro-compiler = { module = "dev.zacsweers.metro:compiler", version.ref = "metro" }
 metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
 junit = { module = "junit:junit", version.ref = "junit" }
