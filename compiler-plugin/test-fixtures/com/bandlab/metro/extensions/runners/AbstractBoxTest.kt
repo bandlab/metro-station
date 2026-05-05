@@ -1,7 +1,6 @@
 package com.bandlab.metro.extensions.runners
 
-import com.bandlab.metro.extensions.services.configureKotlinTestImports
-import com.bandlab.metro.extensions.services.configureMetroImports
+import com.bandlab.metro.extensions.services.configureImports
 import com.bandlab.metro.extensions.services.configurePlugin
 import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.test.FirParser
@@ -42,7 +41,10 @@ open class AbstractBoxTest : AbstractFirBlackBoxCodegenTestBase(FirParser.LightT
         }
 
         configurePlugin()
-        configureMetroImports()
-        configureKotlinTestImports()
+        configureImports(
+            addCommonImports = true,
+            addMetroImports = true,
+            addTestImports = true
+        )
     }
 }

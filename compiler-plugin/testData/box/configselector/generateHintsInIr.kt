@@ -1,8 +1,5 @@
 package com.test
 
-import com.bandlab.config.api.ContributesConfigSelector
-import com.bandlab.config.api.DebuggableConfigSelector
-
 // MODULE: lib
 @ContributesConfigSelector
 object FooConfigSelector : DebuggableConfigSelector

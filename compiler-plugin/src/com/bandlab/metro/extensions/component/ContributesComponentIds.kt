@@ -34,6 +34,9 @@ internal object ContributesComponentIds {
     val defaultScreenServiceProvider = ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
+    val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
+
+    //TODO: Exhaust the super types of components because we cannot look up the supertype for parent.
 
     // Page
     private val commonPageDi = FqName("com.bandlab.common.android.pager.screen.di")
@@ -43,7 +46,6 @@ internal object ContributesComponentIds {
     val pageGraphDependencies = ClassId(commonPageDi, "PageGraphDependencies".asName())
     val pageGraphDependenciesModule = ClassId(commonPageDi, "PageGraphDependenciesModule".asName())
     val navPageDependencies = ClassId(commonPageDi, "NavPageDependencies".asName())
-    val emptyExtraDependencies = ClassId(commonPageDi, "EmptyExtraDependencies".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
 
     // ParamPage

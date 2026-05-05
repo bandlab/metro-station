@@ -1,6 +1,4 @@
-import com.bandlab.common.android.di.ContributesComponent
 import com.bandlab.common.android.pager.screen.ParamPage
-import com.bandlab.common.android.pager.screen.di.EmptyExtraDependencies
 import com.bandlab.common.android.pager.screen.di.PageGraphDependencies
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

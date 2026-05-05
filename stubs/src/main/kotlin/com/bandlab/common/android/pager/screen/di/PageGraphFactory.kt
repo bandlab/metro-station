@@ -8,7 +8,7 @@ import dev.zacsweers.metro.Provides
  * Similar with [GraphFactory], but with extra dependencies.
  * This is used in [com.bandlab.uikit.api.page.Page] to ease the graph creation code.
  */
-interface PageGraphFactory<Feature, ExtraDependencies, ServiceProvider, Graph> {
+interface PageGraphFactory<Feature, ServiceProvider, ExtraDependencies, Graph> {
     fun create(
         @Provides feature: Feature,
         @Provides pageGraphDependencies: PageGraphDependencies = PageGraphDependencies(),
@@ -17,5 +17,3 @@ interface PageGraphFactory<Feature, ExtraDependencies, ServiceProvider, Graph> {
         @Includes extraDependencies: ExtraDependencies,
     ): Graph
 }
-
-object EmptyExtraDependencies

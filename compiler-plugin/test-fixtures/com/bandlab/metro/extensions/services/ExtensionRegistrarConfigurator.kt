@@ -16,12 +16,32 @@ fun TestConfigurationBuilder.configurePlugin() {
     configureMetroRuntime()
 }
 
-fun TestConfigurationBuilder.configureMetroImports() {
-    useSourcePreprocessor(::MetroImportsPreprocessor)
-}
-
-fun TestConfigurationBuilder.configureKotlinTestImports() {
-    useSourcePreprocessor(::KotlinTestImportsPreprocessor)
+fun TestConfigurationBuilder.configureImports(
+    addCommonImports: Boolean,
+    addMetroImports: Boolean,
+    addTestImports: Boolean
+) {
+    useSourcePreprocessor(
+        { testService ->
+            ImportsPreprocessor(
+                testService,
+                buildSet {
+                    if (addCommonImports) {
+                        addAll(
+                            setOf(
+                                "com.bandlab.common.android.di.*",
+                                "com.bandlab.android.common.activity.*",
+                                "com.bandlab.uikit.api.page.*",
+                                "com.bandlab.config.api.*"
+                            )
+                        )
+                    }
+                    if (addMetroImports) add("dev.zacsweers.metro.*")
+                    if (addTestImports) add("kotlin.test.*")
+                }
+            )
+        }
+    )
 }
 
 private class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices) {

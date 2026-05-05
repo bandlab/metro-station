@@ -71,7 +71,7 @@ import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
  *     @Provides
  *     fun provideParam(feature: MyActivity): MyActivity.Param = feature.param
  *
- *     interface Factory : GraphFactory<MyActivity, FeatureServiceProvider, FeatureGraph>
+ *     interface Factory : GraphFactory<MyActivity, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>
  *   }
  *
  *   @ContributesTo(AppScope::class)
@@ -288,6 +288,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
         return provideBaseTypeFunction.symbol as FirNamedFunctionSymbol
     }
 
+    //TODO: Forbid primitive param types
     private fun generateProvideParamFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
         val annotatedClassId = owner.classId.parentClassId ?: return null
         val annotatedSymbol =
@@ -381,35 +382,58 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
                     ownerClassId.createNestedClassId(Ids.featureServiceProviderName).constructClassLikeType()
                 val graphType = featureGraphOwner.classId.constructClassLikeType()
 
-                coneType = when {
-                    owner.findSuperTypeRef(Ids.commonActivity) != null -> {
-                        Ids.graphFactory.constructClassLikeType(
-                            arrayOf(
-                                rootType,
-                                serviceProviderType,
-                                graphType
-                            )
-                        )
-                    }
-
+                val baseFactoryType = when {
+                    owner.findSuperTypeRef(Ids.commonActivity) != null -> Ids.graphFactory
                     owner.findSuperTypeRef(Ids.page) != null ||
-                        owner.findSuperTypeRef(Ids.paramPage) != null -> {
-                        Ids.pageGraphFactory.constructClassLikeType(
-                            arrayOf(
-                                rootType,
-                                //TODO: Use extraDependencies from the page if presented
-                                Ids.emptyExtraDependencies.constructClassLikeType(),
-                                serviceProviderType,
-                                graphType
-                            )
-                        )
-                    }
+                        owner.findSuperTypeRef(Ids.paramPage) != null -> Ids.pageGraphFactory
 
                     else -> error("Unsupported Component Type")
                 }
+
+                val extraDependenciesType = owner.resolveExtraDependencies()
+
+                coneType = baseFactoryType.constructClassLikeType(
+                    arrayOf(
+                        rootType,
+                        serviceProviderType,
+                        extraDependenciesType,
+                        graphType
+                    )
+                )
             }
         }
         return factory.symbol
+    }
+
+    /**
+     * Resolves the extraDependencies type from the @ContributesComponent annotation.
+     * Returns EmptyExtraDependencies if extraDependencies is Nothing::class.
+     */
+    private fun FirClassSymbol<*>.resolveExtraDependencies(): ConeKotlinType {
+        val annotation = getAnnotationByClassId(Ids.contributesComponent, session)
+            ?: return Ids.emptyExtraDependencies.constructClassLikeType()
+
+        val rawExpr = annotation.argumentMapping.mapping[Ids.extraDependenciesName]
+            ?: (annotation as? FirAnnotationCall)?.argumentList?.arguments
+                ?.filterIsInstance<FirNamedArgumentExpression>()
+                ?.find { it.name == Ids.extraDependenciesName }
+            ?: return Ids.emptyExtraDependencies.constructClassLikeType()
+
+        val expr = if (rawExpr is FirNamedArgumentExpression) rawExpr.expression else rawExpr
+
+        val getClassCall = expr as? FirGetClassCall
+            ?: return Ids.emptyExtraDependencies.constructClassLikeType()
+
+        val classId = when (val argument = getClassCall.argument) {
+            is FirResolvedQualifier -> argument.classId
+            else -> extractClassIdFromExpression(argument, this.classId)
+        } ?: return Ids.emptyExtraDependencies.constructClassLikeType()
+
+        return if (classId == StandardClassIds.Nothing) {
+            Ids.emptyExtraDependencies.constructClassLikeType()
+        } else {
+            classId.constructClassLikeType()
+        }
     }
 
     private fun generateFeatureServiceProvider(owner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
@@ -447,11 +471,6 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
             // Add DefaultScreenServiceProvider if available
             superTypeRefs += buildResolvedTypeRef {
                 coneType = Ids.defaultScreenServiceProvider.constructClassLikeType()
-            }
-
-            // If no supertypes were added, use Any
-            if (superTypeRefs.isEmpty()) {
-                superTypeRefs += session.builtinTypes.anyType
             }
 
             // @ContributesTo(AppScope::class)

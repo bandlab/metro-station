@@ -1,7 +1,3 @@
-import com.bandlab.common.android.di.ContributesComponent
-import com.bandlab.common.android.pager.screen.di.EmptyExtraDependencies
-import com.bandlab.uikit.api.page.Page
-
 @ContributesComponent(appDependencies = MyPage.ServiceProvider::class)
 class MyPage : Page<MyViewModel> {
 

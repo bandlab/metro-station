@@ -1,6 +1,6 @@
 public abstract interface annotation class com/bandlab/common/android/di/ContributesComponent : java/lang/annotation/Annotation {
 	public abstract fun appDependencies ()Ljava/lang/Class;
-	public abstract fun extraDependencies ()[Ljava/lang/Class;
+	public abstract fun extraDependencies ()Ljava/lang/Class;
 	public abstract fun graphMarker ()Ljava/lang/Class;
 }
 

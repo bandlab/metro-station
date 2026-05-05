@@ -1,6 +1,3 @@
-import com.bandlab.common.android.di.ContributesComponent
-import com.bandlab.android.common.activity.CommonActivity
-
 interface MyScope
 
 @ContributesComponent(
@@ -30,7 +27,8 @@ fun box(): String {
     val myActivity = MyActivity()
     val graph = createGraphFactory<MyActivity.FeatureGraph.Factory>().create(
         feature = myActivity,
-        serviceProvider = appGraph
+        serviceProvider = appGraph,
+        extraDependencies = EmptyExtraDependencies
     )
     graph.injector.injectMembers(myActivity)
     assertEquals(42, myActivity.myDependency.int)

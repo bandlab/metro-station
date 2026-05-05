@@ -1,14 +1,8 @@
-import com.bandlab.config.api.ContributesConfigSelector
-import com.bandlab.config.api.DebuggableConfigSelector
-
 // MODULE: lib
 @ContributesConfigSelector
 object FooConfigSelector : DebuggableConfigSelector
 
 // MODULE: main(lib)
-import com.bandlab.config.api.ContributesConfigSelector
-import com.bandlab.config.api.DebuggableConfigSelector
-
 @ContributesConfigSelector
 object BarConfigSelector : DebuggableConfigSelector
 

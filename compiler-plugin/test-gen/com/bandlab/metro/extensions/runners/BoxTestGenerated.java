@@ -68,6 +68,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testDefaultDependencies() {
         runTest("compiler-plugin/testData/box/component/activity/defaultDependencies.kt");
       }
+
+      @Test
+      @TestMetadata("extraDependencies.kt")
+      public void testExtraDependencies() {
+        runTest("compiler-plugin/testData/box/component/activity/extraDependencies.kt");
+      }
     }
 
     @Nested
@@ -101,6 +107,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("defaultDependencies.kt")
       public void testDefaultDependencies() {
         runTest("compiler-plugin/testData/box/component/page/defaultDependencies.kt");
+      }
+
+      @Test
+      @TestMetadata("extraDependencies.kt")
+      public void testExtraDependencies() {
+        runTest("compiler-plugin/testData/box/component/page/extraDependencies.kt");
       }
 
       @Test

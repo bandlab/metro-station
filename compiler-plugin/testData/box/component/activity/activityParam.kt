@@ -1,6 +1,3 @@
-import com.bandlab.common.android.di.ContributesComponent
-import com.bandlab.android.common.activity.CommonActivity
-
 @ContributesComponent(appDependencies = MyActivity.ServiceProvider::class)
 class MyActivity : CommonActivity<MyActivity.Param>() {
     @Inject lateinit var myViewModel: MyViewModel
@@ -26,7 +23,8 @@ fun box(): String {
 
     val graph = createGraphFactory<MyActivity.FeatureGraph.Factory>().create(
         feature = myActivity,
-        serviceProvider = appGraph
+        serviceProvider = appGraph,
+        extraDependencies = EmptyExtraDependencies
     )
     graph.injector.injectMembers(myActivity)
     assertEquals("test", myActivity.myViewModel.param.id)

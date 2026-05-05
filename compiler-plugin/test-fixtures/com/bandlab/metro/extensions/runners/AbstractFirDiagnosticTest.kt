@@ -1,6 +1,6 @@
 package com.bandlab.metro.extensions.runners
 
-import com.bandlab.metro.extensions.services.configureMetroImports
+import com.bandlab.metro.extensions.services.configureImports
 import com.bandlab.metro.extensions.services.configurePlugin
 import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
@@ -36,6 +36,10 @@ open class AbstractFirDiagnosticTest : AbstractFirPhasedDiagnosticTest(FirParser
         }
 
         configurePlugin()
-        configureMetroImports()
+        configureImports(
+            addCommonImports = true,
+            addMetroImports = true,
+            addTestImports = false
+        )
     }
 }

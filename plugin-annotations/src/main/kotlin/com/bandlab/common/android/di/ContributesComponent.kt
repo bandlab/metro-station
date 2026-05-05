@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
  * @ContributesComponent(appDependencies = MyActivity.ServiceProvider::class)
  * class MyActivity : CommonActivity<Unit>(), HasServiceProvider {
  *
- *     private val graph by componentCreator(createGraphFactory<MyActivityGraph.Factory>())
+ *     private val graph by graphCreator(createGraphFactory<MyActivityGraph.Factory>())
  *
  *     override fun <T> resolve(): T = HasServiceProvider.resolveFrom(graph)
  *
@@ -23,11 +23,11 @@ import kotlin.reflect.KClass
  *
  * @param appDependencies The service provider that you need from the App graph.
  * @param graphMarker A marker to aggregate a graph, by default it's the component target itself (ex. activity).
- * @param extraDependencies Optional service providers that you need from other feature graphs.
+ * @param extraDependencies Optional service provider that you need from other feature graphs.
  */
 @Target(AnnotationTarget.CLASS)
 public annotation class ContributesComponent(
     val appDependencies: KClass<*>,
     val graphMarker: KClass<*> = Nothing::class,
-    vararg val extraDependencies: KClass<*> = [],
+    val extraDependencies: KClass<*> = Nothing::class,
 )

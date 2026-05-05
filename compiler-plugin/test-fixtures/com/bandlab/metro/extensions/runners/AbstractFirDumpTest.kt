@@ -1,6 +1,6 @@
 package com.bandlab.metro.extensions.runners
 
-import com.bandlab.metro.extensions.services.configureMetroImports
+import com.bandlab.metro.extensions.services.configureImports
 import com.bandlab.metro.extensions.services.configurePlugin
 import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
@@ -33,7 +33,11 @@ open class AbstractFirDumpTest : AbstractFirLightTreeJvmIrTextTest() {
 
     with(builder) {
       configurePlugin()
-      configureMetroImports()
+        configureImports(
+            addCommonImports = true,
+            addMetroImports = true,
+            addTestImports = false
+        )
 
       defaultDirectives {
         JvmEnvironmentConfigurationDirectives.JVM_TARGET.with(JvmTarget.JVM_11)

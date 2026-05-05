@@ -6,16 +6,13 @@ import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.isJavaFile
 
 /**
- * Preprocessor that automatically adds kotlin.test imports to test files. This allows test files to
- * use kotlin.test assertions without explicit imports.
+ * Preprocessor that automatically adds a set of imports to test files.
  */
-class KotlinTestImportsPreprocessor(testServices: TestServices) :
+class ImportsPreprocessor(testServices: TestServices, imports: Set<String>) :
     ReversibleSourceFilePreprocessor(testServices) {
 
-    private val additionalImports: Set<String> = setOf("kotlin.test.*")
-
-    private val additionalImportsString: String by lazy {
-        additionalImports.sorted().joinToString(separator = "\n") { "import $it" }
+    private val importsString: String by lazy {
+        imports.sorted().joinToString(separator = "\n") { "import $it" }
     }
 
     override fun process(file: TestFile, content: String): String {
@@ -28,12 +25,12 @@ class KotlinTestImportsPreprocessor(testServices: TestServices) :
             -1 ->
                 when (val nonBlankIndex = lines.indexOfFirst { it.isNotBlank() }) {
                     // No non-blank lines? Place imports at the very beginning...
-                    -1 -> lines.add(0, additionalImportsString)
+                    -1 -> lines.add(0, importsString)
                     // Place imports before first non-blank line.
-                    else -> lines.add(nonBlankIndex, additionalImportsString)
+                    else -> lines.add(nonBlankIndex, importsString)
                 }
             // Place imports just after package declaration.
-            else -> lines.add(packageIndex + 1, additionalImportsString)
+            else -> lines.add(packageIndex + 1, importsString)
         }
         return lines.joinToString(separator = "\n")
     }
@@ -41,6 +38,6 @@ class KotlinTestImportsPreprocessor(testServices: TestServices) :
     override fun revert(file: TestFile, actualContent: String): String {
         if (file.isAdditional) return actualContent
         if (file.isJavaFile) return actualContent
-        return actualContent.replace(additionalImportsString + "\n", "")
+        return actualContent.replace(importsString + "\n", "")
     }
 }

@@ -1,7 +1,4 @@
 // MODULE: lib
-import com.bandlab.common.android.di.ContributesComponent
-import com.bandlab.uikit.api.page.Page
-
 @ContributesComponent(appDependencies = MyPage.ServiceProvider::class)
 class MyPage : Page<MyViewModel> {
 
@@ -14,8 +11,6 @@ class MyPage : Page<MyViewModel> {
 class MyViewModel(val number: Long)
 
 // MODULE: main(lib)
-import com.bandlab.common.android.pager.screen.di.EmptyExtraDependencies
-
 @DependencyGraph(AppScope::class)
 interface AppGraph {
 
