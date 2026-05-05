@@ -168,7 +168,7 @@ internal fun FirTypeRef.unwrapType(index: Int = 0): ConeTypeProjection? {
 
         is FirResolvedTypeRef -> {
             val coneType = coneType as? ConeClassLikeType
-            coneType?.typeArguments?.firstOrNull()
+            coneType?.typeArguments?.getOrNull(index)
         }
 
         else -> null

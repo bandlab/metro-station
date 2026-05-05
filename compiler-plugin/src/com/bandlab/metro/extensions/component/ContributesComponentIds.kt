@@ -33,10 +33,10 @@ internal object ContributesComponentIds {
     val commonActivityServiceProvider = commonActivity.createNestedClassId("ServiceProvider".asName())
     val defaultScreenServiceProvider = ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
+    val defaultFragmentDeps =
+        ClassId(FqName("com.bandlab.android.common.fragment"), "DefaultFragmentDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
-
-    //TODO: Exhaust the super types of components because we cannot look up the supertype for parent.
 
     // Page
     private val commonPageDi = FqName("com.bandlab.common.android.pager.screen.di")
@@ -54,6 +54,14 @@ internal object ContributesComponentIds {
     val pageParamFlowProvider = ClassId(commonPage, "PageParamFlowProvider".asName())
     val coroutinesFlow = ClassId(FqName("kotlinx.coroutines.flow"), "Flow".asName())
     val initialParamName = "initialParam".asName()
+
+    // Component base types
+    val activityTypes = setOf(commonActivity)
+    val fragmentTypes = setOf(ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName()))
+    val pageTypes = setOf(paramPage, page)
+    val serviceTypes = setOf(ClassId(FqName("android.app"), "Service".asName()))
+    val workerTypes = setOf(ClassId(FqName("androidx.work"), "CoroutineWorker".asName()))
+    val broadcastReceiverTypes = setOf(ClassId(FqName("android.content"), "BroadcastReceiver".asName()))
 
     // Custom feature scopes
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())

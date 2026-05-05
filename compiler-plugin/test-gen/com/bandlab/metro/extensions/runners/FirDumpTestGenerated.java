@@ -22,6 +22,54 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
   }
 
   @Nested
+  @TestMetadata("compiler-plugin/testData/dump/component")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Component {
+    @Test
+    public void testAllFilesPresentInComponent() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/component"), Pattern.compile("^(.+)\\.kt$"), null, true);
+    }
+
+    @Nested
+    @TestMetadata("compiler-plugin/testData/dump/component/activity")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Activity {
+      @Test
+      public void testAllFilesPresentInActivity() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/component/activity"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("compiler-plugin/testData/dump/component/activity/basic.kt");
+      }
+    }
+
+    @Nested
+    @TestMetadata("compiler-plugin/testData/dump/component/page")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Page {
+      @Test
+      public void testAllFilesPresentInPage() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/component/page"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("compiler-plugin/testData/dump/component/page/basic.kt");
+      }
+
+      @Test
+      @TestMetadata("paramPage.kt")
+      public void testParamPage() {
+        runTest("compiler-plugin/testData/dump/component/page/paramPage.kt");
+      }
+    }
+  }
+
+  @Nested
   @TestMetadata("compiler-plugin/testData/dump/configselector")
   @TestDataPath("$PROJECT_ROOT")
   public class Configselector {

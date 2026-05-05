@@ -1,0 +1,116 @@
+FILE: paramPage.kt
+    @R|com/bandlab/common/android/di/ContributesComponent|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|)) public final class MyPage : R|com/bandlab/common/android/pager/screen/ParamPage<MyViewModel, MyPage.Params>| {
+        public constructor(): R|MyPage| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final data class Params : R|kotlin/Any| {
+            public constructor(number: R|kotlin/Long|): R|MyPage.Params| {
+                super<R|kotlin/Any|>()
+            }
+
+            public final val number: R|kotlin/Long| = R|<local>/number|
+                public get(): R|kotlin/Long|
+
+            public final operator fun component1(): R|kotlin/Long|
+
+            public final fun copy(number: R|kotlin/Long| = this@R|/MyPage.Params|.R|/MyPage.Params.number|): R|MyPage.Params|
+
+        }
+
+        public abstract interface ServiceProvider : R|kotlin/Any| {
+        }
+
+        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|com/bandlab/common/android/pager/screen/di/PageGraphDependenciesModule|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
+            @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyPage|): R|com/bandlab/uikit/api/page/Page<*>|
+
+            @R|dev/zacsweers/metro/Provides|() public final fun provideParam(pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|): R|MyPage.Params|
+
+            @R|dev/zacsweers/metro/Provides|() public final fun provideParamFlow(provider: R|com/bandlab/common/android/pager/screen/PageParamFlowProvider|, feature: R|MyPage|, initialParam: R|MyPage.Params|): R|kotlinx/coroutines/flow/Flow<MyPage.Params>|
+
+            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|com/bandlab/common/android/pager/screen/di/PageGraphFactory<MyPage, MyPage.FeatureServiceProvider, com/bandlab/common/android/di/EmptyExtraDependencies, MyPage.FeatureGraph>| {
+                @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final object Impl : R|MyPage.FeatureGraph.Factory| {
+                    @R|dev/zacsweers/metro/internal/GraphFactoryInvokeFunctionMarker|() public final override fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() navPageDependencies: R|com/bandlab/common/android/pager/screen/di/NavPageDependencies|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyPage.FeatureServiceProvider|, @R|dev/zacsweers/metro/Includes|() extraDependencies: R|com/bandlab/common/android/di/EmptyExtraDependencies|): R|MyPage.FeatureGraph|
+
+                    private constructor(): R|MyPage.FeatureGraph.Factory.Impl| {
+                        super<R|kotlin/Any|>()
+                    }
+
+                }
+
+            }
+
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|MyPage.FeatureGraph| {
+                private constructor(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() navPageDependencies: R|com/bandlab/common/android/pager/screen/di/NavPageDependencies|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyPage.FeatureServiceProvider|, @R|dev/zacsweers/metro/Includes|() extraDependencies: R|com/bandlab/common/android/di/EmptyExtraDependencies|): R|MyPage.FeatureGraph.Impl| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+            public final companion object Companion : R|kotlin/Any| {
+                @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final fun factory(): R|MyPage.FeatureGraph.Factory|
+
+                private constructor(): R|MyPage.FeatureGraph.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface FeatureServiceProvider : R|MyPage.ServiceProvider|, R|com/bandlab/android/common/DefaultScreenServiceProvider| {
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|MyPage.FeatureServiceProvider| {
+            }
+
+        }
+
+    }
+    @R|dev/zacsweers/metro/Inject|() public final class MyViewModel : R|kotlin/Any| {
+        public constructor(param: R|MyPage.Params|, paramFlow: R|kotlinx/coroutines/flow/Flow<MyPage.Params>|): R|MyViewModel| {
+            super<R|kotlin/Any|>()
+        }
+
+        private final val param: R|MyPage.Params| = R|<local>/param|
+            private get(): R|MyPage.Params|
+
+        private final val paramFlow: R|kotlinx/coroutines/flow/Flow<MyPage.Params>| = R|<local>/paramFlow|
+            private get(): R|kotlinx/coroutines/flow/Flow<MyPage.Params>|
+
+        public final val number: R|kotlin/Long| = this@R|/MyViewModel|.R|/MyViewModel.param|.R|/MyPage.Params.number|
+            public get(): R|kotlin/Long|
+
+        public final val numberFromFlow: R|kotlin/Long| = R|kotlinx/coroutines/runBlocking|<R|kotlin/Long|>(<L> = runBlocking@fun R|kotlinx/coroutines/CoroutineScope|.<anonymous>(): R|kotlin/Long| <inline=NoInline, kind=EXACTLY_ONCE>  {
+            ^ this@R|/MyViewModel|.R|/MyViewModel.paramFlow|.R|kotlinx/coroutines/flow/first|<R|MyPage.Params|>().R|/MyPage.Params.number|
+        }
+        )
+            public get(): R|kotlin/Long|
+
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) public final class MetroFactory : R|kotlin/Any| {
+            public final companion object Companion : R|kotlin/Any| {
+                private constructor(): R|MyViewModel.MetroFactory.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+    }
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider|, R|com/bandlab/common/android/pager/screen/di/PageInjectorProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/pager/screen/di/PageInjectorProvider| {
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|AppGraph| {
+            private constructor(): R|AppGraph.Impl| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+        public final companion object Companion : R|kotlin/Any| {
+            @R|dev/zacsweers/metro/internal/GraphFactoryInvokeFunctionMarker|() @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final operator fun invoke(): R|AppGraph|
+
+            private constructor(): R|AppGraph.Companion| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+    }
