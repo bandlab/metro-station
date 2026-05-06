@@ -27,7 +27,7 @@ import org.jetbrains.kotlin.name.ClassId
  */
 public class ContributesComponentMetroExtension(private val session: FirSession) : MetroContributionExtension {
 
-    private val predicate = ContributesComponentIds.predicate
+    private val predicate = ContributesComponentIds.componentPredicate
 
     private val annotatedClasses by lazy {
         session.predicateBasedProvider

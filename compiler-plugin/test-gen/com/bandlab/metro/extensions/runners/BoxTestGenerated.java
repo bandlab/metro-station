@@ -156,4 +156,130 @@ public class BoxTestGenerated extends AbstractBoxTest {
       runTest("compiler-plugin/testData/box/configselector/generateHintsInIr.kt");
     }
   }
+
+  @Nested
+  @TestMetadata("compiler-plugin/testData/box/injector")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Injector {
+    @Test
+    public void testAllFilesPresentInInjector() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/injector"), Pattern.compile("^(.+)\\.kt$"), null, true);
+    }
+
+    @Nested
+    @TestMetadata("compiler-plugin/testData/box/injector/activity")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Activity {
+      @Test
+      @TestMetadata("activityParam.kt")
+      public void testActivityParam() {
+        runTest("compiler-plugin/testData/box/injector/activity/activityParam.kt");
+      }
+
+      @Test
+      public void testAllFilesPresentInActivity() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/injector/activity"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("compiler-plugin/testData/box/injector/activity/basic.kt");
+      }
+
+      @Test
+      @TestMetadata("crossModule.kt")
+      public void testCrossModule() {
+        runTest("compiler-plugin/testData/box/injector/activity/crossModule.kt");
+      }
+
+      @Test
+      @TestMetadata("customExternalParentScope.kt")
+      public void testCustomExternalParentScope() {
+        runTest("compiler-plugin/testData/box/injector/activity/customExternalParentScope.kt");
+      }
+
+      @Test
+      @TestMetadata("customGraphMarker.kt")
+      public void testCustomGraphMarker() {
+        runTest("compiler-plugin/testData/box/injector/activity/customGraphMarker.kt");
+      }
+
+      @Test
+      @TestMetadata("customParentScope.kt")
+      public void testCustomParentScope() {
+        runTest("compiler-plugin/testData/box/injector/activity/customParentScope.kt");
+      }
+
+      @Test
+      @TestMetadata("defaultDependencies.kt")
+      public void testDefaultDependencies() {
+        runTest("compiler-plugin/testData/box/injector/activity/defaultDependencies.kt");
+      }
+
+      @Test
+      @TestMetadata("factoryContribution.kt")
+      public void testFactoryContribution() {
+        runTest("compiler-plugin/testData/box/injector/activity/factoryContribution.kt");
+      }
+    }
+
+    @Nested
+    @TestMetadata("compiler-plugin/testData/box/injector/page")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Page {
+      @Test
+      public void testAllFilesPresentInPage() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/injector/page"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("compiler-plugin/testData/box/injector/page/basic.kt");
+      }
+
+      @Test
+      @TestMetadata("crossModule.kt")
+      public void testCrossModule() {
+        runTest("compiler-plugin/testData/box/injector/page/crossModule.kt");
+      }
+
+      @Test
+      @TestMetadata("customExternalParentScope.kt")
+      public void testCustomExternalParentScope() {
+        runTest("compiler-plugin/testData/box/injector/page/customExternalParentScope.kt");
+      }
+
+      @Test
+      @TestMetadata("customGraphMarker.kt")
+      public void testCustomGraphMarker() {
+        runTest("compiler-plugin/testData/box/injector/page/customGraphMarker.kt");
+      }
+
+      @Test
+      @TestMetadata("customParentScope.kt")
+      public void testCustomParentScope() {
+        runTest("compiler-plugin/testData/box/injector/page/customParentScope.kt");
+      }
+
+      @Test
+      @TestMetadata("defaultDependencies.kt")
+      public void testDefaultDependencies() {
+        runTest("compiler-plugin/testData/box/injector/page/defaultDependencies.kt");
+      }
+
+      @Test
+      @TestMetadata("factoryContribution.kt")
+      public void testFactoryContribution() {
+        runTest("compiler-plugin/testData/box/injector/page/factoryContribution.kt");
+      }
+
+      @Test
+      @TestMetadata("paramPage.kt")
+      public void testParamPage() {
+        runTest("compiler-plugin/testData/box/injector/page/paramPage.kt");
+      }
+    }
+  }
 }

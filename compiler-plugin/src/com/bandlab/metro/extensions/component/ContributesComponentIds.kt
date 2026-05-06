@@ -7,8 +7,21 @@ import org.jetbrains.kotlin.name.FqName
 
 internal object ContributesComponentIds {
     private val commonAndroidDi = FqName("com.bandlab.common.android.di")
+
+    // ContributesComponent
     val contributesComponent = ClassId(commonAndroidDi, "ContributesComponent".asName())
     val contributesComponentFqName = contributesComponent.asSingleFqName()
+
+    // ContributesInjector
+    val contributesInjector = ClassId(commonAndroidDi, "ContributesInjector".asName())
+    val contributesInjectorFqName = contributesInjector.asSingleFqName()
+    val featureExtensionName = "FeatureExtension".asName()
+    val featureBindingsName = "FeatureBindings".asName()
+    val extensionFactoryContributionName = "ExtensionFactoryContribution".asName()
+    val createName = "create".asName()
+    val bindName = "bind".asName()
+    val factoryParamName = "factory".asName()
+    val provideFactoryName = "provideFactory".asName()
 
     val appDependenciesName = "appDependencies".asName()
     val graphMarkerName = "graphMarker".asName()
@@ -71,7 +84,11 @@ internal object ContributesComponentIds {
     val workerScope = ClassId(androidCommon, "WorkerScope".asName())
     val broadcastReceiverScope = ClassId(androidCommon, "BroadcastReceiverScope".asName())
 
-    val predicate = LookupPredicate.create {
+    val componentPredicate = LookupPredicate.create {
         annotated(contributesComponentFqName)
+    }
+
+    val injectorPredicate = LookupPredicate.create {
+        annotated(contributesInjectorFqName)
     }
 }

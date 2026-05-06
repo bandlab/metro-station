@@ -1,6 +1,5 @@
 package com.bandlab.metro.extensions.component
 
-import com.bandlab.metro.extensions.component.ContributesComponentIds
 import com.bandlab.metro.extensions.utils.*
 import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
@@ -16,7 +15,10 @@ import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.origin
-import org.jetbrains.kotlin.fir.expressions.*
+import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
+import org.jetbrains.kotlin.fir.expressions.FirGetClassCall
+import org.jetbrains.kotlin.fir.expressions.FirNamedArgumentExpression
+import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.expressions.builder.buildArgumentList
 import org.jetbrains.kotlin.fir.expressions.builder.buildCollectionLiteral
@@ -35,12 +37,15 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
-import org.jetbrains.kotlin.name.*
+import org.jetbrains.kotlin.name.CallableId
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.StandardClassIds
 import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
 
 /**
  * This FIR declaration generator generates a dependency graph for the feature that is annotated with
- * [ContributesComponentIds.contributesComponentFqName].
+ * [Ids.contributesComponent].
  *
  * ```kotlin
  * @ContributesComponent(appDependencies = [MyActivity.ServiceProvider::class])
@@ -57,7 +62,7 @@ import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
  *   @ActivityScope
  *   @DependencyGraph(
  *     scope = MyActivity::class,
- *     bindingContainers = [DefaultActivityDeps::class]
+ *     bindingContainers = [DefaultActivityDependencies::class]
  *   )
  *   interface FeatureGraph : MembersInjectorProvider<MyActivity> {
  *
@@ -108,7 +113,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
         get() = true
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
-        register(Ids.predicate)
+        register(Ids.componentPredicate)
     }
 
     override fun getNestedClassifiersNames(
@@ -116,7 +121,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
         context: NestedClassGenerationContext
     ): Set<Name> {
         return when {
-            session.predicateBasedProvider.matches(Ids.predicate, classSymbol) ->
+            session.predicateBasedProvider.matches(Ids.componentPredicate, classSymbol) ->
                 setOf(Ids.graphName, Ids.featureServiceProviderName)
 
             classSymbol.origin == Key.origin && classSymbol.classId.shortClassName == Ids.graphName ->
@@ -133,7 +138,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
     ): FirClassLikeSymbol<*>? {
         // Generate FeatureGraph inside the annotated class
         if (name == Ids.graphName &&
-            session.predicateBasedProvider.matches(Ids.predicate, owner)
+            session.predicateBasedProvider.matches(Ids.componentPredicate, owner)
         ) {
             return generateFeatureGraph(owner)
         }
@@ -146,7 +151,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
         }
         // Generate FeatureServiceProvider inside the annotated class
         if (name == Ids.featureServiceProviderName &&
-            session.predicateBasedProvider.matches(Ids.predicate, owner)
+            session.predicateBasedProvider.matches(Ids.componentPredicate, owner)
         ) {
             return generateFeatureServiceProvider(owner)
         }
@@ -455,7 +460,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
 
         val classId = when (val argument = getClassCall.argument) {
             is FirResolvedQualifier -> argument.classId
-            else -> extractClassIdFromExpression(argument, this.classId)
+            else -> argument.extractClassId(this.classId, session)
         } ?: return Ids.emptyExtraDependencies.constructClassLikeType()
 
         return if (classId == StandardClassIds.Nothing) {
@@ -568,8 +573,6 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
     /**
      * Validates that the annotated class has the required @ContributesComponent annotation and
      * retrieves the appDependencies type from it.
-     *
-     * TODO: Quite delicate function, might extract this to util if it's used elsewhere.
      */
     private fun FirClassSymbol<*>.requireAppDependencies(): ConeKotlinType {
         val annotation = getAnnotationByClassId(Ids.contributesComponent, session)
@@ -597,75 +600,16 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
             else -> {
                 // At early FIR stages, the argument may not be fully resolved.
                 // Extract the ClassId by collecting name parts from the property access chain.
-                val classId = extractClassIdFromExpression(argument, this.classId)
+                val classId = argument.extractClassId(this.classId, session)
                     ?: error("Cannot extract ClassId from GetClassCall argument: ${argument::class.simpleName}")
                 classId.constructClassLikeType()
             }
         }
     }
 
-    /**
-     * Recursively extract a [ClassId] from an unresolved property access expression chain like
-     * `MyActivity.ServiceProvider`. Walks the receiver chain to collect name segments and resolves
-     * them against the symbol provider.
-     */
-    private fun extractClassIdFromExpression(expr: FirExpression, ownerClassId: ClassId): ClassId? {
-        val names = mutableListOf<String>()
-        var current: FirExpression? = expr
-        while (current is FirPropertyAccessExpression) {
-            val ref = current.calleeReference
-            names.add(0, ref.name.asString())
-            current = current.explicitReceiver
-        }
-        if (names.isEmpty()) return null
-
-        val ownerPackage = ownerClassId.packageFqName
-
-        // Try as a nested class of the owner first
-        var nestedClassId = ownerClassId
-        for (name in names) {
-            nestedClassId = nestedClassId.createNestedClassId(Name.identifier(name))
-        }
-        if (session.symbolProvider.getClassLikeSymbolByClassId(nestedClassId) != null) {
-            return nestedClassId
-        }
-
-        // Try progressively: first name could be a top-level class, then nested classes
-        // Also try as a package prefix
-        for (pkgSplit in names.indices) {
-            val packageFqName = if (pkgSplit == 0) {
-                // Try with no package (use the owner's package)
-                ownerPackage
-            } else {
-                FqName.fromSegments(names.subList(0, pkgSplit))
-            }
-            val classNames = if (pkgSplit == 0) names else names.subList(pkgSplit, names.size)
-            if (classNames.isEmpty()) continue
-
-            var classId = ClassId(packageFqName, Name.identifier(classNames[0]))
-            if (session.symbolProvider.getClassLikeSymbolByClassId(classId) == null) continue
-
-            for (i in 1 until classNames.size) {
-                classId = classId.createNestedClassId(Name.identifier(classNames[i]))
-            }
-            if (session.symbolProvider.getClassLikeSymbolByClassId(classId) != null) {
-                return classId
-            }
-        }
-
-        // Fallback: If we can't resolve it, just assume the first name is a class in the owner's package
-        // or a completely unresolved name. This prevents an IDE crash and lets the compiler 
-        // report an unresolved reference later if it's truly invalid.
-        var fallbackClassId = ClassId(ownerPackage, Name.identifier(names[0]))
-        for (i in 1 until names.size) {
-            fallbackClassId = fallbackClassId.createNestedClassId(Name.identifier(names[i]))
-        }
-        return fallbackClassId
-    }
-
     override fun getContributionHints(): List<ContributionHint> {
         return session.predicateBasedProvider
-            .getSymbolsByPredicate(Ids.predicate)
+            .getSymbolsByPredicate(Ids.componentPredicate)
             .filterIsInstance<FirRegularClassSymbol>()
             .map { classSymbol ->
                 val serviceProvider = classSymbol.classId.createNestedClassId(Ids.featureServiceProviderName)

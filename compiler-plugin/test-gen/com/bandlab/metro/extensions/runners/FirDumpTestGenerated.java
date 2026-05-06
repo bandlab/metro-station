@@ -84,4 +84,58 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
       runTest("compiler-plugin/testData/dump/configselector/basic.kt");
     }
   }
+
+  @Nested
+  @TestMetadata("compiler-plugin/testData/dump/injector")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Injector {
+    @Test
+    public void testAllFilesPresentInInjector() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/injector"), Pattern.compile("^(.+)\\.kt$"), null, true);
+    }
+
+    @Nested
+    @TestMetadata("compiler-plugin/testData/dump/injector/activity")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Activity {
+      @Test
+      @TestMetadata("activityParam.kt")
+      public void testActivityParam() {
+        runTest("compiler-plugin/testData/dump/injector/activity/activityParam.kt");
+      }
+
+      @Test
+      public void testAllFilesPresentInActivity() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/injector/activity"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("compiler-plugin/testData/dump/injector/activity/basic.kt");
+      }
+    }
+
+    @Nested
+    @TestMetadata("compiler-plugin/testData/dump/injector/page")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Page {
+      @Test
+      public void testAllFilesPresentInPage() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/injector/page"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("compiler-plugin/testData/dump/injector/page/basic.kt");
+      }
+
+      @Test
+      @TestMetadata("paramPage.kt")
+      public void testParamPage() {
+        runTest("compiler-plugin/testData/dump/injector/page/paramPage.kt");
+      }
+    }
+  }
 }

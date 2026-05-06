@@ -2,12 +2,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-@ContributesComponent(appDependencies = MyPage.ServiceProvider::class)
+@ContributesInjector
 class MyPage : ParamPage<MyViewModel, MyPage.Params> {
-
     data class Params(val number: Long)
-
-    interface ServiceProvider
 }
 
 @Inject

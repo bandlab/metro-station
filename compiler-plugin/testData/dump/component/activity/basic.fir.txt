@@ -77,7 +77,7 @@ FILE: basic.kt
             ^provideText String(Hello!)
         }
 
-        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/CallableMetadata|(callableName = String(provideText), propertyName = String(), startOffset = Int(493), endOffset = Int(543), newInstanceName = String(provideText)) public final class ProvideTextMetroFactory : R|kotlin/Any| {
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/CallableMetadata|(callableName = String(provideText), propertyName = String(), startOffset = Int(594), endOffset = Int(644), newInstanceName = String(provideText)) public final class ProvideTextMetroFactory : R|kotlin/Any| {
             public final companion object Companion : R|kotlin/Any| {
                 private constructor(): R|AppGraph.ProvideTextMetroFactory.Companion| {
                     super<R|kotlin/Any|>()

@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
-import org.jetbrains.kotlin.fir.declarations.FirNamedFunction
+import org.jetbrains.kotlin.fir.declarations.FirFunction
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.expressions.builder.*
@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 
@@ -111,7 +112,7 @@ internal fun FirClassLikeSymbol<*>.getClassCall(): FirExpression = buildGetClass
 /**
  * Marks a function as abstract.
  */
-internal fun FirNamedFunction.markAbstract(owner: FirClassSymbol<*>) {
+internal fun FirFunction.markAbstract(owner: FirClassSymbol<*>) {
     replaceStatus(
         FirResolvedDeclarationStatusImpl(
             Visibilities.Public,
@@ -173,4 +174,34 @@ internal fun FirTypeRef.unwrapType(index: Int = 0): ConeTypeProjection? {
 
         else -> null
     }
+}
+
+/**
+ * Recursively extract a [ClassId] from an unresolved property access expression chain.
+ */
+internal fun FirExpression.extractClassId(ownerClassId: ClassId, session: FirSession): ClassId? {
+    val names = mutableListOf<String>()
+    var current: FirExpression? = this
+    while (current is FirPropertyAccessExpression) {
+        val ref = current.calleeReference
+        names.add(0, ref.name.asString())
+        current = current.explicitReceiver
+    }
+    if (names.isEmpty()) return null
+
+    val packageFqName = ownerClassId.packageFqName
+    for (i in names.indices) {
+        val outerName = names.subList(0, i + 1).joinToString(".")
+        val classId = ClassId(packageFqName, FqName(outerName), false)
+        if (session.symbolProvider.getClassLikeSymbolByClassId(classId) != null) {
+            var result = classId
+            for (j in (i + 1) until names.size) {
+                result = result.createNestedClassId(names[j].asName())
+            }
+            if (session.symbolProvider.getClassLikeSymbolByClassId(result) != null) {
+                return result
+            }
+        }
+    }
+    return null
 }

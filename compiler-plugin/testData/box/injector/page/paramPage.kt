@@ -2,12 +2,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-@ContributesComponent(appDependencies = MyPage.ServiceProvider::class)
+@ContributesInjector
 class MyPage : ParamPage<MyViewModel, MyPage.Params> {
-
     data class Params(val number: Long)
-
-    interface ServiceProvider
 }
 
 @Inject
@@ -24,11 +21,11 @@ interface AppGraph
 
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
-    val pageGraph = createGraphFactory<MyPage.FeatureGraph.Factory>().create(
+    val myPage = MyPage()
+    val pageGraph = appGraph.asContribution<MyPage.FeatureExtension.Factory>().create(
         feature = MyPage(),
         pageGraphDependencies = PageGraphDependencies(initialParam = MyPage.Params(number = 123L)),
-        serviceProvider = appGraph,
-        extraDependencies = EmptyExtraDependencies
+        navPageDependencies = NavPageDependencies()
     )
     assertEquals(123L, pageGraph.getPageViewModel().number)
     assertEquals(123L, pageGraph.getPageViewModel().numberFromFlow)

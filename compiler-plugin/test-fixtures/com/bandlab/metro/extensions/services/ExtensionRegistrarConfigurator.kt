@@ -30,6 +30,8 @@ fun TestConfigurationBuilder.configureImports(
                         addAll(
                             setOf(
                                 "com.bandlab.common.android.di.*",
+                                "com.bandlab.common.android.pager.screen.*",
+                                "com.bandlab.common.android.pager.screen.di.*",
                                 "com.bandlab.android.common.activity.*",
                                 "com.bandlab.uikit.api.page.*",
                                 "com.bandlab.config.api.*"

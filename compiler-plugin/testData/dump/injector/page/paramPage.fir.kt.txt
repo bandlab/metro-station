@@ -1,0 +1,483 @@
+// FILE: paramPage.kt
+
+@ContributesInjector
+class MyPage : ParamPage<MyViewModel, Params> {
+  data class Params {
+    val number: Long
+      field = number
+      get
+
+    constructor(number: Long) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    operator fun component1(): Long {
+      return <this>.#number
+    }
+
+    fun copy(number: Long = <this>.#number): Params {
+      return Params(number = number)
+    }
+
+    override operator fun equals(other: Any?): Boolean {
+      when {
+        EQEQEQ(arg0 = <this>, arg1 = other) -> return true
+      }
+      when {
+        other !is Params -> return false
+      }
+      val tmp_0: Params = other /*as Params */
+      when {
+        EQEQ(arg0 = <this>.#number, arg1 = tmp_0.#number).not() -> return false
+      }
+      return true
+    }
+
+    override fun hashCode(): Int {
+      return <this>.#number.hashCode()
+    }
+
+    override fun toString(): String {
+      return "Params(" + "number=" + <this>.#number + ")"
+    }
+
+  }
+
+  @IROnlyFactories
+  @ContributesTo(scope = AppScope::class)
+  interface ExtensionFactoryContribution {
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroContribution(scope = AppScope::class)
+    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : ExtensionFactoryContribution {
+    }
+
+    class ProvideFactoryMetroFactory : Factory<Any> {
+      private /* final field */ val instance: ExtensionFactoryContribution = instance
+      private /* final field */ val factory: Provider<Factory> = factory
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): Factory<Any> {
+          return ProvideFactoryMetroFactory(instance = instance, factory = factory)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideFactory(instance: ExtensionFactoryContribution, factory: Factory): Any {
+          return instance.provideFactory(factory = factory)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(instance: ExtensionFactoryContribution, factory: Provider<Factory>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): Any {
+        return Companion.provideFactory(instance = <this>.#instance, factory = <this>.#factory.invoke())
+      }
+
+      @IntoMap
+      @ClassKey(value = MyPage::class)
+      @HiddenFromObjC
+      fun mirrorFunction(factory: Factory): Any {
+        return error(message = "Never called")
+      }
+
+    }
+
+    @Provides
+    @IntoMap
+    @ClassKey(value = MyPage::class)
+    final fun provideFactory(factory: Factory): Any {
+      return factory
+    }
+
+  }
+
+  @PageScope
+  @IROnlyFactories
+  @GraphExtension(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class, FeatureBindings::class])
+  interface FeatureExtension : PageInjector<MyViewModel> {
+    @ContributesTo(scope = AppScope::class)
+    @Factory
+    interface Factory {
+      @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+      @MetroContribution(scope = AppScope::class)
+      interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : Factory {
+      }
+
+      abstract fun create(@Provides feature: MyPage, @Includes pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension
+
+    }
+
+  }
+
+  @BindingContainer
+  @IROnlyFactories
+  object FeatureBindings {
+    class ProvideBaseTypeMetroFactory : Factory<Page<*>> {
+      private /* final field */ val feature: Provider<MyPage> = feature
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(feature: Provider<MyPage>): Factory<Page<*>> {
+          return ProvideBaseTypeMetroFactory(feature = feature)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideBaseType(feature: MyPage): Page<*> {
+          return FeatureBindings.provideBaseType(feature = feature)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(feature: Provider<MyPage>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): Page<*> {
+        return Companion.provideBaseType(feature = <this>.#feature.invoke())
+      }
+
+      @HiddenFromObjC
+      fun mirrorFunction(feature: MyPage): Page<*> {
+        return error(message = "Never called")
+      }
+
+    }
+
+    class ProvideParamFlowMetroFactory : Factory<Flow<Params>> {
+      private /* final field */ val provider: Provider<PageParamFlowProvider> = provider
+      private /* final field */ val feature: Provider<MyPage> = feature
+      private /* final field */ val initialParam: Provider<Params> = initialParam
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>): Factory<Flow<Params>> {
+          return ProvideParamFlowMetroFactory(provider = provider, feature = feature, initialParam = initialParam)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideParamFlow(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
+          return FeatureBindings.provideParamFlow(provider = provider, feature = feature, initialParam = initialParam)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): Flow<Params> {
+        return Companion.provideParamFlow(provider = <this>.#provider.invoke(), feature = <this>.#feature.invoke(), initialParam = <this>.#initialParam.invoke())
+      }
+
+      @HiddenFromObjC
+      fun mirrorFunction(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
+        return error(message = "Never called")
+      }
+
+    }
+
+    class ProvideParamMetroFactory : Factory<Params> {
+      private /* final field */ val pageGraphDependencies: Provider<PageGraphDependencies> = pageGraphDependencies
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(pageGraphDependencies: Provider<PageGraphDependencies>): Factory<Params> {
+          return ProvideParamMetroFactory(pageGraphDependencies = pageGraphDependencies)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideParam(pageGraphDependencies: PageGraphDependencies): Params {
+          return FeatureBindings.provideParam(pageGraphDependencies = pageGraphDependencies)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(pageGraphDependencies: Provider<PageGraphDependencies>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): Params {
+        return Companion.provideParam(pageGraphDependencies = <this>.#pageGraphDependencies.invoke())
+      }
+
+      @HiddenFromObjC
+      fun mirrorFunction(pageGraphDependencies: PageGraphDependencies): Params {
+        return error(message = "Never called")
+      }
+
+    }
+
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @Provides
+    fun provideBaseType(feature: MyPage): Page<*> {
+      return feature
+    }
+
+    @Provides
+    fun provideParam(pageGraphDependencies: PageGraphDependencies): Params {
+      return pageGraphDependencies.<get-initialParam>() as Params
+    }
+
+    @Provides
+    fun provideParamFlow(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
+      return provider.createParamFlow</* null */>(page = feature, initialParam = initialParam)
+    }
+
+  }
+
+  constructor() /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+}
+
+@Inject
+class MyViewModel {
+  private val param: Params
+    field = param
+    private get
+
+  private val paramFlow: Flow<Params>
+    field = paramFlow
+    private get
+
+  val number: Long
+    field = <this>.<get-param>().<get-number>()
+    get
+
+  val numberFromFlow: Long
+    field = runBlocking<Long>(block = local suspend fun CoroutineScope.<anonymous>(): Long {
+      return first<Params>(/* <this> = <this>.<get-paramFlow>() */).<get-number>()
+    }
+)
+    get
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  class MetroFactory : Factory<MyViewModel> {
+    private /* final field */ val param: Provider<Params> = param
+    private /* final field */ val paramFlow: Provider<Flow<Params>> = paramFlow
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun create(param: Provider<Params>, paramFlow: Provider<Flow<Params>>): Factory<MyViewModel> {
+        return MetroFactory(param = param, paramFlow = paramFlow)
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun newInstance(param: Params, paramFlow: Flow<Params>): MyViewModel {
+        return MyViewModel(param = param, paramFlow = paramFlow)
+      }
+
+    }
+
+    @HiddenFromObjC
+    private constructor(param: Provider<Params>, paramFlow: Provider<Flow<Params>>) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @HiddenFromObjC
+    override operator fun invoke(): MyViewModel {
+      return Companion.newInstance(param = <this>.#param.invoke(), paramFlow = <this>.#paramFlow.invoke())
+    }
+
+    @HiddenFromObjC
+    fun mirrorFunction(param: Params, paramFlow: Flow<Params>): MyViewModel {
+      return error(message = "Never called")
+    }
+
+  }
+
+  constructor(param: Params, paramFlow: Flow<Params>) /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+}
+
+@DependencyGraph(scope = AppScope::class)
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphExtensionFactoriesProvider, MetroContributionToAppScope, PageInjectorProvider, MetroContributionToAppScope {
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  @MetroImplMarker
+  class Impl : AppGraph {
+    private val thisGraphInstance: Impl
+      field = <this>
+
+    @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class, FeatureBindings::class])
+    @PageScope
+    private class FeatureExtensionImpl : FeatureExtension {
+      private val appGraphImpl: Impl
+        field = appGraphImpl
+
+      private val featureInstance: MyPage
+        field = feature
+
+      private val featureInstanceProvider: Provider<MyPage>
+        field = Companion.invoke<MyPage>(value = <this>.#featureInstance)
+
+      private val pageGraphDependenciesInstance: PageGraphDependencies
+        field = pageGraphDependencies
+
+      constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Includes pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      override fun getPageViewModel(): MyViewModel {
+        return MyViewModel(param = <this>.<get-provideParam>(), paramFlow = FeatureBindings.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.<get-provideParam>()))
+      }
+
+      private val mapOfKClass___ToAny: Map<KClass<*>, Any>
+        private get(): Map<KClass<*>, Any> {
+          return buildMap<KClass<*>, Any>(capacity = 1, builderAction = local fun MutableMap<KClass<*>, Any>.<anonymous>() {
+            $receiver.put(key = MyPage::class, value = <this>.#appGraphImpl.provideFactory(factory = <this>.#appGraphImpl))
+          }
+)
+        }
+
+      private val provideParam: Params
+        private get(): Params {
+          return FeatureBindings.provideParam(pageGraphDependencies = <this>.#pageGraphDependenciesInstance)
+        }
+
+    }
+
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    override fun create(@Provides feature: MyPage, @Includes pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension {
+      return FeatureExtensionImpl(appGraphImpl = <this>, feature = feature, pageGraphDependencies = pageGraphDependencies, navPageDependencies = navPageDependencies)
+    }
+
+    @Multibinds(allowEmpty = true)
+    override val dispatchingGraphExtensionFactories: Map<KClass<*>, Any>
+      override get(): Map<KClass<*>, Any> {
+        return <this>.<get-mapOfKClass___ToAny>()
+      }
+
+    @Multibinds(allowEmpty = true)
+    override val dispatchingPageInjector: Map<KClass<*>, Any>
+      override get(): Map<KClass<*>, Any> {
+        return <this>.<get-mapOfKClass___ToAny>()
+      }
+
+    private val mapOfKClass___ToAny: Map<KClass<*>, Any>
+      private get(): Map<KClass<*>, Any> {
+        return buildMap<KClass<*>, Any>(capacity = 1, builderAction = local fun MutableMap<KClass<*>, Any>.<anonymous>() {
+          $receiver.put(key = MyPage::class, value = <this>.#thisGraphInstance.provideFactory(factory = <this>.#thisGraphInstance))
+        }
+)
+      }
+
+  }
+
+  companion object Companion {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @GraphFactoryInvokeFunctionMarker
+    @JvmStatic
+    @JsStatic
+    operator fun invoke(): AppGraph {
+      return Impl()
+    }
+
+  }
+
+}
+
+// FILE: myPageExtensionFactoryContributionAppScope.kt
+package metro.hints
+
+fun AppScope(contributed: ExtensionFactoryContribution) {
+  return error(message = "Never called")
+}
+
+// FILE: myPageFeatureExtensionFactoryAppScope.kt
+package metro.hints
+
+fun AppScope(contributed: Factory) {
+  return error(message = "Never called")
+}

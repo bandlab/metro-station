@@ -1,0 +1,86 @@
+FILE: basic.kt
+    @R|com/bandlab/common/android/di/ContributesInjector|() public final class MyPage : R|com/bandlab/uikit/api/page/Page<MyViewModel>| {
+        public constructor(): R|MyPage| {
+            super<R|kotlin/Any|>()
+        }
+
+        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|com/bandlab/common/android/pager/screen/di/PageGraphDependenciesModule|), <getClass>(Q|MyPage.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
+            @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory {
+                public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Includes|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() navPageDependencies: R|com/bandlab/common/android/pager/screen/di/NavPageDependencies|): R|MyPage.FeatureExtension|
+
+                @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|MyPage.FeatureExtension.Factory| {
+                }
+
+            }
+
+        }
+
+        @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface ExtensionFactoryContribution {
+            @R|dev/zacsweers/metro/Provides|() @R|dev/zacsweers/metro/IntoMap|() @R|dev/zacsweers/metro/ClassKey|(value = <getClass>(Q|MyPage|)) public final fun provideFactory(factory: R|MyPage.FeatureExtension.Factory|): R|kotlin/Any|
+
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|MyPage.ExtensionFactoryContribution| {
+            }
+
+        }
+
+        @R|dev/zacsweers/metro/BindingContainer|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() public final object FeatureBindings {
+            @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyPage|): R|com/bandlab/uikit/api/page/Page<*>|
+
+            private constructor(): R|MyPage.FeatureBindings| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+    }
+    @R|dev/zacsweers/metro/Inject|() public final class MyViewModel : R|kotlin/Any| {
+        public constructor(number: R|kotlin/Long|): R|MyViewModel| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val number: R|kotlin/Long| = R|<local>/number|
+            public get(): R|kotlin/Long|
+
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) public final class MetroFactory : R|kotlin/Any| {
+            public final companion object Companion : R|kotlin/Any| {
+                private constructor(): R|MyViewModel.MetroFactory.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+    }
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeoxd1AHI|, R|MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeoxd1AHI|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider|, R|com/bandlab/common/android/pager/screen/di/PageInjectorProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/pager/screen/di/PageInjectorProvider| {
+        @R|dev/zacsweers/metro/Provides|() public open fun provideLong(): R|kotlin/Long| {
+            ^provideLong Long(123)
+        }
+
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/CallableMetadata|(callableName = String(provideLong), propertyName = String(), startOffset = Int(442), endOffset = Int(486), newInstanceName = String(provideLong)) public final class ProvideLongMetroFactory : R|kotlin/Any| {
+            public final companion object Companion : R|kotlin/Any| {
+                private constructor(): R|AppGraph.ProvideLongMetroFactory.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|AppGraph| {
+            private constructor(): R|AppGraph.Impl| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+        public final companion object Companion : R|kotlin/Any| {
+            @R|dev/zacsweers/metro/internal/GraphFactoryInvokeFunctionMarker|() @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final operator fun invoke(): R|AppGraph|
+
+            private constructor(): R|AppGraph.Companion| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+    }

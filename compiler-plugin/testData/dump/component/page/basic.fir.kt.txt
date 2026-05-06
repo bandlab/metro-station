@@ -249,7 +249,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphE
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 459, endOffset = 503, newInstanceName = "provideLong")
+  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 560, endOffset = 604, newInstanceName = "provideLong")
   class ProvideLongMetroFactory : Factory<Long> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {

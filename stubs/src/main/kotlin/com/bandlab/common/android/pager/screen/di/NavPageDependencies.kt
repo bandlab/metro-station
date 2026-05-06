@@ -5,7 +5,7 @@ import dev.zacsweers.metro.Provides
 
 @BindingContainer
 class NavPageDependencies(
-    private val navPageNavigation: NavPageNavigation
+    private val navPageNavigation: NavPageNavigation = NavPageNavigation.NOOP,
 ) {
     @Provides
     fun provideNavPageNavigation(): NavPageNavigation = navPageNavigation

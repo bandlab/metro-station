@@ -13,11 +13,17 @@ internal object ClassIds {
     val intoSet = ClassId(metroPackageFqName, "IntoSet".asName())
     val dependencyGraph = ClassId(metroPackageFqName, "DependencyGraph".asName())
     val dependencyGraphFactory = dependencyGraph.createNestedClassId("Factory".asName())
+    val graphExtension = ClassId(metroPackageFqName, "GraphExtension".asName())
+    val graphExtensionFactory = graphExtension.createNestedClassId("Factory".asName())
     val provides = ClassId(metroPackageFqName, "Provides".asName())
     val includes = ClassId(metroPackageFqName, "Includes".asName())
+    val intoMap = ClassId(metroPackageFqName, "IntoMap".asName())
+    val classKey = ClassId(metroPackageFqName, "ClassKey".asName())
+    val bindingContainer = ClassId(metroPackageFqName, "BindingContainer".asName())
 
     val irOnlyFactories = ClassId(metroInternalPackageFqName, "IROnlyFactories".asName())
 
     val scopeName = "scope".asName()
     val bindingContainersName = "bindingContainers".asName()
+    val valueName = "value".asName()
 }
