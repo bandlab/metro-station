@@ -5,4 +5,7 @@ import org.jetbrains.kotlin.test.directives.model.SimpleDirectivesContainer
 object MetroDirectives : SimpleDirectivesContainer() {
     val GENERATE_CONTRIBUTION_HINTS_IN_FIR by
     directive("Enable generation of contribution hints in FIR instead of IR.")
+
+    val ENABLE_CONTRIBUTES_INJECTOR_BASELINE by
+    directive("Enable the ContributesInjector baseline checker.")
 }

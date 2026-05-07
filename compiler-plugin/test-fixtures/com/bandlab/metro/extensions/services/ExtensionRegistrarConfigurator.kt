@@ -1,16 +1,21 @@
 package com.bandlab.metro.extensions.services
 
-import com.bandlab.metro.extensions.BandLabPluginComponentRegistrar
+import com.bandlab.metro.extensions.BandLabCompilerPluginRegistrar
+import com.bandlab.metro.extensions.component.ContributesComponentIr
+import com.bandlab.metro.extensions.injector.ContributesInjectorIr
 import dev.zacsweers.metro.compiler.MetroCommandLineProcessor
 import dev.zacsweers.metro.compiler.MetroCompilerPluginRegistrar
+import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.services.EnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.TestServices
 
 fun TestConfigurationBuilder.configurePlugin() {
+    useDirectives(MetroDirectives)
     useConfigurators(::ExtensionRegistrarConfigurator)
     configureAnnotations()
     configureMetroRuntime()
@@ -47,7 +52,6 @@ fun TestConfigurationBuilder.configureImports(
 }
 
 private class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices) {
-    private val bandLabRegistrar = BandLabPluginComponentRegistrar()
     private val metroRegistrar = MetroCompilerPluginRegistrar()
     private val metroCliProcessor = MetroCommandLineProcessor()
 
@@ -63,7 +67,15 @@ private class ExtensionRegistrarConfigurator(testServices: TestServices) : Envir
             metroCliProcessor.processOption(option, "true", configuration)
         }
 
-        with(bandLabRegistrar) { registerExtensions(configuration) }
+        val includeBaselineChecker = MetroDirectives.ENABLE_CONTRIBUTES_INJECTOR_BASELINE in module.directives
+        FirExtensionRegistrarAdapter.registerExtension(
+            BandLabCompilerPluginRegistrar(
+                includeBaselineChecker = includeBaselineChecker,
+                contributesInjectorBaseline = emptySet()
+            )
+        )
+        IrGenerationExtension.registerExtension(ContributesComponentIr())
+        IrGenerationExtension.registerExtension(ContributesInjectorIr())
         with(metroRegistrar) { registerExtensions(configuration) }
     }
 }

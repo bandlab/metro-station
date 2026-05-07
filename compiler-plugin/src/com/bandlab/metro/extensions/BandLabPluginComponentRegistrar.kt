@@ -27,7 +27,13 @@ public class BandLabPluginComponentRegistrar : CompilerPluginRegistrar() {
     override val supportsK2: Boolean get() = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
-        FirExtensionRegistrarAdapter.registerExtension(BandLabCompilerPluginRegistrar())
+        val contributesInjectorBaseline =
+            configuration.get(MetroExtensionsConfigurationKeys.CONTRIBUTES_INJECTOR_BASELINE).orEmpty()
+        FirExtensionRegistrarAdapter.registerExtension(
+            BandLabCompilerPluginRegistrar(contributesInjectorBaseline = contributesInjectorBaseline)
+        )
+
+        // Do not run IR extensions in IDE
         if (!isIde) {
             IrGenerationExtension.registerExtension(ContributesComponentIr())
             IrGenerationExtension.registerExtension(ContributesInjectorIr())

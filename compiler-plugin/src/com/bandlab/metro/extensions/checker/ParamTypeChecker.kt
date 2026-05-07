@@ -16,6 +16,14 @@ import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.name.StandardClassIds
 import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
 
+/**
+ * A Fir class declaration checker responsible for validating the generic parameter types of
+ * specific annotated classes based on predefined restrictions.
+ *
+ * This checker ensures that classes annotated with either `@ContributesComponent` or
+ * `@ContributesInjector` do not use restricted types as their parameters. Restricted types
+ * include primitive types such as `String`, `Int`, and others defined in the `restrictedParamTypes` set.
+ */
 internal object ParamTypeClassChecker : FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
 
     private val restrictedParamTypes = setOf(
@@ -68,7 +76,7 @@ internal object ParamTypeClassChecker : FirDeclarationChecker<FirClass>(MppCheck
             reporter.reportOn(
                 source = typeArgSource ?: declaration.source,
                 factory = MetroExtensionsDiagnostics.RESTRICTED_PARAM_TYPE,
-                context = context
+                "Param type ${paramType.classId} is a restricted primitive type. Use a wrapper class instead."
             )
         }
     }

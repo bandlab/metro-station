@@ -2,22 +2,29 @@ package com.bandlab.metro.extensions.checker
 
 import org.jetbrains.kotlin.diagnostics.KtDiagnosticFactoryToRendererMap
 import org.jetbrains.kotlin.diagnostics.KtDiagnosticsContainer
+import org.jetbrains.kotlin.diagnostics.SourceElementPositioningStrategies.NAME_IDENTIFIER
 import org.jetbrains.kotlin.diagnostics.error0
+import org.jetbrains.kotlin.diagnostics.error1
 import org.jetbrains.kotlin.diagnostics.rendering.BaseDiagnosticRendererFactory
+import org.jetbrains.kotlin.diagnostics.rendering.CommonRenderers.STRING
 import org.jetbrains.kotlin.psi.KtElement
 
 internal object MetroExtensionsDiagnostics : KtDiagnosticsContainer() {
 
-    val RESTRICTED_PARAM_TYPE by error0<KtElement>()
+    val RESTRICTED_PARAM_TYPE by error1<KtElement, String>(NAME_IDENTIFIER)
+    val DEPRECATED_CONTRIBUTES_INJECTOR by error0<KtElement>(NAME_IDENTIFIER)
+    val TARGET_MUST_BE_PUBLIC by error1<KtElement, String>(NAME_IDENTIFIER)
 
     override fun getRendererFactory(): BaseDiagnosticRendererFactory = RendererFactory
 
     private object RendererFactory : BaseDiagnosticRendererFactory() {
         override val MAP by KtDiagnosticFactoryToRendererMap("ParamTypeErrors") { map ->
+            map.put(RESTRICTED_PARAM_TYPE, "{0}", STRING)
             map.put(
-                RESTRICTED_PARAM_TYPE,
-                "Parameter type is a restricted primitive type. Use a wrapper class instead.",
+                DEPRECATED_CONTRIBUTES_INJECTOR,
+                "@ContributesInjector is deprecated. Use @ContributesComponent instead.",
             )
+            map.put(TARGET_MUST_BE_PUBLIC, "{0}", STRING)
         }
     }
 }

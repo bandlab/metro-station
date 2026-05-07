@@ -18,7 +18,6 @@ import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.builder.buildValueParameter
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.origin
-import org.jetbrains.kotlin.fir.declarations.utils.visibility
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
 import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
@@ -84,10 +83,6 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
         if (name != Ids.nestedContributionName) return null
         if (!session.predicateBasedProvider.matches(Ids.predicate, owner)) {
             return null
-        }
-
-        if (!owner.visibility.isPublicAPI) {
-            error("${owner.classId.asString()} must be public to be contributed properly.")
         }
 
         val nestedClassId = owner.classId.createNestedClassId(name)

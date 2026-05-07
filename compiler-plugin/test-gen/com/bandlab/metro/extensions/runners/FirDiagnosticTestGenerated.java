@@ -21,6 +21,30 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
+  @TestMetadata("internalConfigSelector.kt")
+  public void testInternalConfigSelector() {
+    runTest("compiler-plugin/testData/diagnostics/internalConfigSelector.kt");
+  }
+
+  @Test
+  @TestMetadata("internalContributesComponent.kt")
+  public void testInternalContributesComponent() {
+    runTest("compiler-plugin/testData/diagnostics/internalContributesComponent.kt");
+  }
+
+  @Test
+  @TestMetadata("internalContributesInjector.kt")
+  public void testInternalContributesInjector() {
+    runTest("compiler-plugin/testData/diagnostics/internalContributesInjector.kt");
+  }
+
+  @Test
+  @TestMetadata("newContributesInjectorUseCase.kt")
+  public void testNewContributesInjectorUseCase() {
+    runTest("compiler-plugin/testData/diagnostics/newContributesInjectorUseCase.kt");
+  }
+
+  @Test
   @TestMetadata("restrictedActivityParam.kt")
   public void testRestrictedActivityParam() {
     runTest("compiler-plugin/testData/diagnostics/restrictedActivityParam.kt");
