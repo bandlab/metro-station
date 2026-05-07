@@ -1,5 +1,6 @@
 package com.bandlab.metro.extensions.utils
 
+import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
@@ -170,6 +171,24 @@ internal fun FirTypeRef.unwrapType(index: Int = 0): ConeTypeProjection? {
         is FirResolvedTypeRef -> {
             val coneType = coneType as? ConeClassLikeType
             coneType?.typeArguments?.getOrNull(index)
+        }
+
+        else -> null
+    }
+}
+
+/**
+ * Returns the [KtSourceElement] of the type argument at the given [index] from this [FirTypeRef].
+ */
+internal fun FirTypeRef.typeArgumentSource(index: Int = 0): KtSourceElement? {
+    return when (this) {
+        is FirUserTypeRef -> {
+            val typeArg = qualifier.lastOrNull()?.typeArgumentList?.typeArguments?.getOrNull(index)
+            typeArg?.source
+        }
+
+        is FirResolvedTypeRef -> {
+            delegatedTypeRef?.typeArgumentSource(index)
         }
 
         else -> null

@@ -21,8 +21,14 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
-  @TestMetadata("dummy.kt")
-  public void testDummy() {
-    runTest("compiler-plugin/testData/diagnostics/dummy.kt");
+  @TestMetadata("restrictedActivityParam.kt")
+  public void testRestrictedActivityParam() {
+    runTest("compiler-plugin/testData/diagnostics/restrictedActivityParam.kt");
+  }
+
+  @Test
+  @TestMetadata("restrictedPageParam.kt")
+  public void testRestrictedPageParam() {
+    runTest("compiler-plugin/testData/diagnostics/restrictedPageParam.kt");
   }
 }

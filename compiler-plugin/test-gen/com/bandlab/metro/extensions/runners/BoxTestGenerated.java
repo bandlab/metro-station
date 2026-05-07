@@ -74,6 +74,40 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testExtraDependencies() {
         runTest("compiler-plugin/testData/box/component/activity/extraDependencies.kt");
       }
+
+      @Test
+      @TestMetadata("fullFeatures.kt")
+      public void testFullFeatures() {
+        runTest("compiler-plugin/testData/box/component/activity/fullFeatures.kt");
+      }
+    }
+
+    @Nested
+    @TestMetadata("compiler-plugin/testData/box/component/other")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Other {
+      @Test
+      public void testAllFilesPresentInOther() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/component/other"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("broadcastReceiver.kt")
+      public void testBroadcastReceiver() {
+        runTest("compiler-plugin/testData/box/component/other/broadcastReceiver.kt");
+      }
+
+      @Test
+      @TestMetadata("service.kt")
+      public void testService() {
+        runTest("compiler-plugin/testData/box/component/other/service.kt");
+      }
+
+      @Test
+      @TestMetadata("worker.kt")
+      public void testWorker() {
+        runTest("compiler-plugin/testData/box/component/other/worker.kt");
+      }
     }
 
     @Nested
@@ -212,6 +246,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("customParentScopePositional.kt")
+      public void testCustomParentScopePositional() {
+        runTest("compiler-plugin/testData/box/injector/activity/customParentScopePositional.kt");
+      }
+
+      @Test
       @TestMetadata("defaultDependencies.kt")
       public void testDefaultDependencies() {
         runTest("compiler-plugin/testData/box/injector/activity/defaultDependencies.kt");
@@ -221,6 +261,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("factoryContribution.kt")
       public void testFactoryContribution() {
         runTest("compiler-plugin/testData/box/injector/activity/factoryContribution.kt");
+      }
+
+      @Test
+      @TestMetadata("fullFeatures.kt")
+      public void testFullFeatures() {
+        runTest("compiler-plugin/testData/box/injector/activity/fullFeatures.kt");
+      }
+
+      @Test
+      @TestMetadata("mixEditorUseCase.kt")
+      public void testMixEditorUseCase() {
+        runTest("compiler-plugin/testData/box/injector/activity/mixEditorUseCase.kt");
       }
     }
 
@@ -261,6 +313,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("customParentScope.kt")
       public void testCustomParentScope() {
         runTest("compiler-plugin/testData/box/injector/page/customParentScope.kt");
+      }
+
+      @Test
+      @TestMetadata("customParentScopePositional.kt")
+      public void testCustomParentScopePositional() {
+        runTest("compiler-plugin/testData/box/injector/page/customParentScopePositional.kt");
       }
 
       @Test

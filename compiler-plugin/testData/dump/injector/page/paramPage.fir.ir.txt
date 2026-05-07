@@ -218,7 +218,7 @@ FILE fqName:<root> fileName:/paramPage.kt
                 Provides
             VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
               annotations:
-                Includes
+                Provides
             VALUE_PARAMETER kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
               annotations:
                 Includes
@@ -231,7 +231,7 @@ FILE fqName:<root> fileName:/paramPage.kt
               Provides
           VALUE_PARAMETER GENERATED[com.bandlab.metro.extensions.injector.ContributesInjectorFir.Key] kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
             annotations:
-              Includes
+              Provides
           VALUE_PARAMETER GENERATED[com.bandlab.metro.extensions.injector.ContributesInjectorFir.Key] kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
             annotations:
               Includes
@@ -763,6 +763,14 @@ FILE fqName:<root> fileName:/paramPage.kt
           FIELD PROPERTY_BACKING_FIELD name:pageGraphDependenciesInstance type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies visibility:private [final]
             EXPRESSION_BODY
               GET_VAR 'pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies declared in <root>.AppGraph.Impl.FeatureExtensionImpl.<init>' type=com.bandlab.common.android.pager.screen.di.PageGraphDependencies origin=null
+        PROPERTY name:pageGraphDependenciesInstanceProvider visibility:private modality:FINAL [val]
+          FIELD PROPERTY_BACKING_FIELD name:pageGraphDependenciesInstanceProvider type:dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.di.PageGraphDependencies> visibility:private [final]
+            EXPRESSION_BODY
+              CALL 'public final fun invoke <T> (value: T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke): dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> declared in dev.zacsweers.metro.internal.InstanceFactory.Companion' type=dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> origin=null
+                TYPE_ARG T: com.bandlab.common.android.pager.screen.di.PageGraphDependencies
+                ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=dev.zacsweers.metro.internal.InstanceFactory.Companion
+                ARG value: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:pageGraphDependenciesInstance type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies visibility:private [final]' type=com.bandlab.common.android.pager.screen.di.PageGraphDependencies origin=null
+                  receiver: GET_VAR '<this>: <root>.AppGraph.Impl.FeatureExtensionImpl declared in <root>.AppGraph.Impl.FeatureExtensionImpl' type=<root>.AppGraph.Impl.FeatureExtensionImpl origin=null
         CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] visibility:public returnType:<root>.AppGraph.Impl.FeatureExtensionImpl [primary]
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ParentGraphParam] kind:Regular name:appGraphImpl index:0 type:<root>.AppGraph.Impl
           VALUE_PARAMETER kind:Regular name:feature index:1 type:<root>.MyPage
@@ -770,7 +778,7 @@ FILE fqName:<root> fileName:/paramPage.kt
               Provides
           VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
             annotations:
-              Includes
+              Provides
           VALUE_PARAMETER kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
             annotations:
               Includes
@@ -871,7 +879,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             Provides
         VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
           annotations:
-            Includes
+            Provides
         VALUE_PARAMETER kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
           annotations:
             Includes
@@ -969,7 +977,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           Provides
       VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
         annotations:
-          Includes
+          Provides
       VALUE_PARAMETER kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
         annotations:
           Includes

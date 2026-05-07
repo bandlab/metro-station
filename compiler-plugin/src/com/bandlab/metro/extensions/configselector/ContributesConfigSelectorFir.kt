@@ -59,7 +59,7 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
     // To let metro process the bind function, we need to generate it when creating the nested contribution interface.
     //TODO: Generate duplicated declaration for the IDE inlay
     override val enableFirInIde: Boolean
-        get() = true
+        get() = false
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.predicate)

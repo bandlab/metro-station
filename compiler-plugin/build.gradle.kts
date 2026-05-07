@@ -117,6 +117,7 @@ kotlin {
         jvmTarget.set(JvmTarget.JVM_21)
         optIn.add("org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
         optIn.add("org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI")
+        freeCompilerArgs.add("-Xcontext-parameters")
     }
 }
 

@@ -46,6 +46,7 @@ internal object ContributesComponentIds {
     val commonActivityServiceProvider = commonActivity.createNestedClassId("ServiceProvider".asName())
     val defaultScreenServiceProvider = ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
+    val fragment = ClassId(FqName("androidx.fragment.app"), "Fragment".asName())
     val defaultFragmentDeps =
         ClassId(FqName("com.bandlab.android.common.fragment"), "DefaultFragmentDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
@@ -70,7 +71,10 @@ internal object ContributesComponentIds {
 
     // Component base types
     val activityTypes = setOf(commonActivity)
-    val fragmentTypes = setOf(ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName()))
+    val fragmentTypes = setOf(
+        ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName()),
+        ClassId(FqName("com.bandlab.android.common.fragment"), "CommonDialogFragment".asName()),
+    )
     val pageTypes = setOf(paramPage, page)
     val serviceTypes = setOf(ClassId(FqName("android.app"), "Service".asName()))
     val workerTypes = setOf(ClassId(FqName("androidx.work"), "CoroutineWorker".asName()))

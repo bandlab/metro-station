@@ -129,7 +129,7 @@ FILE fqName:<root> fileName:/basic.kt
                 Provides
             VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
               annotations:
-                Includes
+                Provides
             VALUE_PARAMETER kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
               annotations:
                 Includes
@@ -142,7 +142,7 @@ FILE fqName:<root> fileName:/basic.kt
               Provides
           VALUE_PARAMETER GENERATED[com.bandlab.metro.extensions.injector.ContributesInjectorFir.Key] kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
             annotations:
-              Includes
+              Provides
           VALUE_PARAMETER GENERATED[com.bandlab.metro.extensions.injector.ContributesInjectorFir.Key] kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
             annotations:
               Includes
@@ -427,7 +427,7 @@ FILE fqName:<root> fileName:/basic.kt
               Provides
           VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
             annotations:
-              Includes
+              Provides
           VALUE_PARAMETER kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
             annotations:
               Includes
@@ -518,7 +518,7 @@ FILE fqName:<root> fileName:/basic.kt
             Provides
         VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
           annotations:
-            Includes
+            Provides
         VALUE_PARAMETER kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
           annotations:
             Includes
@@ -705,7 +705,7 @@ FILE fqName:<root> fileName:/basic.kt
           Provides
       VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
         annotations:
-          Includes
+          Provides
       VALUE_PARAMETER kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
         annotations:
           Includes

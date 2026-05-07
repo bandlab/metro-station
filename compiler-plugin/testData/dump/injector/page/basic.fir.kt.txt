@@ -78,7 +78,7 @@ class MyPage : Page<MyViewModel> {
       interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : Factory {
       }
 
-      abstract fun create(@Provides feature: MyPage, @Includes pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension
+      abstract fun create(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension
 
     }
 
@@ -225,7 +225,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, MetroC
       private val appGraphImpl: Impl
         field = appGraphImpl
 
-      constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Includes pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies) /* primary */ {
+      constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
@@ -251,7 +251,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, MetroC
 
     }
 
-    override fun create(@Provides feature: MyPage, @Includes pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension {
+    override fun create(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension {
       return FeatureExtensionImpl(appGraphImpl = <this>, feature = feature, pageGraphDependencies = pageGraphDependencies, navPageDependencies = navPageDependencies)
     }
 
@@ -359,3 +359,4 @@ package metro.hints
 fun AppScope(contributed: Factory) {
   return error(message = "Never called")
 }
+

@@ -2,6 +2,7 @@ package com.bandlab.metro.extensions.injector
 
 import com.bandlab.metro.extensions.component.ContributesComponentIds
 import com.bandlab.metro.extensions.utils.ClassIds
+import com.bandlab.metro.extensions.utils.resolveScopeClassIdFromAnnotation
 import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroContributionExtension
@@ -63,7 +64,12 @@ public class ContributesInjectorMetroExtension(private val session: FirSession) 
     }
 
     private fun resolveParentScopeClassId(owner: FirRegularClassSymbol): ClassId {
-        return resolveScopeClassIdFromAnnotation(owner, ContributesComponentIds.contributesInjector, session, ClassIds.appScope)
+        return resolveScopeClassIdFromAnnotation(
+            owner,
+            ContributesComponentIds.contributesInjector,
+            session,
+            ClassIds.appScope
+        )
     }
 
     private fun resolveContribution(

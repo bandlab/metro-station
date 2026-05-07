@@ -109,8 +109,9 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
      */
     private val componentTypeCache = mutableMapOf<ClassId, ComponentType>()
 
+    //TODO: Enable FIR in IDE support
     override val enableFirInIde: Boolean
-        get() = true
+        get() = false
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.componentPredicate)
@@ -238,7 +239,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
 
             if (componentType is ComponentType.Page) {
                 superTypeRefs += buildResolvedTypeRef {
-                    val viewModelType = componentType.superTypeRef.unwrapType()!!
+                    val viewModelType = resolvePageViewModelType(componentType.superTypeRef, owner, session)
                     coneType = Ids.pageInjector.constructClassLikeType(arrayOf(viewModelType))
                 }
             } else {
@@ -297,14 +298,12 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
 
-        val commonActivitySuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.commonActivity }
-        val pageSuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.paramPage }
-            ?: annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.page }
-
-        val baseType = when {
-            commonActivitySuperType != null -> Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
-            pageSuperType != null -> Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
-            else -> return null
+        val componentType = resolveComponentType(annotatedSymbol)
+        val baseType = when (componentType) {
+            is ComponentType.Activity -> Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
+            is ComponentType.Page -> Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
+            is ComponentType.Fragment -> Ids.fragment.constructClassLikeType(arrayOf(ConeStarProjection))
+            ComponentType.BroadcastReceiver, ComponentType.Service, ComponentType.Worker -> return null
         }
 
         val provideBaseTypeFunction = createMemberFunction(
@@ -330,7 +329,6 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
                 val typeArg = componentType.superTypeRef.unwrapType(0) ?: return null
                 val paramType = typeArg as? ConeKotlinType ?: return null
                 if (paramType.classId == StandardClassIds.Unit) return null
-                validateParamType(paramType)
 
                 val provideParamFunction =
                     createMemberFunction(owner, Key, Ids.provideParamName, paramType) {
@@ -344,7 +342,6 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
                 // ParamPage<ViewModel, Param> - extract the 2nd type arg (Param)
                 val paramTypeArg = componentType.superTypeRef.unwrapType(1) ?: return null
                 val paramType = paramTypeArg as? ConeKotlinType ?: return null
-                validateParamType(paramType)
 
                 val pageGraphDepsType = Ids.pageGraphDependencies.constructClassLikeType()
                 val provideParamFunction =
@@ -407,33 +404,27 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
             )
             annotations += buildSimpleAnnotation(ClassIds.dependencyGraphFactory)
 
-            val baseFactoryType = when (resolveComponentType(owner)) {
-                is ComponentType.Activity -> Ids.graphFactory
-                is ComponentType.Page -> Ids.pageGraphFactory
-                ComponentType.BroadcastReceiver,
-                ComponentType.Fragment,
-                ComponentType.Service,
-                ComponentType.Worker,
-                    -> null
-            }
-            if (baseFactoryType != null) {
-                superTypeRefs += buildResolvedTypeRef {
-                    val rootType = ownerClassId.constructClassLikeType()
-                    val serviceProviderType =
-                        ownerClassId.createNestedClassId(Ids.featureServiceProviderName).constructClassLikeType()
-                    val graphType = featureGraphOwner.classId.constructClassLikeType()
+            superTypeRefs += buildResolvedTypeRef {
+                val rootType = ownerClassId.constructClassLikeType()
+                val serviceProviderType =
+                    ownerClassId.createNestedClassId(Ids.featureServiceProviderName).constructClassLikeType()
+                val graphType = featureGraphOwner.classId.constructClassLikeType()
 
-                    val extraDependenciesType = owner.resolveExtraDependencies()
+                val extraDependenciesType = owner.resolveExtraDependencies()
 
-                    coneType = baseFactoryType.constructClassLikeType(
-                        arrayOf(
-                            rootType,
-                            serviceProviderType,
-                            extraDependenciesType,
-                            graphType
-                        )
-                    )
+                val baseFactoryType = if (resolveComponentType(owner) is ComponentType.Page) {
+                    Ids.pageGraphFactory
+                } else {
+                    Ids.graphFactory
                 }
+                coneType = baseFactoryType.constructClassLikeType(
+                    arrayOf(
+                        rootType,
+                        serviceProviderType,
+                        extraDependenciesType,
+                        graphType
+                    )
+                )
             }
         }
         return factory.symbol
@@ -544,6 +535,14 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
             for (classId in Ids.broadcastReceiverTypes) {
                 if (owner.findSuperTypeRef(classId) != null) return@getOrPut ComponentType.BroadcastReceiver
             }
+
+            // Try guessing by names for those types that could be internal abstractions, or library level abstractions.
+            when {
+                "Fragment" in owner.classId.shortClassName.asString() -> return@getOrPut ComponentType.Fragment
+                "Service" in owner.classId.shortClassName.asString() -> return@getOrPut ComponentType.Service
+                "Worker" in owner.classId.shortClassName.asString() -> return@getOrPut ComponentType.Worker
+                "Receiver" in owner.classId.shortClassName.asString() -> return@getOrPut ComponentType.BroadcastReceiver
+            }
             error(
                 "Cannot resolve component type for ${owner.classId}. " +
                     "Class must extend one of: CommonActivity, CommonFragment, Page, ParamPage, Service, CoroutineWorker, or BroadcastReceiver"
@@ -551,24 +550,6 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
         }
     }
 
-    private val restrictedParamsType = listOf(
-        StandardClassIds.String,
-        StandardClassIds.Int,
-        StandardClassIds.Long,
-        StandardClassIds.Boolean,
-        StandardClassIds.Float,
-        StandardClassIds.Double,
-        StandardClassIds.Char,
-        StandardClassIds.Byte,
-        StandardClassIds.Short,
-    )
-
-    //TODO: This can be moved to a FIR checker if we want
-    private fun validateParamType(paramType: ConeKotlinType) {
-        require(paramType.classId !in restrictedParamsType) {
-            "Parameter type ${paramType.renderReadable()} is a restricted primitive type. Use a wrapper class instead."
-        }
-    }
 
     /**
      * Validates that the annotated class has the required @ContributesComponent annotation and
@@ -580,7 +561,9 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
 
         // Try resolved argument mapping first, then fall back to argument list
         val rawExpr = annotation.argumentMapping.mapping[Ids.appDependenciesName]
-            ?: (annotation as? FirAnnotationCall)?.argumentList?.arguments?.firstOrNull()
+            ?: (annotation as? FirAnnotationCall)?.argumentList?.arguments
+                ?.filterIsInstance<FirNamedArgumentExpression>()
+                ?.find { it.name == Ids.appDependenciesName }
             ?: error("Cannot find @ContributesComponent.appDependencies argument")
 
         // Unwrap FirNamedArgumentExpression if present

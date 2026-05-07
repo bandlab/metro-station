@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.origin
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
-import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.FirNamedArgumentExpression
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.expressions.builder.buildArgumentList
@@ -103,8 +102,9 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
 
     private val componentTypeCache = mutableMapOf<ClassId, ComponentType>()
 
+    //TODO: Enable FIR in IDE support
     override val enableFirInIde: Boolean
-        get() = true
+        get() = false
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.injectorPredicate)
@@ -266,7 +266,7 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
 
             if (componentType is ComponentType.Page) {
                 superTypeRefs += buildResolvedTypeRef {
-                    val viewModelType = componentType.superTypeRef.unwrapType()!!
+                    val viewModelType = resolvePageViewModelType(componentType.superTypeRef, owner, session)
                     coneType = Ids.pageInjector.constructClassLikeType(arrayOf(viewModelType))
                 }
             } else {
@@ -357,7 +357,7 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
         val annotatedClassId = featureExtensionOwner.classId.parentClassId!!
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as FirRegularClassSymbol
-        val parentScopeExpr = resolveParentScopeExpr(annotatedSymbol)
+        val parentScopeId = resolveParentScopeClassId(annotatedSymbol)
 
         val factory = buildRegularClass {
             resolvePhase = FirResolvePhase.BODY_RESOLVE
@@ -378,7 +378,9 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
             annotations += buildSimpleAnnotation(
                 classId = ClassIds.contributesTo,
                 argumentMapping = buildAnnotationArgumentMapping {
-                    mapping[ClassIds.scopeName] = parentScopeExpr
+                    mapping[ClassIds.scopeName] = session.symbolProvider
+                        .getClassLikeSymbolByClassId(parentScopeId)!!
+                        .getClassCall()
                 }
             )
 
@@ -391,7 +393,7 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
     private fun generateExtensionFactoryContribution(owner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
         val nestedClassId = owner.classId.createNestedClassId(Ids.extensionFactoryContributionName)
         val classSymbol = FirRegularClassSymbol(nestedClassId)
-        val parentScopeExpr = resolveParentScopeExpr(owner)
+        val parentScopeId = resolveParentScopeClassId(owner)
 
         val contribution = buildRegularClass {
             resolvePhase = FirResolvePhase.BODY_RESOLVE
@@ -414,7 +416,9 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
             annotations += buildSimpleAnnotation(
                 classId = ClassIds.contributesTo,
                 argumentMapping = buildAnnotationArgumentMapping {
-                    mapping[ClassIds.scopeName] = parentScopeExpr
+                    mapping[ClassIds.scopeName] = session.symbolProvider
+                        .getClassLikeSymbolByClassId(parentScopeId)!!
+                        .getClassCall()
                 }
             )
         }
@@ -427,14 +431,11 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
 
-        val commonActivitySuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.commonActivity }
-        val pageSuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.paramPage }
-            ?: annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.page }
-
-        val baseType = when {
-            commonActivitySuperType != null -> Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
-            pageSuperType != null -> Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
-            else -> return null
+        val componentType = resolveComponentType(annotatedSymbol)
+        val baseType = when (componentType) {
+            is ComponentType.Activity -> Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
+            is ComponentType.Page -> Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
+            ComponentType.Fragment -> Ids.fragment.constructClassLikeType()
         }
 
         val provideBaseTypeFunction = createMemberFunction(
@@ -492,10 +493,10 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
 
-        val paramPageSuperType = annotatedSymbol.resolvedSuperTypes.find { it.classId == Ids.paramPage }
+        val paramPageSuperTypeRef = annotatedSymbol.findSuperTypeRef(Ids.paramPage)
             ?: return null
 
-        val paramTypeArg = paramPageSuperType.typeArguments.getOrNull(1) ?: return null
+        val paramTypeArg = paramPageSuperTypeRef.unwrapType(1) ?: return null
         val paramType = paramTypeArg as? ConeKotlinType ?: return null
 
         val flowOfParamType = Ids.coroutinesFlow.constructClassLikeType(arrayOf(paramType))
@@ -551,7 +552,7 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
 
         if (componentType is ComponentType.Page) {
             val depsParam = createFunction.valueParameters[1]
-            depsParam.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.includes)))
+            depsParam.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
 
             val navDepsParam = createFunction.valueParameters[2]
             navDepsParam.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.includes)))
@@ -602,14 +603,6 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
     }
 
     /**
-     * Resolves the parent scope expression from the @ContributesInjector(scope = ...) annotation.
-     * Defaults to AppScope::class if not specified.
-     */
-    private fun resolveParentScopeExpr(owner: FirClassSymbol<*>): FirExpression {
-        return resolveScopeExprFromAnnotation(owner, Ids.contributesInjector, session, ClassIds.appScope)
-    }
-
-    /**
      * Resolves the parent scope ClassId from the @ContributesInjector(scope = ...) annotation.
      * Defaults to AppScope if not specified.
      */
@@ -629,6 +622,11 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
             }
             for (classId in Ids.fragmentTypes) {
                 if (owner.findSuperTypeRef(classId) != null) return@getOrPut ComponentType.Fragment
+            }
+
+            // Try guessing by names for those types that could be internal abstractions, or library level abstractions.
+            when {
+                "Fragment" in owner.classId.shortClassName.asString() -> return@getOrPut ComponentType.Fragment
             }
             error(
                 "Cannot resolve component type for ${owner.classId}. " +
