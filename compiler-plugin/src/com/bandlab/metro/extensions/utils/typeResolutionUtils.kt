@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.fir.types.FirUserTypeRef
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
-import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
 
 /**
  * Resolves a scope [ClassId] from an annotation's `scope` argument.
@@ -71,14 +70,7 @@ internal fun resolvePageViewModelType(
     session: FirSession,
 ): ConeTypeProjection {
     return superTypeRef.unwrapType()
-        ?: (owner.findSuperTypeRef(Ids.paramPage) ?: owner.findSuperTypeRef(Ids.page))
-            ?.unwrapType()
         ?: resolveUnresolvedTypeArg(superTypeRef, owner, session)
-        ?: resolveUnresolvedTypeArg(
-            owner.findSuperTypeRef(Ids.paramPage) ?: owner.findSuperTypeRef(Ids.page),
-            owner,
-            session,
-        )
         ?: error("Cannot resolve Page type argument for ${owner.classId}")
 }
 

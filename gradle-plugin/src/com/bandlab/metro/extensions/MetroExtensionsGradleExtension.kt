@@ -2,8 +2,12 @@ package com.bandlab.metro.extensions
 
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.SetProperty
+import javax.inject.Inject
 
-public open class MetroExtensionsGradleExtension(objectFactory: ObjectFactory) {
-    public val contributesInjectorBaseline: SetProperty<String> =
-        objectFactory.setProperty(String::class.java).convention(emptySet())
+public abstract class MetroExtensionsGradleExtension @Inject constructor(objects: ObjectFactory) {
+
+    /**
+     * A baseline of features that are allowed to use @ContributesInjector.
+     */
+    public val contributesInjectorBaseline: SetProperty<String> = objects.setProperty(String::class.java)
 }

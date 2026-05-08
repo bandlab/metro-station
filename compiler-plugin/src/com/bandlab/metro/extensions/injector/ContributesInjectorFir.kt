@@ -5,6 +5,7 @@ import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
+import dev.zacsweers.metro.compiler.fir.MetroFirTypeResolver
 import org.jetbrains.kotlin.GeneratedDeclarationKey
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
@@ -51,7 +52,7 @@ import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
  *   @ActivityScope
  *   @GraphExtension(
  *     scope = MyActivity::class,
- *     bindingContainers = [DefaultActivityDependencies::class]
+ *     bindingContainers = [DefaultActivityDependencies::class, FeatureBindings::class]
  *   )
  *   interface FeatureExtension : MembersInjectorProvider<MyActivity> {
  *
@@ -101,6 +102,9 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
     }
 
     private val componentTypeCache = mutableMapOf<ClassId, ComponentType>()
+
+    @Suppress("INVISIBLE_REFERENCE")
+    private val typeResolverFactory by lazy { MetroFirTypeResolver.Factory(session) }
 
     //TODO: Enable FIR in IDE support
     override val enableFirInIde: Boolean
@@ -612,21 +616,21 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
 
     private fun resolveComponentType(owner: FirClassSymbol<*>): ComponentType {
         return componentTypeCache.getOrPut(owner.classId) {
-            for (classId in Ids.activityTypes) {
-                val ref = owner.findSuperTypeRef(classId)
-                if (ref != null) return@getOrPut ComponentType.Activity(ref)
-            }
-            for (classId in Ids.pageTypes) {
-                val ref = owner.findSuperTypeRef(classId)
-                if (ref != null) return@getOrPut ComponentType.Page(ref, hasParam = classId == Ids.paramPage)
-            }
-            for (classId in Ids.fragmentTypes) {
-                if (owner.findSuperTypeRef(classId) != null) return@getOrPut ComponentType.Fragment
-            }
+            with(typeResolverFactory.create(owner)!!) {
+                owner.deepResolveSuperType(Ids.commonActivity, session)
+                    ?.let { return@getOrPut ComponentType.Activity(it) }
 
-            // Try guessing by names for those types that could be internal abstractions, or library level abstractions.
-            when {
-                "Fragment" in owner.classId.shortClassName.asString() -> return@getOrPut ComponentType.Fragment
+                owner.deepResolveSuperType(Ids.paramPage, session)
+                    ?.let { return@getOrPut ComponentType.Page(it, hasParam = true) }
+
+                owner.deepResolveSuperType(Ids.page, session)
+                    ?.let { return@getOrPut ComponentType.Page(it, hasParam = false) }
+
+                owner.deepResolveSuperType(Ids.fragmentBaseType, session)
+                    ?.let { return@getOrPut ComponentType.Fragment }
+
+                owner.deepResolveSuperType(Ids.dialogFragmentBaseType, session)
+                    ?.let { return@getOrPut ComponentType.Fragment }
             }
             error(
                 "Cannot resolve component type for ${owner.classId}. " +

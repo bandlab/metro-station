@@ -38,9 +38,11 @@ public class MetroExtensionsGradlePlugin : KotlinCompilerPluginSupportPlugin {
             val extension = project.extensions.getByType(MetroExtensionsGradleExtension::class.java)
 
             buildList {
-                extension.contributesInjectorBaseline.get().forEach { entry ->
-                    add(SubpluginOption(key = "contributesInjectorBaseline", value = entry))
-                }
+                extension.contributesInjectorBaseline
+                    .getOrElse(emptySet())
+                    .takeUnless { it.isEmpty() }
+                    ?.let { SubpluginOption("contributesInjectorBaseline", value = it.joinToString(":")) }
+                    ?.let(::add)
             }
         }
     }

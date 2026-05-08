@@ -21,7 +21,7 @@ internal class ContributesInjectorBaselineChecker(
         // Only check classes annotated @ContributesInjector
         val contributesInjectorAnnotation = symbol.getAnnotationByClassId(Ids.contributesInjector, session) ?: return
 
-        val classFqName = declaration.symbol.classId.asString()
+        val classFqName = declaration.symbol.classId.asSingleFqName().asString()
         if (classFqName !in baseline) {
             reporter.reportOn(
                 source = contributesInjectorAnnotation.source,

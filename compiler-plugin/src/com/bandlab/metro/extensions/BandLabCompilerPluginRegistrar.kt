@@ -5,8 +5,8 @@ import org.jetbrains.kotlin.fir.analysis.extensions.FirAdditionalCheckersExtensi
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 
 public class BandLabCompilerPluginRegistrar(
-    private val includeBaselineChecker: Boolean = true,
-    private val contributesInjectorBaseline: Set<String> = emptySet(),
+    private val includeBaselineChecker: Boolean,
+    private val contributesInjectorBaseline: Set<String>,
 ) : FirExtensionRegistrar() {
     override fun ExtensionRegistrarContext.configurePlugin() {
         +FirAdditionalCheckersExtension.Factory { session ->

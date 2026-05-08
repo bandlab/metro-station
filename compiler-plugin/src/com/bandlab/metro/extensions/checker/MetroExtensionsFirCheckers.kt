@@ -6,8 +6,8 @@ import org.jetbrains.kotlin.fir.analysis.extensions.FirAdditionalCheckersExtensi
 
 internal class MetroExtensionsFirCheckers(
     session: FirSession,
-    private val includeBaselineChecker: Boolean = true,
-    private val contributesInjectorBaseline: Set<String> = emptySet(),
+    private val includeBaselineChecker: Boolean,
+    private val contributesInjectorBaseline: Set<String>,
 ) : FirAdditionalCheckersExtension(session) {
 
     override val declarationCheckers = object : DeclarationCheckers() {

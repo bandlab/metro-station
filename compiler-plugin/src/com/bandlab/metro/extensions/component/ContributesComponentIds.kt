@@ -70,15 +70,11 @@ internal object ContributesComponentIds {
     val initialParamName = "initialParam".asName()
 
     // Component base types
-    val activityTypes = setOf(commonActivity)
-    val fragmentTypes = setOf(
-        ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName()),
-        ClassId(FqName("com.bandlab.android.common.fragment"), "CommonDialogFragment".asName()),
-    )
-    val pageTypes = setOf(paramPage, page)
-    val serviceTypes = setOf(ClassId(FqName("android.app"), "Service".asName()))
-    val workerTypes = setOf(ClassId(FqName("androidx.work"), "CoroutineWorker".asName()))
-    val broadcastReceiverTypes = setOf(ClassId(FqName("android.content"), "BroadcastReceiver".asName()))
+    val fragmentBaseType = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName())
+    val dialogFragmentBaseType = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonDialogFragment".asName())
+    val serviceBaseType = ClassId(FqName("android.app"), "Service".asName())
+    val workerBaseType = ClassId(FqName("androidx.work"), "CoroutineWorker".asName())
+    val broadcastReceiverBaseType = ClassId(FqName("android.content"), "BroadcastReceiver".asName())
 
     // Custom feature scopes
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())

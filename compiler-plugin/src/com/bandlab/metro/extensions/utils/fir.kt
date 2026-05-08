@@ -1,5 +1,6 @@
 package com.bandlab.metro.extensions.utils
 
+import dev.zacsweers.metro.compiler.fir.MetroFirTypeResolver
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
@@ -137,16 +138,52 @@ internal fun FirFunction.markAbstract(owner: FirClassSymbol<*>) {
 internal fun FirClassSymbol<*>.findSuperTypeRef(supertypeClassId: ClassId): FirTypeRef? {
     for (ref in fir.superTypeRefs) {
         when (ref) {
-            is FirUserTypeRef -> {
-                if (ref.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName) {
-                    return ref
-                }
+            is FirUserTypeRef if (ref.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName) -> return ref
+            is FirResolvedTypeRef if (ref.coneType.classId == supertypeClassId) -> return ref
+        }
+    }
+    return null
+}
+
+/**
+ * Resolves the specified supertype of a class symbol by deeply traversing its hierarchy,
+ * including supertypes of the current class and their respective supertypes.
+ *
+ * @param supertypeClassId The [ClassId] of the supertype to resolve.
+ * @param session The [FirSession] associated with the resolution process,
+ *                providing necessary context and symbol resolution capabilities.
+ * @return A [FirTypeRef] representing the resolved supertype if found, or `null` if the
+ *         specified supertype could not be resolved.
+ */
+@OptIn(SymbolInternals::class)
+context(typeResolver: MetroFirTypeResolver)
+internal fun FirClassSymbol<*>.deepResolveSuperType(supertypeClassId: ClassId, session: FirSession): FirTypeRef? {
+    val visited = mutableSetOf<ClassId>()
+    val queue = ArrayDeque<FirClassSymbol<*>>()
+    queue.add(this)
+
+    while (queue.isNotEmpty()) {
+        val current = queue.removeFirst()
+        val currentId = current.classId
+        if (!visited.add(currentId)) continue
+        if (currentId == supertypeClassId) return current.defaultType().toFirResolvedTypeRef()
+
+        for (typeRef in current.fir.superTypeRefs) {
+            when (typeRef) {
+                is FirUserTypeRef if (typeRef.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName) -> return typeRef
+                is FirResolvedTypeRef if (typeRef.coneType.classId == supertypeClassId) -> return typeRef
             }
 
-            is FirResolvedTypeRef -> {
-                if (ref.coneType.classId == supertypeClassId) {
-                    return ref
-                }
+            val resolvedType = try {
+                typeResolver.resolveType(typeRef)
+            } catch (_: IllegalArgumentException) {
+                continue
+            }
+            val classId = resolvedType.classId ?: continue
+            val symbol = session.symbolProvider.getClassLikeSymbolByClassId(classId)
+            if (classId == supertypeClassId) return resolvedType.toFirResolvedTypeRef()
+            if (symbol is FirClassSymbol<*>) {
+                queue.add(symbol)
             }
         }
     }
