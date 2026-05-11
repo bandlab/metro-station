@@ -100,9 +100,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
         ) : ComponentType
 
         data object Fragment : ComponentType
-        data object Service : ComponentType
-        data object Worker : ComponentType
-        data object BroadcastReceiver : ComponentType
+        data object Others : ComponentType
     }
 
     /**
@@ -113,10 +111,6 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
 
     @Suppress("INVISIBLE_REFERENCE")
     private val typeResolverFactory by lazy { MetroFirTypeResolver.Factory(session) }
-
-    //TODO: Enable FIR in IDE support
-    override val enableFirInIde: Boolean
-        get() = false
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.componentPredicate)
@@ -220,9 +214,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
             is ComponentType.Activity -> Ids.activityScope
             is ComponentType.Page -> Ids.pageScope
             ComponentType.Fragment -> Ids.fragmentScope
-            ComponentType.Service -> Ids.serviceScope
-            ComponentType.Worker -> Ids.workerScope
-            ComponentType.BroadcastReceiver -> Ids.broadcastReceiverScope
+            ComponentType.Others -> null
         }
 
         val featureGraph = buildRegularClass {
@@ -240,7 +232,9 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
                 Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
             )
 
-            annotations += buildSimpleAnnotation(componentScope)
+            if (componentScope != null) {
+                annotations += buildSimpleAnnotation(componentScope)
+            }
 
             if (componentType is ComponentType.Page) {
                 superTypeRefs += buildResolvedTypeRef {
@@ -281,7 +275,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
                                     Ids.pageGraphDependenciesModule,
                                 )
 
-                                ComponentType.BroadcastReceiver, ComponentType.Service, ComponentType.Worker -> emptySet()
+                                ComponentType.Others -> emptySet()
                             }
 
                             defaultDependenciesIds.forEach { dependenciesId ->
@@ -308,7 +302,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
             is ComponentType.Activity -> Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
             is ComponentType.Page -> Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
             is ComponentType.Fragment -> Ids.fragment.constructClassLikeType(arrayOf(ConeStarProjection))
-            ComponentType.BroadcastReceiver, ComponentType.Service, ComponentType.Worker -> return null
+            ComponentType.Others -> return null
         }
 
         val provideBaseTypeFunction = createMemberFunction(
@@ -357,8 +351,7 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
                 provideParamFunction.symbol as FirNamedFunctionSymbol
             }
 
-            ComponentType.BroadcastReceiver, ComponentType.Fragment,
-            is ComponentType.Page, ComponentType.Service, ComponentType.Worker -> null
+            is ComponentType.Page, ComponentType.Fragment, ComponentType.Others -> null
         }
     }
 
@@ -530,25 +523,13 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
                 owner.deepResolveSuperType(Ids.page, session)
                     ?.let { return@getOrPut ComponentType.Page(it, hasParam = false) }
 
-                owner.deepResolveSuperType(Ids.fragmentBaseType, session)
+                owner.deepResolveSuperType(Ids.commonFragment, session)
                     ?.let { return@getOrPut ComponentType.Fragment }
 
-                owner.deepResolveSuperType(Ids.dialogFragmentBaseType, session)
+                owner.deepResolveSuperType(Ids.commonDialogFragment, session)
                     ?.let { return@getOrPut ComponentType.Fragment }
-
-                owner.deepResolveSuperType(Ids.serviceBaseType, session)
-                    ?.let { return@getOrPut ComponentType.Service }
-
-                owner.deepResolveSuperType(Ids.workerBaseType, session)
-                    ?.let { return@getOrPut ComponentType.Worker }
-
-                owner.deepResolveSuperType(Ids.broadcastReceiverBaseType, session)
-                    ?.let { return@getOrPut ComponentType.BroadcastReceiver }
             }
-            error(
-                "Cannot resolve component type for ${owner.classId}. " +
-                    "Class must extend one of: CommonActivity, CommonFragment, Page, ParamPage, Service, CoroutineWorker, or BroadcastReceiver"
-            )
+            ComponentType.Others
         }
     }
 

@@ -26,7 +26,7 @@ import kotlin.reflect.KClass
  *      fun provideParam(activity: MyActivity): String
  *  }
  *  ```
- *  Supported type: Activity, Fragment
+ *  Supported type: Activity, Page, Fragment
  *
  *  @param scope We use [AppScope] by default, you can override other graphs if needed.
  *  @param graphMarker We use the graph extension as the graph marker by default to merge the modules,

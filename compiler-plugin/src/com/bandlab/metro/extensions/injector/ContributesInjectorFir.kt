@@ -106,10 +106,6 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
     @Suppress("INVISIBLE_REFERENCE")
     private val typeResolverFactory by lazy { MetroFirTypeResolver.Factory(session) }
 
-    //TODO: Enable FIR in IDE support
-    override val enableFirInIde: Boolean
-        get() = false
-
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.injectorPredicate)
     }
@@ -396,7 +392,6 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
 
     private fun generateExtensionFactoryContribution(owner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
         val nestedClassId = owner.classId.createNestedClassId(Ids.extensionFactoryContributionName)
-        val classSymbol = FirRegularClassSymbol(nestedClassId)
         val parentScopeId = resolveParentScopeClassId(owner)
 
         val contribution = buildRegularClass {
@@ -407,7 +402,7 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
             classKind = ClassKind.INTERFACE
             scopeProvider = session.kotlinScopeProvider
             this.name = nestedClassId.shortClassName
-            symbol = classSymbol
+            symbol = FirRegularClassSymbol(nestedClassId)
             status = FirResolvedDeclarationStatusImpl(
                 Visibilities.Public,
                 Modality.ABSTRACT,
@@ -626,16 +621,13 @@ public class ContributesInjectorFir(session: FirSession, compatContext: CompatCo
                 owner.deepResolveSuperType(Ids.page, session)
                     ?.let { return@getOrPut ComponentType.Page(it, hasParam = false) }
 
-                owner.deepResolveSuperType(Ids.fragmentBaseType, session)
+                owner.deepResolveSuperType(Ids.commonFragment, session)
                     ?.let { return@getOrPut ComponentType.Fragment }
 
-                owner.deepResolveSuperType(Ids.dialogFragmentBaseType, session)
+                owner.deepResolveSuperType(Ids.commonDialogFragment, session)
                     ?.let { return@getOrPut ComponentType.Fragment }
             }
-            error(
-                "Cannot resolve component type for ${owner.classId}. " +
-                    "Class must extend one of: CommonActivity, CommonFragment, Page, or ParamPage"
-            )
+            error("ContributesInjector is deprecated, please use @ContributesComponent instead")
         }
     }
 

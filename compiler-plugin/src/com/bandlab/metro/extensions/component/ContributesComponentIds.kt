@@ -47,6 +47,8 @@ internal object ContributesComponentIds {
     val defaultScreenServiceProvider = ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
     val fragment = ClassId(FqName("androidx.fragment.app"), "Fragment".asName())
+    val commonFragment = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName())
+    val commonDialogFragment = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonDialogFragment".asName())
     val defaultFragmentDeps =
         ClassId(FqName("com.bandlab.android.common.fragment"), "DefaultFragmentDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
@@ -68,13 +70,6 @@ internal object ContributesComponentIds {
     val pageParamFlowProvider = ClassId(commonPage, "PageParamFlowProvider".asName())
     val coroutinesFlow = ClassId(FqName("kotlinx.coroutines.flow"), "Flow".asName())
     val initialParamName = "initialParam".asName()
-
-    // Component base types
-    val fragmentBaseType = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName())
-    val dialogFragmentBaseType = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonDialogFragment".asName())
-    val serviceBaseType = ClassId(FqName("android.app"), "Service".asName())
-    val workerBaseType = ClassId(FqName("androidx.work"), "CoroutineWorker".asName())
-    val broadcastReceiverBaseType = ClassId(FqName("android.content"), "BroadcastReceiver".asName())
 
     // Custom feature scopes
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())

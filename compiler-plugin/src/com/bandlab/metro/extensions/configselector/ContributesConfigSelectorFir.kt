@@ -54,12 +54,6 @@ import com.bandlab.metro.extensions.configselector.ContributesConfigSelectorIds 
 public class ContributesConfigSelectorFir(session: FirSession, compatContext: CompatContext) :
     MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
 
-    // IDE doesn't work with this because we do not generate the function in the correct phase.
-    // To let metro process the bind function, we need to generate it when creating the nested contribution interface.
-    //TODO: Generate duplicated declaration for the IDE inlay
-    override val enableFirInIde: Boolean
-        get() = false
-
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.predicate)
     }
