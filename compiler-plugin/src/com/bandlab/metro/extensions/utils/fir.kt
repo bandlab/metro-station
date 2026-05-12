@@ -23,15 +23,14 @@ import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.name.*
 
 internal fun String.asName(): Name = Name.identifier(this)
 
 internal infix operator fun Name.plus(other: String) = (asString() + other).asName()
 internal infix operator fun Name.plus(other: Name) = (asString() + other.asString()).asName()
+
+internal fun ClassId.toCallableId() = CallableId(packageFqName, shortClassName)
 
 /**
  * Builds a simple FIR annotation with the specified class ID and argument mapping.

@@ -1,7 +1,11 @@
 // FILE: paramPage.kt
 
 @ContributesComponent(appDependencies = ServiceProvider::class)
-class MyPage : ParamPage<MyViewModel, Params> {
+class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
+  private val graphCreator: PageGraphCreator<FeatureGraph>
+    field = graphCreator<MyPage, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ context = context, factory = Impl, extraDependencies = EmptyExtraDependencies)
+    get
+
   data class Params {
     val number: Long
       field = number
@@ -285,10 +289,14 @@ class MyPage : ParamPage<MyViewModel, Params> {
   interface ServiceProvider {
   }
 
-  constructor() /* primary */ {
+  constructor(context: Context) /* primary */ {
     super/*Any*/()
     /* <init>() */
 
+  }
+
+  override fun <T : Any?> resolve(): T {
+    return Companion.resolveFrom<T>(graph = <this>.#graphCreator.<get-value>())
   }
 
 }
@@ -417,3 +425,4 @@ package metro.hints
 fun AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
+

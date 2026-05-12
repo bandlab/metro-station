@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
@@ -28,16 +29,15 @@ import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
 import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.moduleData
+import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.scopes.kotlinScopeProvider
-import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
-import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
-import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
-import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
+import org.jetbrains.kotlin.fir.types.impl.ConeTypeParameterTypeImpl
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
@@ -50,7 +50,7 @@ import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
  *
  * ```kotlin
  * @ContributesComponent(appDependencies = [MyActivity.ServiceProvider::class])
- * class MyActivity : CommonActivity<Param>() {
+ * class MyActivity : CommonActivity<Param>(), /* generated */ HasServiceProvider {
  *
  *   data class Param(val int: Int)
  *
@@ -59,6 +59,10 @@ import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
  *   }
  *
  *   // This extension generates:
+ *   private val graph by graphCreator(createGraphFactory<FeatureGraph.Factory>())
+ *
+ *   override fun <T> resolve(): T = HasServiceProvider.resolveFrom(graph)
+ *
  *   @IROnlyFactories
  *   @ActivityScope
  *   @DependencyGraph(
@@ -85,6 +89,10 @@ import com.bandlab.metro.extensions.component.ContributesComponentIds as Ids
  *     DefaultScreenServiceProvider
  * }
  * ```
+ *
+ * TODO: Generate graph declaration and supertype
+ *  - FIR checker to make sure Context and ExtraDependencies are in place
+ *  - Forbid Activity to use ExtraDependencies (there's no reason to do this?)
  */
 public class ContributesComponentFir(session: FirSession, compatContext: CompatContext) :
     MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
@@ -162,6 +170,16 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
         classSymbol: FirClassSymbol<*>,
         context: MemberGenerationContext
     ): Set<Name> {
+        // Generate callables for the annotated Activity class itself
+        if (session.predicateBasedProvider.matches(Ids.componentPredicate, classSymbol)) {
+            val componentType = resolveComponentType(classSymbol)
+            return when (componentType) {
+                is ComponentType.Activity -> setOf(Ids.graphPropertyName, Ids.resolveName)
+                is ComponentType.Page -> setOf(Ids.graphCreatorPropertyName, Ids.resolveName)
+                ComponentType.Fragment, ComponentType.Others -> emptySet()
+            }
+        }
+
         if (classSymbol.origin != Key.origin) return emptySet()
         if (classSymbol.classId.shortClassName == Ids.graphName) {
             return setOf(Ids.provideBaseTypeName, Ids.provideParamName, Ids.provideParamFlowName)
@@ -175,6 +193,20 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
     ): List<FirNamedFunctionSymbol> {
         val ownerClassId = callableId.classId ?: return emptyList()
         val owner = context?.owner ?: return emptyList()
+
+        // Generate "resolve" function for the annotated Activity class
+        if (callableId.callableName == Ids.resolveName &&
+            session.predicateBasedProvider.matches(Ids.componentPredicate, owner)
+        ) {
+            // Skip if resolve function already exists
+            @OptIn(DirectDeclarationsAccess::class)
+            if (owner.declarationSymbols.any { it is FirNamedFunctionSymbol && it.name == Ids.resolveName }) {
+                return emptyList()
+            }
+            val resolveFunction = generateResolveFunction(owner) ?: return emptyList()
+            return listOf(resolveFunction)
+        }
+
         if (owner.origin != Key.origin) return emptyList()
 
         // Generate "provideBaseType" function for FeatureGraph
@@ -199,6 +231,41 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
         ) {
             val provideParamFlowFunction = generateProvideParamFlowFunction(owner) ?: return emptyList()
             return listOf(provideParamFlowFunction)
+        }
+
+        return emptyList()
+    }
+
+    override fun generateProperties(
+        callableId: CallableId,
+        context: MemberGenerationContext?,
+    ): List<FirPropertySymbol> {
+        val owner = context?.owner ?: return emptyList()
+
+        // Generate "graph" property for the annotated Activity class
+        if (callableId.callableName == Ids.graphPropertyName &&
+            session.predicateBasedProvider.matches(Ids.componentPredicate, owner)
+        ) {
+            // Skip if graph property already exists
+            @OptIn(DirectDeclarationsAccess::class)
+            if (owner.declarationSymbols.any { it is FirPropertySymbol && it.name == Ids.graphPropertyName }) {
+                return emptyList()
+            }
+            val graphProperty = generateGraphProperty(owner) ?: return emptyList()
+            return listOf(graphProperty)
+        }
+
+        // Generate "graphCreator" property for the annotated Page class
+        if (callableId.callableName == Ids.graphCreatorPropertyName &&
+            session.predicateBasedProvider.matches(Ids.componentPredicate, owner)
+        ) {
+            // Skip if graphCreator property already exists
+            @OptIn(DirectDeclarationsAccess::class)
+            if (owner.declarationSymbols.any { it is FirPropertySymbol && it.name == Ids.graphCreatorPropertyName }) {
+                return emptyList()
+            }
+            val graphCreatorProperty = generateGraphCreatorProperty(owner) ?: return emptyList()
+            return listOf(graphCreatorProperty)
         }
 
         return emptyList()
@@ -378,6 +445,81 @@ public class ContributesComponentFir(session: FirSession, compatContext: CompatC
             }
         provideParamFlowFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
         return provideParamFlowFunction.symbol as FirNamedFunctionSymbol
+    }
+
+    /**
+     * Generates: `private val graph: FeatureGraph`
+     */
+    private fun generateGraphProperty(owner: FirClassSymbol<*>): FirPropertySymbol? {
+        val componentType = resolveComponentType(owner)
+        if (componentType !is ComponentType.Activity) return null
+
+        val graphClassId = owner.classId.createNestedClassId(Ids.graphName)
+        val graphType = graphClassId.constructClassLikeType()
+
+        val property = createMemberProperty(owner, Key, Ids.graphPropertyName, graphType)
+        property.replaceStatus(
+            FirResolvedDeclarationStatusImpl(
+                Visibilities.Private,
+                Modality.FINAL,
+                Visibilities.Private.toEffectiveVisibility(owner, forClass = true),
+            )
+        )
+        return property.symbol
+    }
+
+    /**
+     * Generates: `private val graphCreator: PageGraphCreator<PageGraphDependencies, FeatureGraph>`
+     */
+    private fun generateGraphCreatorProperty(owner: FirClassSymbol<*>): FirPropertySymbol? {
+        val componentType = resolveComponentType(owner)
+        if (componentType !is ComponentType.Page) return null
+
+        val graphClassId = owner.classId.createNestedClassId(Ids.graphName)
+        val graphType = graphClassId.constructClassLikeType()
+
+        val property = createMemberProperty(
+            owner = owner,
+            key = Key,
+            name = Ids.graphCreatorPropertyName,
+            returnType = Ids.pageGraphCreator.constructClassLikeType(arrayOf(graphType)),
+        )
+        property.replaceStatus(
+            FirResolvedDeclarationStatusImpl(
+                Visibilities.Private,
+                Modality.FINAL,
+                Visibilities.Private.toEffectiveVisibility(owner, forClass = true),
+            )
+        )
+        return property.symbol
+    }
+
+    /**
+     * Generates: `override fun <T> resolve(): T`
+     */
+    private fun generateResolveFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
+        val componentType = resolveComponentType(owner)
+        if (componentType !is ComponentType.Activity && componentType !is ComponentType.Page) return null
+
+        val resolveFunction =
+            createMemberFunction(owner, Key, Ids.resolveName, session.builtinTypes.nothingType.coneType) {
+                typeParameter("T".asName())
+            }
+        // Set return type to the type parameter T
+        val typeParam = resolveFunction.typeParameters.first()
+        resolveFunction.replaceReturnTypeRef(buildResolvedTypeRef {
+            coneType = ConeTypeParameterTypeImpl(typeParam.symbol.toLookupTag(), isMarkedNullable = false)
+        })
+        resolveFunction.replaceStatus(
+            FirResolvedDeclarationStatusImpl(
+                Visibilities.Public,
+                Modality.FINAL,
+                Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
+            ).apply {
+                isOverride = true
+            }
+        )
+        return resolveFunction.symbol as FirNamedFunctionSymbol
     }
 
     private fun generateFactory(featureGraphOwner: FirClassSymbol<*>): FirClassLikeSymbol<*> {

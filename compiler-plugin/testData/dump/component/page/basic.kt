@@ -1,5 +1,5 @@
 @ContributesComponent(appDependencies = MyPage.ServiceProvider::class)
-class MyPage : Page<MyViewModel> {
+class MyPage(context: Context) : Page<MyViewModel> {
 
     interface ServiceProvider {
         val number: Long

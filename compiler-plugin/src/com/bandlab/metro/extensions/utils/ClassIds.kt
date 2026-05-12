@@ -20,6 +20,7 @@ internal object ClassIds {
     val intoMap = ClassId(metroPackageFqName, "IntoMap".asName())
     val classKey = ClassId(metroPackageFqName, "ClassKey".asName())
     val bindingContainer = ClassId(metroPackageFqName, "BindingContainer".asName())
+    val createGraphFactory = ClassId(metroPackageFqName, "createGraphFactory".asName())
 
     val irOnlyFactories = ClassId(metroInternalPackageFqName, "IROnlyFactories".asName())
 

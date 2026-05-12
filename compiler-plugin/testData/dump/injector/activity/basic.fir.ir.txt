@@ -748,7 +748,7 @@ FILE fqName:<root> fileName:/basic.kt
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] CLASS name:ProvideIntMetroFactory modality:FINAL visibility:public superTypes:[kotlin.Any; dev.zacsweers.metro.internal.Factory<kotlin.Int>]
       annotations:
         Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
-        CallableMetadata(callableName = "provideInt", propertyName = "", startOffset = 462, endOffset = 503, newInstanceName = "provideInt")
+        CallableMetadata(callableName = "provideInt", propertyName = "", startOffset = 493, endOffset = 534, newInstanceName = "provideInt")
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.ProvideIntMetroFactory
       FIELD name:instance type:<root>.AppGraph visibility:private [final]
         EXPRESSION_BODY

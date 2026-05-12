@@ -2,13 +2,15 @@
     appDependencies = MyPage.ServiceProvider::class,
     extraDependencies = MyPage.ExtraDependencies::class
 )
-class MyPage : Page<MyViewModel> {
+class MyPage(
+    context: Context,
+    extraDependencies: ExtraDependencies
+) : Page<MyViewModel> {
 
     interface ServiceProvider {
         val number: Long
     }
 
-    @ContributesTo(AppScope::class)
     interface ExtraDependencies {
         val boolean: Boolean
     }
@@ -27,17 +29,17 @@ interface AppGraph {
 
     @Provides
     fun provideLong(): Long = 123L
-
-    @Provides
-    fun provideBoolean(): Boolean = true
 }
 
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
+    val extraDependencies = object : MyPage.ExtraDependencies {
+        override val boolean: Boolean = true
+    }
     val pageGraph = createGraphFactory<MyPage.FeatureGraph.Factory>().create(
-        feature = MyPage(),
+        feature = MyPage(Context.FAKE, extraDependencies),
         serviceProvider = appGraph,
-        extraDependencies = appGraph
+        extraDependencies = extraDependencies
     )
     assertEquals("Hello! true 123", pageGraph.getPageViewModel().value)
     return "OK"

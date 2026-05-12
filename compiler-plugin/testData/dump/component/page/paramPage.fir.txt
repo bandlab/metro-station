@@ -1,6 +1,6 @@
 FILE: paramPage.kt
-    @R|com/bandlab/common/android/di/ContributesComponent|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|)) public final class MyPage : R|com/bandlab/common/android/pager/screen/ParamPage<MyViewModel, MyPage.Params>| {
-        public constructor(): R|MyPage| {
+    @R|com/bandlab/common/android/di/ContributesComponent|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|)) public final class MyPage : R|com/bandlab/common/android/pager/screen/ParamPage<MyViewModel, MyPage.Params>|, R|com/bandlab/common/android/di/HasServiceProvider| {
+        public constructor(context: R|android/content/Context|): R|MyPage| {
             super<R|kotlin/Any|>()
         }
 
@@ -20,6 +20,11 @@ FILE: paramPage.kt
 
         public abstract interface ServiceProvider : R|kotlin/Any| {
         }
+
+        private final val graphCreator: R|com/bandlab/common/android/pager/screen/di/PageGraphCreator<MyPage.FeatureGraph>|
+            public get(): R|com/bandlab/common/android/pager/screen/di/PageGraphCreator<MyPage.FeatureGraph>|
+
+        public final override fun <T> resolve(): R|T|
 
         @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|com/bandlab/common/android/pager/screen/di/PageGraphDependenciesModule|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
             @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyPage|): R|com/bandlab/uikit/api/page/Page<*>|

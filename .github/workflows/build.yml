@@ -27,6 +27,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew build --continue
 
+      - name: Assemble sample app
+        run: ./gradlew :app:assembleDebug
+        working-directory: sample
+
       - uses: mikepenz/action-junit-report@v6
         if: success() || failure()
         with:

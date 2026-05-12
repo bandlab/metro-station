@@ -45,6 +45,18 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
+  @TestMetadata("pageMissingContext.kt")
+  public void testPageMissingContext() {
+    runTest("compiler-plugin/testData/diagnostics/pageMissingContext.kt");
+  }
+
+  @Test
+  @TestMetadata("pageMissingExtraDependencies.kt")
+  public void testPageMissingExtraDependencies() {
+    runTest("compiler-plugin/testData/diagnostics/pageMissingExtraDependencies.kt");
+  }
+
+  @Test
   @TestMetadata("restrictedActivityParam.kt")
   public void testRestrictedActivityParam() {
     runTest("compiler-plugin/testData/diagnostics/restrictedActivityParam.kt");

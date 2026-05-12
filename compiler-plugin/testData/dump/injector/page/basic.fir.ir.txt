@@ -612,7 +612,7 @@ FILE fqName:<root> fileName:/basic.kt
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] CLASS name:ProvideLongMetroFactory modality:FINAL visibility:public superTypes:[kotlin.Any; dev.zacsweers.metro.internal.Factory<kotlin.Long>]
       annotations:
         Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
-        CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 442, endOffset = 486, newInstanceName = "provideLong")
+        CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 473, endOffset = 517, newInstanceName = "provideLong")
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.ProvideLongMetroFactory
       FIELD name:instance type:<root>.AppGraph visibility:private [final]
         EXPRESSION_BODY

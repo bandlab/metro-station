@@ -1,13 +1,32 @@
 FILE fqName:<root> fileName:/basic.kt
-  CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>]
+  CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>; com.bandlab.common.android.di.HasServiceProvider]
     annotations:
       ContributesComponent(appDependencies = CLASS_REFERENCE 'CLASS INTERFACE name:ServiceProvider modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<<root>.MyPage.ServiceProvider>, graphMarker = <null>, extraDependencies = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage
+    PROPERTY GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] name:graphCreator visibility:private modality:FINAL [val]
+      FIELD PROPERTY_BACKING_FIELD name:graphCreator type:com.bandlab.common.android.pager.screen.di.PageGraphCreator<<root>.MyPage.FeatureGraph> visibility:private [final]
+        EXPRESSION_BODY
+          CALL 'public final fun graphCreator <Root, ServiceProvider, ExtraDependencies, Graph> (<this>: Root of com.bandlab.common.android.pager.screen.di.graphCreator, context: android.content.Context, factory: com.bandlab.common.android.pager.screen.di.PageGraphFactory<Root of com.bandlab.common.android.pager.screen.di.graphCreator, ServiceProvider of com.bandlab.common.android.pager.screen.di.graphCreator, ExtraDependencies of com.bandlab.common.android.pager.screen.di.graphCreator, Graph of com.bandlab.common.android.pager.screen.di.graphCreator>, extraDependencies: ExtraDependencies of com.bandlab.common.android.pager.screen.di.graphCreator): com.bandlab.common.android.pager.screen.di.PageGraphCreator<Graph of com.bandlab.common.android.pager.screen.di.graphCreator> declared in com.bandlab.common.android.pager.screen.di' type=com.bandlab.common.android.pager.screen.di.PageGraphCreator<Graph of com.bandlab.common.android.pager.screen.di.graphCreator> origin=null
+            TYPE_ARG Root: <root>.MyPage
+            TYPE_ARG ServiceProvider: <root>.MyPage.FeatureServiceProvider
+            TYPE_ARG ExtraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies
+            TYPE_ARG Graph: <root>.MyPage.FeatureGraph
+            ARG <this>: GET_VAR '<this>: <root>.MyPage declared in <root>.MyPage' type=<root>.MyPage origin=null
+            ARG context: GET_VAR 'context: android.content.Context declared in <root>.MyPage.<init>' type=android.content.Context origin=null
+            ARG factory: GET_OBJECT 'CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GraphFactoryImplClassDeclaration] OBJECT name:Impl modality:FINAL visibility:public superTypes:[<root>.MyPage.FeatureGraph.Factory]' type=<root>.MyPage.FeatureGraph.Factory.Impl
+            ARG extraDependencies: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:EmptyExtraDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=com.bandlab.common.android.di.EmptyExtraDependencies
+      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-graphCreator> visibility:public modality:FINAL returnType:com.bandlab.common.android.pager.screen.di.PageGraphCreator<<root>.MyPage.FeatureGraph>
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage
+        correspondingProperty: PROPERTY GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] name:graphCreator visibility:private modality:FINAL [val]
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-graphCreator> (): com.bandlab.common.android.pager.screen.di.PageGraphCreator<<root>.MyPage.FeatureGraph> declared in <root>.MyPage'
+            GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:graphCreator type:com.bandlab.common.android.pager.screen.di.PageGraphCreator<<root>.MyPage.FeatureGraph> visibility:private [final]' type=com.bandlab.common.android.pager.screen.di.PageGraphCreator<<root>.MyPage.FeatureGraph> origin=null
+              receiver: GET_VAR '<this>: <root>.MyPage declared in <root>.MyPage.<get-graphCreator>' type=<root>.MyPage origin=null
     CLASS GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] INTERFACE name:FeatureGraph modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.pager.screen.di.PageInjector<<root>.MyViewModel>]
       annotations:
         PageScope
         IROnlyFactories
-        DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
+        DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>; com.bandlab.common.android.di.HasServiceProvider]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureGraph
       CLASS GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.pager.screen.di.PageGraphFactory<<root>.MyPage, <root>.MyPage.FeatureServiceProvider, com.bandlab.common.android.di.EmptyExtraDependencies, <root>.MyPage.FeatureGraph>]
         annotations:
@@ -364,9 +383,10 @@ FILE fqName:<root> fileName:/basic.kt
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.ServiceProvider
           correspondingProperty: PROPERTY name:number visibility:public modality:ABSTRACT [val]
     CONSTRUCTOR visibility:public returnType:<root>.MyPage [primary]
+      VALUE_PARAMETER kind:Regular name:context index:0 type:android.content.Context
       BLOCK_BODY
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
-        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>]' type=kotlin.Unit
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>; com.bandlab.common.android.di.HasServiceProvider]' type=kotlin.Unit
     FUN FAKE_OVERRIDE name:Content visibility:public modality:OPEN returnType:kotlin.Unit [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.uikit.api.page.Page<<root>.MyViewModel>
       VALUE_PARAMETER kind:Regular name:viewModel index:1 type:<root>.MyViewModel
@@ -379,14 +399,30 @@ FILE fqName:<root> fileName:/basic.kt
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
       overridden:
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.uikit.api.page.Page
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.HasServiceProvider
     FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun hashCode (): kotlin.Int declared in com.bandlab.uikit.api.page.Page
+        public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.HasServiceProvider
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in com.bandlab.uikit.api.page.Page
+        public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.HasServiceProvider
+    FUN GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] name:resolve visibility:public modality:FINAL returnType:T of <root>.MyPage.resolve
+      TYPE_PARAMETER GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] name:T index:0 variance: superTypes:[kotlin.Any?] reified:false
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage
+      overridden:
+        public abstract fun resolve <T> (): T of com.bandlab.common.android.di.HasServiceProvider.resolve declared in com.bandlab.common.android.di.HasServiceProvider
+      BLOCK_BODY
+        RETURN type=kotlin.Nothing from='public final fun resolve <T> (): T of <root>.MyPage.resolve declared in <root>.MyPage'
+          CALL 'public final fun resolveFrom <T> (graph: kotlin.Any): T of com.bandlab.common.android.di.HasServiceProvider.Companion.resolveFrom declared in com.bandlab.common.android.di.HasServiceProvider.Companion' type=T of com.bandlab.common.android.di.HasServiceProvider.Companion.resolveFrom origin=null
+            TYPE_ARG T: T of <root>.MyPage.resolve
+            ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=com.bandlab.common.android.di.HasServiceProvider.Companion
+            ARG graph: CALL 'public final fun <get-value> (): T of com.bandlab.common.android.pager.screen.di.PageGraphCreator declared in com.bandlab.common.android.pager.screen.di.PageGraphCreator' type=T of com.bandlab.common.android.pager.screen.di.PageGraphCreator origin=null
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:graphCreator type:com.bandlab.common.android.pager.screen.di.PageGraphCreator<<root>.MyPage.FeatureGraph> visibility:private [final]' type=com.bandlab.common.android.pager.screen.di.PageGraphCreator<<root>.MyPage.FeatureGraph> origin=null
+                receiver: GET_VAR '<this>: <root>.MyPage declared in <root>.MyPage.resolve' type=<root>.MyPage origin=null
     PROPERTY FAKE_OVERRIDE name:type visibility:public modality:OPEN [fake_override,val]
       overridden:
         public open type: kotlin.String declared in com.bandlab.uikit.api.page.Page
@@ -628,7 +664,7 @@ FILE fqName:<root> fileName:/basic.kt
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] CLASS name:ProvideLongMetroFactory modality:FINAL visibility:public superTypes:[kotlin.Any; dev.zacsweers.metro.internal.Factory<kotlin.Long>]
       annotations:
         Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
-        CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 560, endOffset = 604, newInstanceName = "provideLong")
+        CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 609, endOffset = 653, newInstanceName = "provideLong")
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.ProvideLongMetroFactory
       FIELD name:instance type:<root>.AppGraph visibility:private [final]
         EXPRESSION_BODY

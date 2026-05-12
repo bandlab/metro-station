@@ -347,7 +347,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, MetroC
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideInt", propertyName = "", startOffset = 462, endOffset = 503, newInstanceName = "provideInt")
+  @CallableMetadata(callableName = "provideInt", propertyName = "", startOffset = 493, endOffset = 534, newInstanceName = "provideInt")
   class ProvideIntMetroFactory : Factory<Int> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
@@ -412,3 +412,4 @@ package metro.hints
 fun AppScope(contributed: Factory) {
   return error(message = "Never called")
 }
+

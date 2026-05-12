@@ -1,7 +1,11 @@
 // FILE: basic.kt
 
 @ContributesComponent(appDependencies = ServiceProvider::class)
-class MyPage : Page<MyViewModel> {
+class MyPage : HasServiceProvider, Page<MyViewModel> {
+  private val graphCreator: PageGraphCreator<FeatureGraph>
+    field = graphCreator<MyPage, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ context = context, factory = Impl, extraDependencies = EmptyExtraDependencies)
+    get
+
   @PageScope
   @IROnlyFactories
   @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class])
@@ -132,10 +136,14 @@ class MyPage : Page<MyViewModel> {
 
   }
 
-  constructor() /* primary */ {
+  constructor(context: Context) /* primary */ {
     super/*Any*/()
     /* <init>() */
 
+  }
+
+  override fun <T : Any?> resolve(): T {
+    return Companion.resolveFrom<T>(graph = <this>.#graphCreator.<get-value>())
   }
 
 }
@@ -249,7 +257,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphE
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 560, endOffset = 604, newInstanceName = "provideLong")
+  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 609, endOffset = 653, newInstanceName = "provideLong")
   class ProvideLongMetroFactory : Factory<Long> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
@@ -307,3 +315,4 @@ package metro.hints
 fun AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
+

@@ -3,7 +3,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 @ContributesComponent(appDependencies = MyPage.ServiceProvider::class)
-class MyPage : ParamPage<MyViewModel, MyPage.Params> {
+class MyPage(context: Context) : ParamPage<MyViewModel, MyPage.Params> {
 
     data class Params(val number: Long)
 
@@ -25,7 +25,7 @@ interface AppGraph
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
     val pageGraph = createGraphFactory<MyPage.FeatureGraph.Factory>().create(
-        feature = MyPage(),
+        feature = MyPage(Context.FAKE),
         pageGraphDependencies = PageGraphDependencies(initialParam = MyPage.Params(number = 123L)),
         serviceProvider = appGraph,
         extraDependencies = EmptyExtraDependencies

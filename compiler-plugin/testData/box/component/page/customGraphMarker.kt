@@ -4,7 +4,7 @@ interface MyScope
     appDependencies = MyPage.ServiceProvider::class,
     graphMarker = MyScope::class
 )
-class MyPage : Page<MyViewModel> {
+class MyPage(context: Context) : Page<MyViewModel> {
 
     interface ServiceProvider
 }
@@ -24,7 +24,7 @@ interface AppGraph
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
     val pageGraph = createGraphFactory<MyPage.FeatureGraph.Factory>().create(
-        feature = MyPage(),
+        feature = MyPage(Context.FAKE),
         serviceProvider = appGraph,
         extraDependencies = EmptyExtraDependencies
     )

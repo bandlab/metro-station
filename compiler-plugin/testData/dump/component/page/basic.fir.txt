@@ -1,6 +1,6 @@
 FILE: basic.kt
-    @R|com/bandlab/common/android/di/ContributesComponent|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|)) public final class MyPage : R|com/bandlab/uikit/api/page/Page<MyViewModel>| {
-        public constructor(): R|MyPage| {
+    @R|com/bandlab/common/android/di/ContributesComponent|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|)) public final class MyPage : R|com/bandlab/uikit/api/page/Page<MyViewModel>|, R|com/bandlab/common/android/di/HasServiceProvider| {
+        public constructor(context: R|android/content/Context|): R|MyPage| {
             super<R|kotlin/Any|>()
         }
 
@@ -9,6 +9,11 @@ FILE: basic.kt
                 public get(): R|kotlin/Long|
 
         }
+
+        private final val graphCreator: R|com/bandlab/common/android/pager/screen/di/PageGraphCreator<MyPage.FeatureGraph>|
+            public get(): R|com/bandlab/common/android/pager/screen/di/PageGraphCreator<MyPage.FeatureGraph>|
+
+        public final override fun <T> resolve(): R|T|
 
         @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|com/bandlab/common/android/pager/screen/di/PageGraphDependenciesModule|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
             @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyPage|): R|com/bandlab/uikit/api/page/Page<*>|
@@ -74,7 +79,7 @@ FILE: basic.kt
             ^provideLong Long(123)
         }
 
-        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/CallableMetadata|(callableName = String(provideLong), propertyName = String(), startOffset = Int(560), endOffset = Int(604), newInstanceName = String(provideLong)) public final class ProvideLongMetroFactory : R|kotlin/Any| {
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/CallableMetadata|(callableName = String(provideLong), propertyName = String(), startOffset = Int(609), endOffset = Int(653), newInstanceName = String(provideLong)) public final class ProvideLongMetroFactory : R|kotlin/Any| {
             public final companion object Companion : R|kotlin/Any| {
                 private constructor(): R|AppGraph.ProvideLongMetroFactory.Companion| {
                     super<R|kotlin/Any|>()

@@ -14,6 +14,8 @@ internal object MetroExtensionsDiagnostics : KtDiagnosticsContainer() {
     val RESTRICTED_PARAM_TYPE by error1<KtElement, String>(NAME_IDENTIFIER)
     val DEPRECATED_CONTRIBUTES_INJECTOR by error0<KtElement>(NAME_IDENTIFIER)
     val TARGET_MUST_BE_PUBLIC by error1<KtElement, String>(NAME_IDENTIFIER)
+    val MISSING_CONTEXT_PARAMETER by error1<KtElement, String>(NAME_IDENTIFIER)
+    val MISSING_EXTRA_DEPENDENCIES_PARAMETER by error1<KtElement, String>(NAME_IDENTIFIER)
 
     override fun getRendererFactory(): BaseDiagnosticRendererFactory = RendererFactory
 
@@ -25,6 +27,8 @@ internal object MetroExtensionsDiagnostics : KtDiagnosticsContainer() {
                 "@ContributesInjector is deprecated. Use @ContributesComponent instead.",
             )
             map.put(TARGET_MUST_BE_PUBLIC, "{0}", STRING)
+            map.put(MISSING_CONTEXT_PARAMETER, "{0}", STRING)
+            map.put(MISSING_EXTRA_DEPENDENCIES_PARAMETER, "{0}", STRING)
         }
     }
 }

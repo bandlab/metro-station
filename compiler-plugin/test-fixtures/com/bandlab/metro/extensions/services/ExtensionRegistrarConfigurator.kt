@@ -39,7 +39,8 @@ fun TestConfigurationBuilder.configureImports(
                                 "com.bandlab.common.android.pager.screen.di.*",
                                 "com.bandlab.android.common.activity.*",
                                 "com.bandlab.uikit.api.page.*",
-                                "com.bandlab.config.api.*"
+                                "com.bandlab.config.api.*",
+                                "android.content.Context"
                             )
                         )
                     }

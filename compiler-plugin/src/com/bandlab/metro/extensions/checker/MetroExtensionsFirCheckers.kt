@@ -14,6 +14,7 @@ internal class MetroExtensionsFirCheckers(
         override val classCheckers = buildSet {
             add(ParamTypeClassChecker)
             add(TargetVisibilityChecker)
+            add(ContributesComponentChecker)
 
             if (includeBaselineChecker) {
                 add(ContributesInjectorBaselineChecker(contributesInjectorBaseline))

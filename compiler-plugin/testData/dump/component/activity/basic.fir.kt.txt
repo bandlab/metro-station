@@ -1,10 +1,17 @@
 // FILE: basic.kt
 
 @ContributesComponent(appDependencies = ServiceProvider::class)
-class MyActivity : CommonActivity<Unit> {
+class MyActivity : CommonActivity<Unit>, HasServiceProvider {
   lateinit var myDependency: MyDependency
     get
     set
+
+  private val graph: Lazy<FeatureGraph>
+    field = lazy<FeatureGraph>(initializer = local fun <anonymous>(): FeatureGraph {
+      return Impl.create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies)
+    }
+)
+    get
 
   @ActivityScope
   @IROnlyFactories
@@ -180,6 +187,10 @@ class MyActivity : CommonActivity<Unit> {
 
   }
 
+  override fun <T : Any?> resolve(): T {
+    return Companion.resolveFrom<T>(graph = <this>.#graph.<get-value>())
+  }
+
 }
 
 @Inject
@@ -291,7 +302,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphE
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 594, endOffset = 644, newInstanceName = "provideText")
+  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 625, endOffset = 675, newInstanceName = "provideText")
   class ProvideTextMetroFactory : Factory<String> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
@@ -349,3 +360,4 @@ package metro.hints
 fun AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
+

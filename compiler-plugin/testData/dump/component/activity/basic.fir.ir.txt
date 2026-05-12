@@ -1,5 +1,5 @@
 FILE fqName:<root> fileName:/basic.kt
-  CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<kotlin.Unit>]
+  CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<kotlin.Unit>; com.bandlab.common.android.di.HasServiceProvider]
     annotations:
       ContributesComponent(appDependencies = CLASS_REFERENCE 'CLASS INTERFACE name:ServiceProvider modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<<root>.MyActivity.ServiceProvider>, graphMarker = <null>, extraDependencies = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity
@@ -22,11 +22,36 @@ FILE fqName:<root> fileName:/basic.kt
           SET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:myDependency type:<root>.MyDependency visibility:private' type=kotlin.Unit origin=null
             receiver: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity.<set-myDependency>' type=<root>.MyActivity origin=null
             value: GET_VAR '<set-?>: <root>.MyDependency declared in <root>.MyActivity.<set-myDependency>' type=<root>.MyDependency origin=null
+    PROPERTY GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] name:graph visibility:private modality:FINAL [val]
+      FIELD PROPERTY_BACKING_FIELD name:graph type:kotlin.Lazy<<root>.MyActivity.FeatureGraph> visibility:private [final]
+        EXPRESSION_BODY
+          CALL 'public final fun lazy <T> (initializer: kotlin.Function0<T of kotlin.lazy>): kotlin.Lazy<T of kotlin.lazy> declared in kotlin' type=kotlin.Lazy<T of kotlin.lazy> origin=null
+            TYPE_ARG T: <root>.MyActivity.FeatureGraph
+            ARG initializer: FUN_EXPR type=kotlin.Function0<<root>.MyActivity.FeatureGraph> origin=LAMBDA
+              FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL returnType:<root>.MyActivity.FeatureGraph
+                BLOCK_BODY
+                  RETURN type=kotlin.Nothing from='local final fun <anonymous> (): <root>.MyActivity.FeatureGraph declared in <root>.MyActivity.graph'
+                    CALL 'public abstract fun create (feature: Root of com.bandlab.common.android.di.GraphFactory, serviceProvider: ServiceProvider of com.bandlab.common.android.di.GraphFactory, extraDependencies: ExtraDependencies of com.bandlab.common.android.di.GraphFactory): Graph of com.bandlab.common.android.di.GraphFactory declared in com.bandlab.common.android.di.GraphFactory' type=Graph of com.bandlab.common.android.di.GraphFactory origin=null
+                      ARG <this>: GET_OBJECT 'CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GraphFactoryImplClassDeclaration] OBJECT name:Impl modality:FINAL visibility:public superTypes:[<root>.MyActivity.FeatureGraph.Factory]' type=<root>.MyActivity.FeatureGraph.Factory.Impl
+                      ARG feature: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity' type=<root>.MyActivity origin=null
+                      ARG serviceProvider: CALL 'public final fun resolveServiceProvider <T> (<this>: android.content.Context): T of com.bandlab.common.android.di.resolveServiceProvider declared in com.bandlab.common.android.di' type=T of com.bandlab.common.android.di.resolveServiceProvider origin=null
+                        TYPE_ARG T: <root>.MyActivity.FeatureServiceProvider
+                        ARG <this>: CALL 'public final fun getApplicationContext (): android.content.Context declared in android.content.ContextWrapper' type=android.content.Context origin=null
+                          ARG <this>: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity' type=<root>.MyActivity origin=null
+                      ARG extraDependencies: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:EmptyExtraDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=com.bandlab.common.android.di.EmptyExtraDependencies
+      FUN DEFAULT_PROPERTY_ACCESSOR name:<get-graph> visibility:public modality:FINAL returnType:<root>.MyActivity.FeatureGraph
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity
+        correspondingProperty: PROPERTY GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] name:graph visibility:private modality:FINAL [val]
+        BLOCK_BODY
+          RETURN type=kotlin.Nothing from='public final fun <get-graph> (): <root>.MyActivity.FeatureGraph declared in <root>.MyActivity'
+            CALL 'public abstract fun <get-value> (): T of kotlin.Lazy declared in kotlin.Lazy' type=T of kotlin.Lazy origin=null
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:graph type:kotlin.Lazy<<root>.MyActivity.FeatureGraph> visibility:private [final]' type=kotlin.Lazy<<root>.MyActivity.FeatureGraph> origin=null
+                receiver: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity.<get-graph>' type=<root>.MyActivity origin=null
     CLASS GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] INTERFACE name:FeatureGraph modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.di.MembersInjectorProvider<<root>.MyActivity>]
       annotations:
         ActivityScope
         IROnlyFactories
-        DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<kotlin.Unit>]' type=kotlin.reflect.KClass<<root>.MyActivity>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultActivityDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.android.common.activity.DefaultActivityDependencies>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
+        DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<kotlin.Unit>; com.bandlab.common.android.di.HasServiceProvider]' type=kotlin.reflect.KClass<<root>.MyActivity>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultActivityDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.android.common.activity.DefaultActivityDependencies>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureGraph
       CLASS GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.di.GraphFactory<<root>.MyActivity, <root>.MyActivity.FeatureServiceProvider, com.bandlab.common.android.di.EmptyExtraDependencies, <root>.MyActivity.FeatureGraph>]
         annotations:
@@ -458,20 +483,36 @@ FILE fqName:<root> fileName:/basic.kt
       BLOCK_BODY
         DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in com.bandlab.android.common.activity.CommonActivity'
           TYPE_ARG Params: kotlin.Unit
-        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<kotlin.Unit>]' type=kotlin.Unit
+        INSTANCE_INITIALIZER_CALL classDescriptor='CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<kotlin.Unit>; com.bandlab.common.android.di.HasServiceProvider]' type=kotlin.Unit
     FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
       overridden:
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.android.common.activity.CommonActivity
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.HasServiceProvider
     FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun hashCode (): kotlin.Int declared in com.bandlab.android.common.activity.CommonActivity
+        public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.HasServiceProvider
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in com.bandlab.android.common.activity.CommonActivity
+        public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.HasServiceProvider
+    FUN GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] name:resolve visibility:public modality:FINAL returnType:T of <root>.MyActivity.resolve
+      TYPE_PARAMETER GENERATED[com.bandlab.metro.extensions.component.ContributesComponentFir.Key] name:T index:0 variance: superTypes:[kotlin.Any?] reified:false
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity
+      overridden:
+        public abstract fun resolve <T> (): T of com.bandlab.common.android.di.HasServiceProvider.resolve declared in com.bandlab.common.android.di.HasServiceProvider
+      BLOCK_BODY
+        RETURN type=kotlin.Nothing from='public final fun resolve <T> (): T of <root>.MyActivity.resolve declared in <root>.MyActivity'
+          CALL 'public final fun resolveFrom <T> (graph: kotlin.Any): T of com.bandlab.common.android.di.HasServiceProvider.Companion.resolveFrom declared in com.bandlab.common.android.di.HasServiceProvider.Companion' type=T of com.bandlab.common.android.di.HasServiceProvider.Companion.resolveFrom origin=null
+            TYPE_ARG T: T of <root>.MyActivity.resolve
+            ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=com.bandlab.common.android.di.HasServiceProvider.Companion
+            ARG graph: CALL 'public abstract fun <get-value> (): T of kotlin.Lazy declared in kotlin.Lazy' type=T of kotlin.Lazy origin=null
+              ARG <this>: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:graph type:kotlin.Lazy<<root>.MyActivity.FeatureGraph> visibility:private [final]' type=kotlin.Lazy<<root>.MyActivity.FeatureGraph> origin=null
+                receiver: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity.resolve' type=<root>.MyActivity origin=null
     PROPERTY FAKE_OVERRIDE name:params visibility:public modality:FINAL [lateinit,fake_override,var]
       overridden:
         public final params: Params of com.bandlab.android.common.activity.CommonActivity declared in com.bandlab.android.common.activity.CommonActivity
@@ -728,7 +769,7 @@ FILE fqName:<root> fileName:/basic.kt
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] CLASS name:ProvideTextMetroFactory modality:FINAL visibility:public superTypes:[kotlin.Any; dev.zacsweers.metro.internal.Factory<kotlin.String>]
       annotations:
         Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
-        CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 594, endOffset = 644, newInstanceName = "provideText")
+        CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 625, endOffset = 675, newInstanceName = "provideText")
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.ProvideTextMetroFactory
       FIELD name:instance type:<root>.AppGraph visibility:private [final]
         EXPRESSION_BODY

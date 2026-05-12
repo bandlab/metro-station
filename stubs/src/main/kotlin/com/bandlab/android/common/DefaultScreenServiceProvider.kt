@@ -1,4 +1,3 @@
 package com.bandlab.android.common
 
-interface DefaultScreenServiceProvider {
-}
+interface DefaultScreenServiceProvider
