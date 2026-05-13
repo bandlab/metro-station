@@ -4,7 +4,7 @@ import android.content.Context
 import com.bandlab.uikit.api.page.Page
 
 /**
- * A component creator for [Page] that will initialize in the composable.
+ * A dependency graph creator for [Page] that will initialize in the composable.
  */
 class PageGraphCreator<T : Any>(private val initializer: (PageGraphDependencies) -> T) {
 

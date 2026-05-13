@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.bandlab.common.android.di.AndroidInjection
-import com.bandlab.metro.extensions.sample.utils.ScreenTracker
+import com.bandlab.metro.station.sample.utils.ScreenTracker
 
 abstract class CommonActivity<Params : Any> : FragmentActivity() {
 

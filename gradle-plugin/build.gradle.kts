@@ -58,9 +58,9 @@ buildConfig {
 gradlePlugin {
     plugins {
         register(rootProject.group.toString()) {
-            displayName = "MetroExtensionsGradlePlugin"
-            description = "A gradle plugin to configure Metro Extensions for BandLab Android apps."
-            implementationClass = "com.bandlab.metro.extensions.MetroExtensionsGradlePlugin"
+            displayName = "MetroStationGraphPlugin"
+            description = "A gradle plugin to configure Metro Station plugin for BandLab Android apps."
+            implementationClass = "com.bandlab.metro.station.MetroStationGradlePlugin"
         }
     }
 }

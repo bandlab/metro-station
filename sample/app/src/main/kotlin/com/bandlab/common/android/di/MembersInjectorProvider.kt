@@ -13,11 +13,11 @@ interface MembersInjectorProvider<T : Any> {
 /**
  * Multibinding of graph extension factories.
  */
-typealias DispatchingGraphExtensionFactories = Map<KClass<*>, Any>
+typealias GraphExtensionFactories = Map<KClass<*>, Any>
 
 @ContributesTo(AppScope::class)
 interface GraphExtensionFactoriesProvider {
 
     @Multibinds(allowEmpty = true)
-    val dispatchingGraphExtensionFactories: DispatchingGraphExtensionFactories
+    val graphExtensionFactories: GraphExtensionFactories
 }

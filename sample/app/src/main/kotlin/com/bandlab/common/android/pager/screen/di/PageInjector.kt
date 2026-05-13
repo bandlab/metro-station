@@ -11,12 +11,3 @@ import kotlin.reflect.KClass
 interface PageInjector<ViewModel : Any> {
     fun getPageViewModel(): ViewModel
 }
-
-typealias DispatchingPageInjector = Map<KClass<*>, Any>
-
-@ContributesTo(AppScope::class)
-interface PageInjectorProvider {
-
-    @Multibinds(allowEmpty = true)
-    val dispatchingPageInjector: DispatchingPageInjector
-}

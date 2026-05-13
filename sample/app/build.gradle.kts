@@ -1,4 +1,3 @@
-import com.bandlab.metro.extensions.MetroExtensionsGradleExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -6,17 +5,17 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.metro)
-    id("com.bandlab.metro.extensions")
+    id("com.bandlab.metro.station")
 }
 
 android {
-    namespace = "com.bandlab.metro.extensions.sample"
+    namespace = "com.bandlab.metro.station.sample"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.bandlab.metro.extensions.sampleapp"
+        applicationId = "com.bandlab.metro.station.sampleapp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -40,18 +39,18 @@ android {
     }
 }
 
-project.extensions.configure<MetroExtensionsGradleExtension> {
-    contributesInjectorBaseline.set(
-        setOf("com.bandlab.metro.extensions.sample.profile.ProfileActivity")
-    )
-}
+//project.extensions.configure<MetroExtensionsGradleExtension> {
+//    stationEntriesBaseline.set(
+//        setOf("com.bandlab.metro.station.sample.profile.ProfileActivity")
+//    )
+//}
 
 project.tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xexplicit-backing-fields",
             // Our compiler needs to run before metro during the IR phase.
-            "-Xcompiler-plugin-order=com.bandlab.metro.extensions>dev.zacsweers.metro.compiler",
+            "-Xcompiler-plugin-order=com.bandlab.metro.station>dev.zacsweers.metro.compiler",
         )
     }
 }

@@ -3,5 +3,5 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.metro) apply false
-    id("com.bandlab.metro.extensions") apply false
+    id("com.bandlab.metro.station") apply false
 }

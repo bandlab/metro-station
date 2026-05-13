@@ -1,4 +1,4 @@
-@ContributesComponent(
+@MetroStation(
     appDependencies = FooPage.ServiceProvider::class,
     extraDependencies = FooPage.ExtraDependencies::class
 )

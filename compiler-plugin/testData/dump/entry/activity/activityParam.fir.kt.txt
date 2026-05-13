@@ -1,0 +1,445 @@
+// FILE: activityParam.kt
+
+@StationEntry
+class MyActivity : CommonActivity<Param> {
+  lateinit var myViewModel: MyViewModel
+    get
+    set
+
+  data class Param {
+    val id: String
+      field = id
+      get
+
+    constructor(id: String) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    operator fun component1(): String {
+      return <this>.#id
+    }
+
+    fun copy(id: String = <this>.#id): Param {
+      return Param(id = id)
+    }
+
+    override operator fun equals(other: Any?): Boolean {
+      when {
+        EQEQEQ(arg0 = <this>, arg1 = other) -> return true
+      }
+      when {
+        other !is Param -> return false
+      }
+      val tmp_0: Param = other /*as Param */
+      when {
+        EQEQ(arg0 = <this>.#id, arg1 = tmp_0.#id).not() -> return false
+      }
+      return true
+    }
+
+    override fun hashCode(): Int {
+      return <this>.#id.hashCode()
+    }
+
+    override fun toString(): String {
+      return "Param(" + "id=" + <this>.#id + ")"
+    }
+
+  }
+
+  @IROnlyFactories
+  @ContributesTo(scope = AppScope::class)
+  interface ExtensionFactoryContribution {
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroContribution(scope = AppScope::class)
+    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : ExtensionFactoryContribution {
+    }
+
+    class ProvideFactoryMetroFactory : Factory<Any> {
+      private /* final field */ val instance: ExtensionFactoryContribution = instance
+      private /* final field */ val factory: Provider<Factory> = factory
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): Factory<Any> {
+          return ProvideFactoryMetroFactory(instance = instance, factory = factory)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideFactory(instance: ExtensionFactoryContribution, factory: Factory): Any {
+          return instance.provideFactory(factory = factory)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(instance: ExtensionFactoryContribution, factory: Provider<Factory>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): Any {
+        return Companion.provideFactory(instance = <this>.#instance, factory = <this>.#factory.invoke())
+      }
+
+      @IntoMap
+      @ClassKey(value = MyActivity::class)
+      @HiddenFromObjC
+      fun mirrorFunction(factory: Factory): Any {
+        return error(message = "Never called")
+      }
+
+    }
+
+    @Provides
+    @IntoMap
+    @ClassKey(value = MyActivity::class)
+    final fun provideFactory(factory: Factory): Any {
+      return factory
+    }
+
+  }
+
+  @ActivityScope
+  @IROnlyFactories
+  @GraphExtension(scope = MyActivity::class, bindingContainers = [DefaultActivityDependencies::class, FeatureBindings::class])
+  interface FeatureExtension : MembersInjectorProvider<MyActivity> {
+    @ContributesTo(scope = AppScope::class)
+    @Factory
+    interface Factory {
+      @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+      @MetroContribution(scope = AppScope::class)
+      interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : Factory {
+      }
+
+      abstract fun create(@Provides feature: MyActivity): FeatureExtension
+
+    }
+
+  }
+
+  @BindingContainer
+  @IROnlyFactories
+  object FeatureBindings {
+    class ProvideBaseTypeMetroFactory : Factory<CommonActivity<*>> {
+      private /* final field */ val feature: Provider<MyActivity> = feature
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(feature: Provider<MyActivity>): Factory<CommonActivity<*>> {
+          return ProvideBaseTypeMetroFactory(feature = feature)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideBaseType(feature: MyActivity): CommonActivity<*> {
+          return FeatureBindings.provideBaseType(feature = feature)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(feature: Provider<MyActivity>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): CommonActivity<*> {
+        return Companion.provideBaseType(feature = <this>.#feature.invoke())
+      }
+
+      @HiddenFromObjC
+      fun mirrorFunction(feature: MyActivity): CommonActivity<*> {
+        return error(message = "Never called")
+      }
+
+    }
+
+    class ProvideParamMetroFactory : Factory<Param> {
+      private /* final field */ val feature: Provider<MyActivity> = feature
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(feature: Provider<MyActivity>): Factory<Param> {
+          return ProvideParamMetroFactory(feature = feature)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideParam(feature: MyActivity): Param {
+          return FeatureBindings.provideParam(feature = feature)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(feature: Provider<MyActivity>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): Param {
+        return Companion.provideParam(feature = <this>.#feature.invoke())
+      }
+
+      @HiddenFromObjC
+      fun mirrorFunction(feature: MyActivity): Param {
+        return error(message = "Never called")
+      }
+
+    }
+
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @Provides
+    fun provideBaseType(feature: MyActivity): CommonActivity<*> {
+      return feature
+    }
+
+    @Provides
+    fun provideParam(feature: MyActivity): Param {
+      return feature.<get-params>()
+    }
+
+  }
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  class MetroMembersInjector : MembersInjector<MyActivity> {
+    private /* final field */ val myViewModel: Provider<MyViewModel> = myViewModel
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun create(myViewModel: Provider<MyViewModel>): MembersInjector<MyActivity> {
+        return MetroMembersInjector(myViewModel = myViewModel)
+      }
+
+      @JvmStatic
+      @JsStatic
+      fun injectMyViewModel(@Assisted instance: MyActivity, myViewModel: MyViewModel) {
+        return instance.#myViewModel = myViewModel
+      }
+
+    }
+
+    private constructor(myViewModel: Provider<MyViewModel>) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    override fun injectMembers(instance: MyActivity) {
+      Companion.injectMyViewModel(instance = instance, myViewModel = <this>.#myViewModel.invoke())
+    }
+
+  }
+
+  constructor() /* primary */ {
+    super/*CommonActivity*/<Param>()
+    /* <init>() */
+
+  }
+
+}
+
+@Inject
+class MyViewModel {
+  val param: Param
+    field = param
+    get
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  class MetroFactory : Factory<MyViewModel> {
+    private /* final field */ val param: Provider<Param> = param
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun create(param: Provider<Param>): Factory<MyViewModel> {
+        return MetroFactory(param = param)
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun newInstance(param: Param): MyViewModel {
+        return MyViewModel(param = param)
+      }
+
+    }
+
+    @HiddenFromObjC
+    private constructor(param: Provider<Param>) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @HiddenFromObjC
+    override operator fun invoke(): MyViewModel {
+      return Companion.newInstance(param = <this>.#param.invoke())
+    }
+
+    @HiddenFromObjC
+    fun mirrorFunction(param: Param): MyViewModel {
+      return error(message = "Never called")
+    }
+
+  }
+
+  constructor(param: Param) /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+}
+
+@DependencyGraph(scope = AppScope::class)
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  @MetroImplMarker
+  class Impl : AppGraph {
+    private val thisGraphInstance: Impl
+      field = <this>
+
+    @DependencyGraph(scope = MyActivity::class, bindingContainers = [DefaultActivityDependencies::class, FeatureBindings::class])
+    @ActivityScope
+    private class FeatureExtensionImpl : FeatureExtension {
+      private val appGraphImpl: Impl
+        field = appGraphImpl
+
+      private val featureInstance: MyActivity
+        field = feature
+
+      private val featureInstanceProvider: Provider<MyActivity>
+        field = Companion.invoke<MyActivity>(value = <this>.#featureInstance)
+
+      constructor(appGraphImpl: Impl, @Provides feature: MyActivity) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      override val injector: MembersInjector<MyActivity>
+        override get(): MembersInjector<MyActivity> {
+          return Companion.create(myViewModel = Companion.create(param = Companion.create(feature = <this>.#featureInstanceProvider)))
+        }
+
+      private val mapOfKClass___ToAny: Map<KClass<*>, Any>
+        private get(): Map<KClass<*>, Any> {
+          return buildMap<KClass<*>, Any>(capacity = 1, builderAction = local fun MutableMap<KClass<*>, Any>.<anonymous>() {
+            $receiver.put(key = MyActivity::class, value = <this>.#appGraphImpl.provideFactory(factory = <this>.#appGraphImpl))
+          }
+)
+        }
+
+    }
+
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    override fun create(@Provides feature: MyActivity): FeatureExtension {
+      return FeatureExtensionImpl(appGraphImpl = <this>, feature = feature)
+    }
+
+    @Multibinds(allowEmpty = true)
+    override val dispatchingGraphExtensionFactories: Map<KClass<*>, Any>
+      override get(): Map<KClass<*>, Any> {
+        return <this>.<get-mapOfKClass___ToAny>()
+      }
+
+    private val mapOfKClass___ToAny: Map<KClass<*>, Any>
+      private get(): Map<KClass<*>, Any> {
+        return buildMap<KClass<*>, Any>(capacity = 1, builderAction = local fun MutableMap<KClass<*>, Any>.<anonymous>() {
+          $receiver.put(key = MyActivity::class, value = <this>.#thisGraphInstance.provideFactory(factory = <this>.#thisGraphInstance))
+        }
+)
+      }
+
+  }
+
+  companion object Companion {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @GraphFactoryInvokeFunctionMarker
+    @JvmStatic
+    @JsStatic
+    operator fun invoke(): AppGraph {
+      return Impl()
+    }
+
+  }
+
+}
+
+// FILE: myActivityExtensionFactoryContributionAppScope.kt
+package metro.hints
+
+fun AppScope(contributed: ExtensionFactoryContribution) {
+  return error(message = "Never called")
+}
+
+// FILE: myActivityFeatureExtensionFactoryAppScope.kt
+package metro.hints
+
+fun AppScope(contributed: Factory) {
+  return error(message = "Never called")
+}
+

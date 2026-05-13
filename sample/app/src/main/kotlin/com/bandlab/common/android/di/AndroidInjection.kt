@@ -20,7 +20,7 @@ object AndroidInjection {
      */
     @Suppress("UNCHECKED_CAST")
     private fun resolveInjectorAndInject(target: Any) {
-        // Try to inject as a standalone graph first, this is needed for ContributesComponent.allowGraphExtensions,
+        // Try to inject as a standalone graph first, this is needed for MetroStation.allowGraphExtensions,
         // coz the activity's injector is part of the graph extension.
         if (target is HasServiceProvider) {
             val injector = try {
@@ -60,8 +60,8 @@ object AndroidInjection {
                         append("Also tried to inject fragment in activity ")
                         appendLine("${target.activity} (HasServiceProvider=${target.activity is HasServiceProvider})")
                     }
-                    append("You probably forgot to annotate it with @ContributesInjector, ")
-                    appendLine("or the scope of the @ContributesInjector is not correct.")
+                    append("You probably forgot to annotate it with @StationEntry, ")
+                    appendLine("or the scope of the @StationEntry is not correct.")
                 }
             )
         }
@@ -91,7 +91,7 @@ object AndroidInjection {
         if (context !is HasServiceProvider) return null
         return try {
             context.resolve<GraphExtensionFactoriesProvider>()
-                .dispatchingGraphExtensionFactories[this::class]
+                .graphExtensionFactories[this::class]
         } catch (_: Exception) {
             null
         }

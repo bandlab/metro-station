@@ -2,13 +2,13 @@ package com.bandlab.common.android.pager.screen
 
 import androidx.lifecycle.LifecycleOwner
 import com.bandlab.android.common.activity.CommonActivity
+import com.bandlab.common.android.di.GraphExtensionFactoriesProvider
 import com.bandlab.common.android.di.HasServiceProvider
 import com.bandlab.common.android.di.resolveServiceProvider
 import com.bandlab.common.android.pager.screen.di.NavPageDependencies
 import com.bandlab.common.android.pager.screen.di.PageGraphCreator
 import com.bandlab.common.android.pager.screen.di.PageGraphDependencies
 import com.bandlab.common.android.pager.screen.di.PageInjector
-import com.bandlab.common.android.pager.screen.di.PageInjectorProvider
 import com.bandlab.uikit.api.page.Page
 
 /**
@@ -20,7 +20,7 @@ fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageInjector(
     host: CommonActivity<*>,
     lifecycleOwner: LifecycleOwner,
 ): PageInjector<ViewModel> {
-    // Handles @ContributesComponent
+    // Handles @MetroStation
     return if (this is HasServiceProvider) {
         val graphCreator = this.javaClass.getDeclaredField("graphCreator")
             .apply { isAccessible = true }
@@ -36,19 +36,19 @@ fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageInjector(
         // Injector can be resolved from the Page component itself
         resolve()
     } else {
-        // Handles @ContributesInjector
+        // Handles @StationEntry
         val injectorFactory = run {
             // Try to find the injector factory from the host activity first
             val injectorFromActivity = try {
-                host.resolveServiceProvider<PageInjectorProvider>().dispatchingPageInjector[this::class]
+                host.resolveServiceProvider<GraphExtensionFactoriesProvider>().graphExtensionFactories[this::class]
             } catch (_: Exception) {
                 null
             }
             injectorFromActivity
             // Fallback to app-level injector if activity injector is not found
                 ?: host.applicationContext
-                    .resolveServiceProvider<PageInjectorProvider>()
-                    .dispatchingPageInjector[this::class]
+                    .resolveServiceProvider<GraphExtensionFactoriesProvider>()
+                    .graphExtensionFactories[this::class]
                 ?: error("No page dependencies factory found for $javaClass")
         }
         val pageDependencies = PageGraphDependencies(

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name="com.bandlab.metro.extensions.sample.SampleApplication"
+        android:name="com.bandlab.metro.station.sample.SampleApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SampleApp">
         <activity
-            android:name="com.bandlab.metro.extensions.sample.main.MainActivity"
+            android:name="com.bandlab.metro.station.sample.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.SampleApp">
@@ -24,7 +24,7 @@
         </activity>
 
         <activity
-            android:name="com.bandlab.metro.extensions.sample.profile.ProfileActivity"
+            android:name="com.bandlab.metro.station.sample.profile.ProfileActivity"
             android:exported="true"
             android:theme="@style/Theme.SampleApp" />
     </application>

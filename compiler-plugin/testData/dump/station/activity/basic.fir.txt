@@ -1,0 +1,130 @@
+FILE: basic.kt
+    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyActivity.ServiceProvider|)) public final class MyActivity : R|com/bandlab/android/common/activity/CommonActivity<kotlin/Unit>|, R|com/bandlab/common/android/di/HasServiceProvider| {
+        public constructor(): R|MyActivity| {
+            super<R|com/bandlab/android/common/activity/CommonActivity<kotlin/Unit>|>()
+        }
+
+        field:@R|dev/zacsweers/metro/Inject|() public final lateinit var myDependency: R|MyDependency|
+            public get(): R|MyDependency|
+            public set(value: R|MyDependency|): R|kotlin/Unit|
+
+        public abstract interface ServiceProvider : R|kotlin/Any| {
+            public abstract val myDependency: R|MyDependency|
+                public get(): R|MyDependency|
+
+        }
+
+        private final val graph: R|MyActivity.FeatureGraph|
+            public get(): R|MyActivity.FeatureGraph|
+
+        public final override fun <T> resolve(): R|T|
+
+        @R|com/bandlab/android/common/ActivityScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyActivity|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/android/common/activity/DefaultActivityDependencies|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/di/MembersInjectorProvider<MyActivity>| {
+            @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyActivity|): R|com/bandlab/android/common/activity/CommonActivity<*>|
+
+            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|com/bandlab/common/android/di/GraphFactory<MyActivity, MyActivity.FeatureServiceProvider, com/bandlab/common/android/di/EmptyExtraDependencies, MyActivity.FeatureGraph>| {
+                @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final object Impl : R|MyActivity.FeatureGraph.Factory| {
+                    @R|dev/zacsweers/metro/internal/GraphFactoryInvokeFunctionMarker|() public final override fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyActivity|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyActivity.FeatureServiceProvider|, @R|dev/zacsweers/metro/Includes|() extraDependencies: R|com/bandlab/common/android/di/EmptyExtraDependencies|): R|MyActivity.FeatureGraph|
+
+                    private constructor(): R|MyActivity.FeatureGraph.Factory.Impl| {
+                        super<R|kotlin/Any|>()
+                    }
+
+                }
+
+            }
+
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|MyActivity.FeatureGraph| {
+                private constructor(@R|dev/zacsweers/metro/Provides|() feature: R|MyActivity|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyActivity.FeatureServiceProvider|, @R|dev/zacsweers/metro/Includes|() extraDependencies: R|com/bandlab/common/android/di/EmptyExtraDependencies|): R|MyActivity.FeatureGraph.Impl| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+            public final companion object Companion : R|kotlin/Any| {
+                @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final fun factory(): R|MyActivity.FeatureGraph.Factory|
+
+                private constructor(): R|MyActivity.FeatureGraph.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+        @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface FeatureServiceProvider : R|MyActivity.ServiceProvider|, R|com/bandlab/android/common/activity/CommonActivity.ServiceProvider|, R|com/bandlab/android/common/DefaultScreenServiceProvider| {
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|MyActivity.FeatureServiceProvider| {
+            }
+
+        }
+
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) public final class MetroMembersInjector : R|dev/zacsweers/metro/MembersInjector<MyActivity>| {
+            private constructor(myDependency: R|dev/zacsweers/metro/Provider<MyDependency>|): R|MyActivity.MetroMembersInjector| {
+                super<R|kotlin/Any|>()
+            }
+
+            public final companion object Companion : R|kotlin/Any| {
+                @R|kotlin/native/HiddenFromObjC|() @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final fun create(myDependency: R|dev/zacsweers/metro/Provider<MyDependency>|): R|dev/zacsweers/metro/MembersInjector<MyActivity>|
+
+                @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final fun injectMyDependency(@R|dev/zacsweers/metro/Assisted|() instance: R|MyActivity|, myDependency: R|MyDependency|): R|kotlin/Unit|
+
+                private constructor(): R|MyActivity.MetroMembersInjector.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+    }
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
+        @R|dev/zacsweers/metro/Provides|() public open fun provideText(): R|kotlin/String| {
+            ^provideText String(Hello!)
+        }
+
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/CallableMetadata|(callableName = String(provideText), propertyName = String(), startOffset = Int(652), endOffset = Int(702), newInstanceName = String(provideText)) public final class ProvideTextMetroFactory : R|kotlin/Any| {
+            public final companion object Companion : R|kotlin/Any| {
+                private constructor(): R|AppGraph.ProvideTextMetroFactory.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|AppGraph| {
+            private constructor(): R|AppGraph.Impl| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+        public final companion object Companion : R|kotlin/Any| {
+            @R|dev/zacsweers/metro/internal/GraphFactoryInvokeFunctionMarker|() @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final operator fun invoke(): R|AppGraph|
+
+            private constructor(): R|AppGraph.Companion| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+    }
+    @R|dev/zacsweers/metro/Inject|() public final class MyDependency : R|kotlin/Any| {
+        public constructor(text: R|kotlin/String|): R|MyDependency| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val text: R|kotlin/String| = R|<local>/text|
+            public get(): R|kotlin/String|
+
+        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) public final class MetroFactory : R|kotlin/Any| {
+            public final companion object Companion : R|kotlin/Any| {
+                private constructor(): R|MyDependency.MetroFactory.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+    }

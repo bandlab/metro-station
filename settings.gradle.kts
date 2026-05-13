@@ -3,10 +3,10 @@ pluginManagement {
 }
 
 plugins {
-    id("com.bandlab.metro.extensions.settings")
+    id("com.bandlab.metro.station.settings")
 }
 
-rootProject.name = "metro-extensions"
+rootProject.name = "metro-station"
 
 include("compiler-plugin")
 include("gradle-plugin")

@@ -1,14 +1,14 @@
-public abstract interface annotation class com/bandlab/common/android/di/ContributesComponent : java/lang/annotation/Annotation {
+public abstract interface annotation class com/bandlab/metro/station/ContributesConfigSelector : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class com/bandlab/metro/station/MetroStation : java/lang/annotation/Annotation {
 	public abstract fun appDependencies ()Ljava/lang/Class;
 	public abstract fun extraDependencies ()Ljava/lang/Class;
 	public abstract fun graphMarker ()Ljava/lang/Class;
 }
 
-public abstract interface annotation class com/bandlab/common/android/di/ContributesInjector : java/lang/annotation/Annotation {
+public abstract interface annotation class com/bandlab/metro/station/StationEntry : java/lang/annotation/Annotation {
 	public abstract fun graphMarker ()Ljava/lang/Class;
-	public abstract fun scope ()Ljava/lang/Class;
-}
-
-public abstract interface annotation class com/bandlab/config/api/ContributesConfigSelector : java/lang/annotation/Annotation {
+	public abstract fun parentScope ()Ljava/lang/Class;
 }
 

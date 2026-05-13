@@ -1,0 +1,83 @@
+package com.bandlab.metro.station.checker
+
+import com.bandlab.metro.station.utils.findSuperTypeRef
+import com.bandlab.metro.station.utils.typeArgumentSource
+import com.bandlab.metro.station.utils.unwrapType
+import org.jetbrains.kotlin.KtSourceElement
+import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
+import org.jetbrains.kotlin.diagnostics.reportOn
+import org.jetbrains.kotlin.fir.analysis.checkers.MppCheckerKind
+import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
+import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirDeclarationChecker
+import org.jetbrains.kotlin.fir.declarations.FirClass
+import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
+import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.classId
+import org.jetbrains.kotlin.name.StandardClassIds
+import com.bandlab.metro.station.graph.MetroStationIds as Ids
+
+/**
+ * A Fir class declaration checker responsible for validating the generic parameter types of
+ * specific annotated classes based on predefined restrictions.
+ *
+ * This checker ensures that classes annotated with either `@MetroStation` or
+ * `@StationEntry` do not use restricted types as their parameters. Restricted types
+ * include primitive types such as `String`, `Int`, and others defined in the `restrictedParamTypes` set.
+ */
+internal object ParamTypeClassChecker : FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
+
+    private val restrictedParamTypes = setOf(
+        StandardClassIds.String,
+        StandardClassIds.Int,
+        StandardClassIds.Long,
+        StandardClassIds.Boolean,
+        StandardClassIds.Float,
+        StandardClassIds.Double,
+        StandardClassIds.Char,
+        StandardClassIds.Byte,
+        StandardClassIds.Short,
+    )
+
+    context(context: CheckerContext, reporter: DiagnosticReporter)
+    override fun check(declaration: FirClass) {
+        val symbol = declaration.symbol
+        val session = context.session
+
+        // Only check classes annotated with @MetroStation or @StationEntry
+        val hasComponent = symbol.getAnnotationByClassId(Ids.metroStation, session) != null
+        val hasInjector = symbol.getAnnotationByClassId(Ids.stationEntry, session) != null
+        if (!hasComponent && !hasInjector) return
+
+        // Check CommonActivity<Param> - param is the first type arg
+        val activitySuperTypeRef = symbol.findSuperTypeRef(Ids.commonActivity)
+        if (activitySuperTypeRef != null) {
+            val paramType = activitySuperTypeRef.unwrapType(0) as? ConeKotlinType
+            if (paramType != null && paramType.classId != StandardClassIds.Unit) {
+                val source = activitySuperTypeRef.typeArgumentSource(0)
+                checkRestricted(paramType, source, declaration)
+            }
+            return
+        }
+
+        // Check ParamPage<ViewModel, Param> - param is the second type arg
+        val paramPageSuperTypeRef = symbol.findSuperTypeRef(Ids.paramPage)
+        if (paramPageSuperTypeRef != null) {
+            val paramType = paramPageSuperTypeRef.unwrapType(1) as? ConeKotlinType
+            if (paramType != null) {
+                val source = paramPageSuperTypeRef.typeArgumentSource(1)
+                checkRestricted(paramType, source, declaration)
+            }
+        }
+    }
+
+    context(context: CheckerContext, reporter: DiagnosticReporter)
+    private fun checkRestricted(paramType: ConeKotlinType, typeArgSource: KtSourceElement?, declaration: FirClass) {
+        if (paramType.classId in restrictedParamTypes) {
+            reporter.reportOn(
+                source = typeArgSource ?: declaration.source,
+                factory = MetroStationDiagnostics.RESTRICTED_PARAM_TYPE,
+                "Param type ${paramType.classId} is a restricted primitive type. Use a wrapper class instead."
+            )
+        }
+    }
+}

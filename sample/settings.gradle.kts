@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "sample"
+rootProject.name = "metro-station-sample"
 include(":app")
 
 includeBuild("..")

@@ -9,8 +9,8 @@ repositories {
 
 gradlePlugin {
     plugins {
-        register("com.bandlab.metro.extensions.settings") {
-            implementationClass = "com.bandlab.metro.extensions.settings.SettingsPlugin"
+        register("com.bandlab.metro.station.settings") {
+            implementationClass = "com.bandlab.metro.station.settings.SettingsPlugin"
         }
     }
 }

@@ -1,5 +1,5 @@
 FILE: basic.kt
-    @R|com/bandlab/config/api/ContributesConfigSelector|() public final object FooConfigSelector : R|com/bandlab/config/api/DebuggableConfigSelector| {
+    @R|com/bandlab/metro/station/ContributesConfigSelector|() public final object FooConfigSelector : R|com/bandlab/config/api/DebuggableConfigSelector| {
         private constructor(): R|FooConfigSelector| {
             super<R|kotlin/Any|>()
         }

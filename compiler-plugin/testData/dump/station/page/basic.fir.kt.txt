@@ -1,0 +1,312 @@
+// FILE: basic.kt
+
+@MetroStation(appDependencies = ServiceProvider::class)
+class MyPage : HasServiceProvider, Page<MyViewModel> {
+  private val graphCreator: PageGraphCreator<FeatureGraph>
+    field = graphCreator<MyPage, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ context = context, factory = Impl, extraDependencies = EmptyExtraDependencies)
+    get
+
+  @PageScope
+  @IROnlyFactories
+  @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class])
+  interface FeatureGraph : PageInjector<MyViewModel> {
+    @Factory
+    interface Factory : PageGraphFactory<MyPage, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+      @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+      @MetroImplMarker
+      object Impl : Factory {
+        private constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @GraphFactoryInvokeFunctionMarker
+        override fun create(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
+          return Impl(feature = feature, pageGraphDependencies = pageGraphDependencies, navPageDependencies = navPageDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        }
+
+      }
+
+    }
+
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroImplMarker
+    class Impl : FeatureGraph {
+      private val featureServiceProviderInstance: FeatureServiceProvider
+        field = serviceProvider
+
+      private val featureServiceProviderNumberProvider: Provider<Long>
+        field = provider<Long>(provider = local fun <anonymous>(): Long {
+          return <this>.#featureServiceProviderInstance.<get-number>()
+        }
+)
+
+      private constructor(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      override fun getPageViewModel(): MyViewModel {
+        return MyViewModel(number = <this>.#featureServiceProviderNumberProvider.invoke())
+      }
+
+    }
+
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @JvmStatic
+      @JsStatic
+      fun factory(): Factory {
+        return Impl()
+      }
+
+    }
+
+    class ProvideBaseTypeMetroFactory : Factory<Page<*>> {
+      private /* final field */ val instance: FeatureGraph = instance
+      private /* final field */ val feature: Provider<MyPage> = feature
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(instance: FeatureGraph, feature: Provider<MyPage>): Factory<Page<*>> {
+          return ProvideBaseTypeMetroFactory(instance = instance, feature = feature)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideBaseType(instance: FeatureGraph, feature: MyPage): Page<*> {
+          return instance.provideBaseType(feature = feature)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(instance: FeatureGraph, feature: Provider<MyPage>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): Page<*> {
+        return Companion.provideBaseType(instance = <this>.#instance, feature = <this>.#feature.invoke())
+      }
+
+      @HiddenFromObjC
+      fun mirrorFunction(feature: MyPage): Page<*> {
+        return error(message = "Never called")
+      }
+
+    }
+
+    @Provides
+    final fun provideBaseType(feature: MyPage): Page<*> {
+      return feature
+    }
+
+  }
+
+  @ContributesTo(scope = AppScope::class)
+  interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider {
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroContribution(scope = AppScope::class)
+    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : FeatureServiceProvider {
+    }
+
+  }
+
+  interface ServiceProvider {
+    abstract val number: Long
+      abstract get
+
+  }
+
+  constructor(context: Context) /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+  override fun <T : Any?> resolve(): T {
+    return Companion.resolveFrom<T>(graph = <this>.#graphCreator.<get-value>())
+  }
+
+}
+
+@Inject
+class MyViewModel {
+  val number: Long
+    field = number
+    get
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  class MetroFactory : Factory<MyViewModel> {
+    private /* final field */ val number: Provider<Long> = number
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun create(number: Provider<Long>): Factory<MyViewModel> {
+        return MetroFactory(number = number)
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun newInstance(number: Long): MyViewModel {
+        return MyViewModel(number = number)
+      }
+
+    }
+
+    @HiddenFromObjC
+    private constructor(number: Provider<Long>) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @HiddenFromObjC
+    override operator fun invoke(): MyViewModel {
+      return Companion.newInstance(number = <this>.#number.invoke())
+    }
+
+    @HiddenFromObjC
+    fun mirrorFunction(number: Long): MyViewModel {
+      return error(message = "Never called")
+    }
+
+  }
+
+  constructor(number: Long) /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+}
+
+@DependencyGraph(scope = AppScope::class)
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  @MetroImplMarker
+  class Impl : AppGraph {
+    private val thisGraphInstance: Impl
+      field = <this>
+
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @Multibinds(allowEmpty = true)
+    override val dispatchingGraphExtensionFactories: Map<KClass<*>, Any>
+      override get(): Map<KClass<*>, Any> {
+        return emptyMap<KClass<*>, Any>()
+      }
+
+    override val number: Long
+      override get(): Long {
+        return <this>.#thisGraphInstance.provideLong()
+      }
+
+  }
+
+  companion object Companion {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @GraphFactoryInvokeFunctionMarker
+    @JvmStatic
+    @JsStatic
+    operator fun invoke(): AppGraph {
+      return Impl()
+    }
+
+  }
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 636, endOffset = 680, newInstanceName = "provideLong")
+  class ProvideLongMetroFactory : Factory<Long> {
+    private /* final field */ val instance: AppGraph = instance
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun create(instance: AppGraph): Factory<Long> {
+        return ProvideLongMetroFactory(instance = instance)
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun provideLong(instance: AppGraph): Long {
+        return instance.provideLong()
+      }
+
+    }
+
+    @HiddenFromObjC
+    private constructor(instance: AppGraph) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @HiddenFromObjC
+    override operator fun invoke(): Long {
+      return Companion.provideLong(instance = <this>.#instance)
+    }
+
+    @HiddenFromObjC
+    fun mirrorFunction(): Long {
+      return error(message = "Never called")
+    }
+
+  }
+
+  @Provides
+  fun provideLong(): Long {
+    return 123L
+  }
+
+}
+
+// FILE: myPageFeatureServiceProviderAppScope.kt
+package metro.hints
+
+fun AppScope(contributed: FeatureServiceProvider) {
+  return error(message = "Never called")
+}
+
