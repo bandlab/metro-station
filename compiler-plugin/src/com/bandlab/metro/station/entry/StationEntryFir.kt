@@ -232,8 +232,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 }
             }
 
-            annotations += buildSimpleAnnotation(ClassIds.irOnlyFactories)
-
             // @GraphExtension annotation
             annotations += buildSimpleAnnotation(
                 classId = ClassIds.graphExtension,

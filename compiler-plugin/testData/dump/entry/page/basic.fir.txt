@@ -4,7 +4,7 @@ FILE: basic.kt
             super<R|kotlin/Any|>()
         }
 
-        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|com/bandlab/common/android/pager/screen/di/PageGraphDependenciesModule|), <getClass>(Q|MyPage.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
+        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|com/bandlab/common/android/pager/screen/di/PageGraphDependenciesModule|), <getClass>(Q|MyPage.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
             @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory {
                 public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() navPageDependencies: R|com/bandlab/common/android/pager/screen/di/NavPageDependencies|): R|MyPage.FeatureExtension|
 

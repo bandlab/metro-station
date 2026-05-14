@@ -72,7 +72,6 @@ class MyActivity : CommonActivity<Unit> {
   }
 
   @ActivityScope
-  @IROnlyFactories
   @GraphExtension(scope = MyActivity::class, bindingContainers = [DefaultActivityDependencies::class, FeatureBindings::class])
   interface FeatureExtension : MembersInjectorProvider<MyActivity> {
     @ContributesTo(scope = AppScope::class)

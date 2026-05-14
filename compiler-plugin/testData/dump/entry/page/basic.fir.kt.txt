@@ -68,7 +68,6 @@ class MyPage : Page<MyViewModel> {
   }
 
   @PageScope
-  @IROnlyFactories
   @GraphExtension(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class, FeatureBindings::class])
   interface FeatureExtension : PageInjector<MyViewModel> {
     @ContributesTo(scope = AppScope::class)

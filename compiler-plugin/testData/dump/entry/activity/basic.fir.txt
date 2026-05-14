@@ -8,7 +8,7 @@ FILE: basic.kt
             public get(): R|MyDependency|
             public set(value: R|MyDependency|): R|kotlin/Unit|
 
-        @R|com/bandlab/android/common/ActivityScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyActivity|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/android/common/activity/DefaultActivityDependencies|), <getClass>(Q|MyActivity.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/di/MembersInjectorProvider<MyActivity>| {
+        @R|com/bandlab/android/common/ActivityScope|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyActivity|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/android/common/activity/DefaultActivityDependencies|), <getClass>(Q|MyActivity.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/di/MembersInjectorProvider<MyActivity>| {
             @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory {
                 public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyActivity|): R|MyActivity.FeatureExtension|
 
