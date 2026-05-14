@@ -37,7 +37,6 @@ import kotlin.reflect.KClass
  * class MyPage : Page<MyViewModel>() {
  *
  *   // This extension generates:
- *   @IROnlyFactories
  *   @PageScope
  *   @GraphExtension(
  *     scope = MyPage::class,
