@@ -8,7 +8,7 @@ lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.13.0"
 kotlin = "2.3.21"
 composeBom = "2026.05.00"
-metro = "1.0.0"
+metro = "1.1.0"
 fragmentKtx = "1.8.9"
 serialization = "1.11.0"
 

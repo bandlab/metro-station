@@ -161,6 +161,7 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
         return Companion.provideBaseType(instance = <this>.#instance, feature = <this>.#feature.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(feature: MyPage): Page<*> {
         return error(message = "Never called")
@@ -208,6 +209,7 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
         return Companion.provideParamFlow(instance = <this>.#instance, provider = <this>.#provider.invoke(), feature = <this>.#feature.invoke(), initialParam = <this>.#initialParam.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
         return error(message = "Never called")
@@ -253,6 +255,7 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
         return Companion.provideParam(instance = <this>.#instance, pageGraphDependencies = <this>.#pageGraphDependencies.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(pageGraphDependencies: PageGraphDependencies): Params {
         return error(message = "Never called")
@@ -281,7 +284,7 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider {
     @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : FeatureServiceProvider {
+    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
     }
 
   }
@@ -361,6 +364,7 @@ class MyViewModel {
       return Companion.newInstance(param = <this>.#param.invoke(), paramFlow = <this>.#paramFlow.invoke())
     }
 
+    @ComptimeOnly
     @HiddenFromObjC
     fun mirrorFunction(param: Params, paramFlow: Flow<Params>): MyViewModel {
       return error(message = "Never called")
@@ -377,7 +381,7 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph {

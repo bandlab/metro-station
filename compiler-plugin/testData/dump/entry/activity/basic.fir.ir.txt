@@ -27,11 +27,11 @@ FILE fqName:<root> fileName:/basic.kt
         IROnlyFactories
         ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.ExtensionFactoryContribution
-      CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeoxd1AHI modality:ABSTRACT visibility:public superTypes:[<root>.MyActivity.ExtensionFactoryContribution]
+      CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeocf15 modality:ABSTRACT visibility:public superTypes:[<root>.MyActivity.ExtensionFactoryContribution]
         annotations:
           Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
           MetroContribution(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>)
-        thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+        thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeocf15
         FUN FAKE_OVERRIDE name:provideFactory visibility:public modality:FINAL returnType:kotlin.Any [fake_override]
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.ExtensionFactoryContribution
           VALUE_PARAMETER kind:Regular name:factory index:1 type:<root>.MyActivity.FeatureExtension.Factory
@@ -110,6 +110,7 @@ FILE fqName:<root> fileName:/basic.kt
           annotations:
             IntoMap
             ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<kotlin.Unit>]' type=kotlin.reflect.KClass<<root>.MyActivity>)
+            ComptimeOnly
             HiddenFromObjC
           BLOCK_BODY
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (factory: <root>.MyActivity.FeatureExtension.Factory): kotlin.Any declared in <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory'
@@ -136,11 +137,11 @@ FILE fqName:<root> fileName:/basic.kt
           ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
           Factory
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureExtension.Factory
-        CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeoxd1AHI modality:ABSTRACT visibility:public superTypes:[<root>.MyActivity.FeatureExtension.Factory]
+        CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeocf15 modality:ABSTRACT visibility:public superTypes:[<root>.MyActivity.FeatureExtension.Factory]
           annotations:
             Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
             MetroContribution(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>)
-          thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+          thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15
           FUN FAKE_OVERRIDE name:create visibility:public modality:ABSTRACT returnType:<root>.MyActivity.FeatureExtension [fake_override]
             VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureExtension.Factory
             VALUE_PARAMETER kind:Regular name:feature index:1 type:<root>.MyActivity
@@ -237,6 +238,7 @@ FILE fqName:<root> fileName:/basic.kt
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory
           VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
           annotations:
+            ComptimeOnly
             HiddenFromObjC
           BLOCK_BODY
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (feature: <root>.MyActivity): com.bandlab.android.common.activity.CommonActivity<*> declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory'
@@ -498,6 +500,7 @@ FILE fqName:<root> fileName:/basic.kt
         VALUE_PARAMETER kind:Regular name:text index:1 type:kotlin.String
         VALUE_PARAMETER kind:Regular name:int index:2 type:kotlin.Int
         annotations:
+          ComptimeOnly
           HiddenFromObjC
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun mirrorFunction (text: kotlin.String, int: kotlin.Int): <root>.MyDependency declared in <root>.MyDependency.MetroFactory'
@@ -522,7 +525,7 @@ FILE fqName:<root> fileName:/basic.kt
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-  CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyActivity.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeoxd1AHI; <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeoxd1AHI; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope; com.bandlab.common.android.di.GraphExtensionFactoriesProvider]
+  CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyActivity.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeocf15; <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope; com.bandlab.common.android.di.GraphExtensionFactoriesProvider]
     annotations:
       DependencyGraph(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph
@@ -815,6 +818,7 @@ FILE fqName:<root> fileName:/basic.kt
       FUN name:mirrorFunction visibility:public modality:FINAL returnType:kotlin.Int
         VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph.ProvideIntMetroFactory
         annotations:
+          ComptimeOnly
           HiddenFromObjC
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun mirrorFunction (): kotlin.Int declared in <root>.AppGraph.ProvideIntMetroFactory'
@@ -826,7 +830,7 @@ FILE fqName:<root> fileName:/basic.kt
         annotations:
           Provides
       overridden:
-        public abstract fun create (feature: <root>.MyActivity): <root>.MyActivity.FeatureExtension declared in <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+        public abstract fun create (feature: <root>.MyActivity): <root>.MyActivity.FeatureExtension declared in <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15
     FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -848,7 +852,7 @@ FILE fqName:<root> fileName:/basic.kt
         IntoMap
         ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<kotlin.Unit>]' type=kotlin.reflect.KClass<<root>.MyActivity>)
       overridden:
-        public final fun provideFactory (factory: <root>.MyActivity.FeatureExtension.Factory): kotlin.Any declared in <root>.MyActivity.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+        public final fun provideFactory (factory: <root>.MyActivity.FeatureExtension.Factory): kotlin.Any declared in <root>.MyActivity.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeocf15
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:

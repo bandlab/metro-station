@@ -107,6 +107,7 @@ class MyPage : HasServiceProvider, Page<MyViewModel> {
         return Companion.provideBaseType(instance = <this>.#instance, feature = <this>.#feature.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(feature: MyPage): Page<*> {
         return error(message = "Never called")
@@ -125,7 +126,7 @@ class MyPage : HasServiceProvider, Page<MyViewModel> {
   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider {
     @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : FeatureServiceProvider {
+    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
     }
 
   }
@@ -192,6 +193,7 @@ class MyViewModel {
       return Companion.newInstance(number = <this>.#number.invoke())
     }
 
+    @ComptimeOnly
     @HiddenFromObjC
     fun mirrorFunction(number: Long): MyViewModel {
       return error(message = "Never called")
@@ -208,7 +210,7 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph {
@@ -289,6 +291,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphE
       return Companion.provideLong(instance = <this>.#instance)
     }
 
+    @ComptimeOnly
     @HiddenFromObjC
     fun mirrorFunction(): Long {
       return error(message = "Never called")

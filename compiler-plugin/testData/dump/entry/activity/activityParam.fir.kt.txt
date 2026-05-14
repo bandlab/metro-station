@@ -54,7 +54,7 @@ class MyActivity : CommonActivity<Param> {
   interface ExtensionFactoryContribution {
     @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : ExtensionFactoryContribution {
+    interface MetroContributionToDevzacsweersmetroappScopeocf15 : ExtensionFactoryContribution {
     }
 
     class ProvideFactoryMetroFactory : Factory<Any> {
@@ -97,6 +97,7 @@ class MyActivity : CommonActivity<Param> {
 
       @IntoMap
       @ClassKey(value = MyActivity::class)
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(factory: Factory): Any {
         return error(message = "Never called")
@@ -122,7 +123,7 @@ class MyActivity : CommonActivity<Param> {
     interface Factory {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroContribution(scope = AppScope::class)
-      interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : Factory {
+      interface MetroContributionToDevzacsweersmetroappScopeocf15 : Factory {
       }
 
       abstract fun create(@Provides feature: MyActivity): FeatureExtension
@@ -171,6 +172,7 @@ class MyActivity : CommonActivity<Param> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(feature: MyActivity): CommonActivity<*> {
         return error(message = "Never called")
@@ -215,6 +217,7 @@ class MyActivity : CommonActivity<Param> {
         return Companion.provideParam(feature = <this>.#feature.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(feature: MyActivity): Param {
         return error(message = "Never called")
@@ -329,6 +332,7 @@ class MyViewModel {
       return Companion.newInstance(param = <this>.#param.invoke())
     }
 
+    @ComptimeOnly
     @HiddenFromObjC
     fun mirrorFunction(param: Param): MyViewModel {
       return error(message = "Never called")
@@ -345,7 +349,7 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroContributionToDevzacsweersmetroappScopeocf15, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph {

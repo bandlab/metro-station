@@ -26,7 +26,7 @@ FILE: activityParam.kt
             @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory {
                 public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyActivity|): R|MyActivity.FeatureExtension|
 
-                @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|MyActivity.FeatureExtension.Factory| {
+                @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyActivity.FeatureExtension.Factory| {
                 }
 
             }
@@ -36,7 +36,7 @@ FILE: activityParam.kt
         @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface ExtensionFactoryContribution {
             @R|dev/zacsweers/metro/Provides|() @R|dev/zacsweers/metro/IntoMap|() @R|dev/zacsweers/metro/ClassKey|(value = <getClass>(Q|MyActivity|)) public final fun provideFactory(factory: R|MyActivity.FeatureExtension.Factory|): R|kotlin/Any|
 
-            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|MyActivity.ExtensionFactoryContribution| {
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyActivity.ExtensionFactoryContribution| {
             }
 
         }
@@ -71,7 +71,7 @@ FILE: activityParam.kt
         }
 
     }
-    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeoxd1AHI|, R|MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeoxd1AHI|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeocf15|, R|MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
         @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|AppGraph| {
             private constructor(): R|AppGraph.Impl| {
                 super<R|kotlin/Any|>()

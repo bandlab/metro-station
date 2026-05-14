@@ -36,11 +36,11 @@ FILE fqName:<root> fileName:/basic.kt
             Binds
             IntoSet
             CallableMetadata(callableName = "bind", propertyName = "", startOffset = -1, endOffset = -1, newInstanceName = <null>)
-      CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeoxd1AHI modality:ABSTRACT visibility:public superTypes:[<root>.FooConfigSelector.MultibindingContribution]
+      CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeocf15 modality:ABSTRACT visibility:public superTypes:[<root>.FooConfigSelector.MultibindingContribution]
         annotations:
           Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
           MetroContribution(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>)
-        thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.FooConfigSelector.MultibindingContribution.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+        thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.FooConfigSelector.MultibindingContribution.MetroContributionToDevzacsweersmetroappScopeocf15
         FUN FAKE_OVERRIDE name:bind visibility:public modality:ABSTRACT returnType:com.bandlab.config.api.DebuggableConfigSelector [fake_override]
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.FooConfigSelector.MultibindingContribution
           VALUE_PARAMETER kind:Regular name:impl index:1 type:<root>.FooConfigSelector
@@ -48,7 +48,7 @@ FILE fqName:<root> fileName:/basic.kt
             Binds
             IntoSet
           overridden:
-            public abstract fun bind (impl: <root>.FooConfigSelector): com.bandlab.config.api.DebuggableConfigSelector declared in <root>.FooConfigSelector.MultibindingContribution
+            public open fun bind (impl: <root>.FooConfigSelector): com.bandlab.config.api.DebuggableConfigSelector declared in <root>.FooConfigSelector.MultibindingContribution
         FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
           VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -75,7 +75,7 @@ FILE fqName:<root> fileName:/basic.kt
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
         overridden:
           public open fun toString (): kotlin.String declared in kotlin.Any
-      FUN GENERATED[com.bandlab.metro.station.configselector.ContributesConfigSelectorFir.Key] name:bind visibility:public modality:ABSTRACT returnType:com.bandlab.config.api.DebuggableConfigSelector
+      FUN GENERATED[com.bandlab.metro.station.configselector.ContributesConfigSelectorFir.Key] name:bind visibility:public modality:OPEN returnType:com.bandlab.config.api.DebuggableConfigSelector
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.FooConfigSelector.MultibindingContribution
         VALUE_PARAMETER GENERATED[com.bandlab.metro.station.configselector.ContributesConfigSelectorFir.Key] kind:Regular name:impl index:1 type:<root>.FooConfigSelector
         annotations:
@@ -83,7 +83,7 @@ FILE fqName:<root> fileName:/basic.kt
           IntoSet
           ComptimeOnly
         BLOCK_BODY
-          RETURN type=kotlin.Nothing from='public abstract fun bind (impl: <root>.FooConfigSelector): com.bandlab.config.api.DebuggableConfigSelector declared in <root>.FooConfigSelector.MultibindingContribution'
+          RETURN type=kotlin.Nothing from='public open fun bind (impl: <root>.FooConfigSelector): com.bandlab.config.api.DebuggableConfigSelector declared in <root>.FooConfigSelector.MultibindingContribution'
             CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing declared in kotlin' type=kotlin.Nothing origin=null
               ARG message: CONST String type=kotlin.String value="Never called"
     CONSTRUCTOR visibility:private returnType:<root>.FooConfigSelector [primary]

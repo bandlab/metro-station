@@ -50,7 +50,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
   interface ExtensionFactoryContribution {
     @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : ExtensionFactoryContribution {
+    interface MetroContributionToDevzacsweersmetroappScopeocf15 : ExtensionFactoryContribution {
     }
 
     class ProvideFactoryMetroFactory : Factory<Any> {
@@ -93,6 +93,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
       @IntoMap
       @ClassKey(value = MyPage::class)
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(factory: Factory): Any {
         return error(message = "Never called")
@@ -118,7 +119,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
     interface Factory {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroContribution(scope = AppScope::class)
-      interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : Factory {
+      interface MetroContributionToDevzacsweersmetroappScopeocf15 : Factory {
       }
 
       abstract fun create(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension
@@ -167,6 +168,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(feature: MyPage): Page<*> {
         return error(message = "Never called")
@@ -213,6 +215,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
         return Companion.provideParamFlow(provider = <this>.#provider.invoke(), feature = <this>.#feature.invoke(), initialParam = <this>.#initialParam.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
         return error(message = "Never called")
@@ -257,6 +260,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
         return Companion.provideParam(pageGraphDependencies = <this>.#pageGraphDependencies.invoke())
       }
 
+      @ComptimeOnly
       @HiddenFromObjC
       fun mirrorFunction(pageGraphDependencies: PageGraphDependencies): Params {
         return error(message = "Never called")
@@ -355,6 +359,7 @@ class MyViewModel {
       return Companion.newInstance(param = <this>.#param.invoke(), paramFlow = <this>.#paramFlow.invoke())
     }
 
+    @ComptimeOnly
     @HiddenFromObjC
     fun mirrorFunction(param: Params, paramFlow: Flow<Params>): MyViewModel {
       return error(message = "Never called")
@@ -371,7 +376,7 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, MetroContributionToDevzacsweersmetroappScopeoxd1AHI, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroContributionToDevzacsweersmetroappScopeocf15, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph {

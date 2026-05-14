@@ -22,13 +22,13 @@ object FooConfigSelector : DebuggableConfigSelector {
 
     @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : MultibindingContribution {
+    interface MetroContributionToDevzacsweersmetroappScopeocf15 : MultibindingContribution {
     }
 
     @Binds
     @IntoSet
     @ComptimeOnly
-    abstract fun bind(impl: FooConfigSelector): DebuggableConfigSelector {
+    fun bind(impl: FooConfigSelector): DebuggableConfigSelector {
       return error(message = "Never called")
     }
 
@@ -48,3 +48,4 @@ package metro.hints
 fun AppScope(contributed: MultibindingContribution) {
   return error(message = "Never called")
 }
+

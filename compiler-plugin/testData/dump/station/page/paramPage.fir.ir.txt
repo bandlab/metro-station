@@ -414,6 +414,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureGraph.ProvideBaseTypeMetroFactory
           VALUE_PARAMETER GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] kind:Regular name:feature index:1 type:<root>.MyPage
           annotations:
+            ComptimeOnly
             HiddenFromObjC
           BLOCK_BODY
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (feature: <root>.MyPage): com.bandlab.uikit.api.page.Page<*> declared in <root>.MyPage.FeatureGraph.ProvideBaseTypeMetroFactory'
@@ -510,6 +511,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           VALUE_PARAMETER GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] kind:Regular name:feature index:2 type:<root>.MyPage
           VALUE_PARAMETER GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] kind:Regular name:initialParam index:3 type:<root>.MyPage.Params
           annotations:
+            ComptimeOnly
             HiddenFromObjC
           BLOCK_BODY
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (provider: com.bandlab.common.android.pager.screen.PageParamFlowProvider, feature: <root>.MyPage, initialParam: <root>.MyPage.Params): kotlinx.coroutines.flow.Flow<<root>.MyPage.Params> declared in <root>.MyPage.FeatureGraph.ProvideParamFlowMetroFactory'
@@ -582,6 +584,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureGraph.ProvideParamMetroFactory
           VALUE_PARAMETER GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] kind:Regular name:pageGraphDependencies index:1 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
           annotations:
+            ComptimeOnly
             HiddenFromObjC
           BLOCK_BODY
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies): <root>.MyPage.Params declared in <root>.MyPage.FeatureGraph.ProvideParamMetroFactory'
@@ -640,11 +643,11 @@ FILE fqName:<root> fileName:/paramPage.kt
       annotations:
         ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureServiceProvider
-      CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeoxd1AHI modality:ABSTRACT visibility:public superTypes:[<root>.MyPage.FeatureServiceProvider]
+      CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeocf15 modality:ABSTRACT visibility:public superTypes:[<root>.MyPage.FeatureServiceProvider]
         annotations:
           Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
           MetroContribution(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>)
-        thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+        thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15
         FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
           VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -901,6 +904,7 @@ FILE fqName:<root> fileName:/paramPage.kt
         VALUE_PARAMETER kind:Regular name:param index:1 type:<root>.MyPage.Params
         VALUE_PARAMETER kind:Regular name:paramFlow index:2 type:kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>
         annotations:
+          ComptimeOnly
           HiddenFromObjC
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun mirrorFunction (param: <root>.MyPage.Params, paramFlow: kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>): <root>.MyViewModel declared in <root>.MyViewModel.MetroFactory'
@@ -925,7 +929,7 @@ FILE fqName:<root> fileName:/paramPage.kt
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-  CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope; com.bandlab.common.android.di.GraphExtensionFactoriesProvider]
+  CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope; com.bandlab.common.android.di.GraphExtensionFactoriesProvider]
     annotations:
       DependencyGraph(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph
@@ -999,21 +1003,21 @@ FILE fqName:<root> fileName:/paramPage.kt
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
       overridden:
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
-        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
     FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun hashCode (): kotlin.Int declared in kotlin.Any
-        public open fun hashCode (): kotlin.Int declared in <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+        public open fun hashCode (): kotlin.Int declared in <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15
         public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-        public open fun toString (): kotlin.String declared in <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI
+        public open fun toString (): kotlin.String declared in <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15
         public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
     PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]

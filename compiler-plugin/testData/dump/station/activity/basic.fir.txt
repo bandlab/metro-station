@@ -53,7 +53,7 @@ FILE: basic.kt
         }
 
         @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface FeatureServiceProvider : R|MyActivity.ServiceProvider|, R|com/bandlab/android/common/activity/CommonActivity.ServiceProvider|, R|com/bandlab/android/common/DefaultScreenServiceProvider| {
-            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|MyActivity.FeatureServiceProvider| {
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyActivity.FeatureServiceProvider| {
             }
 
         }
@@ -77,7 +77,7 @@ FILE: basic.kt
         }
 
     }
-    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
         @R|dev/zacsweers/metro/Provides|() public open fun provideText(): R|kotlin/String| {
             ^provideText String(Hello!)
         }

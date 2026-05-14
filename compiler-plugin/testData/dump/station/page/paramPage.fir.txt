@@ -64,7 +64,7 @@ FILE: paramPage.kt
         }
 
         @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface FeatureServiceProvider : R|MyPage.ServiceProvider|, R|com/bandlab/android/common/DefaultScreenServiceProvider| {
-            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeoxd1AHI : R|MyPage.FeatureServiceProvider| {
+            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyPage.FeatureServiceProvider| {
             }
 
         }
@@ -101,7 +101,7 @@ FILE: paramPage.kt
         }
 
     }
-    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeoxd1AHI|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
         @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|AppGraph| {
             private constructor(): R|AppGraph.Impl| {
                 super<R|kotlin/Any|>()
