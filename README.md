@@ -12,8 +12,9 @@ rewrite our code generation setup to use Metro.
 Please note that we are sharing this repository strictly as a practical demonstration of code generation with Metro. 
 This is a reference example and is not intended for public adoption.
 
-> **⚠️ Metro's extensions API is highly experimental, as well as the Kotlin compiler plugin API itself.
-> You should be aware of the high maintenance cost if you decide to follow the same approach.**
+> **⚠️ Metro's extensions API is highly experimental and does not accept any FRs and issues. The Kotlin compiler plugin 
+> API itself is also constantly changing and lacks documentation. You should be aware of the high-maintenance cost if
+> you decide to follow the same approach.**
 
 ## Performance Benchmark
 
