@@ -21,9 +21,7 @@ import android.content.Context
  */
 interface HasServiceProvider {
 
-    fun <T> resolve(): T {
-        throw UnsupportedOperationException("Implemented by the compiler")
-    }
+    fun <T> resolve(): T
 
     companion object {
 

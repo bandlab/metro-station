@@ -19,7 +19,7 @@ class MyDependency(
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
     val myActivity = MyActivity()
-    val factory = appGraph.dispatchingGraphExtensionFactories[MyActivity::class] as MyActivity.FeatureExtension.Factory
+    val factory = appGraph.graphExtensionFactories[MyActivity::class] as MyActivity.FeatureExtension.Factory
     val graph = factory.create(myActivity)
     graph.injector.injectMembers(myActivity)
 

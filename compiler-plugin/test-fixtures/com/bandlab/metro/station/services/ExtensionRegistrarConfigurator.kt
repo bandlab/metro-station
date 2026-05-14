@@ -1,10 +1,8 @@
 package com.bandlab.metro.station.services
 
 import com.bandlab.metro.station.MetroStationPluginRegistrar
-import com.bandlab.metro.station.extension.StationEntryIr
+import com.bandlab.metro.station.entry.StationEntryIr
 import com.bandlab.metro.station.graph.MetroStationIr
-import com.bandlab.metro.station.services.MetroDirectives
-import dev.zacsweers.metro.compiler.MetroCommandLineProcessor
 import dev.zacsweers.metro.compiler.MetroCompilerPluginRegistrar
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
@@ -23,8 +21,8 @@ fun TestConfigurationBuilder.configurePlugin() {
 }
 
 fun TestConfigurationBuilder.configureImports(
-    addCommonImports: Boolean,
-    addMetroImports: Boolean,
+    addCommonImports: Boolean = true,
+    addMetroImports: Boolean = true,
     addTestImports: Boolean
 ) {
     useSourcePreprocessor(
@@ -56,20 +54,11 @@ fun TestConfigurationBuilder.configureImports(
 
 private class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices) {
     private val metroRegistrar = MetroCompilerPluginRegistrar()
-    private val metroCliProcessor = MetroCommandLineProcessor()
 
     override fun CompilerPluginRegistrar.ExtensionStorage.registerCompilerExtensions(
         module: TestModule,
         configuration: CompilerConfiguration
     ) {
-        // Configure Metro options from directives before registering
-        if (MetroDirectives.GENERATE_CONTRIBUTION_HINTS_IN_FIR in module.directives) {
-            val option = metroCliProcessor.pluginOptions.first {
-                it.optionName == "generate-contribution-hints-in-fir"
-            }
-            metroCliProcessor.processOption(option, "true", configuration)
-        }
-
         val includeBaselineChecker = MetroDirectives.ENABLE_STATION_ENTRIES_BASELINE in module.directives
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(

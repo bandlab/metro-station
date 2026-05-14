@@ -41,10 +41,6 @@ open class AbstractBoxTest : AbstractFirBlackBoxCodegenTestBase(FirParser.LightT
         }
 
         configurePlugin()
-        configureImports(
-            addCommonImports = true,
-            addMetroImports = true,
-            addTestImports = true
-        )
+        configureImports(addTestImports = true)
     }
 }

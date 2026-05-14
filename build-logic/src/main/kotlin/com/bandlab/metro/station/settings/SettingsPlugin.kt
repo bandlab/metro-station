@@ -24,11 +24,13 @@ class SettingsPlugin : Plugin<Settings> {
         settings.pluginManagement {
             repositories {
                 mavenCentral()
-                maven {
-                    setUrl(getPropertyOrFail("ARTIFACTORY_URL"))
-                    credentials {
-                        username = getPropertyOrFail("ARTIFACTORY_USERNAME")
-                        password = getPropertyOrFail("ARTIFACTORY_PASSWORD")
+                if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
+                    maven {
+                        setUrl(getPropertyOrFail("ARTIFACTORY_URL"))
+                        credentials {
+                            username = getPropertyOrFail("ARTIFACTORY_USERNAME")
+                            password = getPropertyOrFail("ARTIFACTORY_PASSWORD")
+                        }
                     }
                 }
                 mavenLocal()
@@ -39,11 +41,13 @@ class SettingsPlugin : Plugin<Settings> {
         settings.dependencyResolutionManagement {
             repositories {
                 mavenCentral()
-                maven {
-                    setUrl(getPropertyOrFail("ARTIFACTORY_URL"))
-                    credentials {
-                        username = getPropertyOrFail("ARTIFACTORY_USERNAME")
-                        password = getPropertyOrFail("ARTIFACTORY_PASSWORD")
+                if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
+                    maven {
+                        setUrl(getPropertyOrFail("ARTIFACTORY_URL"))
+                        credentials {
+                            username = getPropertyOrFail("ARTIFACTORY_USERNAME")
+                            password = getPropertyOrFail("ARTIFACTORY_PASSWORD")
+                        }
                     }
                 }
                 mavenLocal()

@@ -12,7 +12,7 @@ interface PageGraphFactory<Feature, ServiceProvider, ExtraDependencies, Graph> {
     fun create(
         @Provides feature: Feature,
         @Provides pageGraphDependencies: PageGraphDependencies,
-        @Includes navPageDependencies: NavPageDependencies = NavPageDependencies(NavPageNavigation.NOOP),
+        @Includes navPageDependencies: NavPageDependencies = NavPageDependencies(),
         @Includes serviceProvider: ServiceProvider,
         @Includes extraDependencies: ExtraDependencies,
     ): Graph

@@ -10,7 +10,7 @@ buildconfig = "6.0.9"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 coroutines = "1.10.2"
 # https://github.com/ZacSweers/metro/releases
-metro = "1.0.0-bl"
+metro = "1.0.0"
 # https://github.com/joshfriend/autoservice-ir/releases
 autoservice = "0.1.4"
 # https://github.com/vanniktech/gradle-maven-publish-plugin/releases

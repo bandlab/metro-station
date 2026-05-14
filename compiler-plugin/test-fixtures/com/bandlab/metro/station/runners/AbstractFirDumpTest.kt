@@ -24,40 +24,36 @@ import org.junit.jupiter.api.Assumptions
  * defined in `libs.versions.toml`.
  */
 open class AbstractFirDumpTest : AbstractFirLightTreeJvmIrTextTest() {
-  override fun createKotlinStandardLibrariesPathProvider(): KotlinStandardLibrariesPathProvider {
-    return EnvironmentBasedStandardLibrariesPathProvider
-  }
-
-  override fun configure(builder: TestConfigurationBuilder) {
-    super.configure(builder)
-
-    with(builder) {
-      configurePlugin()
-        configureImports(
-            addCommonImports = true,
-            addMetroImports = true,
-            addTestImports = false
-        )
-
-      defaultDirectives {
-        JvmEnvironmentConfigurationDirectives.JVM_TARGET.with(JvmTarget.JVM_11)
-        +ConfigurationDirectives.WITH_STDLIB
-        +JvmEnvironmentConfigurationDirectives.FULL_JDK
-
-        +FirDiagnosticsDirectives.FIR_DUMP
-        +FirDiagnosticsDirectives.DISABLE_GENERATED_FIR_TAGS
-
-        +CodegenTestDirectives.IGNORE_DEXING
-      }
+    override fun createKotlinStandardLibrariesPathProvider(): KotlinStandardLibrariesPathProvider {
+        return EnvironmentBasedStandardLibrariesPathProvider
     }
-  }
 
-  override fun runTest(filePath: String) {
-    // Skip dump tests on preview Kotlin builds — golden files only match the catalog version.
-    Assumptions.assumeFalse(IS_PREVIEW_KOTLIN_BUILD, "Dump tests skipped on preview Kotlin builds")
-    super.runTest(filePath)
-  }
+    override fun configure(builder: TestConfigurationBuilder) {
+        super.configure(builder)
+
+        with(builder) {
+            configurePlugin()
+            configureImports(addTestImports = false)
+
+            defaultDirectives {
+                JvmEnvironmentConfigurationDirectives.JVM_TARGET.with(JvmTarget.JVM_11)
+                +ConfigurationDirectives.WITH_STDLIB
+                +JvmEnvironmentConfigurationDirectives.FULL_JDK
+
+                +FirDiagnosticsDirectives.FIR_DUMP
+                +FirDiagnosticsDirectives.DISABLE_GENERATED_FIR_TAGS
+
+                +CodegenTestDirectives.IGNORE_DEXING
+            }
+        }
+    }
+
+    override fun runTest(filePath: String) {
+        // Skip dump tests on preview Kotlin builds — golden files only match the catalog version.
+        Assumptions.assumeFalse(IS_PREVIEW_KOTLIN_BUILD, "Dump tests skipped on preview Kotlin builds")
+        super.runTest(filePath)
+    }
 }
 
 private val IS_PREVIEW_KOTLIN_BUILD: Boolean =
-  System.getProperty("squareMetroExtensions.previewKotlinBuild") == "true"
+    System.getProperty("squareMetroExtensions.previewKotlinBuild") == "true"

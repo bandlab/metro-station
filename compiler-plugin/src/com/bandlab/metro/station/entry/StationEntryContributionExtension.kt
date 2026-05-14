@@ -1,4 +1,4 @@
-package com.bandlab.metro.station.extension
+package com.bandlab.metro.station.entry
 
 import com.bandlab.metro.station.graph.MetroStationIds
 import com.bandlab.metro.station.utils.ClassIds

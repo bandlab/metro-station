@@ -27,14 +27,9 @@ import kotlinx.serialization.json.Json
 @StationEntry
 class ProfileActivity : CommonActivity<Profile>() {
 
-    @Inject
-    override lateinit var dependencies: CommonActivityDependencies
-
-    @Inject
-    private lateinit var viewModel: ProfileViewModel
-
-    @Inject
-    private lateinit var profileContentPage: ProfileContentPage
+    @Inject override lateinit var dependencies: CommonActivityDependencies
+    @Inject private lateinit var viewModel: ProfileViewModel
+    @Inject private lateinit var profileContentPage: ProfileContentPage
 
     override fun parseRequiredParams(bundle: Bundle): Profile {
         return Json.decodeFromString(requireNotNull(bundle.getString(ARG_PROFILE)))

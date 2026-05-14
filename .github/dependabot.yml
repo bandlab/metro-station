@@ -13,6 +13,3 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "gradle/actions"
-        versions: [">=6"]

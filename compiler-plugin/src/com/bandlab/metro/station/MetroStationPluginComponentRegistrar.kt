@@ -1,7 +1,7 @@
 package com.bandlab.metro.station
 
+import com.bandlab.metro.station.entry.StationEntryIr
 import com.bandlab.metro.station.graph.MetroStationIr
-import com.bandlab.metro.station.extension.StationEntryIr
 import com.fueledbycaffeine.autoservice.AutoService
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar

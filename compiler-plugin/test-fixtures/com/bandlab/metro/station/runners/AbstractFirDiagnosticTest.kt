@@ -40,10 +40,6 @@ open class AbstractFirDiagnosticTest : AbstractFirPhasedDiagnosticTest(FirParser
         }
 
         configurePlugin()
-        configureImports(
-            addCommonImports = true,
-            addMetroImports = true,
-            addTestImports = false
-        )
+        configureImports(addTestImports = false)
     }
 }

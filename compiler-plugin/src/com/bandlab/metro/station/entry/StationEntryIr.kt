@@ -1,4 +1,4 @@
-package com.bandlab.metro.station.extension
+package com.bandlab.metro.station.entry
 
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext

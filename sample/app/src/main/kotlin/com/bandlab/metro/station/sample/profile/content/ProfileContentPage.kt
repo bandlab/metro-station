@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,8 +26,8 @@ import dev.zacsweers.metro.Inject
 )
 @Inject
 class ProfileContentPage(
-    context: Context,
-    activityDependencies: ActivityDependencies,
+    context: Context, /* used by the compiler */
+    activityDependencies: ActivityDependencies, /* used by the compiler */
 ) : Page<ProfileContentViewModel> {
 
     @Composable
@@ -40,9 +41,11 @@ class ProfileContentPage(
                 .background(Purple80),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                "Profile Content for $username"
-            )
+            if (username == null) {
+                CircularProgressIndicator()
+            } else {
+                Text("Profile Content for $username")
+            }
         }
     }
 

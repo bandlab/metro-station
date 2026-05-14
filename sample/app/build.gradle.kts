@@ -1,3 +1,4 @@
+import dev.zacsweers.metro.gradle.DiagnosticSeverity
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -39,11 +40,10 @@ android {
     }
 }
 
-//project.extensions.configure<MetroExtensionsGradleExtension> {
-//    stationEntriesBaseline.set(
-//        setOf("com.bandlab.metro.station.sample.profile.ProfileActivity")
-//    )
-//}
+metro {
+    // Do not report warning on unused inputs for the sample project
+    unusedGraphInputsSeverity.set(DiagnosticSeverity.NONE)
+}
 
 project.tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {

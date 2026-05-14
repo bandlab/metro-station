@@ -3,7 +3,7 @@ FILE fqName:<root> fileName:/basic.kt
     annotations:
       StationEntry(parentScope = <null>, graphMarker = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage
-    CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] INTERFACE name:ExtensionFactoryContribution modality:ABSTRACT visibility:public superTypes:[]
+    CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:ExtensionFactoryContribution modality:ABSTRACT visibility:public superTypes:[]
       annotations:
         IROnlyFactories
         ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
@@ -87,7 +87,7 @@ FILE fqName:<root> fileName:/basic.kt
                     receiver: GET_VAR '<this>: <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.invoke' type=<root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory origin=null
         FUN name:mirrorFunction visibility:public modality:FINAL returnType:kotlin.Any
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyPage.FeatureExtension.Factory
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyPage.FeatureExtension.Factory
           annotations:
             IntoMap
             ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>]' type=kotlin.reflect.KClass<<root>.MyPage>)
@@ -96,9 +96,9 @@ FILE fqName:<root> fileName:/basic.kt
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (factory: <root>.MyPage.FeatureExtension.Factory): kotlin.Any declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory'
               CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing declared in kotlin' type=kotlin.Nothing origin=null
                 ARG message: CONST String type=kotlin.String value="Never called"
-      FUN GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] name:provideFactory visibility:public modality:FINAL returnType:kotlin.Any
+      FUN GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] name:provideFactory visibility:public modality:FINAL returnType:kotlin.Any
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.ExtensionFactoryContribution
-        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyPage.FeatureExtension.Factory
+        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyPage.FeatureExtension.Factory
         annotations:
           Provides
           IntoMap
@@ -106,13 +106,13 @@ FILE fqName:<root> fileName:/basic.kt
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun provideFactory (factory: <root>.MyPage.FeatureExtension.Factory): kotlin.Any declared in <root>.MyPage.ExtensionFactoryContribution'
             GET_VAR 'factory: <root>.MyPage.FeatureExtension.Factory declared in <root>.MyPage.ExtensionFactoryContribution.provideFactory' type=<root>.MyPage.FeatureExtension.Factory origin=null
-    CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] INTERFACE name:FeatureExtension modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.pager.screen.di.PageInjector<<root>.MyViewModel>]
+    CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:FeatureExtension modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.pager.screen.di.PageInjector<<root>.MyViewModel>]
       annotations:
         PageScope
         IROnlyFactories
-        GraphExtension(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyPage.FeatureBindings>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
+        GraphExtension(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyPage.FeatureBindings>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureExtension
-      CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[]
+      CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[]
         annotations:
           ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
           Factory
@@ -135,15 +135,15 @@ FILE fqName:<root> fileName:/basic.kt
                 Includes
             overridden:
               public abstract fun create (feature: <root>.MyPage, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies, navPageDependencies: com.bandlab.common.android.pager.screen.di.NavPageDependencies): <root>.MyPage.FeatureExtension declared in <root>.MyPage.FeatureExtension.Factory
-        FUN GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] name:create visibility:public modality:ABSTRACT returnType:<root>.MyPage.FeatureExtension
+        FUN GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] name:create visibility:public modality:ABSTRACT returnType:<root>.MyPage.FeatureExtension
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureExtension.Factory
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyPage
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyPage
             annotations:
               Provides
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
             annotations:
               Provides
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:navPageDependencies index:3 type:com.bandlab.common.android.pager.screen.di.NavPageDependencies
             annotations:
               Includes
       FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
@@ -163,7 +163,7 @@ FILE fqName:<root> fileName:/basic.kt
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
         overridden:
           public open fun toString (): kotlin.String declared in com.bandlab.common.android.pager.screen.di.PageInjector
-    CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]
+    CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]
       annotations:
         BindingContainer(includes = <null>)
         IROnlyFactories
@@ -200,7 +200,7 @@ FILE fqName:<root> fileName:/basic.kt
             BLOCK_BODY
               RETURN type=kotlin.Nothing from='public final fun provideBaseType (feature: <root>.MyPage): com.bandlab.uikit.api.page.Page<*> declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion'
                 CALL 'public final fun provideBaseType (feature: <root>.MyPage): com.bandlab.uikit.api.page.Page<*> declared in <root>.MyPage.FeatureBindings' type=com.bandlab.uikit.api.page.Page<*> origin=null
-                  ARG <this>: GET_OBJECT 'CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=<root>.MyPage.FeatureBindings
+                  ARG <this>: GET_OBJECT 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=<root>.MyPage.FeatureBindings
                   ARG feature: GET_VAR 'feature: <root>.MyPage declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion.provideBaseType' type=<root>.MyPage origin=null
         CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] visibility:private returnType:<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory [primary]
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:0 type:dev.zacsweers.metro.Provider<<root>.MyPage>
@@ -224,20 +224,20 @@ FILE fqName:<root> fileName:/basic.kt
                     receiver: GET_VAR '<this>: <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.invoke' type=<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory origin=null
         FUN name:mirrorFunction visibility:public modality:FINAL returnType:com.bandlab.uikit.api.page.Page<*>
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyPage
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyPage
           annotations:
             HiddenFromObjC
           BLOCK_BODY
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (feature: <root>.MyPage): com.bandlab.uikit.api.page.Page<*> declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory'
               CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing declared in kotlin' type=kotlin.Nothing origin=null
                 ARG message: CONST String type=kotlin.String value="Never called"
-      CONSTRUCTOR GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] visibility:private returnType:<root>.MyPage.FeatureBindings [primary]
+      CONSTRUCTOR GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] visibility:private returnType:<root>.MyPage.FeatureBindings [primary]
         BLOCK_BODY
           DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
-          INSTANCE_INITIALIZER_CALL classDescriptor='CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.Unit
-      FUN GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] name:provideBaseType visibility:public modality:FINAL returnType:com.bandlab.uikit.api.page.Page<*>
+          INSTANCE_INITIALIZER_CALL classDescriptor='CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.Unit
+      FUN GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] name:provideBaseType visibility:public modality:FINAL returnType:com.bandlab.uikit.api.page.Page<*>
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureBindings
-        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyPage
+        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyPage
         annotations:
           Provides
         BLOCK_BODY
@@ -413,7 +413,7 @@ FILE fqName:<root> fileName:/basic.kt
             GET_VAR '<this>: <root>.AppGraph.Impl declared in <root>.AppGraph.Impl' type=<root>.AppGraph.Impl origin=null
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GeneratedGraphExtension] CLASS name:FeatureExtensionImpl modality:FINAL visibility:private superTypes:[<root>.MyPage.FeatureExtension]
         annotations:
-          DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyPage.FeatureBindings>] type=kotlin.Array<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies> varargElementType=com.bandlab.common.android.pager.screen.di.DefaultPageDependencies)
+          DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyPage.FeatureBindings>] type=kotlin.Array<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies> varargElementType=com.bandlab.common.android.pager.screen.di.DefaultPageDependencies)
           PageScope
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.Impl.FeatureExtensionImpl
         PROPERTY name:appGraphImpl visibility:private modality:FINAL [val]
@@ -531,20 +531,20 @@ FILE fqName:<root> fileName:/basic.kt
               ARG feature: GET_VAR 'feature: <root>.MyPage declared in <root>.AppGraph.Impl.create' type=<root>.MyPage origin=null
               ARG pageGraphDependencies: GET_VAR 'pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies declared in <root>.AppGraph.Impl.create' type=com.bandlab.common.android.pager.screen.di.PageGraphDependencies origin=null
               ARG navPageDependencies: GET_VAR 'navPageDependencies: com.bandlab.common.android.pager.screen.di.NavPageDependencies declared in <root>.AppGraph.Impl.create' type=com.bandlab.common.android.pager.screen.di.NavPageDependencies origin=null
-      PROPERTY name:dispatchingGraphExtensionFactories visibility:public modality:FINAL [val]
+      PROPERTY name:graphExtensionFactories visibility:public modality:FINAL [val]
         annotations:
           Multibinds(allowEmpty = true)
         overridden:
-          public abstract dispatchingGraphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
-        FUN name:<get-dispatchingGraphExtensionFactories> visibility:public modality:FINAL returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any>
+          public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
+        FUN name:<get-graphExtensionFactories> visibility:public modality:FINAL returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any>
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph.Impl
-          correspondingProperty: PROPERTY name:dispatchingGraphExtensionFactories visibility:public modality:FINAL [val]
+          correspondingProperty: PROPERTY name:graphExtensionFactories visibility:public modality:FINAL [val]
           overridden:
-            public abstract fun <get-dispatchingGraphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
+            public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
           BLOCK_BODY
-            RETURN type=kotlin.Nothing from='public final fun <get-dispatchingGraphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph.Impl'
+            RETURN type=kotlin.Nothing from='public final fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph.Impl'
               CALL 'private final fun <get-mapOfKClass___ToAny> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph.Impl' type=kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> origin=null
-                ARG <this>: GET_VAR '<this>: <root>.AppGraph.Impl declared in <root>.AppGraph.Impl.<get-dispatchingGraphExtensionFactories>' type=<root>.AppGraph.Impl origin=null
+                ARG <this>: GET_VAR '<this>: <root>.AppGraph.Impl declared in <root>.AppGraph.Impl.<get-graphExtensionFactories>' type=<root>.AppGraph.Impl origin=null
       PROPERTY name:mapOfKClass___ToAny visibility:private modality:FINAL [val]
         FUN name:<get-mapOfKClass___ToAny> visibility:private modality:FINAL returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any>
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph.Impl
@@ -732,18 +732,18 @@ FILE fqName:<root> fileName:/basic.kt
       BLOCK_BODY
         RETURN type=kotlin.Nothing from='public open fun provideLong (): kotlin.Long declared in <root>.AppGraph'
           CONST Long type=kotlin.Long value=123
-    PROPERTY FAKE_OVERRIDE name:dispatchingGraphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
+    PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
       annotations:
         Multibinds(allowEmpty = true)
       overridden:
-        public abstract dispatchingGraphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
-        public abstract dispatchingGraphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-      FUN FAKE_OVERRIDE name:<get-dispatchingGraphExtensionFactories> visibility:public modality:ABSTRACT returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> [fake_override]
+        public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
+        public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+      FUN FAKE_OVERRIDE name:<get-graphExtensionFactories> visibility:public modality:ABSTRACT returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> [fake_override]
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
-        correspondingProperty: PROPERTY FAKE_OVERRIDE name:dispatchingGraphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
+        correspondingProperty: PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
         overridden:
-          public abstract fun <get-dispatchingGraphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
-          public abstract fun <get-dispatchingGraphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+          public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
+          public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
 FILE fqName:metro.hints fileName:/myPageExtensionFactoryContributionAppScope.kt
   FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] name:AppScope visibility:public modality:FINAL returnType:kotlin.Unit
     VALUE_PARAMETER kind:Regular name:contributed index:0 type:<root>.MyPage.ExtensionFactoryContribution

@@ -111,7 +111,7 @@ FILE fqName:<root> fileName:/activityParam.kt
               GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:id type:kotlin.String visibility:private [final]' type=kotlin.String origin=null
                 receiver: GET_VAR '<this>: <root>.MyActivity.Param declared in <root>.MyActivity.Param.toString' type=<root>.MyActivity.Param origin=null
               CONST String type=kotlin.String value=")"
-    CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] INTERFACE name:ExtensionFactoryContribution modality:ABSTRACT visibility:public superTypes:[]
+    CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:ExtensionFactoryContribution modality:ABSTRACT visibility:public superTypes:[]
       annotations:
         IROnlyFactories
         ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
@@ -195,7 +195,7 @@ FILE fqName:<root> fileName:/activityParam.kt
                     receiver: GET_VAR '<this>: <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory declared in <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory.invoke' type=<root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory origin=null
         FUN name:mirrorFunction visibility:public modality:FINAL returnType:kotlin.Any
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyActivity.FeatureExtension.Factory
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyActivity.FeatureExtension.Factory
           annotations:
             IntoMap
             ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<<root>.MyActivity.Param>]' type=kotlin.reflect.KClass<<root>.MyActivity>)
@@ -204,9 +204,9 @@ FILE fqName:<root> fileName:/activityParam.kt
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (factory: <root>.MyActivity.FeatureExtension.Factory): kotlin.Any declared in <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory'
               CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing declared in kotlin' type=kotlin.Nothing origin=null
                 ARG message: CONST String type=kotlin.String value="Never called"
-      FUN GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] name:provideFactory visibility:public modality:FINAL returnType:kotlin.Any
+      FUN GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] name:provideFactory visibility:public modality:FINAL returnType:kotlin.Any
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.ExtensionFactoryContribution
-        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyActivity.FeatureExtension.Factory
+        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyActivity.FeatureExtension.Factory
         annotations:
           Provides
           IntoMap
@@ -214,13 +214,13 @@ FILE fqName:<root> fileName:/activityParam.kt
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun provideFactory (factory: <root>.MyActivity.FeatureExtension.Factory): kotlin.Any declared in <root>.MyActivity.ExtensionFactoryContribution'
             GET_VAR 'factory: <root>.MyActivity.FeatureExtension.Factory declared in <root>.MyActivity.ExtensionFactoryContribution.provideFactory' type=<root>.MyActivity.FeatureExtension.Factory origin=null
-    CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] INTERFACE name:FeatureExtension modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.di.MembersInjectorProvider<<root>.MyActivity>]
+    CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:FeatureExtension modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.di.MembersInjectorProvider<<root>.MyActivity>]
       annotations:
         ActivityScope
         IROnlyFactories
-        GraphExtension(scope = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<<root>.MyActivity.Param>]' type=kotlin.reflect.KClass<<root>.MyActivity>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultActivityDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.android.common.activity.DefaultActivityDependencies>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyActivity.FeatureBindings>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
+        GraphExtension(scope = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<<root>.MyActivity.Param>]' type=kotlin.reflect.KClass<<root>.MyActivity>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultActivityDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.android.common.activity.DefaultActivityDependencies>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyActivity.FeatureBindings>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureExtension
-      CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[]
+      CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[]
         annotations:
           ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
           Factory
@@ -237,9 +237,9 @@ FILE fqName:<root> fileName:/activityParam.kt
                 Provides
             overridden:
               public abstract fun create (feature: <root>.MyActivity): <root>.MyActivity.FeatureExtension declared in <root>.MyActivity.FeatureExtension.Factory
-        FUN GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] name:create visibility:public modality:ABSTRACT returnType:<root>.MyActivity.FeatureExtension
+        FUN GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] name:create visibility:public modality:ABSTRACT returnType:<root>.MyActivity.FeatureExtension
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureExtension.Factory
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
             annotations:
               Provides
       FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
@@ -263,7 +263,7 @@ FILE fqName:<root> fileName:/activityParam.kt
           correspondingProperty: PROPERTY FAKE_OVERRIDE name:injector visibility:public modality:ABSTRACT [fake_override,val]
           overridden:
             public abstract fun <get-injector> (): dev.zacsweers.metro.MembersInjector<T of com.bandlab.common.android.di.MembersInjectorProvider> declared in com.bandlab.common.android.di.MembersInjectorProvider
-    CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]
+    CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]
       annotations:
         BindingContainer(includes = <null>)
         IROnlyFactories
@@ -300,7 +300,7 @@ FILE fqName:<root> fileName:/activityParam.kt
             BLOCK_BODY
               RETURN type=kotlin.Nothing from='public final fun provideBaseType (feature: <root>.MyActivity): com.bandlab.android.common.activity.CommonActivity<*> declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory.Companion'
                 CALL 'public final fun provideBaseType (feature: <root>.MyActivity): com.bandlab.android.common.activity.CommonActivity<*> declared in <root>.MyActivity.FeatureBindings' type=com.bandlab.android.common.activity.CommonActivity<*> origin=null
-                  ARG <this>: GET_OBJECT 'CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=<root>.MyActivity.FeatureBindings
+                  ARG <this>: GET_OBJECT 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=<root>.MyActivity.FeatureBindings
                   ARG feature: GET_VAR 'feature: <root>.MyActivity declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory.Companion.provideBaseType' type=<root>.MyActivity origin=null
         CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] visibility:private returnType:<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory [primary]
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:0 type:dev.zacsweers.metro.Provider<<root>.MyActivity>
@@ -324,7 +324,7 @@ FILE fqName:<root> fileName:/activityParam.kt
                     receiver: GET_VAR '<this>: <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory.invoke' type=<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory origin=null
         FUN name:mirrorFunction visibility:public modality:FINAL returnType:com.bandlab.android.common.activity.CommonActivity<*>
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
           annotations:
             HiddenFromObjC
           BLOCK_BODY
@@ -363,7 +363,7 @@ FILE fqName:<root> fileName:/activityParam.kt
             BLOCK_BODY
               RETURN type=kotlin.Nothing from='public final fun provideParam (feature: <root>.MyActivity): <root>.MyActivity.Param declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion'
                 CALL 'public final fun provideParam (feature: <root>.MyActivity): <root>.MyActivity.Param declared in <root>.MyActivity.FeatureBindings' type=<root>.MyActivity.Param origin=null
-                  ARG <this>: GET_OBJECT 'CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=<root>.MyActivity.FeatureBindings
+                  ARG <this>: GET_OBJECT 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=<root>.MyActivity.FeatureBindings
                   ARG feature: GET_VAR 'feature: <root>.MyActivity declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion.provideParam' type=<root>.MyActivity origin=null
         CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] visibility:private returnType:<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory [primary]
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:0 type:dev.zacsweers.metro.Provider<<root>.MyActivity>
@@ -387,28 +387,28 @@ FILE fqName:<root> fileName:/activityParam.kt
                     receiver: GET_VAR '<this>: <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.invoke' type=<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory origin=null
         FUN name:mirrorFunction visibility:public modality:FINAL returnType:<root>.MyActivity.Param
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory
-          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
           annotations:
             HiddenFromObjC
           BLOCK_BODY
             RETURN type=kotlin.Nothing from='public final fun mirrorFunction (feature: <root>.MyActivity): <root>.MyActivity.Param declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory'
               CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing declared in kotlin' type=kotlin.Nothing origin=null
                 ARG message: CONST String type=kotlin.String value="Never called"
-      CONSTRUCTOR GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] visibility:private returnType:<root>.MyActivity.FeatureBindings [primary]
+      CONSTRUCTOR GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] visibility:private returnType:<root>.MyActivity.FeatureBindings [primary]
         BLOCK_BODY
           DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
-          INSTANCE_INITIALIZER_CALL classDescriptor='CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.Unit
-      FUN GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] name:provideBaseType visibility:public modality:FINAL returnType:com.bandlab.android.common.activity.CommonActivity<*>
+          INSTANCE_INITIALIZER_CALL classDescriptor='CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.Unit
+      FUN GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] name:provideBaseType visibility:public modality:FINAL returnType:com.bandlab.android.common.activity.CommonActivity<*>
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureBindings
-        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
+        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
         annotations:
           Provides
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun provideBaseType (feature: <root>.MyActivity): com.bandlab.android.common.activity.CommonActivity<*> declared in <root>.MyActivity.FeatureBindings'
             GET_VAR 'feature: <root>.MyActivity declared in <root>.MyActivity.FeatureBindings.provideBaseType' type=<root>.MyActivity origin=null
-      FUN GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] name:provideParam visibility:public modality:FINAL returnType:<root>.MyActivity.Param
+      FUN GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] name:provideParam visibility:public modality:FINAL returnType:<root>.MyActivity.Param
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureBindings
-        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
+        VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
         annotations:
           Provides
         BLOCK_BODY
@@ -674,7 +674,7 @@ FILE fqName:<root> fileName:/activityParam.kt
             GET_VAR '<this>: <root>.AppGraph.Impl declared in <root>.AppGraph.Impl' type=<root>.AppGraph.Impl origin=null
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GeneratedGraphExtension] CLASS name:FeatureExtensionImpl modality:FINAL visibility:private superTypes:[<root>.MyActivity.FeatureExtension]
         annotations:
-          DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<<root>.MyActivity.Param>]' type=kotlin.reflect.KClass<<root>.MyActivity>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultActivityDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.android.common.activity.DefaultActivityDependencies>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.extension.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyActivity.FeatureBindings>] type=kotlin.Array<com.bandlab.android.common.activity.DefaultActivityDependencies> varargElementType=com.bandlab.android.common.activity.DefaultActivityDependencies)
+          DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyActivity modality:FINAL visibility:public superTypes:[com.bandlab.android.common.activity.CommonActivity<<root>.MyActivity.Param>]' type=kotlin.reflect.KClass<<root>.MyActivity>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultActivityDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.android.common.activity.DefaultActivityDependencies>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyActivity.FeatureBindings>] type=kotlin.Array<com.bandlab.android.common.activity.DefaultActivityDependencies> varargElementType=com.bandlab.android.common.activity.DefaultActivityDependencies)
           ActivityScope
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.Impl.FeatureExtensionImpl
         PROPERTY name:appGraphImpl visibility:private modality:FINAL [val]
@@ -792,20 +792,20 @@ FILE fqName:<root> fileName:/activityParam.kt
             CONSTRUCTOR_CALL 'public constructor <init> (appGraphImpl: <root>.AppGraph.Impl, feature: <root>.MyActivity) declared in <root>.AppGraph.Impl.FeatureExtensionImpl' type=<root>.AppGraph.Impl.FeatureExtensionImpl origin=null
               ARG appGraphImpl: GET_VAR '<this>: <root>.AppGraph.Impl declared in <root>.AppGraph.Impl.create' type=<root>.AppGraph.Impl origin=null
               ARG feature: GET_VAR 'feature: <root>.MyActivity declared in <root>.AppGraph.Impl.create' type=<root>.MyActivity origin=null
-      PROPERTY name:dispatchingGraphExtensionFactories visibility:public modality:FINAL [val]
+      PROPERTY name:graphExtensionFactories visibility:public modality:FINAL [val]
         annotations:
           Multibinds(allowEmpty = true)
         overridden:
-          public abstract dispatchingGraphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
-        FUN name:<get-dispatchingGraphExtensionFactories> visibility:public modality:FINAL returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any>
+          public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
+        FUN name:<get-graphExtensionFactories> visibility:public modality:FINAL returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any>
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph.Impl
-          correspondingProperty: PROPERTY name:dispatchingGraphExtensionFactories visibility:public modality:FINAL [val]
+          correspondingProperty: PROPERTY name:graphExtensionFactories visibility:public modality:FINAL [val]
           overridden:
-            public abstract fun <get-dispatchingGraphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
+            public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
           BLOCK_BODY
-            RETURN type=kotlin.Nothing from='public final fun <get-dispatchingGraphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph.Impl'
+            RETURN type=kotlin.Nothing from='public final fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph.Impl'
               CALL 'private final fun <get-mapOfKClass___ToAny> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph.Impl' type=kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> origin=null
-                ARG <this>: GET_VAR '<this>: <root>.AppGraph.Impl declared in <root>.AppGraph.Impl.<get-dispatchingGraphExtensionFactories>' type=<root>.AppGraph.Impl origin=null
+                ARG <this>: GET_VAR '<this>: <root>.AppGraph.Impl declared in <root>.AppGraph.Impl.<get-graphExtensionFactories>' type=<root>.AppGraph.Impl origin=null
       PROPERTY name:mapOfKClass___ToAny visibility:private modality:FINAL [val]
         FUN name:<get-mapOfKClass___ToAny> visibility:private modality:FINAL returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any>
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph.Impl
@@ -891,18 +891,18 @@ FILE fqName:<root> fileName:/activityParam.kt
         public open fun toString (): kotlin.String declared in kotlin.Any
         public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-    PROPERTY FAKE_OVERRIDE name:dispatchingGraphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
+    PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
       annotations:
         Multibinds(allowEmpty = true)
       overridden:
-        public abstract dispatchingGraphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
-        public abstract dispatchingGraphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-      FUN FAKE_OVERRIDE name:<get-dispatchingGraphExtensionFactories> visibility:public modality:ABSTRACT returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> [fake_override]
+        public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
+        public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+      FUN FAKE_OVERRIDE name:<get-graphExtensionFactories> visibility:public modality:ABSTRACT returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> [fake_override]
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
-        correspondingProperty: PROPERTY FAKE_OVERRIDE name:dispatchingGraphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
+        correspondingProperty: PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
         overridden:
-          public abstract fun <get-dispatchingGraphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
-          public abstract fun <get-dispatchingGraphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+          public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
+          public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
 FILE fqName:metro.hints fileName:/myActivityExtensionFactoryContributionAppScope.kt
   FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] name:AppScope visibility:public modality:FINAL returnType:kotlin.Unit
     VALUE_PARAMETER kind:Regular name:contributed index:0 type:<root>.MyActivity.ExtensionFactoryContribution

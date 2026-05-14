@@ -14,7 +14,7 @@ interface AppGraph {
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
     val myPage = MyPage()
-    val factory = appGraph.dispatchingGraphExtensionFactories[MyPage::class] as MyPage.FeatureExtension.Factory
+    val factory = appGraph.graphExtensionFactories[MyPage::class] as MyPage.FeatureExtension.Factory
     val pageGraph = factory.create(
         feature = myPage,
         pageGraphDependencies = PageGraphDependencies(),

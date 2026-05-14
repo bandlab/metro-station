@@ -396,7 +396,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeoxd1AHI, MetroC
     }
 
     @Multibinds(allowEmpty = true)
-    override val dispatchingGraphExtensionFactories: Map<KClass<*>, Any>
+    override val graphExtensionFactories: Map<KClass<*>, Any>
       override get(): Map<KClass<*>, Any> {
         return <this>.<get-mapOfKClass___ToAny>()
       }

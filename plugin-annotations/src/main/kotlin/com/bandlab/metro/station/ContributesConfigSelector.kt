@@ -7,7 +7,7 @@ package com.bandlab.metro.station
  * @ContributesConfigSelector
  * object MyConfigSelector : BooleanConfigSelector {
  *
- *   // The compiler plugin generates:
+ *   // The plugin generates:
  *   @ContributesTo(AppScope::class)
  *   interface MultibindingContribution {
  *     @Binds @IntoSet

@@ -10,10 +10,10 @@ import dev.zacsweers.metro.Provides
 interface AppGraph {
 
     @Binds
-    val SampleApplication.context: Context
+    val SampleApp.context: Context
 
     @DependencyGraph.Factory
     fun interface Factory {
-        fun create(@Provides app: SampleApplication): AppGraph
+        fun create(@Provides app: SampleApp): AppGraph
     }
 }

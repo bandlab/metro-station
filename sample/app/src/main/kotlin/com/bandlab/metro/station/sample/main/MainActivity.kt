@@ -1,6 +1,5 @@
 package com.bandlab.metro.station.sample.main
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,16 +18,14 @@ import com.bandlab.android.common.activity.CommonActivity
 import com.bandlab.android.common.activity.CommonActivityDependencies
 import com.bandlab.metro.station.MetroStation
 import com.bandlab.metro.station.sample.ui.theme.SampleAppTheme
+import com.bandlab.metro.station.sample.utils.Toaster
 import dev.zacsweers.metro.Inject
 
 @MetroStation(appDependencies = MainActivity.ServiceProvider::class)
 class MainActivity : CommonActivity<Unit>() {
 
-    @Inject
-    override lateinit var dependencies: CommonActivityDependencies
-
-    @Inject
-    private lateinit var viewModel: MainViewModel
+    @Inject override lateinit var dependencies: CommonActivityDependencies
+    @Inject private lateinit var viewModel: MainViewModel
 
     override fun parseRequiredParams(bundle: Bundle) = Unit
 
@@ -64,6 +61,7 @@ class MainActivity : CommonActivity<Unit>() {
     }
 
     interface ServiceProvider {
-        val context: Context
+        // Request Toaster from the AppGraph as it's an app-level singleton.
+        val toaster: Toaster
     }
 }

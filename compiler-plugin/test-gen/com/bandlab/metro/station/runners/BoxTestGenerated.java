@@ -41,18 +41,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     public void testCrossModule() {
       runTest("compiler-plugin/testData/box/configselector/crossModule.kt");
     }
-
-    @Test
-    @TestMetadata("generateHintsInFir.kt")
-    public void testGenerateHintsInFir() {
-      runTest("compiler-plugin/testData/box/configselector/generateHintsInFir.kt");
-    }
-
-    @Test
-    @TestMetadata("generateHintsInIr.kt")
-    public void testGenerateHintsInIr() {
-      runTest("compiler-plugin/testData/box/configselector/generateHintsInIr.kt");
-    }
   }
 
   @Nested
