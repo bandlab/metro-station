@@ -27,37 +27,24 @@ BandLab Android app has 1163 modules, and 490 of them are running KSP (3 process
 
 ## Use Cases
 
-### @ContributesConfigSelector
-
-This annotation generates a multibinding contribution for config selectors. 
-
-Annotating a class with `@ContributesConfigSelector` will generate a nested `@ContributesTo(AppScope::class)` interface
-that binds the annotated class into a `Set<DebuggableConfigSelector>` via `@Binds @IntoSet`.
-
-```kotlin
-@ContributesConfigSelector
-object MyConfigSelector : BooleanConfigSelector {
-    
-    // The plugin generates:
-    @ContributesTo(AppScope::class)
-    interface MultibindingContribution {
-        @Binds @IntoSet
-        fun bind(impl: MyConfigSelector): DebuggableConfigSelector
-    }
-}
-```
-
 ### @MetroStation
 
 This annotation generates a Dependency Graph for the feature.
 
-Annotate your feature with @MetroStation, provide a dependency contract you need from the AppGraph,
+Annotate your feature with `@MetroStation`, provide a dependency contract you need from the AppGraph,
 and the compiler plugin will generate a standalone dependency graph for you ✨
+
+> 📖 `Page` is our internal light-weight framework to render a composable with an injected ViewModel type. 
 
 ```kotlin
 @MetroStation(appDependencies = [MyPage.ServiceProvider::class])
 class MyPage(context: Context) : Page<MyViewModel>(),
   /* generated */ HasServiceProvider {
+
+  @Composable
+  override fun Content(viewModel: MyViewModel) {
+    // MyViewModel is already injected at this point
+  }
 
   interface ServiceProvider {
     val appDependency: AppDependency
@@ -149,6 +136,28 @@ class MyPage : Page<MyViewModel>() {
 Same as @MetroStation, we will also generate param providers in FeatureBindings if the feature has a param.
 
 Supported types: Page, Activity, Fragment
+
+### @ContributesConfigSelector
+
+This annotation generates a multibinding contribution for config selectors.
+
+> 📖 Config selector is our internal abstraction for remote config (a.k.a. feature flag) and user/ device preferences
+
+Annotating a class with `@ContributesConfigSelector` will generate a nested `@ContributesTo(AppScope::class)` interface
+that binds the annotated class into a `Set<DebuggableConfigSelector>` via `@Binds @IntoSet`.
+
+```kotlin
+@ContributesConfigSelector
+object MyConfigSelector : BooleanConfigSelector {
+    
+    // The plugin generates:
+    @ContributesTo(AppScope::class)
+    interface MultibindingContribution {
+        @Binds @IntoSet
+        fun bind(impl: MyConfigSelector): DebuggableConfigSelector
+    }
+}
+```
 
 ## Usage
 
