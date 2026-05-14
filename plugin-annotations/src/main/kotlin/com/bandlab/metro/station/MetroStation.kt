@@ -57,7 +57,7 @@ import kotlin.reflect.KClass
  *   override fun <T> resolve(): T = HasServiceProvider.resolveFrom(graphCreator.value)
  *
  *   @IROnlyFactories
- *   @Page
+ *   @PageScope
  *   @DependencyGraph(
  *     scope = MyPage::class,
  *     bindingContainers = [DefaultPageDependencies::class]

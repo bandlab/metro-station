@@ -21,7 +21,11 @@ import android.content.Context
  */
 interface HasServiceProvider {
 
-    fun <T> resolve(): T
+    fun <T> resolve(): T {
+        throw UnsupportedOperationException(
+            "This should be implemented by the compiler, unless you manually extend this supertype."
+        )
+    }
 
     companion object {
 

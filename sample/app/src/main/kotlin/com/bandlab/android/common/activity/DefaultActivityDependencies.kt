@@ -10,10 +10,7 @@ import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.CoroutineScope
 
 /**
- *  Default dependencies for all the activities, please do not add feature-specific dependencies
- *  here, feature specific dependencies should be contributed explicitly to where we need them.
- *
- *  _If we want to add any new dependency, please discuss with the team before doing this._
+ *  Default dependencies for all the activities.
  */
 @BindingContainer
 interface DefaultActivityDependencies {

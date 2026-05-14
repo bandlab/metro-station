@@ -38,7 +38,7 @@ import kotlin.reflect.KClass
  *
  *   // This extension generates:
  *   @IROnlyFactories
- *   @MyPageScope
+ *   @PageScope
  *   @GraphExtension(
  *     scope = MyPage::class,
  *     bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class]

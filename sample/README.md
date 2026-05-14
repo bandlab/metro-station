@@ -10,6 +10,7 @@ The sample app illustrates how to streamline dependency injection and eliminate 
 
 - **`@MetroStation` Usage**: Generates a standalone dependency graph for a feature. See `MainActivity` and `ProfileContentPage`, it automatically wires up dependencies from the `AppGraph`.
 - **`@StationEntry` Usage**: Demonstrates contributing a graph extension towards a declared parent scope, as seen in `ProfileActivity`.
+- **Run metro-station after metro**: Because we generate metro expressions like `createGraphFactory` that require metro compiler to run after ours during the IR phase, we need to leverate the `-Xcompiler-plugin-order` flag to ensure that metro-station runs after metro.
 
 ## Getting Started
 

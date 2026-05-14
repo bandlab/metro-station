@@ -6,6 +6,11 @@ import androidx.fragment.app.FragmentActivity
 import com.bandlab.common.android.di.AndroidInjection
 import com.bandlab.metro.station.sample.utils.ScreenTracker
 
+/**
+ * An abstraction for activities that require dependency injection and parameter parsing.
+ *
+ * @param Params The type of the parameters required by the activity.
+ */
 abstract class CommonActivity<Params : Any> : FragmentActivity() {
 
     lateinit var params: Params
@@ -32,6 +37,7 @@ abstract class CommonActivity<Params : Any> : FragmentActivity() {
         onCreate()
     }
 
+    // Used by the compiler plugin
     interface ServiceProvider {
         val screenTracker: ScreenTracker
     }

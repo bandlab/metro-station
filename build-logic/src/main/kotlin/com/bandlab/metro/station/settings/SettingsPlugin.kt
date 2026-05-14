@@ -3,7 +3,7 @@ package com.bandlab.metro.station.settings
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import java.io.File
-import java.util.*
+import java.util.Properties
 
 class SettingsPlugin : Plugin<Settings> {
     override fun apply(settings: Settings) {
@@ -23,6 +23,7 @@ class SettingsPlugin : Plugin<Settings> {
 
         settings.pluginManagement {
             repositories {
+                google()
                 mavenCentral()
                 if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
                     maven {
@@ -33,13 +34,13 @@ class SettingsPlugin : Plugin<Settings> {
                         }
                     }
                 }
-                mavenLocal()
                 gradlePluginPortal()
             }
         }
 
         settings.dependencyResolutionManagement {
             repositories {
+                google()
                 mavenCentral()
                 if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
                     maven {
@@ -50,7 +51,6 @@ class SettingsPlugin : Plugin<Settings> {
                         }
                     }
                 }
-                mavenLocal()
             }
         }
     }

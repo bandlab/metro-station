@@ -33,7 +33,7 @@ fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageInjector(
                 lifecycleOwner = lifecycleOwner,
             )
         )
-        // Injector can be resolved from the Page component itself
+        // Injector can be resolved from the Page itself
         resolve()
     } else {
         // Handles @StationEntry
@@ -45,7 +45,7 @@ fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageInjector(
                 null
             }
             injectorFromActivity
-            // Fallback to app-level injector if activity injector is not found
+            // Fallback to app-level injector
                 ?: host.applicationContext
                     .resolveServiceProvider<GraphExtensionFactoriesProvider>()
                     .graphExtensionFactories[this::class]
@@ -75,7 +75,7 @@ fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageInjector(
                 ) as PageInjector<ViewModel>
 
         } catch (e: Exception) {
-            // Rethrow exception with clearer message, we gonna crash the app anyway.
+            // Rethrow exception with a clearer message, we gonna crash the app anyway.
             throw IllegalStateException("Failed to inject $javaClass graph extension", e)
         }
     }

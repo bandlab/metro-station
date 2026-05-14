@@ -45,8 +45,7 @@ import org.jetbrains.kotlin.name.StandardClassIds
 import com.bandlab.metro.station.graph.MetroStationIds as Ids
 
 /**
- * This FIR declaration generator generates a dependency graph for the feature that is annotated with
- * [Ids.metroStation].
+ * This FIR declaration generator generates a dependency graph for the feature that is annotated with [Ids.metroStation].
  */
 public class MetroStationFir(session: FirSession, compatContext: CompatContext) :
     MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
