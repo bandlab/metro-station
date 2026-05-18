@@ -4,7 +4,11 @@ import android.content.Context
 
 interface HasServiceProvider {
 
-    fun <T> resolve(): T
+    fun <T> resolve(): T {
+        throw UnsupportedOperationException(
+            "resolve is not supported in the JVM box test. Check the sample project about how it works."
+        )
+    }
 
     companion object {
 
