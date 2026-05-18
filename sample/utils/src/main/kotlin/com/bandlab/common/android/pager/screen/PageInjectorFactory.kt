@@ -22,7 +22,8 @@ fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageInjector(
 ): PageInjector<ViewModel> {
     // Handles @MetroStation
     return if (this is HasServiceProvider) {
-        val graphCreator = this.javaClass.getDeclaredField("graphCreator")
+        val graphCreator = this.javaClass.declaredFields
+            .single { PageGraphCreator::class.java.isAssignableFrom(it.type) }
             .apply { isAccessible = true }
             .get(this) as PageGraphCreator<ViewModel>
 
