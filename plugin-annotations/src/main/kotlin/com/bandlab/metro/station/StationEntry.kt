@@ -47,6 +47,7 @@ import kotlin.reflect.KClass
  *     @ContributesTo(AppScope::class)
  *     @GraphExtension.Factory
  *     interface Factory {
+ *       @Keep // We use reflection to access this method at runtime.
  *       fun create(@Provides feature: MyPage): FeatureExtension
  *     }
  *   }

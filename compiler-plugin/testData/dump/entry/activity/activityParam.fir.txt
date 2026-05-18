@@ -24,7 +24,7 @@ FILE: activityParam.kt
 
         @R|com/bandlab/android/common/ActivityScope|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyActivity|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/android/common/activity/DefaultActivityDependencies|), <getClass>(Q|MyActivity.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/di/MembersInjectorProvider<MyActivity>| {
             @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory {
-                public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyActivity|): R|MyActivity.FeatureExtension|
+                @R|androidx/annotation/Keep|() public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyActivity|): R|MyActivity.FeatureExtension|
 
                 @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyActivity.FeatureExtension.Factory| {
                 }

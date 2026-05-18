@@ -497,6 +497,10 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             }
         }
         createFunction.markAbstract(owner)
+        // We need to add @Keep here because we use reflection to access this method at runtime.
+        createFunction.replaceAnnotations(
+            listOf(buildSimpleAnnotation(Ids.keep))
+        )
 
         // Annotate parameters with @Provides or @Includes
         val featureParam = createFunction.valueParameters[0]
