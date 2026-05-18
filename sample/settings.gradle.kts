@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("sample-build-logic")
     includeBuild("../build-logic")
 }
 
@@ -8,5 +9,7 @@ plugins {
 
 rootProject.name = "metro-station-sample"
 include(":app")
+include(":profile")
+include(":utils")
 
 includeBuild("..")

@@ -14,8 +14,8 @@ class ProfileContentViewModel(
     private val coroutineScope: CoroutineScope,
     screenTracker: ScreenTracker,
 ) {
-    val username: StateFlow<String?>
-        field = MutableStateFlow(null)
+    private val _username = MutableStateFlow<String?>(null)
+    val username: StateFlow<String?> = _username
 
     init {
         screenTracker.trackScreenEnter("ProfileContent")
@@ -23,7 +23,7 @@ class ProfileContentViewModel(
 
     fun loadUser() {
         coroutineScope.launch {
-            username.value = profileService.getUsername()
+            _username.value = profileService.getUsername()
         }
     }
 }
