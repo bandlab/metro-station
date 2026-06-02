@@ -38,7 +38,7 @@ and the compiler plugin will generate a standalone dependency graph for you ✨
 > 📖 `Page` is our internal light-weight framework to render a composable with an injected ViewModel type. 
 
 ```kotlin
-@MetroStation(appDependencies = [MyPage.ServiceProvider::class])
+@MetroStation(appDependencies = MyPage.ServiceProvider::class)
 class MyPage(context: Context) : Page<MyViewModel>(),
   /* generated */ HasServiceProvider {
 
@@ -81,11 +81,22 @@ class MyPage(context: Context) : Page<MyViewModel>(),
   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider
 }
 ```
+Supported types: Page, Activity, Fragment, and any other classes
+
+#### Default Dependencies
+We provide common default dependencies to ease the development for you.
+- *Page*: DefaultPageDependencies.kt
+- *Activity*: DefaultActivityDependencies.kt
+- *Fragment*: DefaultFragmentDependencies.kt
+
+We also request some common app-level dependencies for you. For screens (page, activity, fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
+
 Besides the basic support, we will also generate param providers:
 - For CommonActivity, param type T is available in the graph.
 - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
 
-Supported types: Page, Activity, Fragment, and any other classes
+You'll need to provide either a Context or a ComponentActivity to the Page's primary constructor, and extra
+dependencies if it's presented. They'll be used by the compiler during the IR phase.
 
 ### @StationEntry
 
@@ -134,7 +145,7 @@ class MyPage : Page<MyViewModel>() {
 }
 ```
 
-Same as @MetroStation, we will also generate param providers in FeatureBindings if the feature has a param.
+Same as @MetroStation, we will also provide default dependencies and generate param providers in FeatureBindings if the feature has a param.
 
 Supported types: Page, Activity, Fragment
 

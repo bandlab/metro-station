@@ -70,7 +70,7 @@ import kotlin.reflect.KClass
  * }
  * ```
  *
- * Same as @MetroStation, we will also generate param providers in FeatureBindings if the feature has a param.
+ * Same as @MetroStation, we will also provide default dependencies and generate param providers in FeatureBindings if the feature has a param.
  *
  *  @param parentScope The dependency graph marker to contribute the extension towards, default to [AppScope].
  *  @param graphMarker A marker to aggregate the extension, default to the feature class itself (ex. MyPage).
