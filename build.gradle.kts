@@ -1,3 +1,4 @@
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
 
@@ -32,6 +33,10 @@ subprojects {
         }
     }
     plugins.withId("com.vanniktech.maven.publish") {
+        // This is to make sure publishing picks up the synthetic version we declared above
+        extensions.configure<MavenPublishBaseExtension> {
+            coordinates(project.group.toString(), project.name, project.version.toString())
+        }
         configure<PublishingExtension> {
             repositories {
                 maven {
