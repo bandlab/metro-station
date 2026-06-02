@@ -8,6 +8,7 @@ import kotlin.reflect.KClass
  * Annotate your feature with [MetroStation], provide a dependency contract you need from the AppGraph,
  * and the compiler plugin will generate a standalone dependency graph for you ✨
  *
+ * Usage:
  * ```kotlin
  * @MetroStation(
  *   appDependencies = MyPage.ServiceProvider::class,
@@ -37,6 +38,22 @@ import kotlin.reflect.KClass
  * }
  * ```
  * Supported types: Page, Activity, Fragment, and any other classes
+ *
+ * ### Default Dependencies
+ * We provide common default dependencies to ease the development for you.
+ * - *Page*: DefaultPageDependencies.kt
+ * - *Activity*: DefaultActivityDependencies.kt
+ * - *Fragment*: DefaultFragmentDependencies.kt
+ *
+ * We also request some common app-level dependencies for you. For screens (page, activity, fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
+ *
+ * Besides the basic support, we will also generate param providers:
+ * - For CommonActivity, param type T is available in the graph.
+ * - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
+ *
+ * You'll need to provide either a Context or a ComponentActivity to the Page's primary constructor, and extra
+ * dependencies if it's presented. They'll be used by the compiler during the IR phase.
+ *
  *
  * ## Under the hood
  *
@@ -75,13 +92,6 @@ import kotlin.reflect.KClass
  *   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider
  * }
  * ```
- *
- * Besides the basic support, we will also generate param providers:
- * - For CommonActivity, param type T is available in the graph.
- * - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
- *
- * You'll need to provide either a Context or a ComponentActivity to the Page's primary constructor, and extra
- * dependencies if it's presented. They'll be used by the compiler during the IR phase.
  *
  * @param appDependencies The dependency contract you need the App graph to provide to your feature.
  * @param graphMarker A marker to aggregate a graph, default to the feature class itself (ex. MyPage).

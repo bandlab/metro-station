@@ -415,7 +415,7 @@ FILE fqName:<root> fileName:/basic.kt
       TYPE_PARAMETER GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] name:T index:0 variance: superTypes:[kotlin.Any?] reified:false
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage
       overridden:
-        public abstract fun resolve <T> (): T of com.bandlab.common.android.di.HasServiceProvider.resolve declared in com.bandlab.common.android.di.HasServiceProvider
+        public open fun resolve <T> (): T of com.bandlab.common.android.di.HasServiceProvider.resolve declared in com.bandlab.common.android.di.HasServiceProvider
       BLOCK_BODY
         RETURN type=kotlin.Nothing from='public final fun resolve <T> (): T of <root>.MyPage.resolve declared in <root>.MyPage'
           CALL 'public final fun resolveFrom <T> (graph: kotlin.Any): T of com.bandlab.common.android.di.HasServiceProvider.Companion.resolveFrom declared in com.bandlab.common.android.di.HasServiceProvider.Companion' type=T of com.bandlab.common.android.di.HasServiceProvider.Companion.resolveFrom origin=null

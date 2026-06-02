@@ -1,3 +1,4 @@
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
 
@@ -10,9 +11,13 @@ plugins {
     alias(libs.plugins.metro) apply false
 }
 
+val metroVersion = libs.versions.metro.get()
+
 allprojects {
     group = project.property("GROUP") as String
-    version = project.property("VERSION_NAME") as String
+    val versionName = project.property("VERSION_NAME") as String
+    // The version name is consist of "${metro-station}-$metro"
+    version = "$versionName-$metroVersion"
 }
 
 subprojects {
@@ -28,6 +33,10 @@ subprojects {
         }
     }
     plugins.withId("com.vanniktech.maven.publish") {
+        // This is to make sure publishing picks up the synthetic version we declared above
+        extensions.configure<MavenPublishBaseExtension> {
+            coordinates(project.group.toString(), project.name, project.version.toString())
+        }
         configure<PublishingExtension> {
             repositories {
                 maven {
