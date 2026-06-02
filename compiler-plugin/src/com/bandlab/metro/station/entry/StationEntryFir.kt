@@ -58,6 +58,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
     private val componentTypeCache = mutableMapOf<ClassId, ComponentType>()
 
+    //TODO: This suppress is irrelevant after metro 1.1.2
     @Suppress("INVISIBLE_REFERENCE")
     private val typeResolverFactory by lazy { MetroFirTypeResolver.Factory(session) }
 
