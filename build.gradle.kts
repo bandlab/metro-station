@@ -12,7 +12,10 @@ plugins {
 
 allprojects {
     group = project.property("GROUP") as String
-    version = project.property("VERSION_NAME") as String
+    val versionName = project.property("VERSION_NAME") as String
+    val metroVersion = libs.versions.metro.get()
+    // The version name is consist of "${metro-station}-$metro"
+    version = "$versionName-$metroVersion"
 }
 
 subprojects {
