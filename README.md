@@ -1,5 +1,9 @@
 # 🚉 Metro Station
 
+![build](https://img.shields.io/github/actions/workflow/status/bandlab/metro-station/build.yml?label=build)
+![metro](https://img.shields.io/badge/metro-1.1.1-blue)
+![snapshot](https://img.shields.io/github/actions/workflow/status/bandlab/metro-station/validate-metro-snapshot.yml?label=metro%20snapshot%20validation)
+
 This compiler plugin demonstrates how we scale our DI setup in Android monorepo with Metro.
 
 A few years ago, we implemented a bunch of KSP processors based on Dagger and Anvil to generate boilerplate code for our
