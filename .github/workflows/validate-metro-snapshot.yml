@@ -1,17 +1,28 @@
-name: Build
+name: Validate Metro Snapshot
 
 on:
-  pull_request: {}
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch: {}
 
 jobs:
-  build:
+  snapshot:
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v6
+
+      - name: Fetch latest Metro snapshot version
+        id: snapshot
+        run: |
+          SNAPSHOT_VERSION=$(curl -s https://central.sonatype.com/repository/maven-snapshots/dev/zacsweers/metro/runtime/maven-metadata.xml | grep '<latest>' | sed 's/.*<latest>\(.*\)<\/latest>.*/\1/')
+          echo "version=$SNAPSHOT_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Replace metro version with snapshot
+        run: |
+          sed -i '' "s/^metro = \".*\"/metro = \"${{ steps.snapshot.outputs.version }}\"/" gradle/libs.versions.toml
+          sed -i '' "s/^metro = \".*\"/metro = \"${{ steps.snapshot.outputs.version }}\"/" sample/gradle/libs.versions.toml
+
       - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'

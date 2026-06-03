@@ -2,8 +2,9 @@ package com.bandlab.metro.station.settings
 
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.maven
 import java.io.File
-import java.util.Properties
+import java.util.*
 
 class SettingsPlugin : Plugin<Settings> {
     override fun apply(settings: Settings) {
@@ -25,6 +26,7 @@ class SettingsPlugin : Plugin<Settings> {
             repositories {
                 google()
                 mavenCentral()
+                maven("https://central.sonatype.com/repository/maven-snapshots/")
                 if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
                     maven {
                         setUrl(getPropertyOrFail("ARTIFACTORY_URL"))
@@ -42,6 +44,7 @@ class SettingsPlugin : Plugin<Settings> {
             repositories {
                 google()
                 mavenCentral()
+                maven("https://central.sonatype.com/repository/maven-snapshots/")
                 if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
                     maven {
                         setUrl(getPropertyOrFail("ARTIFACTORY_URL"))

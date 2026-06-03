@@ -26,6 +26,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://central.sonatype.com/repository/maven-snapshots/")
         gradlePluginPortal()
         if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
             maven {
