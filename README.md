@@ -213,7 +213,7 @@ There is a sample Android app under [`:sample`](sample) that demonstrates how we
 
 Metro Station uses a composite versioning scheme that appends Metro's version as a suffix. For example, `0.1.0-1.1.1` means it is based on Metro `1.1.1`. We have two compatibility guards:
 1. There is a GitHub workflow that builds the repository daily against Metro's latest snapshot, allowing us to catch breaking changes early.
-2. In the main BandLab Android repository, we have a version check ensuring that Metro's version matches Metro Station's version.
+2. By default, the gradle plugin will check the Metro version during the configuration. You can disable it by using the gradle property `com.bandlab.metro.station.metroStrictCompatibility=false`.
 
 ## Caveats
 

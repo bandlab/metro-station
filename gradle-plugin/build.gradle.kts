@@ -46,6 +46,7 @@ buildConfig {
     buildConfigField("String", "KOTLIN_PLUGIN_GROUP", "\"${pluginProject.group}\"")
     buildConfigField("String", "KOTLIN_PLUGIN_NAME", "\"${pluginProject.name}\"")
     buildConfigField("String", "KOTLIN_PLUGIN_VERSION", "\"${pluginProject.version}\"")
+    buildConfigField("String", "SUPPORTED_METRO_VERSION", "\"${pluginProject.libs.versions.metro.get()}\"")
 
     val annotationsProject = project(":plugin-annotations")
     buildConfigField(
