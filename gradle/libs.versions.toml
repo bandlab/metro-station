@@ -6,7 +6,7 @@ kotlin-binaryCompatibilityValidator = "0.18.1"
 # https://github.com/junit-team/junit4
 junit = "4.13.2"
 # https://github.com/gmazzo/gradle-buildconfig-plugin
-buildconfig = "6.0.9"
+buildconfig = "6.0.10"
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 coroutines = "1.11.0"
 # https://github.com/ZacSweers/metro/releases
