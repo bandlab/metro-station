@@ -12,6 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Checkout metro-snapshot branch if it exists
+        run: |
+          if git ls-remote --heads origin metro-snapshot | grep -q metro-snapshot; then
+            git fetch origin metro-snapshot
+            git checkout metro-snapshot
+          fi
+
       - name: Fetch latest Metro snapshot version
         id: snapshot
         run: |
