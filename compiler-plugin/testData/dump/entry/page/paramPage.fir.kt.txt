@@ -66,7 +66,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): Factory<Any> {
+        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): ProvideFactoryMetroFactory {
           return ProvideFactoryMetroFactory(instance = instance, factory = factory)
         }
 
@@ -142,7 +142,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(feature: Provider<MyPage>): Factory<Page<*>> {
+        fun create(feature: Provider<MyPage>): ProvideBaseTypeMetroFactory {
           return ProvideBaseTypeMetroFactory(feature = feature)
         }
 
@@ -189,7 +189,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>): Factory<Flow<Params>> {
+        fun create(provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>): ProvideParamFlowMetroFactory {
           return ProvideParamFlowMetroFactory(provider = provider, feature = feature, initialParam = initialParam)
         }
 
@@ -234,7 +234,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(pageGraphDependencies: Provider<PageGraphDependencies>): Factory<Params> {
+        fun create(pageGraphDependencies: Provider<PageGraphDependencies>): ProvideParamMetroFactory {
           return ProvideParamMetroFactory(pageGraphDependencies = pageGraphDependencies)
         }
 
@@ -333,7 +333,7 @@ class MyViewModel {
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(param: Provider<Params>, paramFlow: Provider<Flow<Params>>): Factory<MyViewModel> {
+      fun create(param: Provider<Params>, paramFlow: Provider<Flow<Params>>): MetroFactory {
         return MetroFactory(param = param, paramFlow = paramFlow)
       }
 
@@ -391,14 +391,8 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroCon
       private val featureInstance: MyPage
         field = feature
 
-      private val featureInstanceProvider: Provider<MyPage>
-        field = Companion.invoke<MyPage>(value = <this>.#featureInstance)
-
       private val pageGraphDependenciesInstance: PageGraphDependencies
         field = pageGraphDependencies
-
-      private val pageGraphDependenciesInstanceProvider: Provider<PageGraphDependencies>
-        field = Companion.invoke<PageGraphDependencies>(value = <this>.#pageGraphDependenciesInstance)
 
       constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies) /* primary */ {
         super/*Any*/()

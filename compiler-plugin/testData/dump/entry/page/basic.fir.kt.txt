@@ -23,7 +23,7 @@ class MyPage : Page<MyViewModel> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): Factory<Any> {
+        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): ProvideFactoryMetroFactory {
           return ProvideFactoryMetroFactory(instance = instance, factory = factory)
         }
 
@@ -99,7 +99,7 @@ class MyPage : Page<MyViewModel> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(feature: Provider<MyPage>): Factory<Page<*>> {
+        fun create(feature: Provider<MyPage>): ProvideBaseTypeMetroFactory {
           return ProvideBaseTypeMetroFactory(feature = feature)
         }
 
@@ -172,7 +172,7 @@ class MyViewModel {
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(number: Provider<Long>): Factory<MyViewModel> {
+      fun create(number: Provider<Long>): MetroFactory {
         return MetroFactory(number = number)
       }
 
@@ -303,7 +303,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroCon
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(instance: AppGraph): Factory<Long> {
+      fun create(instance: AppGraph): ProvideLongMetroFactory {
         return ProvideLongMetroFactory(instance = instance)
       }
 

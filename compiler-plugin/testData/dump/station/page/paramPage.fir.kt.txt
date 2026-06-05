@@ -79,14 +79,8 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
       private val featureInstance: MyPage
         field = feature
 
-      private val featureInstanceProvider: Provider<MyPage>
-        field = Companion.invoke<MyPage>(value = <this>.#featureInstance)
-
       private val pageGraphDependenciesInstance: PageGraphDependencies
         field = pageGraphDependencies
-
-      private val pageGraphDependenciesInstanceProvider: Provider<PageGraphDependencies>
-        field = Companion.invoke<PageGraphDependencies>(value = <this>.#pageGraphDependenciesInstance)
 
       private val thisGraphInstance: Impl
         field = <this>
@@ -136,7 +130,7 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(instance: FeatureGraph, feature: Provider<MyPage>): Factory<Page<*>> {
+        fun create(instance: FeatureGraph, feature: Provider<MyPage>): ProvideBaseTypeMetroFactory {
           return ProvideBaseTypeMetroFactory(instance = instance, feature = feature)
         }
 
@@ -184,7 +178,7 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(instance: FeatureGraph, provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>): Factory<Flow<Params>> {
+        fun create(instance: FeatureGraph, provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>): ProvideParamFlowMetroFactory {
           return ProvideParamFlowMetroFactory(instance = instance, provider = provider, feature = feature, initialParam = initialParam)
         }
 
@@ -230,7 +224,7 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(instance: FeatureGraph, pageGraphDependencies: Provider<PageGraphDependencies>): Factory<Params> {
+        fun create(instance: FeatureGraph, pageGraphDependencies: Provider<PageGraphDependencies>): ProvideParamMetroFactory {
           return ProvideParamMetroFactory(instance = instance, pageGraphDependencies = pageGraphDependencies)
         }
 
@@ -339,7 +333,7 @@ class MyViewModel {
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(param: Provider<Params>, paramFlow: Provider<Flow<Params>>): Factory<MyViewModel> {
+      fun create(param: Provider<Params>, paramFlow: Provider<Flow<Params>>): MetroFactory {
         return MetroFactory(param = param, paramFlow = paramFlow)
       }
 

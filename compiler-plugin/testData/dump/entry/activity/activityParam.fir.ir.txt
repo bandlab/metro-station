@@ -144,7 +144,7 @@ FILE fqName:<root> fileName:/activityParam.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<kotlin.Any>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.InstanceParameter] kind:Regular name:instance index:1 type:<root>.MyActivity.ExtensionFactoryContribution
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:factory index:2 type:dev.zacsweers.metro.Provider<<root>.MyActivity.FeatureExtension.Factory>
@@ -153,7 +153,7 @@ FILE fqName:<root> fileName:/activityParam.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (instance: <root>.MyActivity.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyActivity.FeatureExtension.Factory>): dev.zacsweers.metro.internal.Factory<kotlin.Any> declared in <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (instance: <root>.MyActivity.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyActivity.FeatureExtension.Factory>): <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory declared in <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (instance: <root>.MyActivity.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyActivity.FeatureExtension.Factory>) declared in <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory' type=<root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory origin=null
                   ARG instance: GET_VAR 'instance: <root>.MyActivity.ExtensionFactoryContribution declared in <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion.create' type=<root>.MyActivity.ExtensionFactoryContribution origin=null
                   ARG factory: GET_VAR 'factory: dev.zacsweers.metro.Provider<<root>.MyActivity.FeatureExtension.Factory> declared in <root>.MyActivity.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyActivity.FeatureExtension.Factory> origin=null
@@ -279,7 +279,7 @@ FILE fqName:<root> fileName:/activityParam.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<com.bandlab.android.common.activity.CommonActivity<*>>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:1 type:dev.zacsweers.metro.Provider<<root>.MyActivity>
             annotations:
@@ -287,7 +287,7 @@ FILE fqName:<root> fileName:/activityParam.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyActivity>): dev.zacsweers.metro.internal.Factory<com.bandlab.android.common.activity.CommonActivity<*>> declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyActivity>): <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (feature: dev.zacsweers.metro.Provider<<root>.MyActivity>) declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory' type=<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory origin=null
                   ARG feature: GET_VAR 'feature: dev.zacsweers.metro.Provider<<root>.MyActivity> declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyActivity> origin=null
           FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryNewInstanceFunction] name:provideBaseType visibility:public modality:FINAL returnType:com.bandlab.android.common.activity.CommonActivity<*>
@@ -343,7 +343,7 @@ FILE fqName:<root> fileName:/activityParam.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<<root>.MyActivity.Param>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:1 type:dev.zacsweers.metro.Provider<<root>.MyActivity>
             annotations:
@@ -351,7 +351,7 @@ FILE fqName:<root> fileName:/activityParam.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyActivity>): dev.zacsweers.metro.internal.Factory<<root>.MyActivity.Param> declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyActivity>): <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (feature: dev.zacsweers.metro.Provider<<root>.MyActivity>) declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory' type=<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory origin=null
                   ARG feature: GET_VAR 'feature: dev.zacsweers.metro.Provider<<root>.MyActivity> declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyActivity> origin=null
           FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryNewInstanceFunction] name:provideParam visibility:public modality:FINAL returnType:<root>.MyActivity.Param
@@ -579,7 +579,7 @@ FILE fqName:<root> fileName:/activityParam.kt
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
           overridden:
             public open fun toString (): kotlin.String declared in kotlin.Any
-        FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<<root>.MyViewModel>
+        FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyViewModel.MetroFactory
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyViewModel.MetroFactory.Companion
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:param index:1 type:dev.zacsweers.metro.Provider<<root>.MyActivity.Param>
           annotations:
@@ -587,7 +587,7 @@ FILE fqName:<root> fileName:/activityParam.kt
             JvmStatic
             JsStatic
           BLOCK_BODY
-            RETURN type=kotlin.Nothing from='public final fun create (param: dev.zacsweers.metro.Provider<<root>.MyActivity.Param>): dev.zacsweers.metro.internal.Factory<<root>.MyViewModel> declared in <root>.MyViewModel.MetroFactory.Companion'
+            RETURN type=kotlin.Nothing from='public final fun create (param: dev.zacsweers.metro.Provider<<root>.MyActivity.Param>): <root>.MyViewModel.MetroFactory declared in <root>.MyViewModel.MetroFactory.Companion'
               CONSTRUCTOR_CALL 'private constructor <init> (param: dev.zacsweers.metro.Provider<<root>.MyActivity.Param>) declared in <root>.MyViewModel.MetroFactory' type=<root>.MyViewModel.MetroFactory origin=null
                 ARG param: GET_VAR 'param: dev.zacsweers.metro.Provider<<root>.MyActivity.Param> declared in <root>.MyViewModel.MetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyActivity.Param> origin=null
         FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryNewInstanceFunction] name:newInstance visibility:public modality:FINAL returnType:<root>.MyViewModel
@@ -688,14 +688,6 @@ FILE fqName:<root> fileName:/activityParam.kt
           FIELD PROPERTY_BACKING_FIELD name:featureInstance type:<root>.MyActivity visibility:private [final]
             EXPRESSION_BODY
               GET_VAR 'feature: <root>.MyActivity declared in <root>.AppGraph.Impl.FeatureExtensionImpl.<init>' type=<root>.MyActivity origin=null
-        PROPERTY name:featureInstanceProvider visibility:private modality:FINAL [val]
-          FIELD PROPERTY_BACKING_FIELD name:featureInstanceProvider type:dev.zacsweers.metro.Provider<<root>.MyActivity> visibility:private [final]
-            EXPRESSION_BODY
-              CALL 'public final fun invoke <T> (value: T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke): dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> declared in dev.zacsweers.metro.internal.InstanceFactory.Companion' type=dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> origin=null
-                TYPE_ARG T: <root>.MyActivity
-                ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=dev.zacsweers.metro.internal.InstanceFactory.Companion
-                ARG value: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:featureInstance type:<root>.MyActivity visibility:private [final]' type=<root>.MyActivity origin=null
-                  receiver: GET_VAR '<this>: <root>.AppGraph.Impl.FeatureExtensionImpl declared in <root>.AppGraph.Impl.FeatureExtensionImpl' type=<root>.AppGraph.Impl.FeatureExtensionImpl origin=null
         CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] visibility:public returnType:<root>.AppGraph.Impl.FeatureExtensionImpl [primary]
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ParentGraphParam] kind:Regular name:appGraphImpl index:0 type:<root>.AppGraph.Impl
           VALUE_PARAMETER kind:Regular name:feature index:1 type:<root>.MyActivity
@@ -729,12 +721,15 @@ FILE fqName:<root> fileName:/activityParam.kt
               RETURN type=kotlin.Nothing from='public final fun <get-injector> (): dev.zacsweers.metro.MembersInjector<<root>.MyActivity> declared in <root>.AppGraph.Impl.FeatureExtensionImpl'
                 CALL 'public final fun create (myViewModel: dev.zacsweers.metro.Provider<<root>.MyViewModel>): dev.zacsweers.metro.MembersInjector<<root>.MyActivity> declared in <root>.MyActivity.MetroMembersInjector.Companion' type=dev.zacsweers.metro.MembersInjector<<root>.MyActivity> origin=null
                   ARG <this>: GET_OBJECT 'CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MembersInjectorCompanionDeclaration] OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=<root>.MyActivity.MetroMembersInjector.Companion
-                  ARG myViewModel: CALL 'public final fun create (param: dev.zacsweers.metro.Provider<<root>.MyActivity.Param>): dev.zacsweers.metro.internal.Factory<<root>.MyViewModel> declared in <root>.MyViewModel.MetroFactory.Companion' type=dev.zacsweers.metro.internal.Factory<<root>.MyViewModel> origin=null
+                  ARG myViewModel: CALL 'public final fun create (param: dev.zacsweers.metro.Provider<<root>.MyActivity.Param>): <root>.MyViewModel.MetroFactory declared in <root>.MyViewModel.MetroFactory.Companion' type=<root>.MyViewModel.MetroFactory origin=null
                     ARG <this>: GET_OBJECT 'CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.InjectConstructorFactoryCompanionDeclaration] OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=<root>.MyViewModel.MetroFactory.Companion
-                    ARG param: CALL 'public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyActivity>): dev.zacsweers.metro.internal.Factory<<root>.MyActivity.Param> declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion' type=dev.zacsweers.metro.internal.Factory<<root>.MyActivity.Param> origin=null
+                    ARG param: CALL 'public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyActivity>): <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion' type=<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory origin=null
                       ARG <this>: GET_OBJECT 'CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion
-                      ARG feature: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:featureInstanceProvider type:dev.zacsweers.metro.Provider<<root>.MyActivity> visibility:private [final]' type=dev.zacsweers.metro.Provider<<root>.MyActivity> origin=null
-                        receiver: GET_VAR '<this>: <root>.AppGraph.Impl.FeatureExtensionImpl declared in <root>.AppGraph.Impl.FeatureExtensionImpl.<get-injector>' type=<root>.AppGraph.Impl.FeatureExtensionImpl origin=null
+                      ARG feature: CALL 'public final fun invoke <T> (value: T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke): dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> declared in dev.zacsweers.metro.internal.InstanceFactory.Companion' type=dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> origin=null
+                        TYPE_ARG T: <root>.MyActivity
+                        ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=dev.zacsweers.metro.internal.InstanceFactory.Companion
+                        ARG value: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:featureInstance type:<root>.MyActivity visibility:private [final]' type=<root>.MyActivity origin=null
+                          receiver: GET_VAR '<this>: <root>.AppGraph.Impl.FeatureExtensionImpl declared in <root>.AppGraph.Impl.FeatureExtensionImpl.<get-injector>' type=<root>.AppGraph.Impl.FeatureExtensionImpl origin=null
         PROPERTY name:mapOfKClass___ToAny visibility:private modality:FINAL [val]
           FUN name:<get-mapOfKClass___ToAny> visibility:private modality:FINAL returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any>
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph.Impl.FeatureExtensionImpl

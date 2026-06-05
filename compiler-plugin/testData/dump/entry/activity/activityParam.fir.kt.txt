@@ -70,7 +70,7 @@ class MyActivity : CommonActivity<Param> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): Factory<Any> {
+        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): ProvideFactoryMetroFactory {
           return ProvideFactoryMetroFactory(instance = instance, factory = factory)
         }
 
@@ -146,7 +146,7 @@ class MyActivity : CommonActivity<Param> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(feature: Provider<MyActivity>): Factory<CommonActivity<*>> {
+        fun create(feature: Provider<MyActivity>): ProvideBaseTypeMetroFactory {
           return ProvideBaseTypeMetroFactory(feature = feature)
         }
 
@@ -191,7 +191,7 @@ class MyActivity : CommonActivity<Param> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(feature: Provider<MyActivity>): Factory<Param> {
+        fun create(feature: Provider<MyActivity>): ProvideParamMetroFactory {
           return ProvideParamMetroFactory(feature = feature)
         }
 
@@ -306,7 +306,7 @@ class MyViewModel {
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(param: Provider<Param>): Factory<MyViewModel> {
+      fun create(param: Provider<Param>): MetroFactory {
         return MetroFactory(param = param)
       }
 
@@ -364,9 +364,6 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroCon
       private val featureInstance: MyActivity
         field = feature
 
-      private val featureInstanceProvider: Provider<MyActivity>
-        field = Companion.invoke<MyActivity>(value = <this>.#featureInstance)
-
       constructor(appGraphImpl: Impl, @Provides feature: MyActivity) /* primary */ {
         super/*Any*/()
         /* <init>() */
@@ -375,7 +372,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroCon
 
       override val injector: MembersInjector<MyActivity>
         override get(): MembersInjector<MyActivity> {
-          return Companion.create(myViewModel = Companion.create(param = Companion.create(feature = <this>.#featureInstanceProvider)))
+          return Companion.create(myViewModel = Companion.create(param = Companion.create(feature = Companion.invoke<MyActivity>(value = <this>.#featureInstance))))
         }
 
       private val mapOfKClass___ToAny: Map<KClass<*>, Any>

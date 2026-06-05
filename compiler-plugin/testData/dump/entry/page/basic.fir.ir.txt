@@ -36,7 +36,7 @@ FILE fqName:<root> fileName:/basic.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<kotlin.Any>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.InstanceParameter] kind:Regular name:instance index:1 type:<root>.MyPage.ExtensionFactoryContribution
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:factory index:2 type:dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory>
@@ -45,7 +45,7 @@ FILE fqName:<root> fileName:/basic.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (instance: <root>.MyPage.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory>): dev.zacsweers.metro.internal.Factory<kotlin.Any> declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (instance: <root>.MyPage.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory>): <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (instance: <root>.MyPage.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory>) declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory' type=<root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory origin=null
                   ARG instance: GET_VAR 'instance: <root>.MyPage.ExtensionFactoryContribution declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion.create' type=<root>.MyPage.ExtensionFactoryContribution origin=null
                   ARG factory: GET_VAR 'factory: dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory> declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory> origin=null
@@ -179,7 +179,7 @@ FILE fqName:<root> fileName:/basic.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<com.bandlab.uikit.api.page.Page<*>>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:1 type:dev.zacsweers.metro.Provider<<root>.MyPage>
             annotations:
@@ -187,7 +187,7 @@ FILE fqName:<root> fileName:/basic.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyPage>): dev.zacsweers.metro.internal.Factory<com.bandlab.uikit.api.page.Page<*>> declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyPage>): <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (feature: dev.zacsweers.metro.Provider<<root>.MyPage>) declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory' type=<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory origin=null
                   ARG feature: GET_VAR 'feature: dev.zacsweers.metro.Provider<<root>.MyPage> declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyPage> origin=null
           FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryNewInstanceFunction] name:provideBaseType visibility:public modality:FINAL returnType:com.bandlab.uikit.api.page.Page<*>
@@ -317,7 +317,7 @@ FILE fqName:<root> fileName:/basic.kt
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
           overridden:
             public open fun toString (): kotlin.String declared in kotlin.Any
-        FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<<root>.MyViewModel>
+        FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyViewModel.MetroFactory
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyViewModel.MetroFactory.Companion
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:number index:1 type:dev.zacsweers.metro.Provider<kotlin.Long>
           annotations:
@@ -325,7 +325,7 @@ FILE fqName:<root> fileName:/basic.kt
             JvmStatic
             JsStatic
           BLOCK_BODY
-            RETURN type=kotlin.Nothing from='public final fun create (number: dev.zacsweers.metro.Provider<kotlin.Long>): dev.zacsweers.metro.internal.Factory<<root>.MyViewModel> declared in <root>.MyViewModel.MetroFactory.Companion'
+            RETURN type=kotlin.Nothing from='public final fun create (number: dev.zacsweers.metro.Provider<kotlin.Long>): <root>.MyViewModel.MetroFactory declared in <root>.MyViewModel.MetroFactory.Companion'
               CONSTRUCTOR_CALL 'private constructor <init> (number: dev.zacsweers.metro.Provider<kotlin.Long>) declared in <root>.MyViewModel.MetroFactory' type=<root>.MyViewModel.MetroFactory origin=null
                 ARG number: GET_VAR 'number: dev.zacsweers.metro.Provider<kotlin.Long> declared in <root>.MyViewModel.MetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<kotlin.Long> origin=null
         FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryNewInstanceFunction] name:newInstance visibility:public modality:FINAL returnType:<root>.MyViewModel
@@ -624,7 +624,7 @@ FILE fqName:<root> fileName:/basic.kt
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
           overridden:
             public open fun toString (): kotlin.String declared in kotlin.Any
-        FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<kotlin.Long>
+        FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.AppGraph.ProvideLongMetroFactory
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph.ProvideLongMetroFactory.Companion
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.InstanceParameter] kind:Regular name:instance index:1 type:<root>.AppGraph
           annotations:
@@ -632,7 +632,7 @@ FILE fqName:<root> fileName:/basic.kt
             JvmStatic
             JsStatic
           BLOCK_BODY
-            RETURN type=kotlin.Nothing from='public final fun create (instance: <root>.AppGraph): dev.zacsweers.metro.internal.Factory<kotlin.Long> declared in <root>.AppGraph.ProvideLongMetroFactory.Companion'
+            RETURN type=kotlin.Nothing from='public final fun create (instance: <root>.AppGraph): <root>.AppGraph.ProvideLongMetroFactory declared in <root>.AppGraph.ProvideLongMetroFactory.Companion'
               CONSTRUCTOR_CALL 'private constructor <init> (instance: <root>.AppGraph) declared in <root>.AppGraph.ProvideLongMetroFactory' type=<root>.AppGraph.ProvideLongMetroFactory origin=null
                 ARG instance: GET_VAR 'instance: <root>.AppGraph declared in <root>.AppGraph.ProvideLongMetroFactory.Companion.create' type=<root>.AppGraph origin=null
         FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryNewInstanceFunction] name:provideLong visibility:public modality:FINAL returnType:kotlin.Long
