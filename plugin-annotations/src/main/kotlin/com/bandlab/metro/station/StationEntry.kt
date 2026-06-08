@@ -34,7 +34,7 @@ import kotlin.reflect.KClass
  * The compiler plugin will generate such FIR structures for you:
  * ```kotlin
  * @StationEntry
- * class MyPage : Page<MyViewModel>() {
+ * class MyPage : Page<MyViewModel> {
  *
  *   // This extension generates:
  *   @PageScope
