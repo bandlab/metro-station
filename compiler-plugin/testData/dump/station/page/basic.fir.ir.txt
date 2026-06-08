@@ -1,7 +1,7 @@
 FILE fqName:<root> fileName:/basic.kt
   CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>; com.bandlab.common.android.di.HasServiceProvider]
     annotations:
-      MetroStation(appDependencies = CLASS_REFERENCE 'CLASS INTERFACE name:ServiceProvider modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<<root>.MyPage.ServiceProvider>, graphMarker = <null>, extraDependencies = <null>)
+      MetroStation(appDependencies = ServiceProvider::class, graphMarker = <null>, extraDependencies = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage
     PROPERTY GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] name:graphCreator visibility:private modality:FINAL [val]
       FIELD PROPERTY_BACKING_FIELD name:graphCreator type:com.bandlab.common.android.pager.screen.di.PageGraphCreator<<root>.MyPage.FeatureGraph> visibility:private [final]
@@ -26,7 +26,7 @@ FILE fqName:<root> fileName:/basic.kt
       annotations:
         PageScope
         IROnlyFactories
-        DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.uikit.api.page.Page<<root>.MyViewModel>; com.bandlab.common.android.di.HasServiceProvider]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
+        DependencyGraph(scope = MyPage::class, additionalScopes = <null>, excludes = <null>, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureGraph
       CLASS GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.pager.screen.di.PageGraphFactory<<root>.MyPage, <root>.MyPage.FeatureServiceProvider, com.bandlab.common.android.di.EmptyExtraDependencies, <root>.MyPage.FeatureGraph>]
         annotations:
@@ -34,7 +34,7 @@ FILE fqName:<root> fileName:/basic.kt
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureGraph.Factory
         CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GraphFactoryImplClassDeclaration] OBJECT name:Impl modality:FINAL visibility:public superTypes:[<root>.MyPage.FeatureGraph.Factory]
           annotations:
-            Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
+            Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
             MetroImplMarker
           thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureGraph.Factory.Impl
           CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] visibility:private returnType:<root>.MyPage.FeatureGraph.Factory.Impl [primary]
@@ -117,7 +117,7 @@ FILE fqName:<root> fileName:/basic.kt
             public open fun toString (): kotlin.String declared in com.bandlab.common.android.pager.screen.di.PageGraphFactory
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GraphImplClassDeclaration] CLASS name:Impl modality:FINAL visibility:public superTypes:[<root>.MyPage.FeatureGraph]
         annotations:
-          Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
+          Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
           MetroImplMarker
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureGraph.Impl
         PROPERTY name:featureServiceProviderInstance visibility:private modality:FINAL [val]
@@ -312,12 +312,12 @@ FILE fqName:<root> fileName:/basic.kt
             GET_VAR 'feature: <root>.MyPage declared in <root>.MyPage.FeatureGraph.provideBaseType' type=<root>.MyPage origin=null
     CLASS GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] INTERFACE name:FeatureServiceProvider modality:ABSTRACT visibility:public superTypes:[<root>.MyPage.ServiceProvider; com.bandlab.android.common.DefaultScreenServiceProvider]
       annotations:
-        ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
+        ContributesTo(scope = AppScope::class, replaces = <null>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureServiceProvider
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeocf15 modality:ABSTRACT visibility:public superTypes:[<root>.MyPage.FeatureServiceProvider]
         annotations:
-          Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
-          MetroContribution(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>)
+          Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
+          MetroContribution(scope = AppScope::class)
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15
         FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
@@ -449,7 +449,7 @@ FILE fqName:<root> fileName:/basic.kt
               receiver: GET_VAR '<this>: <root>.MyViewModel declared in <root>.MyViewModel.<get-number>' type=<root>.MyViewModel origin=null
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.InjectConstructorFactoryClassDeclaration] CLASS name:MetroFactory modality:FINAL visibility:public superTypes:[kotlin.Any; dev.zacsweers.metro.internal.Factory<<root>.MyViewModel>]
       annotations:
-        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
+        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyViewModel.MetroFactory
       FIELD name:number type:dev.zacsweers.metro.Provider<kotlin.Long> visibility:private [final]
         EXPRESSION_BODY
@@ -558,11 +558,11 @@ FILE fqName:<root> fileName:/basic.kt
         public open fun toString (): kotlin.String declared in kotlin.Any
   CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope; com.bandlab.common.android.di.GraphExtensionFactoriesProvider]
     annotations:
-      DependencyGraph(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
+      DependencyGraph(scope = AppScope::class, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GraphImplClassDeclaration] CLASS name:Impl modality:FINAL visibility:public superTypes:[<root>.AppGraph]
       annotations:
-        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
+        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
         MetroImplMarker
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.Impl
       PROPERTY name:thisGraphInstance visibility:private modality:FINAL [val]
@@ -650,7 +650,7 @@ FILE fqName:<root> fileName:/basic.kt
             CONSTRUCTOR_CALL 'private constructor <init> () declared in <root>.AppGraph.Impl' type=<root>.AppGraph.Impl origin=null
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] CLASS name:ProvideLongMetroFactory modality:FINAL visibility:public superTypes:[kotlin.Any; dev.zacsweers.metro.internal.Factory<kotlin.Long>]
       annotations:
-        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
+        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
         CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 636, endOffset = 680, newInstanceName = "provideLong")
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.ProvideLongMetroFactory
       FIELD name:instance type:<root>.AppGraph visibility:private [final]

@@ -1,5 +1,5 @@
 FILE: basic.kt
-    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyActivity.ServiceProvider|)) public final class MyActivity : R|com/bandlab/android/common/activity/CommonActivity<kotlin/Unit>|, R|com/bandlab/common/android/di/HasServiceProvider| {
+    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyActivity.ServiceProvider|) [evaluated = <getClass>(Q|MyActivity.ServiceProvider|)]) public final class MyActivity : R|com/bandlab/android/common/activity/CommonActivity<kotlin/Unit>|, R|com/bandlab/common/android/di/HasServiceProvider| {
         public constructor(): R|MyActivity| {
             super<R|com/bandlab/android/common/activity/CommonActivity<kotlin/Unit>|>()
         }
@@ -77,7 +77,7 @@ FILE: basic.kt
         }
 
     }
-    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|) [evaluated = <getClass>(Q|dev/zacsweers/metro/AppScope|)]) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
         @R|dev/zacsweers/metro/Provides|() public open fun provideText(): R|kotlin/String| {
             ^provideText String(Hello!)
         }
