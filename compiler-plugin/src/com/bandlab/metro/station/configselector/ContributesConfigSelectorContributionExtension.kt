@@ -2,7 +2,6 @@ package com.bandlab.metro.station.configselector
 
 import com.bandlab.metro.station.utils.ClassIds
 import com.bandlab.metro.station.utils.findMetroContributionSymbol
-import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroContributionExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
@@ -61,7 +60,6 @@ public class ContributesConfigSelectorContributionExtension(private val session:
         }
     }
 
-    @AutoService
     public class Factory : MetroContributionExtension.Factory {
         override fun create(
             session: FirSession,

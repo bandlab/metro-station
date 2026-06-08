@@ -4,7 +4,6 @@ import com.bandlab.metro.station.graph.MetroStationIds
 import com.bandlab.metro.station.utils.ClassIds
 import com.bandlab.metro.station.utils.findMetroContributionSymbol
 import com.bandlab.metro.station.utils.resolveParentScopeClassIdFromAnnotation
-import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroContributionExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
@@ -82,7 +81,6 @@ public class StationEntryContributionExtension(private val session: FirSession) 
         )
     }
 
-    @AutoService
     public class Factory : MetroContributionExtension.Factory {
         override fun create(
             session: FirSession,

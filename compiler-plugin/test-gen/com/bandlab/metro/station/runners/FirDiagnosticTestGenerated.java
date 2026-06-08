@@ -15,6 +15,10 @@ import java.util.regex.Pattern;
 @TestMetadata("compiler-plugin/testData/diagnostics")
 @TestDataPath("$PROJECT_ROOT")
 public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
+  private void run(String fileName) {
+    runTest("compiler-plugin/testData/diagnostics/" + fileName);
+  }
+
   @Test
   public void testAllFilesPresentInDiagnostics() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/diagnostics"), Pattern.compile("^(.+)\\.kt$"), null, true);
@@ -23,48 +27,48 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   @Test
   @TestMetadata("internalConfigSelector.kt")
   public void testInternalConfigSelector() {
-    runTest("compiler-plugin/testData/diagnostics/internalConfigSelector.kt");
+    run("internalConfigSelector.kt");
   }
 
   @Test
   @TestMetadata("internalMetroStation.kt")
   public void testInternalMetroStation() {
-    runTest("compiler-plugin/testData/diagnostics/internalMetroStation.kt");
+    run("internalMetroStation.kt");
   }
 
   @Test
   @TestMetadata("internalStationEntry.kt")
   public void testInternalStationEntry() {
-    runTest("compiler-plugin/testData/diagnostics/internalStationEntry.kt");
+    run("internalStationEntry.kt");
   }
 
   @Test
   @TestMetadata("newStationEntryUseCase.kt")
   public void testNewStationEntryUseCase() {
-    runTest("compiler-plugin/testData/diagnostics/newStationEntryUseCase.kt");
+    run("newStationEntryUseCase.kt");
   }
 
   @Test
   @TestMetadata("pageMissingContext.kt")
   public void testPageMissingContext() {
-    runTest("compiler-plugin/testData/diagnostics/pageMissingContext.kt");
+    run("pageMissingContext.kt");
   }
 
   @Test
   @TestMetadata("pageMissingExtraDependencies.kt")
   public void testPageMissingExtraDependencies() {
-    runTest("compiler-plugin/testData/diagnostics/pageMissingExtraDependencies.kt");
+    run("pageMissingExtraDependencies.kt");
   }
 
   @Test
   @TestMetadata("restrictedActivityParam.kt")
   public void testRestrictedActivityParam() {
-    runTest("compiler-plugin/testData/diagnostics/restrictedActivityParam.kt");
+    run("restrictedActivityParam.kt");
   }
 
   @Test
   @TestMetadata("restrictedPageParam.kt")
   public void testRestrictedPageParam() {
-    runTest("compiler-plugin/testData/diagnostics/restrictedPageParam.kt");
+    run("restrictedPageParam.kt");
   }
 }

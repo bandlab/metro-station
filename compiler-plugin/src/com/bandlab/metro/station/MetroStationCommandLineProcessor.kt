@@ -1,13 +1,11 @@
 package com.bandlab.metro.station
 
 import com.bandlab.metro.station.MetroStationConfigurationKeys.OPTION_STATION_ENTRIES_BASELINE
-import com.fueledbycaffeine.autoservice.AutoService
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOption
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
-@AutoService
 public class MetroStationCommandLineProcessor : CommandLineProcessor {
     override val pluginId: String get() = BuildConfig.KOTLIN_PLUGIN_ID
     override val pluginOptions: Collection<CliOption> = listOf(
