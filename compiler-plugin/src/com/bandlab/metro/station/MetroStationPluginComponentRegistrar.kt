@@ -2,13 +2,11 @@ package com.bandlab.metro.station
 
 import com.bandlab.metro.station.entry.StationEntryIr
 import com.bandlab.metro.station.graph.MetroStationIr
-import com.fueledbycaffeine.autoservice.AutoService
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter
 
-@AutoService
 public class MetroStationPluginComponentRegistrar : CompilerPluginRegistrar() {
 
     private companion object {

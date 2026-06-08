@@ -4,7 +4,6 @@ import com.bandlab.metro.station.utils.ClassIds
 import com.bandlab.metro.station.utils.buildSimpleAnnotation
 import com.bandlab.metro.station.utils.buildSimpleAnnotationCall
 import com.bandlab.metro.station.utils.getClassCall
-import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
@@ -139,7 +138,6 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
 
     private object Key : GeneratedDeclarationKey()
 
-    @AutoService
     public class Factory : MetroFirDeclarationGenerationExtension.Factory {
         override fun create(
             session: FirSession,

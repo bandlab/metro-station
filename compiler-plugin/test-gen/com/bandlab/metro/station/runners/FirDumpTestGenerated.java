@@ -16,6 +16,10 @@ import java.util.regex.Pattern;
 @TestMetadata("compiler-plugin/testData/dump")
 @TestDataPath("$PROJECT_ROOT")
 public class FirDumpTestGenerated extends AbstractFirDumpTest {
+  private void run(String fileName) {
+    runTest("compiler-plugin/testData/dump/" + fileName);
+  }
+
   @Test
   public void testAllFilesPresentInDump() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump"), Pattern.compile("^(.+)\\.kt$"), null, true);
@@ -25,6 +29,10 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
   @TestMetadata("compiler-plugin/testData/dump/configselector")
   @TestDataPath("$PROJECT_ROOT")
   public class Configselector {
+    private void run(String fileName) {
+      runTest("compiler-plugin/testData/dump/configselector/" + fileName);
+    }
+
     @Test
     public void testAllFilesPresentInConfigselector() {
       KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/configselector"), Pattern.compile("^(.+)\\.kt$"), null, true);
@@ -33,7 +41,7 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
     @Test
     @TestMetadata("basic.kt")
     public void testBasic() {
-      runTest("compiler-plugin/testData/dump/configselector/basic.kt");
+      run("basic.kt");
     }
   }
 
@@ -41,6 +49,10 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
   @TestMetadata("compiler-plugin/testData/dump/entry")
   @TestDataPath("$PROJECT_ROOT")
   public class Entry {
+    private void run(String fileName) {
+      runTest("compiler-plugin/testData/dump/entry/" + fileName);
+    }
+
     @Test
     public void testAllFilesPresentInEntry() {
       KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/entry"), Pattern.compile("^(.+)\\.kt$"), null, true);
@@ -50,10 +62,14 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
     @TestMetadata("compiler-plugin/testData/dump/entry/activity")
     @TestDataPath("$PROJECT_ROOT")
     public class Activity {
+      private void run(String fileName) {
+        runTest("compiler-plugin/testData/dump/entry/activity/" + fileName);
+      }
+
       @Test
       @TestMetadata("activityParam.kt")
       public void testActivityParam() {
-        runTest("compiler-plugin/testData/dump/entry/activity/activityParam.kt");
+        run("activityParam.kt");
       }
 
       @Test
@@ -64,7 +80,7 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
       @Test
       @TestMetadata("basic.kt")
       public void testBasic() {
-        runTest("compiler-plugin/testData/dump/entry/activity/basic.kt");
+        run("basic.kt");
       }
     }
 
@@ -72,6 +88,10 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
     @TestMetadata("compiler-plugin/testData/dump/entry/page")
     @TestDataPath("$PROJECT_ROOT")
     public class Page {
+      private void run(String fileName) {
+        runTest("compiler-plugin/testData/dump/entry/page/" + fileName);
+      }
+
       @Test
       public void testAllFilesPresentInPage() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/entry/page"), Pattern.compile("^(.+)\\.kt$"), null, true);
@@ -80,13 +100,13 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
       @Test
       @TestMetadata("basic.kt")
       public void testBasic() {
-        runTest("compiler-plugin/testData/dump/entry/page/basic.kt");
+        run("basic.kt");
       }
 
       @Test
       @TestMetadata("paramPage.kt")
       public void testParamPage() {
-        runTest("compiler-plugin/testData/dump/entry/page/paramPage.kt");
+        run("paramPage.kt");
       }
     }
   }
@@ -95,6 +115,10 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
   @TestMetadata("compiler-plugin/testData/dump/station")
   @TestDataPath("$PROJECT_ROOT")
   public class Station {
+    private void run(String fileName) {
+      runTest("compiler-plugin/testData/dump/station/" + fileName);
+    }
+
     @Test
     public void testAllFilesPresentInStation() {
       KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/station"), Pattern.compile("^(.+)\\.kt$"), null, true);
@@ -104,6 +128,10 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
     @TestMetadata("compiler-plugin/testData/dump/station/activity")
     @TestDataPath("$PROJECT_ROOT")
     public class Activity {
+      private void run(String fileName) {
+        runTest("compiler-plugin/testData/dump/station/activity/" + fileName);
+      }
+
       @Test
       public void testAllFilesPresentInActivity() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/station/activity"), Pattern.compile("^(.+)\\.kt$"), null, true);
@@ -112,7 +140,7 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
       @Test
       @TestMetadata("basic.kt")
       public void testBasic() {
-        runTest("compiler-plugin/testData/dump/station/activity/basic.kt");
+        run("basic.kt");
       }
     }
 
@@ -120,6 +148,10 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
     @TestMetadata("compiler-plugin/testData/dump/station/page")
     @TestDataPath("$PROJECT_ROOT")
     public class Page {
+      private void run(String fileName) {
+        runTest("compiler-plugin/testData/dump/station/page/" + fileName);
+      }
+
       @Test
       public void testAllFilesPresentInPage() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/station/page"), Pattern.compile("^(.+)\\.kt$"), null, true);
@@ -128,13 +160,13 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
       @Test
       @TestMetadata("basic.kt")
       public void testBasic() {
-        runTest("compiler-plugin/testData/dump/station/page/basic.kt");
+        run("basic.kt");
       }
 
       @Test
       @TestMetadata("paramPage.kt")
       public void testParamPage() {
-        runTest("compiler-plugin/testData/dump/station/page/paramPage.kt");
+        run("paramPage.kt");
       }
     }
   }

@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.gradle.targets.wasm.d8.D8Plugin
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.autoservice)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.gradle.java.test.fixtures)
     alias(libs.plugins.gradle.idea)

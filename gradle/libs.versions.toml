@@ -1,6 +1,6 @@
 [versions]
 # https://github.com/JetBrains/kotlin
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 # https://github.com/Kotlin/binary-compatibility-validator
 kotlin-binaryCompatibilityValidator = "0.18.1"
 # https://github.com/junit-team/junit4
@@ -11,8 +11,6 @@ buildconfig = "6.0.10"
 coroutines = "1.11.0"
 # https://github.com/ZacSweers/metro/releases
 metro = "1.1.1"
-# https://github.com/joshfriend/autoservice-ir/releases
-autoservice = "0.1.4"
 # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
 maven-publish = "0.36.0"
 jdk = "25"
@@ -32,7 +30,6 @@ metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" 
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
-autoservice = { id = "com.fueledbycaffeine.autoservice", version.ref = "autoservice" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlin-binaryCompatibilityValidator" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }

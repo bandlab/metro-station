@@ -1,7 +1,6 @@
 package com.bandlab.metro.station.entry
 
 import com.bandlab.metro.station.utils.*
-import com.fueledbycaffeine.autoservice.AutoService
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
@@ -608,7 +607,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
     internal object Key : GeneratedDeclarationKey()
 
-    @AutoService
     public class Factory : MetroFirDeclarationGenerationExtension.Factory {
         override fun create(
             session: FirSession,

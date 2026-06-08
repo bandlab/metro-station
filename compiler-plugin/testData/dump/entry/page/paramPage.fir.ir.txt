@@ -95,12 +95,12 @@ FILE fqName:<root> fileName:/paramPage.kt
     CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:ExtensionFactoryContribution modality:ABSTRACT visibility:public superTypes:[]
       annotations:
         IROnlyFactories
-        ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
+        ContributesTo(scope = AppScope::class, replaces = <null>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.ExtensionFactoryContribution
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeocf15 modality:ABSTRACT visibility:public superTypes:[<root>.MyPage.ExtensionFactoryContribution]
         annotations:
-          Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
-          MetroContribution(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>)
+          Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
+          MetroContribution(scope = AppScope::class)
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeocf15
         FUN FAKE_OVERRIDE name:provideFactory visibility:public modality:FINAL returnType:kotlin.Any [fake_override]
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.ExtensionFactoryContribution
@@ -108,7 +108,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           annotations:
             Provides
             IntoMap
-            ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.common.android.pager.screen.ParamPage<<root>.MyViewModel, <root>.MyPage.Params>]' type=kotlin.reflect.KClass<<root>.MyPage>)
+            ClassKey(value = MyPage::class)
           overridden:
             public final fun provideFactory (factory: <root>.MyPage.FeatureExtension.Factory): kotlin.Any declared in <root>.MyPage.ExtensionFactoryContribution
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] CLASS name:ProvideFactoryMetroFactory modality:FINAL visibility:public superTypes:[dev.zacsweers.metro.internal.Factory<kotlin.Any>]
@@ -179,7 +179,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:factory index:1 type:<root>.MyPage.FeatureExtension.Factory
           annotations:
             IntoMap
-            ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.common.android.pager.screen.ParamPage<<root>.MyViewModel, <root>.MyPage.Params>]' type=kotlin.reflect.KClass<<root>.MyPage>)
+            ClassKey(value = MyPage::class)
             ComptimeOnly
             HiddenFromObjC
           BLOCK_BODY
@@ -192,24 +192,24 @@ FILE fqName:<root> fileName:/paramPage.kt
         annotations:
           Provides
           IntoMap
-          ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.common.android.pager.screen.ParamPage<<root>.MyViewModel, <root>.MyPage.Params>]' type=kotlin.reflect.KClass<<root>.MyPage>)
+          ClassKey(value = MyPage::class)
         BLOCK_BODY
           RETURN type=kotlin.Nothing from='public final fun provideFactory (factory: <root>.MyPage.FeatureExtension.Factory): kotlin.Any declared in <root>.MyPage.ExtensionFactoryContribution'
             GET_VAR 'factory: <root>.MyPage.FeatureExtension.Factory declared in <root>.MyPage.ExtensionFactoryContribution.provideFactory' type=<root>.MyPage.FeatureExtension.Factory origin=null
     CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:FeatureExtension modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.pager.screen.di.PageInjector<<root>.MyViewModel>]
       annotations:
         PageScope
-        GraphExtension(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.common.android.pager.screen.ParamPage<<root>.MyViewModel, <root>.MyPage.Params>]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyPage.FeatureBindings>] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
+        GraphExtension(scope = MyPage::class, additionalScopes = <null>, excludes = <null>, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class, FeatureBindings::class] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureExtension
       CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[]
         annotations:
-          ContributesTo(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, replaces = <null>)
+          ContributesTo(scope = AppScope::class, replaces = <null>)
           Factory
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureExtension.Factory
         CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroContributionClassDeclaration] INTERFACE name:MetroContributionToDevzacsweersmetroappScopeocf15 modality:ABSTRACT visibility:public superTypes:[<root>.MyPage.FeatureExtension.Factory]
           annotations:
-            Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
-            MetroContribution(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>)
+            Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
+            MetroContribution(scope = AppScope::class)
           thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15
           FUN FAKE_OVERRIDE name:create visibility:public modality:ABSTRACT returnType:<root>.MyPage.FeatureExtension [fake_override]
             VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureExtension.Factory
@@ -609,7 +609,7 @@ FILE fqName:<root> fileName:/paramPage.kt
               receiver: GET_VAR '<this>: <root>.MyViewModel declared in <root>.MyViewModel.<get-numberFromFlow>' type=<root>.MyViewModel origin=null
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.InjectConstructorFactoryClassDeclaration] CLASS name:MetroFactory modality:FINAL visibility:public superTypes:[kotlin.Any; dev.zacsweers.metro.internal.Factory<<root>.MyViewModel>]
       annotations:
-        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
+        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyViewModel.MetroFactory
       FIELD name:param type:dev.zacsweers.metro.Provider<<root>.MyPage.Params> visibility:private [final]
         EXPRESSION_BODY
@@ -731,11 +731,11 @@ FILE fqName:<root> fileName:/paramPage.kt
         public open fun toString (): kotlin.String declared in kotlin.Any
   CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyPage.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeocf15; <root>.MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope; com.bandlab.common.android.di.GraphExtensionFactoriesProvider]
     annotations:
-      DependencyGraph(scope = CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:AppScope modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<dev.zacsweers.metro.AppScope>, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
+      DependencyGraph(scope = AppScope::class, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GraphImplClassDeclaration] CLASS name:Impl modality:FINAL visibility:public superTypes:[<root>.AppGraph]
       annotations:
-        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = GET_ENUM 'ENUM_ENTRY IR_EXTERNAL_DECLARATION_STUB name:HIDDEN' type=kotlin.DeprecationLevel)
+        Deprecated(message = "This synthesized declaration should not be used directly", replaceWith = <null>, level = DeprecationLevel.HIDDEN)
         MetroImplMarker
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.Impl
       PROPERTY name:thisGraphInstance visibility:private modality:FINAL [val]
@@ -744,7 +744,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             GET_VAR '<this>: <root>.AppGraph.Impl declared in <root>.AppGraph.Impl' type=<root>.AppGraph.Impl origin=null
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GeneratedGraphExtension] CLASS name:FeatureExtensionImpl modality:FINAL visibility:private superTypes:[<root>.MyPage.FeatureExtension]
         annotations:
-          DependencyGraph(scope = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.common.android.pager.screen.ParamPage<<root>.MyViewModel, <root>.MyPage.Params>]' type=kotlin.reflect.KClass<<root>.MyPage>, additionalScopes = <null>, excludes = <null>, bindingContainers = [CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:DefaultPageDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies>, CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:PageGraphDependenciesModule modality:FINAL visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<com.bandlab.common.android.pager.screen.di.PageGraphDependenciesModule>, CLASS_REFERENCE 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=kotlin.reflect.KClass<<root>.MyPage.FeatureBindings>] type=kotlin.Array<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies> varargElementType=com.bandlab.common.android.pager.screen.di.DefaultPageDependencies)
+          DependencyGraph(scope = MyPage::class, additionalScopes = <null>, excludes = <null>, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class, FeatureBindings::class] type=kotlin.Array<com.bandlab.common.android.pager.screen.di.DefaultPageDependencies> varargElementType=com.bandlab.common.android.pager.screen.di.DefaultPageDependencies)
           PageScope
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.Impl.FeatureExtensionImpl
         PROPERTY name:appGraphImpl visibility:private modality:FINAL [val]
@@ -869,7 +869,7 @@ FILE fqName:<root> fileName:/paramPage.kt
         annotations:
           Provides
           IntoMap
-          ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.common.android.pager.screen.ParamPage<<root>.MyViewModel, <root>.MyPage.Params>]' type=kotlin.reflect.KClass<<root>.MyPage>)
+          ClassKey(value = MyPage::class)
         overridden:
           public final fun provideFactory (factory: <root>.MyPage.FeatureExtension.Factory): kotlin.Any declared in <root>.AppGraph
       FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
@@ -992,7 +992,7 @@ FILE fqName:<root> fileName:/paramPage.kt
       annotations:
         Provides
         IntoMap
-        ClassKey(value = CLASS_REFERENCE 'CLASS CLASS name:MyPage modality:FINAL visibility:public superTypes:[com.bandlab.common.android.pager.screen.ParamPage<<root>.MyViewModel, <root>.MyPage.Params>]' type=kotlin.reflect.KClass<<root>.MyPage>)
+        ClassKey(value = MyPage::class)
       overridden:
         public final fun provideFactory (factory: <root>.MyPage.FeatureExtension.Factory): kotlin.Any declared in <root>.MyPage.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeocf15
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]

@@ -44,7 +44,7 @@ and the compiler plugin will generate a standalone dependency graph for you ✨
 
 ```kotlin
 @MetroStation(appDependencies = MyPage.ServiceProvider::class)
-class MyPage(context: Context) : Page<MyViewModel>(),
+class MyPage(context: Context) : Page<MyViewModel>,
   /* generated */ HasServiceProvider {
 
   @Composable
@@ -114,7 +114,7 @@ the declared parentScope for you, and contribute the factory to a multibinding t
 
 ```kotlin
 @StationEntry
-class MyPage : Page<MyViewModel>() {
+class MyPage : Page<MyViewModel> {
 
   @Composable
   override fun Content(viewModel: MyViewModel) {
@@ -219,6 +219,7 @@ Metro Station uses a composite versioning scheme that appends Metro's version as
 
 There are a few caveats to be aware of when using the metro extensions API:
 - **Use of `@IROnlyFactories`**: This annotation is required on a generated dependency graph if it contains providers, as well as binding container declarations. This is because external metro extensions will be run in one-pass with other metro native FIR extensions, and those providers won't be seen by metro, so we need to defer the factory generation to the IR phase.
+- **Providers for Graph Extensions**: Metro processes graph extensions in IR, if you declare providers in the graph extensions themselves, metro won't see them. You'll need to declare a separate binding container annotated with `@IROnlyFactories` and include it in your extension instead.
 - **Compiler Plugin Ordering**: If your IR extension generates expressions that require metro to process, for example, `createGraph` or `createGraphFactory`, you'll need to specify the compiler flag `-Xcompiler-plugin-order` to _run your plugin before metro_.
 
 ## Tests

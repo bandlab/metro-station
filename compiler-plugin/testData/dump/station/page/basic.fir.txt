@@ -1,5 +1,5 @@
 FILE: basic.kt
-    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|)) public final class MyPage : R|com/bandlab/uikit/api/page/Page<MyViewModel>|, R|com/bandlab/common/android/di/HasServiceProvider| {
+    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|) [evaluated = <getClass>(Q|MyPage.ServiceProvider|)]) public final class MyPage : R|com/bandlab/uikit/api/page/Page<MyViewModel>|, R|com/bandlab/common/android/di/HasServiceProvider| {
         public constructor(context: R|android/content/Context|): R|MyPage| {
             super<R|kotlin/Any|>()
         }
@@ -74,7 +74,7 @@ FILE: basic.kt
         }
 
     }
-    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|) [evaluated = <getClass>(Q|dev/zacsweers/metro/AppScope|)]) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.FeatureServiceProvider.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
         @R|dev/zacsweers/metro/Provides|() public open fun provideLong(): R|kotlin/Long| {
             ^provideLong Long(123)
         }
