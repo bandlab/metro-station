@@ -12,16 +12,16 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 // Used via reflection.
 @Suppress("unused")
 public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
-    override fun apply(project: Project) {
-        project.extensions.create("metroStation", MetroStationExtension::class.java)
+    override fun apply(target: Project) {
+        target.extensions.create("metroStation", MetroStationExtension::class.java)
 
-        val isMetroStrictCompatibility = project.providers
+        val isMetroStrictCompatibility = target.providers
             .gradleProperty("com.bandlab.metro.station.metroStrictCompatibility")
             .map { it.toBoolean() }
             .getOrElse(true)
         if (isMetroStrictCompatibility) {
             var metroVersion: String? = null
-            project.plugins.withId("dev.zacsweers.metro") {
+            target.plugins.withId("dev.zacsweers.metro") {
                 val clazz = Class.forName("dev.zacsweers.metro.gradle.BuildConfigKt")
                 val property = clazz.fields.find { it.name == "VERSION" }
 
@@ -30,7 +30,7 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
                     it.get(null)?.toString()
                 }
             }
-            project.afterEvaluate {
+            target.afterEvaluate {
                 if (BuildConfig.SUPPORTED_METRO_VERSION != metroVersion) {
                     throw GradleException(
                         "Metro Station version (${BuildConfig.KOTLIN_PLUGIN_VERSION}) is incompatible with Metro version ($metroVersion).\n" +
