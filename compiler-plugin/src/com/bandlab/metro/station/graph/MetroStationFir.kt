@@ -312,7 +312,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateProvideBaseTypeFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
-        val annotatedClassId = owner.classId.parentClassId ?: return null
+        val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
@@ -338,7 +338,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateProvideParamFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
-        val annotatedClassId = owner.classId.parentClassId ?: return null
+        val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
@@ -376,7 +376,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateProvideParamFlowFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
-        val annotatedClassId = owner.classId.parentClassId ?: return null
+        val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
@@ -478,7 +478,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
     private fun generateFactory(featureGraphOwner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
         val factoryClassId = featureGraphOwner.classId.createNestedClassId(Ids.nestedFactoryName)
         val factorySymbol = FirRegularClassSymbol(factoryClassId)
-        val ownerClassId = featureGraphOwner.classId.parentClassId!!
+        val ownerClassId = featureGraphOwner.classId.outerClassId!!
         val owner = session.symbolProvider.getClassLikeSymbolByClassId(ownerClassId) as FirRegularClassSymbol
 
         val factory = buildRegularClass {

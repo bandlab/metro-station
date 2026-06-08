@@ -307,7 +307,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         val factoryClassId = featureExtensionOwner.classId.createNestedClassId(Ids.nestedFactoryName)
         val factorySymbol = FirRegularClassSymbol(factoryClassId)
 
-        val annotatedClassId = featureExtensionOwner.classId.parentClassId!!
+        val annotatedClassId = featureExtensionOwner.classId.outerClassId!!
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as FirRegularClassSymbol
         val parentScopeId = resolveParentScopeClassId(annotatedSymbol)
@@ -378,7 +378,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateProvideBaseTypeFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
-        val annotatedClassId = owner.classId.parentClassId ?: return null
+        val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
@@ -403,7 +403,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateProvideParamFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
-        val annotatedClassId = owner.classId.parentClassId ?: return null
+        val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
@@ -440,7 +440,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateProvideParamFlowFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
-        val annotatedClassId = owner.classId.parentClassId ?: return null
+        val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
@@ -466,8 +466,8 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
     private fun generateCreateFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
         // Factory is inside FeatureExtension which is inside the annotated class
-        val featureExtensionClassId = owner.classId.parentClassId ?: return null
-        val annotatedClassId = featureExtensionClassId.parentClassId ?: return null
+        val featureExtensionClassId = owner.classId.outerClassId ?: return null
+        val annotatedClassId = featureExtensionClassId.outerClassId ?: return null
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
@@ -519,7 +519,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
     private fun generateProvideFactoryFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
         // ExtensionFactoryContribution is inside the annotated class
-        val annotatedClassId = owner.classId.parentClassId ?: return null
+        val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
             session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
                 ?: return null
