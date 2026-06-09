@@ -43,8 +43,8 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
                     MetroStationDiagnostics.EXTRA_DEPENDENCIES_UNSUPPORTED,
                     "extraDependencies feature is supported only on Pages."
                 )
-                return
             }
+            return
         }
 
         val primaryConstructor = symbol.primaryConstructorIfAny(session) ?: return
