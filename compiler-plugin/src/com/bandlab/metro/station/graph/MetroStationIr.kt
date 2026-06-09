@@ -76,12 +76,15 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         }
         if (!hasMetroStation) return declaration
 
+        fun isSubclassOf(classId: ClassId): Boolean {
+            return finder.findClass(classId)?.owner?.let { declaration.isSubclassOf(it) } == true
+        }
+
         // Determine the component type and inject accordingly
         when {
-            //TODO: Can we use the impl from the kotlin compiler?
-            declaration.isSubclassOf(Ids.androidService) -> injectService(declaration)
-            declaration.isSubclassOf(Ids.coroutineWorker) -> injectWorker(declaration)
-            declaration.isSubclassOf(Ids.broadcastReceiver) -> injectBroadcastReceiver(declaration)
+            isSubclassOf(Ids.androidService) -> injectService(declaration)
+            isSubclassOf(Ids.coroutineWorker) -> injectWorker(declaration)
+            isSubclassOf(Ids.broadcastReceiver) -> injectBroadcastReceiver(declaration)
         }
 
         return declaration
@@ -538,7 +541,8 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
                 val thisReceiver = parentClass.thisReceiver ?: return
 
                 // Extension receiver = this (the Page)
-                val extensionReceiverIndex = graphCreatorOwner.parameters.indexOfFirst { it.kind == IrParameterKind.ExtensionReceiver }
+                val extensionReceiverIndex =
+                    graphCreatorOwner.parameters.indexOfFirst { it.kind == IrParameterKind.ExtensionReceiver }
                 if (extensionReceiverIndex >= 0) {
                     arguments[extensionReceiverIndex] = builder.irGet(thisReceiver)
                 }
