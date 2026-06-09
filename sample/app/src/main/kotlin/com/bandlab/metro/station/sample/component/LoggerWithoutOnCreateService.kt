@@ -7,18 +7,14 @@ import com.bandlab.metro.station.MetroStation
 import com.bandlab.metro.station.sample.utils.Logger
 import dev.zacsweers.metro.Inject
 
-@MetroStation(appDependencies = LoggerService.ServiceProvider::class)
-class LoggerService : Service() {
+@MetroStation(appDependencies = LoggerWithoutOnCreateService.ServiceProvider::class)
+class LoggerWithoutOnCreateService : Service() {
 
     @Inject
     private lateinit var logger: Logger
 
-    override fun onCreate() {
-        super.onCreate()
-        logger.log("MetroStation:: LoggerService is created")
-    }
-
     override fun onBind(intent: Intent?): IBinder? {
+        logger.log("MetroStation:: LoggerWithoutOnCreateService is bound")
         return null
     }
 

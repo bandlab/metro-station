@@ -96,7 +96,7 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
      */
     private fun injectService(irClass: IrClass) {
         val onCreateFunction = irClass.functions.find {
-            it.name == Ids.onCreateName && it.overriddenSymbols.isNotEmpty()
+            it.name == Ids.onCreateName && it.overriddenSymbols.isNotEmpty() && !it.isFakeOverride
         }
 
         if (onCreateFunction != null) {
@@ -213,6 +213,10 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             if (injectionCall != null) +injectionCall
         }
 
+        // Remove the fake override of onCreate before adding the real implementation
+        irClass.declarations.removeAll {
+            it is IrSimpleFunction && it.name == Ids.onCreateName && it.isFakeOverride
+        }
         irClass.declarations.add(onCreateFunction)
     }
 

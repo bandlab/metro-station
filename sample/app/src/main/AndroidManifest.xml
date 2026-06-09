@@ -34,6 +34,10 @@
         <service
             android:name="com.bandlab.metro.station.sample.component.LoggerService"
             android:exported="false" />
+
+        <service
+            android:name="com.bandlab.metro.station.sample.component.LoggerWithoutOnCreateService"
+            android:exported="false" />
     </application>
 
 </manifest>
