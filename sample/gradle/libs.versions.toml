@@ -10,6 +10,7 @@ kotlin = "2.4.0"
 composeBom = "2026.05.00"
 metro = "1.1.1"
 fragmentKtx = "1.8.9"
+workKtx = "2.11.2"
 serialization = "1.11.0"
 
 [libraries]
@@ -28,6 +29,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "workKtx" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
