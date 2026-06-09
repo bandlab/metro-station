@@ -16,6 +16,7 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
     val TARGET_MUST_BE_PUBLIC by error1<KtElement, String>(NAME_IDENTIFIER)
     val MISSING_CONTEXT_PARAMETER by error1<KtElement, String>(NAME_IDENTIFIER)
     val MISSING_EXTRA_DEPENDENCIES_PARAMETER by error1<KtElement, String>(NAME_IDENTIFIER)
+    val EXTRA_DEPENDENCIES_UNSUPPORTED by error1<KtElement, String>(NAME_IDENTIFIER)
 
     override fun getRendererFactory(): BaseDiagnosticRendererFactory = RendererFactory
 

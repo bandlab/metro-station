@@ -25,6 +25,12 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
+  @TestMetadata("extraDependenciesOnActivity.kt")
+  public void testExtraDependenciesOnActivity() {
+    run("extraDependenciesOnActivity.kt");
+  }
+
+  @Test
   @TestMetadata("internalConfigSelector.kt")
   public void testInternalConfigSelector() {
     run("internalConfigSelector.kt");
