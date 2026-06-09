@@ -1,16 +1,9 @@
-@MetroStation(
-    appDependencies = MyActivity.ServiceProvider::class,
-    extraDependencies = MyActivity.ExtraDependencies::class
-)
+@MetroStation(appDependencies = MyActivity.ServiceProvider::class)
 class MyActivity : CommonActivity<Unit>() {
     @Inject lateinit var myDependency: MyDependency
 
     interface ServiceProvider {
         val boolean: Boolean
-    }
-
-    @ContributesTo(AppScope::class)
-    interface ExtraDependencies {
         val long: Long
     }
 }
@@ -39,7 +32,7 @@ fun box(): String {
     val graph = createGraphFactory<MyActivity.FeatureGraph.Factory>().create(
         feature = myActivity,
         serviceProvider = appGraph,
-        extraDependencies = appGraph
+        extraDependencies = EmptyExtraDependencies
     )
     graph.injector.injectMembers(myActivity)
     assertEquals("Hello! true 42", myActivity.myDependency.value)
