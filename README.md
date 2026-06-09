@@ -103,6 +103,12 @@ Besides the basic support, we will also generate param providers:
 You'll need to provide either a Context or a ComponentActivity to the Page's primary constructor, and extra
 dependencies if it's presented. They'll be used by the compiler during the IR phase.
 
+### Android Component Injection
+We inject known Android components automatically for you:
+- *Service*: The plugin injects `fun onCreate()` for you, if the `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
+- *BroadcastReceiver*: The plugin injects `fun onReceive(context: Context, intent: Intent)` for you.
+- *CoroutineWorker*: The plugin injects `suspend fun doWork(): Result` for you.
+
 ### @StationEntry
 
 This annotation generates a Graph Extension for the feature.
