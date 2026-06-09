@@ -1,8 +1,6 @@
 package com.bandlab.metro.station.graph
 
-import com.bandlab.metro.station.utils.asName
-import com.bandlab.metro.station.utils.isSubclassOf
-import com.bandlab.metro.station.utils.toCallableId
+import com.bandlab.metro.station.utils.*
 import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
@@ -12,10 +10,12 @@ import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.buildFun
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.expressions.IrBlockBody
+import org.jetbrains.kotlin.ir.expressions.IrClassReference
+import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionExpressionImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
@@ -58,9 +58,9 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         }
         if (declaration.body != null) return super.visitSimpleFunction(declaration)
         when (declaration.name) {
-            Ids.provideParamName -> generateProvideParamBody(declaration)
-            Ids.provideBaseTypeName -> generateProvideBaseTypeBody(declaration)
-            Ids.provideParamFlowName -> generateProvideParamFlowBody(declaration)
+            Ids.provideParamName -> generateProvideParamBody(pluginContext, declaration)
+            Ids.provideBaseTypeName -> generateProvideBaseTypeBody(pluginContext, declaration)
+            Ids.provideParamFlowName -> generateProvideParamFlowBody(pluginContext, declaration)
             Ids.resolveName -> generateResolveBody(declaration)
         }
         return super.visitSimpleFunction(declaration)
@@ -117,7 +117,7 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         } ?: return
 
         prependInjectionToFunction(irClass, doWorkFunction) { builder, thisReceiver ->
-            generateWorkerApplicationContextExpr(builder, thisReceiver)
+            generateApplicationContextExpr(builder, thisReceiver, Ids.coroutineWorker)
         }
     }
 
@@ -307,33 +307,17 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
     }
 
     /**
-     * Generates `this.getApplicationContext()` for Service (via ContextWrapper).
+     * Generates `this.getApplicationContext()` by looking up the method on the given [classId].
      */
     private fun generateApplicationContextExpr(
         builder: IrBuilderWithScope,
         thisReceiver: IrValueParameter,
+        classId: ClassId = ClassId(FqName("android.content"), "ContextWrapper".asName()),
     ): IrExpression {
-        val contextWrapperClassId = ClassId(FqName("android.content"), "ContextWrapper".asName())
-        val contextWrapperClass = finder.findClass(contextWrapperClassId)?.owner
-            ?: error("Cannot find android.content.ContextWrapper class")
-        val applicationContextGetter = contextWrapperClass.getSimpleFunction("getApplicationContext")
-            ?: error("Cannot find getApplicationContext on ContextWrapper")
-        return builder.irCall(applicationContextGetter).apply {
-            dispatchReceiver = builder.irGet(thisReceiver)
-        }
-    }
-
-    /**
-     * Generates `this.getApplicationContext()` for Worker (via CoroutineWorker).
-     */
-    private fun generateWorkerApplicationContextExpr(
-        builder: IrBuilderWithScope,
-        thisReceiver: IrValueParameter,
-    ): IrExpression {
-        val coroutineWorkerClass = finder.findClass(Ids.coroutineWorker)?.owner
-            ?: error("Cannot find androidx.work.CoroutineWorker class")
-        val applicationContextGetter = coroutineWorkerClass.getSimpleFunction("getApplicationContext")
-            ?: error("Cannot find getApplicationContext on CoroutineWorker")
+        val ownerClass = finder.findClass(classId)?.owner
+            ?: error("Cannot find ${classId.asSingleFqName()} class")
+        val applicationContextGetter = ownerClass.getSimpleFunction("getApplicationContext")
+            ?: error("Cannot find getApplicationContext on ${classId.shortClassName}")
         return builder.irCall(applicationContextGetter).apply {
             dispatchReceiver = builder.irGet(thisReceiver)
         }
@@ -413,7 +397,7 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
                 val lambdaType = pluginContext.irBuiltIns.functionN(0).typeWith(lambdaReturnType)
 
                 val lambdaFunction = pluginContext.irFactory.buildFun {
-                    name = org.jetbrains.kotlin.name.Name.special("<anonymous>")
+                    name = Name.special("<anonymous>")
                     returnType = lambdaReturnType
                     visibility = org.jetbrains.kotlin.descriptors.DescriptorVisibilities.LOCAL
                     origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA
@@ -422,8 +406,9 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
 
                     body = DeclarationIrBuilder(pluginContext, symbol).irBlockBody {
                         val createCall = generateCreateGraphCall(
-                            this, parentClass, thisReceiver, ::generateApplicationContextExpr
-                        ) ?: return@irBlockBody
+                            this, parentClass, thisReceiver
+                        ) { b, recv -> generateApplicationContextExpr(b, recv) }
+                            ?: return@irBlockBody
                         +irReturn(createCall)
                     }
                 }
@@ -668,86 +653,4 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         }
     }
 
-    /**
-     * Generates either:
-     * - `return feature.params` (for CommonActivity)
-     * - `return pageGraphDependencies.initialParam as ParamType` (for ParamPage)
-     */
-    private fun generateProvideParamBody(declaration: IrSimpleFunction) {
-        val regularParams = declaration.parameters.filter { it.kind == IrParameterKind.Regular }
-        val firstParam = regularParams.first()
-        val firstParamClass = firstParam.type.classOrNull?.owner ?: return
-
-        // Check if the parameter is PageGraphDependencies (ParamPage case)
-        val initialParamProperty = firstParamClass.declarations
-            .filterIsInstance<IrProperty>()
-            .find { it.name == Ids.initialParamName }
-        if (initialParamProperty != null) {
-            val initialParamGetter = initialParamProperty.getter!!.symbol
-            // ParamPage case: return pageGraphDependencies.initialParam as ParamType
-            val returnType = declaration.returnType
-            declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-                val getInitialParam = irCall(initialParamGetter).apply {
-                    dispatchReceiver = irGet(firstParam)
-                }
-                +irReturn(
-                    IrTypeOperatorCallImpl(
-                        startOffset, endOffset,
-                        returnType,
-                        IrTypeOperator.CAST,
-                        returnType,
-                        getInitialParam
-                    )
-                )
-            }
-        } else {
-            // CommonActivity case: return feature.params
-            val paramsGetterSymbol = firstParamClass.getPropertyGetter("params") ?: return
-            declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-                +irReturn(
-                    irCall(paramsGetterSymbol).apply {
-                        dispatchReceiver = irGet(firstParam)
-                    }
-                )
-            }
-        }
-    }
-
-    /**
-     * Generates: `return provider.createParamFlow(feature, initialParam)`
-     */
-    private fun generateProvideParamFlowBody(declaration: IrSimpleFunction) {
-        val regularParams = declaration.parameters.filter { it.kind == IrParameterKind.Regular }
-        val providerParam = regularParams[0]
-        val featureParam = regularParams[1]
-        val initialParamParam = regularParams[2]
-
-        val providerClass = providerParam.type.classOrNull?.owner ?: return
-        val createParamFlowFunction = providerClass.functions.firstOrNull { it.name.asString() == "createParamFlow" }
-            ?: return
-
-        declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-            +irReturn(
-                irCall(createParamFlowFunction).apply {
-                    // arguments[0] = dispatch receiver
-                    arguments[0] = irGet(providerParam)
-                    // arguments[1] = page (first value param)
-                    arguments[1] = irGet(featureParam)
-                    // arguments[2] = initialParam (second value param)
-                    arguments[2] = irGet(initialParamParam)
-                }
-            )
-        }
-    }
-
-    /**
-     * Generates: `return feature`
-     */
-    private fun generateProvideBaseTypeBody(declaration: IrSimpleFunction) {
-        val featureParameter = declaration.parameters.first { it.kind == IrParameterKind.Regular }
-
-        declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-            +irReturn(irGet(featureParameter))
-        }
-    }
 }

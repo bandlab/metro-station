@@ -1,20 +1,19 @@
 package com.bandlab.metro.station.entry
 
+import com.bandlab.metro.station.utils.generateProvideBaseTypeBody
+import com.bandlab.metro.station.utils.generateProvideParamBody
+import com.bandlab.metro.station.utils.generateProvideParamFlowBody
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.irBlockBody
-import org.jetbrains.kotlin.ir.builders.irCall
 import org.jetbrains.kotlin.ir.builders.irGet
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
-import org.jetbrains.kotlin.ir.types.classOrNull
-import org.jetbrains.kotlin.ir.util.functions
-import org.jetbrains.kotlin.ir.util.getPropertyGetter
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 import com.bandlab.metro.station.graph.MetroStationIds as Ids
@@ -45,54 +44,12 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
         }
         if (declaration.body != null) return super.visitSimpleFunction(declaration)
         when (declaration.name) {
-            Ids.provideParamName -> generateProvideParamBody(declaration)
-            Ids.provideBaseTypeName -> generateProvideBaseTypeBody(declaration)
+            Ids.provideParamName -> generateProvideParamBody(pluginContext, declaration)
+            Ids.provideBaseTypeName -> generateProvideBaseTypeBody(pluginContext, declaration)
             Ids.provideFactoryName -> generateProvideFactoryBody(declaration)
-            Ids.provideParamFlowName -> generateProvideParamFlowBody(declaration)
+            Ids.provideParamFlowName -> generateProvideParamFlowBody(pluginContext, declaration)
         }
         return super.visitSimpleFunction(declaration)
-    }
-
-    /**
-     * Generates: `return feature.params`
-     */
-    private fun generateProvideParamBody(declaration: IrSimpleFunction) {
-        val regularParams = declaration.parameters.filter { it.kind == IrParameterKind.Regular }
-        val firstParam = regularParams.first()
-        val firstParamClass = firstParam.type.classOrNull?.owner ?: return
-
-        // Check if the parameter is PageGraphDependencies (ParamPage case)
-        val initialParamProperty = firstParamClass.declarations
-            .filterIsInstance<org.jetbrains.kotlin.ir.declarations.IrProperty>()
-            .find { it.name == Ids.initialParamName }
-        if (initialParamProperty != null) {
-            val initialParamGetter = initialParamProperty.getter!!.symbol
-            val returnType = declaration.returnType
-            declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-                val getInitialParam = irCall(initialParamGetter).apply {
-                    dispatchReceiver = irGet(firstParam)
-                }
-                +irReturn(
-                    org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl(
-                        startOffset, endOffset,
-                        returnType,
-                        org.jetbrains.kotlin.ir.expressions.IrTypeOperator.CAST,
-                        returnType,
-                        getInitialParam
-                    )
-                )
-            }
-        } else {
-            // CommonActivity case: return feature.params
-            val paramsGetterSymbol = firstParamClass.getPropertyGetter("params") ?: return
-            declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-                +irReturn(
-                    irCall(paramsGetterSymbol).apply {
-                        dispatchReceiver = irGet(firstParam)
-                    }
-                )
-            }
-        }
     }
 
     /**
@@ -103,44 +60,6 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
 
         declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
             +irReturn(irGet(factoryParameter))
-        }
-    }
-
-    /**
-     * Generates: `return feature`
-     */
-    private fun generateProvideBaseTypeBody(declaration: IrSimpleFunction) {
-        val featureParameter = declaration.parameters.first { it.kind == IrParameterKind.Regular }
-
-        declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-            +irReturn(irGet(featureParameter))
-        }
-    }
-
-    /**
-     * Generates: `return provider.createParamFlow(feature, initialParam)`
-     */
-    private fun generateProvideParamFlowBody(declaration: IrSimpleFunction) {
-        val regularParams = declaration.parameters.filter { it.kind == IrParameterKind.Regular }
-        val providerParam = regularParams[0]
-        val featureParam = regularParams[1]
-        val initialParamParam = regularParams[2]
-
-        val providerClass = providerParam.type.classOrNull?.owner ?: return
-        val createParamFlowFunction = providerClass.functions.firstOrNull { it.name.asString() == "createParamFlow" }
-            ?: return
-
-        declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-            +irReturn(
-                irCall(createParamFlowFunction).apply {
-                    // arguments[0] = dispatch receiver
-                    arguments[0] = irGet(providerParam)
-                    // arguments[1] = page (first value param)
-                    arguments[1] = irGet(featureParam)
-                    // arguments[2] = initialParam (second value param)
-                    arguments[2] = irGet(initialParamParam)
-                }
-            )
         }
     }
 }
