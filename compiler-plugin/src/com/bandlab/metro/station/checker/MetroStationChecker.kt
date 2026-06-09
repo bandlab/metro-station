@@ -36,7 +36,8 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
             symbol.findSuperTypeRef(Ids.paramPage) != null
 
         if (!isPage) {
-            if (extraDepsClassId != null) {
+            // We still use extraDependencies on Fragments for legacy code
+            if (extraDepsClassId != null && symbol.findSuperTypeRef(Ids.commonFragment) == null) {
                 // extraDependencies is supported on Pages only (for now)
                 reporter.reportOn(
                     declaration.source,
