@@ -30,6 +30,7 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
             map.put(TARGET_MUST_BE_PUBLIC, "{0}", STRING)
             map.put(MISSING_CONTEXT_PARAMETER, "{0}", STRING)
             map.put(MISSING_EXTRA_DEPENDENCIES_PARAMETER, "{0}", STRING)
+            map.put(EXTRA_DEPENDENCIES_UNSUPPORTED, "{0}", STRING)
         }
     }
 }
