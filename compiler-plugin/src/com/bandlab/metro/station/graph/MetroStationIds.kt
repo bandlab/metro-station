@@ -91,6 +91,19 @@ internal object MetroStationIds {
     val context = ClassId(FqName("android.content"), "Context".asName())
     val componentActivity = ClassId(FqName("androidx.activity"), "ComponentActivity".asName())
 
+    // Service, Worker, BroadcastReceiver
+    val androidService = ClassId(FqName("android.app"), "Service".asName())
+    val coroutineWorker = ClassId(FqName("androidx.work"), "CoroutineWorker".asName())
+    val broadcastReceiver = ClassId(FqName("android.content"), "BroadcastReceiver".asName())
+    val onCreateName = "onCreate".asName()
+    val doWorkName = "doWork".asName()
+    val onReceiveName = "onReceive".asName()
+
+    // MembersInjector (for .injector.injectMembers)
+    val membersInjector = ClassId(FqName("dev.zacsweers.metro"), "MembersInjector".asName())
+    val injectorName = "injector".asName()
+    val injectMembersName = "injectMembers".asName()
+
     val metroStationPredicate = LookupPredicate.create {
         annotated(metroStationFqName)
     }

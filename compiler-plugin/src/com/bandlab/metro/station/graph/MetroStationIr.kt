@@ -1,6 +1,7 @@
 package com.bandlab.metro.station.graph
 
 import com.bandlab.metro.station.utils.asName
+import com.bandlab.metro.station.utils.isSubclassOf
 import com.bandlab.metro.station.utils.toCallableId
 import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
@@ -11,9 +12,8 @@ import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.buildFun
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.expressions.IrClassReference
-import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
-import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
+import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionExpressionImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl
 import org.jetbrains.kotlin.ir.types.classOrNull
@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
 import com.bandlab.metro.station.graph.MetroStationIds as Ids
 import com.bandlab.metro.station.utils.ClassIds as MetroClassIds
 
@@ -65,6 +66,293 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         return super.visitSimpleFunction(declaration)
     }
 
+    override fun visitClass(declaration: IrClass): IrStatement {
+        // Process all children first (fills in graph property bodies, provideParam, etc.)
+        super.visitClass(declaration)
+
+        // Check if this class is annotated with @MetroStation
+        val hasMetroStation = declaration.annotations.any { annotation ->
+            annotation.type.classOrNull?.owner?.classId == Ids.metroStation
+        }
+        if (!hasMetroStation) return declaration
+
+        // Determine the component type and inject accordingly
+        when {
+            //TODO: Can we use the impl from the kotlin compiler?
+            declaration.isSubclassOf(Ids.androidService) -> injectService(declaration)
+            declaration.isSubclassOf(Ids.coroutineWorker) -> injectWorker(declaration)
+            declaration.isSubclassOf(Ids.broadcastReceiver) -> injectBroadcastReceiver(declaration)
+        }
+
+        return declaration
+    }
+
+    /**
+     * Injects into a Service class by finding or creating `onCreate()` and prepending
+     * the graph creation + member injection call.
+     */
+    private fun injectService(irClass: IrClass) {
+        val onCreateFunction = irClass.functions.find {
+            it.name == Ids.onCreateName && it.overriddenSymbols.isNotEmpty()
+        }
+
+        if (onCreateFunction != null) {
+            // Prepend injection to existing onCreate
+            prependInjectionToFunction(irClass, onCreateFunction) { builder, thisReceiver ->
+                generateApplicationContextExpr(builder, thisReceiver)
+            }
+        } else {
+            // Generate onCreate with super call + injection
+            generateOnCreateWithInjection(irClass)
+        }
+    }
+
+    /**
+     * Injects into a CoroutineWorker class by finding `doWork()` and prepending
+     * the graph creation + member injection call.
+     */
+    private fun injectWorker(irClass: IrClass) {
+        val doWorkFunction = irClass.functions.find {
+            it.name == Ids.doWorkName && it.overriddenSymbols.isNotEmpty()
+        } ?: return
+
+        prependInjectionToFunction(irClass, doWorkFunction) { builder, thisReceiver ->
+            generateWorkerApplicationContextExpr(builder, thisReceiver)
+        }
+    }
+
+    /**
+     * Injects into a BroadcastReceiver class by finding `onReceive()` and prepending
+     * the graph creation + member injection call using the `context` parameter.
+     */
+    private fun injectBroadcastReceiver(irClass: IrClass) {
+        val onReceiveFunction = irClass.functions.find {
+            it.name == Ids.onReceiveName && it.overriddenSymbols.isNotEmpty()
+        } ?: return
+
+        prependInjectionToFunction(irClass, onReceiveFunction) { builder, _ ->
+            // Use the "context" parameter from onReceive(context: Context, intent: Intent?)
+            val contextParam = onReceiveFunction.parameters.first { it.kind == IrParameterKind.Regular }
+            builder.irGet(contextParam)
+        }
+    }
+
+    /**
+     * Generates the injection statement:
+     * ```
+     * createGraphFactory<FeatureGraph.Factory>()
+     *   .create(this, contextExpr.resolveServiceProvider(), EmptyExtraDependencies)
+     *   .injector
+     *   .injectMembers(this)
+     * ```
+     * and prepends it to the beginning of [function]'s body.
+     */
+    private fun prependInjectionToFunction(
+        irClass: IrClass,
+        function: IrSimpleFunction,
+        contextExprProvider: (IrBuilderWithScope, IrValueParameter) -> IrExpression,
+    ) {
+        val existingBody = function.body as? IrBlockBody ?: return
+        val thisReceiver = function.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
+
+        val builder = DeclarationIrBuilder(pluginContext, function.symbol)
+        val injectionStatement = generateInjectionCall(builder, irClass, thisReceiver, contextExprProvider)
+            ?: return
+
+        // Prepend the injection statement before existing body statements
+        existingBody.statements.add(0, injectionStatement)
+    }
+
+    /**
+     * Generates a new `onCreate()` override for a Service class that calls `super.onCreate()`
+     * followed by the injection code.
+     */
+    private fun generateOnCreateWithInjection(irClass: IrClass) {
+        // Find super's onCreate to override
+        val superOnCreate = findSuperFunction(irClass, Ids.onCreateName) ?: return
+
+        val onCreateFunction = pluginContext.irFactory.buildFun {
+            name = Ids.onCreateName
+            returnType = pluginContext.irBuiltIns.unitType
+            visibility = org.jetbrains.kotlin.descriptors.DescriptorVisibilities.PUBLIC
+            modality = org.jetbrains.kotlin.descriptors.Modality.OPEN
+            origin = IrDeclarationOrigin.GeneratedByPlugin(MetroStationFir.Key)
+        }.apply {
+            parent = irClass
+            overriddenSymbols = listOf(superOnCreate.symbol)
+            // Add dispatch receiver parameter (this)
+            val thisParam = irClass.thisReceiver!!.copyTo(this, kind = IrParameterKind.DispatchReceiver)
+            parameters = listOf(thisParam)
+        }
+
+        val builder = DeclarationIrBuilder(pluginContext, onCreateFunction.symbol)
+        val thisReceiver = onCreateFunction.parameters.first { it.kind == IrParameterKind.DispatchReceiver }
+
+        onCreateFunction.body = builder.irBlockBody {
+            // super.onCreate()
+            val superClass = superOnCreate.parent as IrClass
+            +IrCallImpl(
+                startOffset = UNDEFINED_OFFSET,
+                endOffset = UNDEFINED_OFFSET,
+                type = pluginContext.irBuiltIns.unitType,
+                symbol = superOnCreate.symbol,
+                typeArgumentsCount = 0,
+                origin = null,
+                superQualifierSymbol = superClass.symbol,
+            ).apply {
+                dispatchReceiver = irGet(thisReceiver)
+            }
+
+            // createGraphFactory<...>().create(...).injector.injectMembers(this)
+            val injectionCall = generateInjectionCall(builder, irClass, thisReceiver) { b, recv ->
+                generateApplicationContextExpr(b, recv)
+            }
+            if (injectionCall != null) +injectionCall
+        }
+
+        irClass.declarations.add(onCreateFunction)
+    }
+
+    /**
+     * Generates: `createGraphFactory<FeatureGraph.Factory>().create(this, context.resolveServiceProvider<T>(), EmptyExtraDependencies)`
+     *
+     * @param irClass the class containing the FeatureGraph and FeatureServiceProvider nested classes
+     * @param contextExprProvider provides the context expression used as the receiver for `resolveServiceProvider()`
+     */
+    private fun generateCreateGraphCall(
+        builder: IrBuilderWithScope,
+        irClass: IrClass,
+        thisReceiver: IrValueParameter,
+        contextExprProvider: (IrBuilderWithScope, IrValueParameter) -> IrExpression,
+    ): IrExpression? {
+        // Find FeatureGraph.Factory
+        val featureGraphClass = irClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.graphName } ?: return null
+        val factoryClass = featureGraphClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.nestedFactoryName } ?: return null
+
+        // Reference createGraphFactory<FeatureGraph.Factory>()
+        val createGraphFactoryCallableId = MetroClassIds.createGraphFactory.toCallableId()
+        val createGraphFactorySymbol = finder.findFunctions(createGraphFactoryCallableId).firstOrNull() ?: return null
+
+        // Reference resolveServiceProvider()
+        val resolveServiceProviderCallableId = Ids.resolveServiceProvider.toCallableId()
+        val resolveServiceProviderSymbol = finder.findFunctions(resolveServiceProviderCallableId).firstOrNull()
+            ?: return null
+
+        // Reference EmptyExtraDependencies
+        val emptyExtraDepsClass = finder.findClass(Ids.emptyExtraDependencies) ?: return null
+
+        // Find FeatureServiceProvider type
+        val featureServiceProviderClass = irClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.featureServiceProviderName }
+        val serviceProviderType = featureServiceProviderClass?.symbol?.typeWith()
+
+        // createGraphFactory<FeatureGraph.Factory>()
+        val createFactoryCall = builder.irCall(createGraphFactorySymbol).apply {
+            typeArguments[0] = factoryClass.symbol.typeWith()
+        }
+
+        // Find GraphFactory.create function
+        val factoryClassOwner = factoryClass.superTypes
+            .mapNotNull { it.classOrNull?.owner }
+            .find { it.functions.any { f -> f.name == Ids.createName } }
+            ?: factoryClass
+        val createFunction = factoryClassOwner.functions.first { it.name == Ids.createName }
+
+        // .create(this, context.resolveServiceProvider(), EmptyExtraDependencies)
+        return builder.irCall(createFunction).apply {
+            dispatchReceiver = createFactoryCall
+            // feature = this
+            arguments[1] = builder.irGet(thisReceiver)
+            // serviceProvider = context.resolveServiceProvider()
+            arguments[2] = builder.irCall(resolveServiceProviderSymbol).apply {
+                if (serviceProviderType != null) {
+                    typeArguments[0] = serviceProviderType
+                }
+                // extension receiver = context expression
+                arguments[0] = contextExprProvider(builder, thisReceiver)
+            }
+            // extraDependencies = EmptyExtraDependencies
+            arguments[3] = builder.irGetObject(emptyExtraDepsClass)
+        }
+    }
+
+    private fun generateInjectionCall(
+        builder: IrBuilderWithScope,
+        irClass: IrClass,
+        thisReceiver: IrValueParameter,
+        contextExprProvider: (IrBuilderWithScope, IrValueParameter) -> IrExpression,
+    ): IrStatement? {
+        val createCall = generateCreateGraphCall(builder, irClass, thisReceiver, contextExprProvider) ?: return null
+
+        // .injector
+        val membersInjectorProviderClass = finder.findClass(Ids.membersInjectorProvider)?.owner ?: return null
+        val injectorGetter = membersInjectorProviderClass.properties
+            .first { it.name == Ids.injectorName }.getter ?: return null
+        val getInjector = builder.irCall(injectorGetter).apply {
+            dispatchReceiver = createCall
+        }
+
+        // .injectMembers(this)
+        val membersInjectorClass = finder.findClass(Ids.membersInjector)?.owner ?: return null
+        val injectMembersFunction = membersInjectorClass.functions
+            .first { it.name == Ids.injectMembersName }
+        return builder.irCall(injectMembersFunction).apply {
+            dispatchReceiver = getInjector
+            val regularParamIndex = injectMembersFunction.parameters
+                .indexOfFirst { it.kind == IrParameterKind.Regular }
+            arguments[regularParamIndex] = builder.irGet(thisReceiver)
+        }
+    }
+
+    /**
+     * Generates `this.getApplicationContext()` for Service (via ContextWrapper).
+     */
+    private fun generateApplicationContextExpr(
+        builder: IrBuilderWithScope,
+        thisReceiver: IrValueParameter,
+    ): IrExpression {
+        val contextWrapperClassId = ClassId(FqName("android.content"), "ContextWrapper".asName())
+        val contextWrapperClass = finder.findClass(contextWrapperClassId)?.owner
+            ?: error("Cannot find android.content.ContextWrapper class")
+        val applicationContextGetter = contextWrapperClass.getSimpleFunction("getApplicationContext")
+            ?: error("Cannot find getApplicationContext on ContextWrapper")
+        return builder.irCall(applicationContextGetter).apply {
+            dispatchReceiver = builder.irGet(thisReceiver)
+        }
+    }
+
+    /**
+     * Generates `this.getApplicationContext()` for Worker (via CoroutineWorker).
+     */
+    private fun generateWorkerApplicationContextExpr(
+        builder: IrBuilderWithScope,
+        thisReceiver: IrValueParameter,
+    ): IrExpression {
+        val coroutineWorkerClass = finder.findClass(Ids.coroutineWorker)?.owner
+            ?: error("Cannot find androidx.work.CoroutineWorker class")
+        val applicationContextGetter = coroutineWorkerClass.getSimpleFunction("getApplicationContext")
+            ?: error("Cannot find getApplicationContext on CoroutineWorker")
+        return builder.irCall(applicationContextGetter).apply {
+            dispatchReceiver = builder.irGet(thisReceiver)
+        }
+    }
+
+    /**
+     * Finds a function by name in the supertype hierarchy of [irClass].
+     */
+    private fun findSuperFunction(irClass: IrClass, name: Name): IrSimpleFunction? {
+        for (superType in irClass.superTypes) {
+            val superClass = superType.classOrNull?.owner ?: continue
+            val function = superClass.functions.find { it.name == name }
+            if (function != null) return function
+            // Check further up the hierarchy
+            findSuperFunction(superClass, name)?.let { return it }
+        }
+        return null
+    }
+
     override fun visitProperty(declaration: IrProperty): IrStatement {
         val origin = declaration.origin
         if (
@@ -95,27 +383,6 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         val parentClass = declaration.parent as? IrClass ?: return
         val thisReceiver = parentClass.thisReceiver ?: return
         val getterThisReceiver = getter.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
-
-        // Find FeatureGraph.Factory nested class
-        val featureGraphClass = parentClass.declarations
-            .filterIsInstance<IrClass>()
-            .find { it.name == Ids.graphName } ?: return
-        val factoryClass = featureGraphClass.declarations
-            .filterIsInstance<IrClass>()
-            .find { it.name == Ids.nestedFactoryName } ?: return
-
-        // Reference createGraphFactory<FeatureGraph.Factory>()
-        val createGraphFactoryCallableId = MetroClassIds.createGraphFactory.toCallableId()
-        val createGraphFactoryFunctions = finder.findFunctions(createGraphFactoryCallableId)
-        val createGraphFactorySymbol = createGraphFactoryFunctions.firstOrNull() ?: return
-
-        // Reference resolveServiceProvider()
-        val resolveServiceProviderCallableId = Ids.resolveServiceProvider.toCallableId()
-        val resolveServiceProviderFunctions = finder.findFunctions(resolveServiceProviderCallableId)
-        val resolveServiceProviderSymbol = resolveServiceProviderFunctions.firstOrNull() ?: return
-
-        // Reference EmptyExtraDependencies object
-        val emptyExtraDepsClass = finder.findClass(Ids.emptyExtraDependencies) ?: return
 
         // Reference kotlin.lazy
         val lazyCallableId = CallableId(FqName("kotlin"), "lazy".asName())
@@ -154,51 +421,9 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
                     parent = backingField
 
                     body = DeclarationIrBuilder(pluginContext, symbol).irBlockBody {
-                        // createGraphFactory<FeatureGraph.Factory>()
-                        val createFactoryCall = irCall(createGraphFactorySymbol).apply {
-                            typeArguments[0] = factoryClass.symbol.typeWith()
-                        }
-
-                        // .create(this, resolveServiceProvider(), EmptyExtraDependencies)
-                        val factoryClassOwner = factoryClass.superTypes
-                            .mapNotNull { it.classOrNull?.owner }
-                            .find { it.functions.any { f -> f.name == Ids.createName } }
-                            ?: factoryClass
-
-                        val createFunction = factoryClassOwner.functions.first { it.name == Ids.createName }
-
-                        // Find FeatureServiceProvider type for resolveServiceProvider<T>()
-                        val featureServiceProviderClass = parentClass.declarations
-                            .filterIsInstance<IrClass>()
-                            .find { it.name == Ids.featureServiceProviderName }
-                        val serviceProviderType = featureServiceProviderClass?.symbol?.typeWith()
-
-                        // Find applicationContext property getter from ContextWrapper
-                        val contextWrapperClassId = ClassId(FqName("android.content"), "ContextWrapper".asName())
-                        val contextWrapperClass = finder.findClass(contextWrapperClassId)?.owner
-                            ?: error("Cannot find android.content.ContextWrapper class")
-                        val applicationContextGetter = contextWrapperClass.getSimpleFunction("getApplicationContext")
-                            ?: error("Cannot find 'applicationContext' property getter on ContextWrapper")
-
-                        val createCall = irCall(createFunction).apply {
-                            dispatchReceiver = createFactoryCall
-                            // feature = this
-                            arguments[1] = irGet(thisReceiver)
-                            // serviceProvider = applicationContext.resolveServiceProvider()
-                            arguments[2] = irCall(resolveServiceProviderSymbol).apply {
-                                // type argument T = FeatureServiceProvider
-                                if (serviceProviderType != null) {
-                                    typeArguments[0] = serviceProviderType
-                                }
-                                // extension receiver = applicationContext
-                                arguments[0] = irCall(applicationContextGetter).apply {
-                                    dispatchReceiver = irGet(thisReceiver)
-                                }
-                            }
-                            // extraDependencies = EmptyExtraDependencies
-                            arguments[3] = irGetObject(emptyExtraDepsClass)
-                        }
-
+                        val createCall = generateCreateGraphCall(
+                            this, parentClass, thisReceiver, ::generateApplicationContextExpr
+                        ) ?: return@irBlockBody
                         +irReturn(createCall)
                     }
                 }
