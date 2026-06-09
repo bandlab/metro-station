@@ -73,7 +73,7 @@ class MyPage(context: Context) : Page<MyViewModel>,
     scope = MyPage::class,
     bindingContainers = [DefaultPageDependencies::class]
   )
-  interface FeatureGraph : PageInjector<MyPage> {
+  interface FeatureGraph : PageInjector<MyViewModel> {
 
     @Provides
     fun provideBaseType(feature: MyPage): Page<*> = feature
@@ -127,7 +127,7 @@ class MyPage : Page<MyViewModel> {
     scope = MyPage::class,
     bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class]
   )
-  interface FeatureExtension : PageInjector<MyPage> {
+  interface FeatureExtension : PageInjector<MyViewModel> {
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

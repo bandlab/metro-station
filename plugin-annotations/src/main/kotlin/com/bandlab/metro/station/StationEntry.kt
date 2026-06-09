@@ -42,7 +42,7 @@ import kotlin.reflect.KClass
  *     scope = MyPage::class,
  *     bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class]
  *   )
- *   interface FeatureExtension : PageInjector<MyPage> {
+ *   interface FeatureExtension : PageInjector<MyViewModel> {
  *
  *     @ContributesTo(AppScope::class)
  *     @GraphExtension.Factory

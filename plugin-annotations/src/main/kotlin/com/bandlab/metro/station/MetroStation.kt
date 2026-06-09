@@ -79,7 +79,7 @@ import kotlin.reflect.KClass
  *     scope = MyPage::class,
  *     bindingContainers = [DefaultPageDependencies::class]
  *   )
- *   interface FeatureGraph : PageInjector<MyPage> {
+ *   interface FeatureGraph : PageInjector<MyViewModel> {
  *
  *     @Provides
  *     fun provideBaseType(feature: MyPage): Page<*> = feature
