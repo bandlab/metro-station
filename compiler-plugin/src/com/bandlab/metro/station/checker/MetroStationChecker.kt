@@ -30,10 +30,23 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
         val session = context.session
 
         val annotation = symbol.getAnnotationByClassId(Ids.metroStation, session) ?: return
+        val extraDepsClassId = resolveExtraDependenciesClassId(annotation)
 
         val isPage = symbol.findSuperTypeRef(Ids.page) != null ||
             symbol.findSuperTypeRef(Ids.paramPage) != null
-        if (!isPage) return
+
+        if (!isPage) {
+            // We still use extraDependencies on Fragments for legacy code
+            if (extraDepsClassId != null && symbol.findSuperTypeRef(Ids.commonFragment) == null) {
+                // extraDependencies is supported on Pages only (for now)
+                reporter.reportOn(
+                    declaration.source,
+                    MetroStationDiagnostics.EXTRA_DEPENDENCIES_UNSUPPORTED,
+                    "extraDependencies feature is supported only on Pages."
+                )
+            }
+            return
+        }
 
         val primaryConstructor = symbol.primaryConstructorIfAny(session) ?: return
         val constructorParams = primaryConstructor.valueParameterSymbols
@@ -52,7 +65,6 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
         }
 
         // If extraDependencies is specified, there must be a matching constructor parameter
-        val extraDepsClassId = resolveExtraDependenciesClassId(annotation)
         if (extraDepsClassId != null) {
             val hasExtraDepsParam = constructorParams.any { param ->
                 param.resolvedReturnType.classId == extraDepsClassId

@@ -2,19 +2,13 @@ interface MyScope
 
 @MetroStation(
     graphMarker = MyScope::class,
-    appDependencies = MyActivity.AppServiceProvider::class,
-    extraDependencies = MyActivity.ExtraDependencies::class
+    appDependencies = MyActivity.AppServiceProvider::class
 )
 class MyActivity : CommonActivity<Unit>() {
     @Inject lateinit var myDependency: MyDependency
 
     interface AppServiceProvider {
         val long: Long
-    }
-
-    @ContributesTo(Unit::class)
-    interface ExtraDependencies {
-        val boolean: Boolean
     }
 }
 
@@ -30,17 +24,10 @@ interface AppGraph {
     fun provideLong(): Long = 123L
 }
 
-@DependencyGraph(Unit::class)
-interface ExtraGraph {
-    @Provides
-    fun provideBoolean(): Boolean = true
-}
-
 @Inject
 class MyDependency(
     val int: Int,
     val long: Long,
-    val boolean: Boolean
 )
 
 fun box(): String {
@@ -48,11 +35,10 @@ fun box(): String {
     val graph = createGraphFactory<MyActivity.FeatureGraph.Factory>().create(
         feature = myActivity,
         serviceProvider = createGraph<AppGraph>(),
-        extraDependencies = createGraph<ExtraGraph>()
+        extraDependencies = EmptyExtraDependencies
     )
     graph.injector.injectMembers(myActivity)
     assertEquals(42, myActivity.myDependency.int)
     assertEquals(123L, myActivity.myDependency.long)
-    assertEquals(true, myActivity.myDependency.boolean)
     return "OK"
 }

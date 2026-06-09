@@ -1,3 +1,8 @@
 package androidx.work
 
-abstract class CoroutineWorker
+import android.content.Context
+
+abstract class CoroutineWorker {
+    fun getApplicationContext(): Context = Context.FAKE
+    abstract suspend fun doWork(): Result
+}

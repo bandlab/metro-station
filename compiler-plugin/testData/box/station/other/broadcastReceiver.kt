@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver
 class MyBroadcastReceiver : BroadcastReceiver() {
     @Inject lateinit var myDependency: MyDependency
 
+    override fun onReceive(context: android.content.Context, intent: android.content.Intent) {
+    }
+
     interface ServiceProvider {
         val myDependency: MyDependency
     }

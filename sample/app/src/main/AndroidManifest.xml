@@ -26,6 +26,18 @@
             android:name="com.bandlab.metro.station.sample.profile.ProfileActivity"
             android:exported="true"
             android:theme="@style/Theme.SampleApp" />
+
+        <receiver
+            android:name="com.bandlab.metro.station.sample.component.LoggerBroadcastReceiver"
+            android:exported="false" />
+
+        <service
+            android:name="com.bandlab.metro.station.sample.component.LoggerService"
+            android:exported="false" />
+
+        <service
+            android:name="com.bandlab.metro.station.sample.component.LoggerWithoutOnCreateService"
+            android:exported="false" />
     </application>
 
 </manifest>
