@@ -20,8 +20,6 @@ object AndroidInjection {
      */
     @Suppress("UNCHECKED_CAST")
     private fun resolveInjectorAndInject(target: Any) {
-        // Try to inject as a standalone graph first, this is needed for MetroStation.allowGraphExtensions,
-        // coz the activity's injector is part of the graph extension.
         if (target is HasServiceProvider) {
             val injector = try {
                 target.resolve<MembersInjectorProvider<Any>>().injector

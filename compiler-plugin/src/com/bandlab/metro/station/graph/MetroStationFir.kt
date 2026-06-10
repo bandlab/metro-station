@@ -1,6 +1,13 @@
 package com.bandlab.metro.station.graph
 
-import com.bandlab.metro.station.utils.*
+import com.bandlab.metro.station.utils.ClassIds
+import com.bandlab.metro.station.utils.asName
+import com.bandlab.metro.station.utils.buildSimpleAnnotation
+import com.bandlab.metro.station.utils.deepResolveSuperType
+import com.bandlab.metro.station.utils.extractClassId
+import com.bandlab.metro.station.utils.getClassCall
+import com.bandlab.metro.station.utils.resolvePageViewModelType
+import com.bandlab.metro.station.utils.unwrapType
 import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
@@ -32,10 +39,18 @@ import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.scopes.kotlinScopeProvider
-import org.jetbrains.kotlin.fir.symbols.impl.*
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.toEffectiveVisibility
-import org.jetbrains.kotlin.fir.types.*
+import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.ConeStarProjection
+import org.jetbrains.kotlin.fir.types.FirTypeRef
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
+import org.jetbrains.kotlin.fir.types.classId
+import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.impl.ConeTypeParameterTypeImpl
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
@@ -288,10 +303,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                             val defaultDependenciesIds = when (componentType) {
                                 is ComponentType.Activity -> setOf(Ids.defaultActivityDeps)
                                 ComponentType.Fragment -> setOf(Ids.defaultFragmentDeps)
-                                is ComponentType.Page -> setOf(
-                                    Ids.defaultPageDependencies,
-                                    Ids.pageGraphDependenciesModule,
-                                )
+                                is ComponentType.Page -> setOf(Ids.defaultPageDependencies)
 
                                 ComponentType.Others -> emptySet()
                             }

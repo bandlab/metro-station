@@ -3,7 +3,7 @@ package com.bandlab.android.common.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
-import com.bandlab.common.android.di.AndroidInjection
+import com.bandlab.metro.station.GeneratedByMetroStation
 import com.bandlab.metro.station.sample.utils.ScreenTracker
 
 /**
@@ -32,9 +32,18 @@ abstract class CommonActivity<Params : Any> : FragmentActivity() {
             return
         }
 
-        AndroidInjection.inject(this)
+        @OptIn(GeneratedByMetroStation::class)
+        inject()
         super.onCreate(savedInstanceState)
         onCreate()
+    }
+
+    /**
+     * TODO
+     */
+    @GeneratedByMetroStation
+    open fun inject() {
+        throw UnsupportedOperationException("This method will be implemented by the compiler plugin.")
     }
 
     // Used by the compiler plugin

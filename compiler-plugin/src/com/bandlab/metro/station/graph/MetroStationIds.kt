@@ -63,7 +63,6 @@ internal object MetroStationIds {
     val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
     val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
     val pageGraphDependencies = ClassId(commonPageDi, "PageGraphDependencies".asName())
-    val pageGraphDependenciesModule = ClassId(commonPageDi, "PageGraphDependenciesModule".asName())
     val navPageDependencies = ClassId(commonPageDi, "NavPageDependencies".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
 

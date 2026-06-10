@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.bandlab.android.common.activity.CommonActivity
 import com.bandlab.common.android.pager.screen.ParamPage
-import com.bandlab.common.android.pager.screen.createPageInjector
+import com.bandlab.common.android.pager.screen.di.createPageViewModel
 import com.bandlab.uikit.api.page.Page
 import com.bandlab.uikit.api.page.PageContainerState
 
@@ -38,13 +38,11 @@ private class DefaultPageContainerState(
                 error("ParamPage requires a parameter. ${this::class.java}")
             }
 
-            val injector = page.createPageInjector(
+            vmStore = page.createPageViewModel(
                 initialParam = param ?: Unit,
                 lifecycleOwner = lifecycleOwner,
                 host = host,
             )
-
-            vmStore = injector.getPageViewModel()
         }
 
         @Suppress("UNCHECKED_CAST")
