@@ -19,7 +19,7 @@ import android.content.Context
  *  }
  *  ```
  */
-interface HasServiceProvider {
+interface HasDependencyGraph {
 
     fun <T> resolve(): T {
         throw UnsupportedOperationException(
@@ -35,8 +35,8 @@ interface HasServiceProvider {
         } catch (e: Exception) {
             throw IllegalStateException(
                 """
-                Fail to cast the service provider, make sure you contribute your provider correctly.
-                See: HasServiceProvider kdoc for more details
+                Fail to cast from the graph, make sure you contribute your provider correctly.
+                See: HasDependencyGraph kdoc for more details
                 """.trimIndent(),
                 e
             )
@@ -47,8 +47,8 @@ interface HasServiceProvider {
 fun <T> Context.resolveServiceProvider(): T {
     val app = applicationContext
     return when {
-        this is Activity && this is HasServiceProvider -> this.resolve()
-        app is HasServiceProvider -> app.resolve()
-        else -> error("Application doesn't implement HasServiceProvider interface")
+        this is Activity && this is HasDependencyGraph -> this.resolve()
+        app is HasDependencyGraph -> app.resolve()
+        else -> error("Application doesn't implement HasDependencyGraph interface")
     }
 }

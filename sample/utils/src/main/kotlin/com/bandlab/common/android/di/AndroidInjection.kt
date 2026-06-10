@@ -20,7 +20,7 @@ object AndroidInjection {
      */
     @Suppress("UNCHECKED_CAST")
     private fun resolveInjectorAndInject(target: Any) {
-        if (target is HasServiceProvider) {
+        if (target is HasDependencyGraph) {
             val injector = try {
                 target.resolve<MembersInjectorProvider<Any>>().injector
             } catch (_: Exception) {
@@ -56,7 +56,7 @@ object AndroidInjection {
                     appendLine(".")
                     if (target is Fragment) {
                         append("Also tried to inject fragment in activity ")
-                        appendLine("${target.activity} (HasServiceProvider=${target.activity is HasServiceProvider})")
+                        appendLine("${target.activity} (HasServiceProvider=${target.activity is HasDependencyGraph})")
                     }
                     append("You probably forgot to annotate it with @StationEntry, ")
                     appendLine("or the scope of the @StationEntry is not correct.")
@@ -86,7 +86,7 @@ object AndroidInjection {
     }
 
     private fun Any.resolveFactoryFrom(context: Context): Any? {
-        if (context !is HasServiceProvider) return null
+        if (context !is HasDependencyGraph) return null
         return try {
             context.resolve<GraphExtensionFactoriesProvider>()
                 .graphExtensionFactories[this::class]

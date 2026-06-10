@@ -2,7 +2,7 @@ package com.bandlab.common.android.di
 
 import android.content.Context
 
-interface HasServiceProvider {
+interface HasDependencyGraph {
 
     fun <T> resolve(): T {
         throw UnsupportedOperationException(
@@ -18,8 +18,8 @@ interface HasServiceProvider {
         } catch (e: Exception) {
             throw IllegalStateException(
                 """
-                Fail to cast the service provider, make sure you contribute your provider correctly.
-                See: HasServiceProvider kdoc for more details
+                Fail to cast from the graph, make sure you contribute your provider correctly.
+                See: HasDependencyGraph kdoc for more details
                 """.trimIndent(),
                 e
             )

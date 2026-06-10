@@ -56,6 +56,7 @@ internal object MetroStationIds {
         ClassId(FqName("com.bandlab.android.common.fragment"), "DefaultFragmentDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
+    val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
 
     // Page
     private val commonPageDi = FqName("com.bandlab.common.android.pager.screen.di")
@@ -77,18 +78,6 @@ internal object MetroStationIds {
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())
     val fragmentScope = ClassId(androidCommon, "FragmentScope".asName())
     val pageScope = ClassId(androidCommon, "PageScope".asName())
-
-    // Graph resolution and supertypes
-    val hasServiceProvider = ClassId(commonAndroidDi, "HasServiceProvider".asName())
-    val resolveName = "resolve".asName()
-    val resolveFromName = "resolveFrom".asName()
-    val graphPropertyName = "graph".asName()
-    val graphCreatorPropertyName = "graphCreator".asName()
-    val pageGraphCreator = ClassId(commonPageDi, "PageGraphCreator".asName())
-    val pageGraphCreatorExtension = ClassId(commonPageDi, "graphCreator".asName())
-    val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
-    val context = ClassId(FqName("android.content"), "Context".asName())
-    val componentActivity = ClassId(FqName("androidx.activity"), "ComponentActivity".asName())
 
     // Service, Worker, BroadcastReceiver
     val androidService = ClassId(FqName("android.app"), "Service".asName())
