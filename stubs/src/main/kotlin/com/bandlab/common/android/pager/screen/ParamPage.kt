@@ -1,5 +1,6 @@
 package com.bandlab.common.android.pager.screen
 
+import com.bandlab.common.android.pager.screen.di.PageGraphDependencies
 import com.bandlab.uikit.api.page.Page
 
 /**
@@ -18,6 +19,10 @@ interface ParamPage<ViewModel : Any, Param : Any> : Page<ViewModel> {
      * @param savedState the bundle from the intent, specifically with [OBJECT_ARG] key.
      */
     fun parseParam(savedState: SavedState): Param? = null
+
+    fun injectViewModel(deps: PageGraphDependencies, initialParam: Param): ViewModel {
+        throw UnsupportedOperationException("This method will be implemented by the compiler plugin.")
+    }
 }
 
 // Stub for androidx.savedstate.SavedState
