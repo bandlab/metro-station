@@ -55,6 +55,7 @@ internal object MetroStationIds {
     val defaultFragmentDeps =
         ClassId(FqName("com.bandlab.android.common.fragment"), "DefaultFragmentDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
+    val graphExtensionFactory = ClassId(commonAndroidDi, "GraphExtensionFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
     val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
 
@@ -63,6 +64,7 @@ internal object MetroStationIds {
     val page = ClassId(FqName("com.bandlab.uikit.api.page"), "Page".asName())
     val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
     val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
+    val pageGraphExtensionFactory = ClassId(commonPageDi, "PageGraphExtensionFactory".asName())
     val pageGraphDependencies = ClassId(commonPageDi, "PageGraphDependencies".asName())
     val navPageDependencies = ClassId(commonPageDi, "NavPageDependencies".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
