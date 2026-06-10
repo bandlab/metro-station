@@ -18,7 +18,6 @@ import com.bandlab.metro.station.graph.MetroStationIds as Ids
 
 /**
  * Validates that classes annotated with `@MetroStation` have the required constructor parameters:
- * - Pages must have a `Context` or `ComponentActivity` parameter in their primary constructor.
  * - If `extraDependencies` is specified (not `Nothing::class`), there must be a constructor parameter
  *   whose type matches the specified extra dependencies class.
  */
@@ -50,19 +49,6 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
 
         val primaryConstructor = symbol.primaryConstructorIfAny(session) ?: return
         val constructorParams = primaryConstructor.valueParameterSymbols
-
-        // Pages must have a Context or ComponentActivity constructor parameter
-        val hasContextParam = constructorParams.any { param ->
-            val paramClassId = param.resolvedReturnType.classId
-            paramClassId == Ids.context || paramClassId == Ids.componentActivity
-        }
-        if (!hasContextParam) {
-            reporter.reportOn(
-                declaration.source,
-                MetroStationDiagnostics.MISSING_CONTEXT_PARAMETER,
-                "${declaration.classId.shortClassName.asString()} must have a Context or ComponentActivity parameter in its constructor for the compiler to create the graph."
-            )
-        }
 
         // If extraDependencies is specified, there must be a matching constructor parameter
         if (extraDepsClassId != null) {
