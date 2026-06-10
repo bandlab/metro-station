@@ -121,6 +121,14 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         classSymbol: FirClassSymbol<*>,
         context: MemberGenerationContext
     ): Set<Name> {
+        // Generate inject()/injectViewModel() overrides on the annotated class itself
+        if (session.predicateBasedProvider.matches(Ids.metroStationPredicate, classSymbol)) {
+            return when (resolveComponentType(classSymbol)) {
+                is ComponentType.Activity -> setOf(Ids.injectName)
+                is ComponentType.Page -> setOf(Ids.injectViewModelName)
+                ComponentType.Fragment, ComponentType.Others -> emptySet()
+            }
+        }
         if (classSymbol.origin != Key.origin) return emptySet()
         if (classSymbol.classId.shortClassName == Ids.graphName) {
             return setOf(Ids.provideBaseTypeName, Ids.provideParamName, Ids.provideParamFlowName)
@@ -134,6 +142,15 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
     ): List<FirNamedFunctionSymbol> {
         val ownerClassId = callableId.classId ?: return emptyList()
         val owner = context?.owner ?: return emptyList()
+
+        // Generate inject()/injectViewModel() overrides on the annotated class
+        if (session.predicateBasedProvider.matches(Ids.metroStationPredicate, owner)) {
+            return when (callableId.callableName) {
+                Ids.injectName -> listOfNotNull(generateInjectFunction(owner))
+                Ids.injectViewModelName -> listOfNotNull(generateInjectViewModelFunction(owner))
+                else -> emptyList()
+            }
+        }
 
         if (owner.origin != Key.origin) return emptyList()
 
@@ -337,6 +354,66 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         return provideParamFlowFunction.symbol as FirNamedFunctionSymbol
     }
 
+    /**
+     * Generates an `override fun inject()` on the annotated activity class. The body is filled in IR.
+     *
+     * The overridden [Ids.commonActivity] `inject()` is a `@GeneratedByMetroStation` (opt-in) member,
+     * so the marker is propagated onto the generated override to satisfy the opt-in requirement.
+     */
+    private fun generateInjectFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol {
+        val injectFunction = createMemberFunction(
+            owner,
+            Key,
+            Ids.injectName,
+            session.builtinTypes.unitType.coneType,
+        ) {
+            status {
+                isOverride = true
+            }
+        }
+        injectFunction.replaceAnnotations(listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)))
+        return injectFunction.symbol as FirNamedFunctionSymbol
+    }
+
+    /**
+     * Generates an `override fun injectViewModel(deps[, initialParam])` on the annotated page class,
+     * returning the page's ViewModel type. The second `initialParam` parameter is only generated for
+     * a [ParamPage][Ids.paramPage]. The body is filled in IR.
+     *
+     * The overridden Page/ParamPage `injectViewModel` is a `@GeneratedByMetroStation` (opt-in) member,
+     * so the marker is propagated onto the generated override to satisfy the opt-in requirement.
+     */
+    private fun generateInjectViewModelFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
+        val componentType = resolveComponentType(owner)
+        if (componentType !is ComponentType.Page) return null
+
+        val viewModelType = resolvePageViewModelType(componentType.superTypeRef, owner, session) as? ConeKotlinType
+            ?: return null
+        val pageGraphDepsType = Ids.pageGraphDependencies.constructClassLikeType()
+        val paramType = if (componentType.hasParam) {
+            componentType.superTypeRef.unwrapType(1) as? ConeKotlinType ?: return null
+        } else {
+            null
+        }
+
+        val injectViewModelFunction = createMemberFunction(
+            owner,
+            Key,
+            Ids.injectViewModelName,
+            viewModelType,
+        ) {
+            status {
+                isOverride = true
+            }
+            valueParameter(Ids.depsName, pageGraphDepsType, key = Key)
+            if (paramType != null) {
+                valueParameter(Ids.initialParamName, paramType, key = Key)
+            }
+        }
+        injectViewModelFunction.replaceAnnotations(listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)))
+        return injectViewModelFunction.symbol as FirNamedFunctionSymbol
+    }
+
     private fun generateFactory(featureGraphOwner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
         val factoryClassId = featureGraphOwner.classId.createNestedClassId(Ids.nestedFactoryName)
         val factorySymbol = FirRegularClassSymbol(factoryClassId)
@@ -367,19 +444,36 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
 
                 val extraDependenciesType = owner.resolveExtraDependencies()
 
-                val baseFactoryType = if (resolveComponentType(owner) is ComponentType.Page) {
-                    Ids.pageGraphFactory
-                } else {
-                    Ids.graphFactory
-                }
-                coneType = baseFactoryType.constructClassLikeType(
-                    arrayOf(
-                        rootType,
-                        serviceProviderType,
-                        extraDependenciesType,
-                        graphType
+                val componentType = resolveComponentType(owner)
+                coneType = if (componentType is ComponentType.Page) {
+                    // PageGraphFactory<Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph>
+                    val viewModelType = resolvePageViewModelType(componentType.superTypeRef, owner, session)
+                    val paramType: ConeTypeProjection = if (componentType.hasParam) {
+                        componentType.superTypeRef.unwrapType(1) ?: StandardClassIds.Unit.constructClassLikeType()
+                    } else {
+                        StandardClassIds.Unit.constructClassLikeType()
+                    }
+                    Ids.pageGraphFactory.constructClassLikeType(
+                        arrayOf(
+                            rootType,
+                            viewModelType,
+                            paramType,
+                            serviceProviderType,
+                            extraDependenciesType,
+                            graphType,
+                        )
                     )
-                )
+                } else {
+                    // GraphFactory<Root, ServiceProvider, ExtraDependencies, Graph>
+                    Ids.graphFactory.constructClassLikeType(
+                        arrayOf(
+                            rootType,
+                            serviceProviderType,
+                            extraDependenciesType,
+                            graphType,
+                        )
+                    )
+                }
             }
         }
         return factory.symbol

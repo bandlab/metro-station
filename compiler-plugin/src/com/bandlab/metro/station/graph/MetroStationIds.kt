@@ -12,6 +12,7 @@ internal object MetroStationIds {
     // MetroStation
     val metroStation = ClassId(metroStationPackage, "MetroStation".asName())
     val metroStationFqName = metroStation.asSingleFqName()
+    val generatedByMetroStation = ClassId(metroStationPackage, "GeneratedByMetroStation".asName())
 
     // StationEntry
     val stationEntry = ClassId(metroStationPackage, "StationEntry".asName())
@@ -41,6 +42,11 @@ internal object MetroStationIds {
     val provideParamName = "provideParam".asName()
     val provideParamFlowName = "provideParamFlow".asName()
 
+    // Injection entry points overridden on the annotated class (bodies generated in IR)
+    val injectName = "inject".asName()
+    val injectViewModelName = "injectViewModel".asName()
+    val depsName = "deps".asName()
+
     // Common classes
     private val androidCommon = FqName("com.bandlab.android.common")
     private val androidCommonActivity = FqName("com.bandlab.android.common.activity")
@@ -66,6 +72,7 @@ internal object MetroStationIds {
     val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
     val pageGraphExtensionFactory = ClassId(commonPageDi, "PageGraphExtensionFactory".asName())
     val pageGraphDependencies = ClassId(commonPageDi, "PageGraphDependencies".asName())
+    val createGraphAndInjectViewModel = ClassId(commonPageDi, "createGraphAndInjectViewModel".asName())
     val navPageDependencies = ClassId(commonPageDi, "NavPageDependencies".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
 

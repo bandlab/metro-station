@@ -13,8 +13,7 @@ import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.types.classOrNull
-import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
@@ -57,6 +56,8 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             Ids.provideParamName -> generateProvideParamBody(pluginContext, declaration)
             Ids.provideBaseTypeName -> generateProvideBaseTypeBody(pluginContext, declaration)
             Ids.provideParamFlowName -> generateProvideParamFlowBody(pluginContext, declaration)
+            Ids.injectName -> generateInjectBody(declaration)
+            Ids.injectViewModelName -> generateInjectViewModelBody(declaration)
         }
         return super.visitSimpleFunction(declaration)
     }
@@ -305,6 +306,135 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             val regularParamIndex = injectMembersFunction.parameters
                 .indexOfFirst { it.kind == IrParameterKind.Regular }
             arguments[regularParamIndex] = builder.irGet(thisReceiver)
+        }
+    }
+
+    /**
+     * Generates the body of the FIR-generated `inject()` override on an annotated activity:
+     * ```
+     * createGraphFactory<FeatureGraph.Factory>()
+     *     .create(this, applicationContext.resolveServiceProvider(), EmptyExtraDependencies)
+     *     .injector
+     *     .injectMembers(this)
+     * ```
+     */
+    private fun generateInjectBody(declaration: IrSimpleFunction) {
+        val irClass = declaration.parentClassOrNull ?: return
+        val thisReceiver = declaration.parameters
+            .firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
+
+        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
+        val injectionCall = generateInjectionCall(builder, irClass, thisReceiver) { b, recv ->
+            generateApplicationContextExpr(b, recv)
+        } ?: return
+
+        declaration.body = builder.irBlockBody {
+            +injectionCall
+        }
+    }
+
+    /**
+     * Generates the body of the FIR-generated `injectViewModel(deps[, initialParam])` override on an
+     * annotated page:
+     * ```
+     * return createGraphAndInjectViewModel(
+     *     deps,
+     *     initialParam | Unit,
+     *     createGraphFactory<FeatureGraph.Factory>(),
+     *     extraDependencies,
+     * )
+     * ```
+     * The 6 type arguments are read off the `PageGraphFactory<...>` supertype of the generated
+     * `FeatureGraph.Factory`, which carries them in the order
+     * `[Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph]` — matching the type parameter
+     * order of `createGraphAndInjectViewModel`.
+     */
+    private fun generateInjectViewModelBody(declaration: IrSimpleFunction) {
+        val irClass = declaration.parentClassOrNull ?: return
+        val thisReceiver = declaration.parameters
+            .firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
+
+        // FeatureGraph.Factory
+        val featureGraphClass = irClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.graphName } ?: return
+        val factoryClass = featureGraphClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.nestedFactoryName } ?: return
+
+        // PageGraphFactory<Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph> supertype
+        val pageGraphFactorySuperType = factoryClass.superTypes
+            .filterIsInstance<IrSimpleType>()
+            .find { it.classOrNull?.owner?.classId == Ids.pageGraphFactory } ?: return
+        val factoryTypeArgs = pageGraphFactorySuperType.arguments.mapNotNull { it.typeOrNull }
+        if (factoryTypeArgs.size < 6) return
+        val extraDependenciesType = factoryTypeArgs[4]
+
+        // createGraphFactory<FeatureGraph.Factory>()
+        val createGraphFactorySymbol = finder
+            .findFunctions(MetroClassIds.createGraphFactory.toCallableId()).firstOrNull() ?: return
+        // createGraphAndInjectViewModel(deps, param, factory, extraDependencies)
+        val createGraphAndInjectViewModelSymbol = finder
+            .findFunctions(Ids.createGraphAndInjectViewModel.toCallableId()).firstOrNull() ?: return
+
+        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
+
+        val createFactoryCall = builder.irCall(createGraphFactorySymbol).apply {
+            typeArguments[0] = factoryClass.symbol.typeWith()
+        }
+
+        val regularParams = declaration.parameters.filter { it.kind == IrParameterKind.Regular }
+        val depsValueParam = regularParams.firstOrNull() ?: return
+        val initialParamValueParam = regularParams.getOrNull(1)
+        // ParamPage passes its initialParam; a plain Page passes Unit.
+        val paramExpr = if (initialParamValueParam != null) {
+            builder.irGet(initialParamValueParam)
+        } else {
+            builder.irGetObject(pluginContext.irBuiltIns.unitClass)
+        }
+
+        val extraDepsExpr =
+            resolveExtraDependenciesExpr(builder, irClass, thisReceiver, extraDependenciesType) ?: return
+
+        val createGraphAndInjectViewModelFn = createGraphAndInjectViewModelSymbol.owner
+        val call = builder.irCall(createGraphAndInjectViewModelSymbol).apply {
+            factoryTypeArgs.take(6).forEachIndexed { index, typeArg -> typeArguments[index] = typeArg }
+            createGraphAndInjectViewModelFn.parameters.forEachIndexed { index, param ->
+                arguments[index] = when {
+                    param.kind == IrParameterKind.ExtensionReceiver -> builder.irGet(thisReceiver)
+                    param.name == Ids.depsName -> builder.irGet(depsValueParam)
+                    param.name == Ids.factoryParamName -> createFactoryCall
+                    param.name == Ids.extraDependenciesName -> extraDepsExpr
+                    else -> paramExpr
+                }
+            }
+        }
+
+        declaration.body = builder.irBlockBody {
+            +irReturn(call)
+        }
+    }
+
+    /**
+     * Resolves the expression passed as `extraDependencies` to `createGraphAndInjectViewModel`:
+     * - the `EmptyExtraDependencies` object when [extraDependenciesType] is that empty marker, or
+     * - the value of the page property whose type matches [extraDependenciesType] otherwise.
+     */
+    private fun resolveExtraDependenciesExpr(
+        builder: IrBuilderWithScope,
+        irClass: IrClass,
+        thisReceiver: IrValueParameter,
+        extraDependenciesType: IrType,
+    ): IrExpression? {
+        val extraDepsClassSymbol = extraDependenciesType.classOrNull
+        if (extraDepsClassSymbol?.owner?.classId == Ids.emptyExtraDependencies) {
+            val emptyClass = finder.findClass(Ids.emptyExtraDependencies) ?: return null
+            return builder.irGetObject(emptyClass)
+        }
+        val property = irClass.properties.firstOrNull { prop ->
+            prop.backingField?.type?.classOrNull == extraDepsClassSymbol
+        }
+        val getter = property?.getter ?: return null
+        return builder.irCall(getter.symbol).apply {
+            dispatchReceiver = builder.irGet(thisReceiver)
         }
     }
 
