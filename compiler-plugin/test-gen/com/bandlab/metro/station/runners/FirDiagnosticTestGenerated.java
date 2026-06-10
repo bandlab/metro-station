@@ -25,6 +25,12 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
+  @TestMetadata("extraDependenciesMustBeVal.kt")
+  public void testExtraDependenciesMustBeVal() {
+    run("extraDependenciesMustBeVal.kt");
+  }
+
+  @Test
   @TestMetadata("extraDependenciesOnActivity.kt")
   public void testExtraDependenciesOnActivity() {
     run("extraDependenciesOnActivity.kt");
@@ -52,12 +58,6 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   @TestMetadata("newStationEntryUseCase.kt")
   public void testNewStationEntryUseCase() {
     run("newStationEntryUseCase.kt");
-  }
-
-  @Test
-  @TestMetadata("pageMissingContext.kt")
-  public void testPageMissingContext() {
-    run("pageMissingContext.kt");
   }
 
   @Test
