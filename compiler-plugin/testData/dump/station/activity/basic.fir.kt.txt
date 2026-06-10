@@ -90,7 +90,7 @@ class MyActivity : CommonActivity<Unit>, HasServiceProvider {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(instance: FeatureGraph, feature: Provider<MyActivity>): Factory<CommonActivity<*>> {
+        fun create(instance: FeatureGraph, feature: Provider<MyActivity>): ProvideBaseTypeMetroFactory {
           return ProvideBaseTypeMetroFactory(instance = instance, feature = feature)
         }
 
@@ -213,7 +213,7 @@ class MyDependency {
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(text: Provider<String>): Factory<MyDependency> {
+      fun create(text: Provider<String>): MetroFactory {
         return MetroFactory(text = text)
       }
 
@@ -311,7 +311,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, GraphExt
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(instance: AppGraph): Factory<String> {
+      fun create(instance: AppGraph): ProvideTextMetroFactory {
         return ProvideTextMetroFactory(instance = instance)
       }
 

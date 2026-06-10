@@ -125,7 +125,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<kotlin.Any>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.InstanceParameter] kind:Regular name:instance index:1 type:<root>.MyPage.ExtensionFactoryContribution
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:factory index:2 type:dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory>
@@ -134,7 +134,7 @@ FILE fqName:<root> fileName:/paramPage.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (instance: <root>.MyPage.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory>): dev.zacsweers.metro.internal.Factory<kotlin.Any> declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (instance: <root>.MyPage.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory>): <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (instance: <root>.MyPage.ExtensionFactoryContribution, factory: dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory>) declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory' type=<root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory origin=null
                   ARG instance: GET_VAR 'instance: <root>.MyPage.ExtensionFactoryContribution declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion.create' type=<root>.MyPage.ExtensionFactoryContribution origin=null
                   ARG factory: GET_VAR 'factory: dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory> declared in <root>.MyPage.ExtensionFactoryContribution.ProvideFactoryMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyPage.FeatureExtension.Factory> origin=null
@@ -268,7 +268,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<com.bandlab.uikit.api.page.Page<*>>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:1 type:dev.zacsweers.metro.Provider<<root>.MyPage>
             annotations:
@@ -276,7 +276,7 @@ FILE fqName:<root> fileName:/paramPage.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyPage>): dev.zacsweers.metro.internal.Factory<com.bandlab.uikit.api.page.Page<*>> declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (feature: dev.zacsweers.metro.Provider<<root>.MyPage>): <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (feature: dev.zacsweers.metro.Provider<<root>.MyPage>) declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory' type=<root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory origin=null
                   ARG feature: GET_VAR 'feature: dev.zacsweers.metro.Provider<<root>.MyPage> declared in <root>.MyPage.FeatureBindings.ProvideBaseTypeMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyPage> origin=null
           FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryNewInstanceFunction] name:provideBaseType visibility:public modality:FINAL returnType:com.bandlab.uikit.api.page.Page<*>
@@ -338,7 +338,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:provider index:1 type:dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.PageParamFlowProvider>
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:2 type:dev.zacsweers.metro.Provider<<root>.MyPage>
@@ -348,7 +348,7 @@ FILE fqName:<root> fileName:/paramPage.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (provider: dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.PageParamFlowProvider>, feature: dev.zacsweers.metro.Provider<<root>.MyPage>, initialParam: dev.zacsweers.metro.Provider<<root>.MyPage.Params>): dev.zacsweers.metro.internal.Factory<kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>> declared in <root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (provider: dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.PageParamFlowProvider>, feature: dev.zacsweers.metro.Provider<<root>.MyPage>, initialParam: dev.zacsweers.metro.Provider<<root>.MyPage.Params>): <root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory declared in <root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (provider: dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.PageParamFlowProvider>, feature: dev.zacsweers.metro.Provider<<root>.MyPage>, initialParam: dev.zacsweers.metro.Provider<<root>.MyPage.Params>) declared in <root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory' type=<root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory origin=null
                   ARG provider: GET_VAR 'provider: dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.PageParamFlowProvider> declared in <root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.PageParamFlowProvider> origin=null
                   ARG feature: GET_VAR 'feature: dev.zacsweers.metro.Provider<<root>.MyPage> declared in <root>.MyPage.FeatureBindings.ProvideParamFlowMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyPage> origin=null
@@ -420,7 +420,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             BLOCK_BODY
               DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () declared in kotlin.Any'
               INSTANCE_INITIALIZER_CALL classDescriptor='CLASS OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[]' type=kotlin.Unit
-          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<<root>.MyPage.Params>
+          FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyPage.FeatureBindings.ProvideParamMetroFactory
             VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage.FeatureBindings.ProvideParamMetroFactory.Companion
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:pageGraphDependencies index:1 type:dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.di.PageGraphDependencies>
             annotations:
@@ -428,7 +428,7 @@ FILE fqName:<root> fileName:/paramPage.kt
               JvmStatic
               JsStatic
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (pageGraphDependencies: dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.di.PageGraphDependencies>): dev.zacsweers.metro.internal.Factory<<root>.MyPage.Params> declared in <root>.MyPage.FeatureBindings.ProvideParamMetroFactory.Companion'
+              RETURN type=kotlin.Nothing from='public final fun create (pageGraphDependencies: dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.di.PageGraphDependencies>): <root>.MyPage.FeatureBindings.ProvideParamMetroFactory declared in <root>.MyPage.FeatureBindings.ProvideParamMetroFactory.Companion'
                 CONSTRUCTOR_CALL 'private constructor <init> (pageGraphDependencies: dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.di.PageGraphDependencies>) declared in <root>.MyPage.FeatureBindings.ProvideParamMetroFactory' type=<root>.MyPage.FeatureBindings.ProvideParamMetroFactory origin=null
                   ARG pageGraphDependencies: GET_VAR 'pageGraphDependencies: dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.di.PageGraphDependencies> declared in <root>.MyPage.FeatureBindings.ProvideParamMetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.di.PageGraphDependencies> origin=null
           FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryNewInstanceFunction] name:provideParam visibility:public modality:FINAL returnType:<root>.MyPage.Params
@@ -636,7 +636,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
           overridden:
             public open fun toString (): kotlin.String declared in kotlin.Any
-        FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:dev.zacsweers.metro.internal.Factory<<root>.MyViewModel>
+        FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.FactoryCreateFunction] name:create visibility:public modality:FINAL returnType:<root>.MyViewModel.MetroFactory
           VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.MyViewModel.MetroFactory.Companion
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:param index:1 type:dev.zacsweers.metro.Provider<<root>.MyPage.Params>
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:paramFlow index:2 type:dev.zacsweers.metro.Provider<kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>>
@@ -645,7 +645,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             JvmStatic
             JsStatic
           BLOCK_BODY
-            RETURN type=kotlin.Nothing from='public final fun create (param: dev.zacsweers.metro.Provider<<root>.MyPage.Params>, paramFlow: dev.zacsweers.metro.Provider<kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>>): dev.zacsweers.metro.internal.Factory<<root>.MyViewModel> declared in <root>.MyViewModel.MetroFactory.Companion'
+            RETURN type=kotlin.Nothing from='public final fun create (param: dev.zacsweers.metro.Provider<<root>.MyPage.Params>, paramFlow: dev.zacsweers.metro.Provider<kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>>): <root>.MyViewModel.MetroFactory declared in <root>.MyViewModel.MetroFactory.Companion'
               CONSTRUCTOR_CALL 'private constructor <init> (param: dev.zacsweers.metro.Provider<<root>.MyPage.Params>, paramFlow: dev.zacsweers.metro.Provider<kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>>) declared in <root>.MyViewModel.MetroFactory' type=<root>.MyViewModel.MetroFactory origin=null
                 ARG param: GET_VAR 'param: dev.zacsweers.metro.Provider<<root>.MyPage.Params> declared in <root>.MyViewModel.MetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<<root>.MyPage.Params> origin=null
                 ARG paramFlow: GET_VAR 'paramFlow: dev.zacsweers.metro.Provider<kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>> declared in <root>.MyViewModel.MetroFactory.Companion.create' type=dev.zacsweers.metro.Provider<kotlinx.coroutines.flow.Flow<<root>.MyPage.Params>> origin=null
@@ -755,26 +755,10 @@ FILE fqName:<root> fileName:/paramPage.kt
           FIELD PROPERTY_BACKING_FIELD name:featureInstance type:<root>.MyPage visibility:private [final]
             EXPRESSION_BODY
               GET_VAR 'feature: <root>.MyPage declared in <root>.AppGraph.Impl.FeatureExtensionImpl.<init>' type=<root>.MyPage origin=null
-        PROPERTY name:featureInstanceProvider visibility:private modality:FINAL [val]
-          FIELD PROPERTY_BACKING_FIELD name:featureInstanceProvider type:dev.zacsweers.metro.Provider<<root>.MyPage> visibility:private [final]
-            EXPRESSION_BODY
-              CALL 'public final fun invoke <T> (value: T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke): dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> declared in dev.zacsweers.metro.internal.InstanceFactory.Companion' type=dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> origin=null
-                TYPE_ARG T: <root>.MyPage
-                ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=dev.zacsweers.metro.internal.InstanceFactory.Companion
-                ARG value: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:featureInstance type:<root>.MyPage visibility:private [final]' type=<root>.MyPage origin=null
-                  receiver: GET_VAR '<this>: <root>.AppGraph.Impl.FeatureExtensionImpl declared in <root>.AppGraph.Impl.FeatureExtensionImpl' type=<root>.AppGraph.Impl.FeatureExtensionImpl origin=null
         PROPERTY name:pageGraphDependenciesInstance visibility:private modality:FINAL [val]
           FIELD PROPERTY_BACKING_FIELD name:pageGraphDependenciesInstance type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies visibility:private [final]
             EXPRESSION_BODY
               GET_VAR 'pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies declared in <root>.AppGraph.Impl.FeatureExtensionImpl.<init>' type=com.bandlab.common.android.pager.screen.di.PageGraphDependencies origin=null
-        PROPERTY name:pageGraphDependenciesInstanceProvider visibility:private modality:FINAL [val]
-          FIELD PROPERTY_BACKING_FIELD name:pageGraphDependenciesInstanceProvider type:dev.zacsweers.metro.Provider<com.bandlab.common.android.pager.screen.di.PageGraphDependencies> visibility:private [final]
-            EXPRESSION_BODY
-              CALL 'public final fun invoke <T> (value: T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke): dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> declared in dev.zacsweers.metro.internal.InstanceFactory.Companion' type=dev.zacsweers.metro.internal.InstanceFactory<T of dev.zacsweers.metro.internal.InstanceFactory.Companion.invoke> origin=null
-                TYPE_ARG T: com.bandlab.common.android.pager.screen.di.PageGraphDependencies
-                ARG <this>: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]' type=dev.zacsweers.metro.internal.InstanceFactory.Companion
-                ARG value: GET_FIELD 'FIELD PROPERTY_BACKING_FIELD name:pageGraphDependenciesInstance type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies visibility:private [final]' type=com.bandlab.common.android.pager.screen.di.PageGraphDependencies origin=null
-                  receiver: GET_VAR '<this>: <root>.AppGraph.Impl.FeatureExtensionImpl declared in <root>.AppGraph.Impl.FeatureExtensionImpl' type=<root>.AppGraph.Impl.FeatureExtensionImpl origin=null
         CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] visibility:public returnType:<root>.AppGraph.Impl.FeatureExtensionImpl [primary]
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ParentGraphParam] kind:Regular name:appGraphImpl index:0 type:<root>.AppGraph.Impl
           VALUE_PARAMETER kind:Regular name:feature index:1 type:<root>.MyPage
