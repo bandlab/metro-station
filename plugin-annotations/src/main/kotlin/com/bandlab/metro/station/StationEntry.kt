@@ -55,7 +55,7 @@ import kotlin.reflect.KClass
  *     interface Factory {
  *       fun create(
  *         @Provides feature: MyPage,
- *         @Provides param: Unit,
+ *         @Provides param: Unit, // or the actual param type if you're using ParamPage
  *         @Includes pageGraphDependencies: PageGraphDependencies,
  *       ): FeatureExtension
  *     }

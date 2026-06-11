@@ -55,7 +55,7 @@ import kotlin.reflect.KClass
  *   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
  *     return createGraphAndInjectViewModel(
  *       deps = deps,
- *       param = Unit,
+ *       param = Unit, // or the actual param type if you're using ParamPage
  *       factory = createGraphFactory<FeatureGraph.Factory>(),
  *       extraDependencies = ExtraDependencies,
  *     )

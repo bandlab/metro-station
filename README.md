@@ -67,7 +67,7 @@ class MyPage : Page<MyViewModel> {
   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel { 
     return createGraphAndInjectViewModel(
       deps = deps, 
-      param = Unit,
+      param = Unit, // or the actual param type if you're using ParamPage
       factory = createGraphFactory<FeatureGraph.Factory>(), 
       extraDependencies = ExtraDependencies,
     )
@@ -149,7 +149,7 @@ class MyPage : Page<MyViewModel> {
     interface Factory { 
       fun create(
         @Provides feature: MyPage,
-        @Provides param: Unit,
+        @Provides param: Unit, // or the actual param type if you're using ParamPage
         @Includes pageGraphDependencies: PageGraphDependencies,
       ): FeatureExtension
     }
