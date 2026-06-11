@@ -1,6 +1,9 @@
 package com.bandlab.metro.station.entry
 
-import com.bandlab.metro.station.utils.*
+import com.bandlab.metro.station.utils.generateProvideBaseTypeBody
+import com.bandlab.metro.station.utils.generateProvideParamBody
+import com.bandlab.metro.station.utils.generateProvideParamFlowBody
+import com.bandlab.metro.station.utils.toCallableId
 import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
@@ -13,13 +16,10 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.functions
-import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.ir.util.parentClassOrNull
 import org.jetbrains.kotlin.ir.util.properties
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
 import com.bandlab.metro.station.graph.MetroStationIds as Ids
 
 /**
@@ -74,7 +74,7 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
     /**
      * Generates the body of the FIR-generated `inject()` override on an annotated activity:
      * ```
-     * val factory = applicationContext.resolveServiceProvider<FeatureExtension.Factory>()
+     * val factory = resolveServiceProvider<FeatureExtension.Factory>()
      * factory.create(this).injector.injectMembers(this)
      * ```
      */
@@ -95,20 +95,10 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
 
         val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
 
-        // applicationContext expression: this.getApplicationContext()
-        val contextWrapperClass = finder.findClass(
-            ClassId(FqName("android.content"), "ContextWrapper".asName())
-        )?.owner ?: return
-        val applicationContextGetter = contextWrapperClass.getSimpleFunction("getApplicationContext")
-            ?: return
-        val applicationContextExpr = builder.irCall(applicationContextGetter).apply {
-            dispatchReceiver = builder.irGet(thisReceiver)
-        }
-
-        // applicationContext.resolveServiceProvider<FeatureExtension.Factory>()
+        // this.resolveServiceProvider<FeatureExtension.Factory>()
         val resolveCall = builder.irCall(resolveServiceProviderSymbol).apply {
             typeArguments[0] = factoryClass.symbol.typeWith()
-            arguments[0] = applicationContextExpr
+            arguments[0] = builder.irGet(thisReceiver)
         }
 
         // factory.create(this)

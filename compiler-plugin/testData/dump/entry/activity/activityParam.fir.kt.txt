@@ -222,7 +222,7 @@ class MyActivity : CommonActivity<Param> {
 
   @GeneratedByMetroStation
   override fun inject() {
-    resolveServiceProvider<Factory>(/* <this> = <this>.getApplicationContext() */).create(feature = <this>).<get-injector>().injectMembers(instance = <this>)
+    resolveServiceProvider<Factory>(/* <this> = <this> */).create(feature = <this>).<get-injector>().injectMembers(instance = <this>)
   }
 
 }

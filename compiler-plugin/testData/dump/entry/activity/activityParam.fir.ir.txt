@@ -438,8 +438,7 @@ FILE fqName:<root> fileName:/activityParam.kt
             ARG <this>: CALL 'public abstract fun create (feature: <root>.MyActivity): <root>.MyActivity.FeatureExtension declared in <root>.MyActivity.FeatureExtension.Factory' type=<root>.MyActivity.FeatureExtension origin=null
               ARG <this>: CALL 'public final fun resolveServiceProvider <T> (<this>: android.content.Context): T of com.bandlab.common.android.di.resolveServiceProvider declared in com.bandlab.common.android.di' type=T of com.bandlab.common.android.di.resolveServiceProvider origin=null
                 TYPE_ARG T: <root>.MyActivity.FeatureExtension.Factory
-                ARG <this>: CALL 'public final fun getApplicationContext (): android.content.Context declared in android.content.ContextWrapper' type=android.content.Context origin=null
-                  ARG <this>: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity.inject' type=<root>.MyActivity origin=null
+                ARG <this>: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity.inject' type=<root>.MyActivity origin=null
               ARG feature: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity.inject' type=<root>.MyActivity origin=null
           ARG instance: GET_VAR '<this>: <root>.MyActivity declared in <root>.MyActivity.inject' type=<root>.MyActivity origin=null
     PROPERTY FAKE_OVERRIDE name:graph visibility:public modality:FINAL [fake_override,var]

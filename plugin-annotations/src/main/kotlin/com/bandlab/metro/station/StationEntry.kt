@@ -77,7 +77,7 @@ import kotlin.reflect.KClass
  * class MyActivity : CommonActivity<Unit>() {
  *   @GeneratedByMetroStation
  *   override fun inject() {
- *     val factory = applicationContext.resolveServiceProvider<FeatureExtension.Factory>()
+ *     val factory = resolveServiceProvider<FeatureExtension.Factory>()
  *     factory.create(this).injector.injectMembers(this)
  *   }
  * }
