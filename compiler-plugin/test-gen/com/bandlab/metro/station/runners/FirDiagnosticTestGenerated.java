@@ -25,12 +25,6 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
-  @TestMetadata("extraDependenciesMustBeVal.kt")
-  public void testExtraDependenciesMustBeVal() {
-    run("extraDependenciesMustBeVal.kt");
-  }
-
-  @Test
   @TestMetadata("extraDependenciesOnActivity.kt")
   public void testExtraDependenciesOnActivity() {
     run("extraDependenciesOnActivity.kt");

@@ -4,7 +4,7 @@
 )
 class MyPage(
     context: Context,
-    private val extraDependencies: ExtraDependencies
+    extraDependencies: ExtraDependencies
 ) : Page<MyViewModel> {
 
     interface ServiceProvider {

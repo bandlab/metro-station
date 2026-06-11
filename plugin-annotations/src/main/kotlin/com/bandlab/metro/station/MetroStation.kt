@@ -81,8 +81,8 @@ import kotlin.reflect.KClass
  * }
  * ```
  *
- * If `extraDependencies` is presented, the FIR checker will request a `val extraDependencies: ExtraDependencies` in
- * the Page's constructor, and pass it while creating the graph.
+ * If `extraDependencies` is presented, the FIR checker will request a param declared in the Page's constructor,
+ * and the plugin will pass it while creating the graph.
  *
  * For classes extend `CommonActivity`, we will override the `inject` method like this:
  * ```kotlin

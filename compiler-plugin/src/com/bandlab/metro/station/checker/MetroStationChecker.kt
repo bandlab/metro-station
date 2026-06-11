@@ -6,16 +6,11 @@ import org.jetbrains.kotlin.diagnostics.reportOn
 import org.jetbrains.kotlin.fir.analysis.checkers.MppCheckerKind
 import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
 import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirDeclarationChecker
-import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.declarations.primaryConstructorIfAny
 import org.jetbrains.kotlin.fir.declarations.utils.classId
-import org.jetbrains.kotlin.fir.declarations.utils.correspondingValueParameterFromPrimaryConstructor
 import org.jetbrains.kotlin.fir.expressions.*
-import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
-import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
-import org.jetbrains.kotlin.fir.symbols.impl.FirValueParameterSymbol
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.StandardClassIds
@@ -67,27 +62,7 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
                     "${declaration.classId.shortClassName.asString()} must have a ${extraDepsClassId.shortClassName.asString()} in its constructor for the compiler to create the graph."
                 )
             }
-
-            if (extraDepsParam != null && !extraDepsParam.isDeclaredAsVal(symbol)) {
-                reporter.reportOn(
-                    declaration.source,
-                    MetroStationDiagnostics.EXTRA_DEPENDENCIES_PARAMETER_MUST_BE_VAL,
-                    "${extraDepsParam.name.asString()} must be declared as val."
-                )
-            }
         }
-    }
-
-    /**
-     * Returns true if this constructor value parameter is declared with the `val` keyword
-     * (i.e. it has a corresponding read-only property generated from the primary constructor).
-     */
-    @OptIn(DirectDeclarationsAccess::class)
-    private fun FirValueParameterSymbol.isDeclaredAsVal(classSymbol: FirClassSymbol<*>): Boolean {
-        val correspondingProperty = classSymbol.declarationSymbols
-            .filterIsInstance<FirPropertySymbol>()
-            .firstOrNull { it.correspondingValueParameterFromPrimaryConstructor == this }
-        return correspondingProperty != null && correspondingProperty.isVal
     }
 
     /**

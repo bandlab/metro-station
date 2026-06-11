@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.*
+import org.jetbrains.kotlin.ir.builders.declarations.buildField
 import org.jetbrains.kotlin.ir.builders.declarations.buildFun
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
@@ -63,6 +64,10 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
     }
 
     override fun visitClass(declaration: IrClass): IrStatement {
+        // Synthesize a backing field for extraDependencies if the parameter is not declared as `val`.
+        // This must happen before processing children, since generateInjectViewModelBody needs the field.
+        synthesizeExtraDependenciesFieldIfNeeded(declaration)
+
         // Process all children first (fills in graph property bodies, provideParam, etc.)
         super.visitClass(declaration)
 
@@ -416,7 +421,8 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
     /**
      * Resolves the expression passed as `extraDependencies` to `createGraphAndInjectViewModel`:
      * - the `EmptyExtraDependencies` object when [extraDependenciesType] is that empty marker, or
-     * - the value of the page property whose type matches [extraDependenciesType] otherwise.
+     * - the value of the page property whose type matches [extraDependenciesType] otherwise
+     *   (supports both `val` properties and synthesized backing fields).
      */
     private fun resolveExtraDependenciesExpr(
         builder: IrBuilderWithScope,
@@ -429,13 +435,99 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             val emptyClass = finder.findClass(Ids.emptyExtraDependencies) ?: return null
             return builder.irGetObject(emptyClass)
         }
+        // Try finding a `val` property with getter first
         val property = irClass.properties.firstOrNull { prop ->
             prop.backingField?.type?.classOrNull == extraDepsClassSymbol
         }
-        val getter = property?.getter ?: return null
-        return builder.irCall(getter.symbol).apply {
-            dispatchReceiver = builder.irGet(thisReceiver)
+        if (property != null) {
+            val getter = property.getter ?: return null
+            return builder.irCall(getter.symbol).apply {
+                dispatchReceiver = builder.irGet(thisReceiver)
+            }
         }
+        // Fall back to reading from the synthesized backing field (non-val parameter)
+        val field = irClass.declarations.filterIsInstance<IrField>().firstOrNull { f ->
+            f.type.classOrNull == extraDepsClassSymbol
+        } ?: return null
+        return builder.irGetField(builder.irGet(thisReceiver), field)
+    }
+
+    /**
+     * For classes with a non-empty `extraDependencies` type where the constructor parameter is NOT
+     * declared as `val`, synthesizes a private backing field and initializes it from the constructor
+     * parameter. This allows [resolveExtraDependenciesExpr] to read the value later.
+     */
+    private fun synthesizeExtraDependenciesFieldIfNeeded(irClass: IrClass) {
+        // Check if class has @MetroStation
+        val hasMetroStation = irClass.annotations.any { annotation ->
+            annotation.type.classOrNull?.owner?.classId == Ids.metroStation
+        }
+        if (!hasMetroStation) return
+
+        // Find FeatureGraph.Factory to get the extra deps type
+        val featureGraphClass = irClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.graphName } ?: return
+        val factoryClass = featureGraphClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.nestedFactoryName } ?: return
+
+        // Extract extra dependencies type from the factory's supertype
+        val extraDepsType = run {
+            val pageFactorySuperType = factoryClass.superTypes
+                .filterIsInstance<IrSimpleType>()
+                .find { it.classOrNull?.owner?.classId == Ids.pageGraphFactory }
+            if (pageFactorySuperType != null) {
+                val args = pageFactorySuperType.arguments.mapNotNull { it.typeOrNull }
+                if (args.size < 5) return
+                args[4]
+            } else {
+                val graphFactorySuperType = factoryClass.superTypes
+                    .filterIsInstance<IrSimpleType>()
+                    .find { it.classOrNull?.owner?.classId == Ids.graphFactory } ?: return
+                val args = graphFactorySuperType.arguments.mapNotNull { it.typeOrNull }
+                if (args.size < 3) return
+                args[2]
+            }
+        }
+
+        val extraDepsClassSymbol = extraDepsType.classOrNull ?: return
+
+        // If it's EmptyExtraDependencies, no field needed
+        if (extraDepsClassSymbol.owner.classId == Ids.emptyExtraDependencies) return
+
+        // Check if a property already exists for this type (e.g., user declared `val`)
+        val existingProperty = irClass.properties.any { prop ->
+            prop.backingField?.type?.classOrNull == extraDepsClassSymbol
+        }
+        if (existingProperty) return
+
+        // Find the constructor parameter with this type
+        val primaryConstructor = irClass.primaryConstructor ?: return
+        val extraDepsParam = primaryConstructor.parameters.firstOrNull { param ->
+            param.kind == IrParameterKind.Regular && param.type.classOrNull == extraDepsClassSymbol
+        } ?: return
+
+        // Create a backing field
+        val field = pluginContext.irFactory.buildField {
+            name = extraDepsParam.name
+            type = extraDepsParam.type
+            visibility = org.jetbrains.kotlin.descriptors.DescriptorVisibilities.PRIVATE
+            isFinal = true
+            origin = IrDeclarationOrigin.GeneratedByPlugin(MetroStationFir.Key)
+        }.apply {
+            parent = irClass
+        }
+
+        // Add field to class declarations
+        irClass.declarations.add(field)
+
+        // Add initialization in constructor body: this.<field> = param
+        val constructorBody = primaryConstructor.body as? IrBlockBody ?: return
+        val builder = DeclarationIrBuilder(pluginContext, primaryConstructor.symbol)
+        val thisParam = primaryConstructor.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver }
+            ?: irClass.thisReceiver
+            ?: return
+        val setField = builder.irSetField(builder.irGet(thisParam), field, builder.irGet(extraDepsParam))
+        constructorBody.statements.add(setField)
     }
 
     /**
