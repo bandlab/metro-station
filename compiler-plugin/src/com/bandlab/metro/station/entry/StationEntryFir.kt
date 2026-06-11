@@ -136,6 +136,9 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         if (classSymbol.classId.shortClassName == Ids.featureBindingsName) {
             return setOf(SpecialNames.INIT, Ids.provideBaseTypeName, Ids.provideParamName, Ids.provideParamFlowName)
         }
+        if (classSymbol.classId.shortClassName == Ids.nestedFactoryName) {
+            return setOf(Ids.createName)
+        }
         if (classSymbol.classId.shortClassName == Ids.extensionFactoryContributionName) {
             return setOf(Ids.provideFactoryName)
         }
@@ -181,6 +184,14 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             ownerClassId.shortClassName == Ids.featureBindingsName
         ) {
             val fn = generateProvideParamFlowFunction(owner) ?: return emptyList()
+            return listOf(fn)
+        }
+
+        // Generate "create" for Factory
+        if (callableId.callableName == Ids.createName &&
+            ownerClassId.shortClassName == Ids.nestedFactoryName
+        ) {
+            val fn = generateCreateFunction(owner) ?: return emptyList()
             return listOf(fn)
         }
 
@@ -350,36 +361,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
             // @GraphExtension.Factory
             annotations += buildSimpleAnnotation(ClassIds.graphExtensionFactory)
-
-            // Extend PageGraphExtensionFactory for Page/ParamPage, GraphExtensionFactory for others
-            superTypeRefs += buildResolvedTypeRef {
-                val featureType = annotatedSymbol.defaultType()
-                val graphType = featureExtensionOwner.classId.constructClassLikeType()
-
-                coneType = when (val componentType = resolveComponentType(annotatedSymbol)) {
-                    is ComponentType.Page -> {
-                        // PageGraphExtensionFactory<Feature, VM, Param, Graph>
-                        val viewModelType =
-                            resolvePageViewModelType(componentType.superTypeRef, annotatedSymbol, session)
-                        val paramType: ConeTypeProjection = if (componentType.hasParam) {
-                            componentType.superTypeRef.unwrapType(1)
-                                ?: StandardClassIds.Unit.constructClassLikeType()
-                        } else {
-                            StandardClassIds.Unit.constructClassLikeType()
-                        }
-                        Ids.pageGraphExtensionFactory.constructClassLikeType(
-                            arrayOf(featureType, viewModelType, paramType, graphType)
-                        )
-                    }
-
-                    is ComponentType.Activity, ComponentType.Fragment -> {
-                        // GraphExtensionFactory<Feature, GraphExtension>
-                        Ids.graphExtensionFactory.constructClassLikeType(
-                            arrayOf(featureType, graphType)
-                        )
-                    }
-                }
-            }
         }
         return factory.symbol
     }
@@ -550,6 +531,66 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         }
         injectViewModelFunction.replaceAnnotations(listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)))
         return injectViewModelFunction.symbol as FirNamedFunctionSymbol
+    }
+
+    private fun generateCreateFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
+        // Factory is inside FeatureExtension which is inside the annotated class
+        val featureExtensionClassId = owner.classId.outerClassId ?: return null
+        val annotatedClassId = featureExtensionClassId.outerClassId ?: return null
+        val annotatedSymbol =
+            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
+                ?: return null
+
+        val featureExtensionType = featureExtensionClassId.constructClassLikeType()
+
+        val componentType = resolveComponentType(annotatedSymbol)
+        val createFunction = createMemberFunction(
+            owner,
+            Key,
+            Ids.createName,
+            featureExtensionType
+        ) {
+            valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
+
+            if (componentType is ComponentType.Page) {
+                valueParameter(
+                    "param".asName(),
+                    if (componentType.hasParam) {
+                        componentType.superTypeRef.unwrapType(1) as? ConeKotlinType
+                            ?: StandardClassIds.Unit.constructClassLikeType()
+                    } else {
+                        StandardClassIds.Unit.constructClassLikeType()
+                    },
+                    key = Key
+                )
+                valueParameter(
+                    "pageGraphDependencies".asName(),
+                    Ids.pageGraphDependencies.constructClassLikeType(),
+                    key = Key
+                )
+            }
+        }
+        createFunction.markAbstract(owner)
+        if (componentType == ComponentType.Fragment) {
+            // We need to add @Keep here because we use reflection to access this method at runtime.
+            createFunction.replaceAnnotations(
+                listOf(buildSimpleAnnotation(Ids.keep))
+            )
+        }
+
+        // Annotate parameters with @Provides or @Includes
+        val featureParam = createFunction.valueParameters[0]
+        featureParam.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
+
+        if (componentType is ComponentType.Page) {
+            val depsParam = createFunction.valueParameters[1]
+            depsParam.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
+
+            val navDepsParam = createFunction.valueParameters[2]
+            navDepsParam.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.includes)))
+        }
+
+        return createFunction.symbol as FirNamedFunctionSymbol
     }
 
     private fun generateProvideFactoryFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
