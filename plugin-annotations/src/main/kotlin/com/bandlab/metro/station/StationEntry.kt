@@ -52,7 +52,13 @@ import kotlin.reflect.KClass
  *
  *     @ContributesTo(AppScope::class)
  *     @GraphExtension.Factory
- *     interface Factory : PageGraphExtensionFactory<MyPage, MyViewModel, Unit, FeatureExtension>
+ *     interface Factory {
+ *       fun create(
+ *         @Provides feature: MyPage,
+ *         @Provides param: Unit,
+ *         @Includes pageGraphDependencies: PageGraphDependencies,
+ *       ): FeatureExtension
+ *     }
  *   }
  *
  *   @IROnlyFactories

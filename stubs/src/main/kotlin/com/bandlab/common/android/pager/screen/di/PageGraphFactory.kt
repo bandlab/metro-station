@@ -1,6 +1,5 @@
 package com.bandlab.common.android.pager.screen.di
 
-import com.bandlab.common.android.di.GraphExtensionFactory
 import com.bandlab.common.android.di.GraphFactory
 import com.bandlab.common.android.di.resolveServiceProvider
 import com.bandlab.uikit.api.page.Page
@@ -24,17 +23,6 @@ interface PageGraphFactory<
         @Includes pageGraphDependencies: PageGraphDependencies,
         @Includes serviceProvider: ServiceProvider,
         @Includes extraDependencies: ExtraDependencies,
-    ): Graph
-}
-
-/**
- * Similar with [GraphExtensionFactory], but with page-specific dependencies.
- */
-interface PageGraphExtensionFactory<Feature, VM : Any, Param, Graph : PageInjector<VM>> {
-    fun create(
-        @Provides feature: Feature,
-        @Provides param: Param,
-        @Includes pageGraphDependencies: PageGraphDependencies,
     ): Graph
 }
 

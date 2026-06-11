@@ -14,11 +14,4 @@ interface GraphFactory<Feature, ServiceProvider, ExtraDependencies, Graph> {
     ): Graph
 }
 
-/**
- * Base factory interface for building graph extensions.
- */
-interface GraphExtensionFactory<Feature, GraphExtension> {
-    fun create(@Provides feature: Feature): GraphExtension
-}
-
 object EmptyExtraDependencies
