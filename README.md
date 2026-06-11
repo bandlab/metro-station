@@ -1,8 +1,8 @@
 # 🚉 Metro Station
 
 ![Metro](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbandlab%2Fmetro-station%2Fmain%2Fgradle%2Flibs.versions.toml&query=%24.versions.metro&label=Uses%20metro&color=orange)
-![Build](https://img.shields.io/github/actions/workflow/status/bandlab/metro-station/build.yml?label=Build)
-![Snapshot](https://img.shields.io/github/actions/workflow/status/bandlab/metro-station/validate-metro-snapshot.yml?label=Metro%20snapshot%20validation)
+[![Build](https://github.com/bandlab/metro-station/actions/workflows/build.yml/badge.svg)](https://github.com/bandlab/metro-station/actions/workflows/build.yml)
+[![Validate Metro Snapshot](https://github.com/bandlab/metro-station/actions/workflows/validate-metro-snapshot.yml/badge.svg)](https://github.com/bandlab/metro-station/actions/workflows/validate-metro-snapshot.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 This compiler plugin demonstrates how we scale our DI setup in Android monorepo with Metro.
