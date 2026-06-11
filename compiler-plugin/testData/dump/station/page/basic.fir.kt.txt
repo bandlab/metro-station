@@ -65,6 +65,7 @@ class MyPage : Page<MyViewModel> {
 
     }
 
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 529, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<Page<*>> {
       private /* final field */ val instance: FeatureGraph = instance
       private /* final field */ val feature: Provider<MyPage> = feature

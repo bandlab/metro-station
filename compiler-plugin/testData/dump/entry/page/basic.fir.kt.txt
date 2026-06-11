@@ -22,6 +22,7 @@ class MyPage : Page<MyViewModel> {
   @BindingContainer
   @IROnlyFactories
   object FeatureBindings {
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 394, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<Page<*>> {
       private /* final field */ val feature: Provider<MyPage> = feature
       companion object Companion {
