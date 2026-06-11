@@ -18,7 +18,7 @@ class MyPage : Page<MyViewModel> {
         }
 
         @GraphFactoryInvokeFunctionMarker
-        override fun create(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: PageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
+        override fun create(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
           return Impl(feature = feature, param = param, pageGraphDependencies = pageGraphDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
         }
 
@@ -38,7 +38,7 @@ class MyPage : Page<MyViewModel> {
         }
 )
 
-      private constructor(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: PageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+      private constructor(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
 

@@ -27,7 +27,7 @@ FILE fqName:<root> fileName:/basic.kt
         ActivityScope
         GraphExtension(scope = MyActivity::class, additionalScopes = <null>, excludes = <null>, bindingContainers = [DefaultActivityDependencies::class, FeatureBindings::class] type=kotlin.Array<kotlin.reflect.KClass<*>> varargElementType=kotlin.reflect.KClass<*>)
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureExtension
-      CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[com.bandlab.common.android.di.GraphExtensionFactory<<root>.MyActivity, <root>.MyActivity.FeatureExtension>]
+      CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] INTERFACE name:Factory modality:ABSTRACT visibility:public superTypes:[]
         annotations:
           ContributesTo(scope = AppScope::class, replaces = <null>)
           Factory
@@ -38,45 +38,17 @@ FILE fqName:<root> fileName:/basic.kt
             MetroContribution(scope = AppScope::class)
           thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15
           FUN FAKE_OVERRIDE name:create visibility:public modality:ABSTRACT returnType:<root>.MyActivity.FeatureExtension [fake_override]
-            VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.di.GraphExtensionFactory<<root>.MyActivity, <root>.MyActivity.FeatureExtension>
+            VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureExtension.Factory
             VALUE_PARAMETER kind:Regular name:feature index:1 type:<root>.MyActivity
               annotations:
                 Provides
             overridden:
               public abstract fun create (feature: <root>.MyActivity): <root>.MyActivity.FeatureExtension declared in <root>.MyActivity.FeatureExtension.Factory
-          FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
-            VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
-            VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
-            overridden:
-              public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in <root>.MyActivity.FeatureExtension.Factory
-          FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
-            VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
-            overridden:
-              public open fun hashCode (): kotlin.Int declared in <root>.MyActivity.FeatureExtension.Factory
-          FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
-            VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
-            overridden:
-              public open fun toString (): kotlin.String declared in <root>.MyActivity.FeatureExtension.Factory
-        FUN FAKE_OVERRIDE name:create visibility:public modality:ABSTRACT returnType:<root>.MyActivity.FeatureExtension [fake_override]
-          VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.di.GraphExtensionFactory<<root>.MyActivity, <root>.MyActivity.FeatureExtension>
-          VALUE_PARAMETER kind:Regular name:feature index:1 type:<root>.MyActivity
+        FUN GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] name:create visibility:public modality:ABSTRACT returnType:<root>.MyActivity.FeatureExtension
+          VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureExtension.Factory
+          VALUE_PARAMETER GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] kind:Regular name:feature index:1 type:<root>.MyActivity
             annotations:
               Provides
-          overridden:
-            public abstract fun create (feature: Feature of com.bandlab.common.android.di.GraphExtensionFactory): GraphExtension of com.bandlab.common.android.di.GraphExtensionFactory declared in com.bandlab.common.android.di.GraphExtensionFactory
-        FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
-          VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
-          VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
-          overridden:
-            public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactory
-        FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
-          VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
-          overridden:
-            public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactory
-        FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
-          VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
-          overridden:
-            public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactory
       FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
         VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -301,7 +273,7 @@ FILE fqName:<root> fileName:/basic.kt
       BLOCK_BODY
         CALL 'public abstract fun injectMembers (instance: T of dev.zacsweers.metro.MembersInjector): kotlin.Unit declared in dev.zacsweers.metro.MembersInjector' type=kotlin.Unit origin=null
           ARG <this>: CALL 'public abstract fun <get-injector> (): dev.zacsweers.metro.MembersInjector<T of com.bandlab.common.android.di.MembersInjectorProvider> declared in com.bandlab.common.android.di.MembersInjectorProvider' type=dev.zacsweers.metro.MembersInjector<T of com.bandlab.common.android.di.MembersInjectorProvider> origin=null
-            ARG <this>: CALL 'public abstract fun create (feature: Feature of com.bandlab.common.android.di.GraphExtensionFactory): GraphExtension of com.bandlab.common.android.di.GraphExtensionFactory declared in com.bandlab.common.android.di.GraphExtensionFactory' type=GraphExtension of com.bandlab.common.android.di.GraphExtensionFactory origin=null
+            ARG <this>: CALL 'public abstract fun create (feature: <root>.MyActivity): <root>.MyActivity.FeatureExtension declared in <root>.MyActivity.FeatureExtension.Factory' type=<root>.MyActivity.FeatureExtension origin=null
               ARG <this>: CALL 'public final fun resolveServiceProvider <T> (<this>: android.content.Context): T of com.bandlab.common.android.di.resolveServiceProvider declared in com.bandlab.common.android.di' type=T of com.bandlab.common.android.di.resolveServiceProvider origin=null
                 TYPE_ARG T: <root>.MyActivity.FeatureExtension.Factory
                 ARG <this>: CALL 'public final fun getApplicationContext (): android.content.Context declared in android.content.ContextWrapper' type=android.content.Context origin=null
@@ -735,7 +707,7 @@ FILE fqName:<root> fileName:/basic.kt
             CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing declared in kotlin' type=kotlin.Nothing origin=null
               ARG message: CONST String type=kotlin.String value="Never called"
     FUN FAKE_OVERRIDE name:create visibility:public modality:ABSTRACT returnType:<root>.MyActivity.FeatureExtension [fake_override]
-      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.di.GraphExtensionFactory<<root>.MyActivity, <root>.MyActivity.FeatureExtension>
+      VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyActivity.FeatureExtension.Factory
       VALUE_PARAMETER kind:Regular name:feature index:1 type:<root>.MyActivity
         annotations:
           Provides
@@ -746,21 +718,18 @@ FILE fqName:<root> fileName:/basic.kt
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
       overridden:
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
-        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
     FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun hashCode (): kotlin.Int declared in kotlin.Any
-        public open fun hashCode (): kotlin.Int declared in <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15
         public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-        public open fun toString (): kotlin.String declared in <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15
         public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
     FUN name:provideInt visibility:public modality:OPEN returnType:kotlin.Int

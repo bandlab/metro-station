@@ -50,11 +50,13 @@ class MyPage : ParamPage<MyViewModel, Params> {
   interface FeatureExtension : PageInjector<MyViewModel> {
     @ContributesTo(scope = AppScope::class)
     @Factory
-    interface Factory : PageGraphExtensionFactory<MyPage, MyViewModel, Params, FeatureExtension> {
+    interface Factory {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroContribution(scope = AppScope::class)
       interface MetroContributionToDevzacsweersmetroappScopeocf15 : Factory {
       }
+
+      abstract fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies): FeatureExtension
 
     }
 
@@ -181,7 +183,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
   @GeneratedByMetroStation
   override fun injectViewModel(deps: PageGraphDependencies, initialParam: Params): MyViewModel {
-    return resolveServiceProvider<Factory>(/* <this> = deps.<get-activity>() */).create(feature = <this>, param = initialParam, pageGraphDependencies = deps).getPageViewModel()
+    return resolveServiceProvider<Factory>(/* <this> = deps as AndroidPageGraphDependencies.<get-activity>() */).create(feature = <this>, param = initialParam, pageGraphDependencies = deps).getPageViewModel()
   }
 
 }
@@ -282,7 +284,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, GraphExt
       private val paramInstance: Params
         field = param
 
-      constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: PageGraphDependencies) /* primary */ {
+      constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
@@ -300,7 +302,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, GraphExt
 
     }
 
-    override fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: PageGraphDependencies): FeatureExtension {
+    override fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies): FeatureExtension {
       return FeatureExtensionImpl(appGraphImpl = <this>, feature = feature, param = param, pageGraphDependencies = pageGraphDependencies)
     }
 

@@ -4,10 +4,12 @@ FILE: basic.kt
             super<R|kotlin/Any|>()
         }
 
-        @R|com/bandlab/common/di/GeneratedByMetroStation|() public final override fun injectViewModel(deps: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|): R|MyViewModel|
+        @R|com/bandlab/common/di/GeneratedByMetroStation|() public final override fun injectViewModel(deps: R|com/bandlab/uikit/api/page/PageGraphDependencies|): R|MyViewModel|
 
         @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|MyPage.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
-            @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|com/bandlab/common/android/pager/screen/di/PageGraphExtensionFactory<MyPage, MyViewModel, kotlin/Unit, MyPage.FeatureExtension>| {
+            @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory {
+                public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() param: R|kotlin/Unit|, @R|dev/zacsweers/metro/Includes|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/AndroidPageGraphDependencies|): R|MyPage.FeatureExtension|
+
                 @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyPage.FeatureExtension.Factory| {
                 }
 

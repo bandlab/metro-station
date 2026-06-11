@@ -11,11 +11,13 @@ class MyActivity : CommonActivity<Unit> {
   interface FeatureExtension : MembersInjectorProvider<MyActivity> {
     @ContributesTo(scope = AppScope::class)
     @Factory
-    interface Factory : GraphExtensionFactory<MyActivity, FeatureExtension> {
+    interface Factory {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroContribution(scope = AppScope::class)
       interface MetroContributionToDevzacsweersmetroappScopeocf15 : Factory {
       }
+
+      abstract fun create(@Provides feature: MyActivity): FeatureExtension
 
     }
 

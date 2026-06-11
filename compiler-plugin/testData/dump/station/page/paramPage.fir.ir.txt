@@ -132,7 +132,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:param index:2 type:<root>.MyPage.Params
               annotations:
                 Provides
-            VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:pageGraphDependencies index:3 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
+            VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:pageGraphDependencies index:3 type:com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies
               annotations:
                 Includes
             VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:serviceProvider index:4 type:<root>.MyPage.FeatureServiceProvider
@@ -144,13 +144,13 @@ FILE fqName:<root> fileName:/paramPage.kt
             annotations:
               GraphFactoryInvokeFunctionMarker
             overridden:
-              public abstract fun create (feature: <root>.MyPage, param: <root>.MyPage.Params, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies, serviceProvider: <root>.MyPage.FeatureServiceProvider, extraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies): <root>.MyPage.FeatureGraph declared in <root>.MyPage.FeatureGraph.Factory
+              public abstract fun create (feature: <root>.MyPage, param: <root>.MyPage.Params, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies, serviceProvider: <root>.MyPage.FeatureServiceProvider, extraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies): <root>.MyPage.FeatureGraph declared in <root>.MyPage.FeatureGraph.Factory
             BLOCK_BODY
-              RETURN type=kotlin.Nothing from='public final fun create (feature: <root>.MyPage, param: <root>.MyPage.Params, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies, serviceProvider: <root>.MyPage.FeatureServiceProvider, extraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies): <root>.MyPage.FeatureGraph declared in <root>.MyPage.FeatureGraph.Factory.Impl'
-                CONSTRUCTOR_CALL 'private constructor <init> (feature: <root>.MyPage, param: <root>.MyPage.Params, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies, serviceProvider: <root>.MyPage.FeatureServiceProvider, extraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies) declared in <root>.MyPage.FeatureGraph.Impl' type=<root>.MyPage.FeatureGraph.Impl origin=null
+              RETURN type=kotlin.Nothing from='public final fun create (feature: <root>.MyPage, param: <root>.MyPage.Params, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies, serviceProvider: <root>.MyPage.FeatureServiceProvider, extraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies): <root>.MyPage.FeatureGraph declared in <root>.MyPage.FeatureGraph.Factory.Impl'
+                CONSTRUCTOR_CALL 'private constructor <init> (feature: <root>.MyPage, param: <root>.MyPage.Params, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies, serviceProvider: <root>.MyPage.FeatureServiceProvider, extraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies) declared in <root>.MyPage.FeatureGraph.Impl' type=<root>.MyPage.FeatureGraph.Impl origin=null
                   ARG feature: GET_VAR 'feature: <root>.MyPage declared in <root>.MyPage.FeatureGraph.Factory.Impl.create' type=<root>.MyPage origin=null
                   ARG param: GET_VAR 'param: <root>.MyPage.Params declared in <root>.MyPage.FeatureGraph.Factory.Impl.create' type=<root>.MyPage.Params origin=null
-                  ARG pageGraphDependencies: GET_VAR 'pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies declared in <root>.MyPage.FeatureGraph.Factory.Impl.create' type=com.bandlab.common.android.pager.screen.di.PageGraphDependencies origin=null
+                  ARG pageGraphDependencies: GET_VAR 'pageGraphDependencies: com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies declared in <root>.MyPage.FeatureGraph.Factory.Impl.create' type=com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies origin=null
                   ARG serviceProvider: GET_VAR 'serviceProvider: <root>.MyPage.FeatureServiceProvider declared in <root>.MyPage.FeatureGraph.Factory.Impl.create' type=<root>.MyPage.FeatureServiceProvider origin=null
                   ARG extraDependencies: GET_VAR 'extraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies declared in <root>.MyPage.FeatureGraph.Factory.Impl.create' type=com.bandlab.common.android.di.EmptyExtraDependencies origin=null
         FUN FAKE_OVERRIDE name:create visibility:public modality:ABSTRACT returnType:<root>.MyPage.FeatureGraph [fake_override]
@@ -161,7 +161,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           VALUE_PARAMETER kind:Regular name:param index:2 type:<root>.MyPage.Params
             annotations:
               Provides
-          VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:3 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
+          VALUE_PARAMETER kind:Regular name:pageGraphDependencies index:3 type:com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies
             annotations:
               Includes
           VALUE_PARAMETER kind:Regular name:serviceProvider index:4 type:<root>.MyPage.FeatureServiceProvider
@@ -171,7 +171,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             annotations:
               Includes
           overridden:
-            public abstract fun create (feature: Feature of com.bandlab.common.android.pager.screen.di.PageGraphFactory, param: Param of com.bandlab.common.android.pager.screen.di.PageGraphFactory, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.PageGraphDependencies, serviceProvider: ServiceProvider of com.bandlab.common.android.pager.screen.di.PageGraphFactory, extraDependencies: ExtraDependencies of com.bandlab.common.android.pager.screen.di.PageGraphFactory): Graph of com.bandlab.common.android.pager.screen.di.PageGraphFactory declared in com.bandlab.common.android.pager.screen.di.PageGraphFactory
+            public abstract fun create (feature: Feature of com.bandlab.common.android.pager.screen.di.PageGraphFactory, param: Param of com.bandlab.common.android.pager.screen.di.PageGraphFactory, pageGraphDependencies: com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies, serviceProvider: ServiceProvider of com.bandlab.common.android.pager.screen.di.PageGraphFactory, extraDependencies: ExtraDependencies of com.bandlab.common.android.pager.screen.di.PageGraphFactory): Graph of com.bandlab.common.android.pager.screen.di.PageGraphFactory declared in com.bandlab.common.android.pager.screen.di.PageGraphFactory
         FUN FAKE_OVERRIDE name:equals visibility:public modality:OPEN returnType:kotlin.Boolean [fake_override,operator]
           VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
           VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
@@ -209,7 +209,7 @@ FILE fqName:<root> fileName:/paramPage.kt
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:param index:1 type:<root>.MyPage.Params
             annotations:
               Provides
-          VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
+          VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:pageGraphDependencies index:2 type:com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies
             annotations:
               Includes
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:serviceProvider index:3 type:<root>.MyPage.FeatureServiceProvider
@@ -579,11 +579,11 @@ FILE fqName:<root> fileName:/paramPage.kt
         public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.pager.screen.ParamPage
     FUN FAKE_OVERRIDE name:injectViewModel visibility:public modality:OPEN returnType:<root>.MyViewModel [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.uikit.api.page.Page<<root>.MyViewModel>
-      VALUE_PARAMETER kind:Regular name:deps index:1 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
+      VALUE_PARAMETER kind:Regular name:deps index:1 type:com.bandlab.uikit.api.page.PageGraphDependencies
       annotations:
         GeneratedByMetroStation
       overridden:
-        public open fun injectViewModel (deps: com.bandlab.common.android.pager.screen.di.PageGraphDependencies): ViewModel of com.bandlab.common.android.pager.screen.ParamPage declared in com.bandlab.common.android.pager.screen.ParamPage
+        public open fun injectViewModel (deps: com.bandlab.uikit.api.page.PageGraphDependencies): ViewModel of com.bandlab.common.android.pager.screen.ParamPage declared in com.bandlab.common.android.pager.screen.ParamPage
     FUN FAKE_OVERRIDE name:parseParam visibility:public modality:OPEN returnType:<root>.MyPage.Params? [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.pager.screen.ParamPage<<root>.MyViewModel, <root>.MyPage.Params>
       VALUE_PARAMETER kind:Regular name:savedState index:1 type:com.bandlab.common.android.pager.screen.SavedState
@@ -595,15 +595,15 @@ FILE fqName:<root> fileName:/paramPage.kt
         public open fun toString (): kotlin.String declared in com.bandlab.common.android.pager.screen.ParamPage
     FUN GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] name:injectViewModel visibility:public modality:FINAL returnType:<root>.MyViewModel
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.MyPage
-      VALUE_PARAMETER GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] kind:Regular name:deps index:1 type:com.bandlab.common.android.pager.screen.di.PageGraphDependencies
+      VALUE_PARAMETER GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] kind:Regular name:deps index:1 type:com.bandlab.uikit.api.page.PageGraphDependencies
       VALUE_PARAMETER GENERATED[com.bandlab.metro.station.graph.MetroStationFir.Key] kind:Regular name:initialParam index:2 type:<root>.MyPage.Params
       annotations:
         GeneratedByMetroStation
       overridden:
-        public open fun injectViewModel (deps: com.bandlab.common.android.pager.screen.di.PageGraphDependencies, initialParam: Param of com.bandlab.common.android.pager.screen.ParamPage): ViewModel of com.bandlab.common.android.pager.screen.ParamPage declared in com.bandlab.common.android.pager.screen.ParamPage
+        public open fun injectViewModel (deps: com.bandlab.uikit.api.page.PageGraphDependencies, initialParam: Param of com.bandlab.common.android.pager.screen.ParamPage): ViewModel of com.bandlab.common.android.pager.screen.ParamPage declared in com.bandlab.common.android.pager.screen.ParamPage
       BLOCK_BODY
-        RETURN type=kotlin.Nothing from='public final fun injectViewModel (deps: com.bandlab.common.android.pager.screen.di.PageGraphDependencies, initialParam: <root>.MyPage.Params): <root>.MyViewModel declared in <root>.MyPage'
-          CALL 'public final fun createGraphAndInjectViewModel <Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph> (<this>: Feature of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, deps: com.bandlab.common.android.pager.screen.di.PageGraphDependencies, param: Param of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, factory: com.bandlab.common.android.pager.screen.di.PageGraphFactory<Feature of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, VM of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, Param of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, ServiceProvider of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, ExtraDependencies of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, Graph of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel>, extraDependencies: ExtraDependencies of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel): VM of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel declared in com.bandlab.common.android.pager.screen.di' type=VM of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel origin=null
+        RETURN type=kotlin.Nothing from='public final fun injectViewModel (deps: com.bandlab.uikit.api.page.PageGraphDependencies, initialParam: <root>.MyPage.Params): <root>.MyViewModel declared in <root>.MyPage'
+          CALL 'public final fun createGraphAndInjectViewModel <Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph> (<this>: Feature of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, deps: com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies, param: Param of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, factory: com.bandlab.common.android.pager.screen.di.PageGraphFactory<Feature of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, VM of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, Param of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, ServiceProvider of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, ExtraDependencies of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel, Graph of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel>, extraDependencies: ExtraDependencies of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel): VM of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel declared in com.bandlab.common.android.pager.screen.di' type=VM of com.bandlab.common.android.pager.screen.di.createGraphAndInjectViewModel origin=null
             TYPE_ARG Feature: <root>.MyPage
             TYPE_ARG VM: <root>.MyViewModel
             TYPE_ARG Param: <root>.MyPage.Params
@@ -611,7 +611,7 @@ FILE fqName:<root> fileName:/paramPage.kt
             TYPE_ARG ExtraDependencies: com.bandlab.common.android.di.EmptyExtraDependencies
             TYPE_ARG Graph: <root>.MyPage.FeatureGraph
             ARG <this>: GET_VAR '<this>: <root>.MyPage declared in <root>.MyPage.injectViewModel' type=<root>.MyPage origin=null
-            ARG deps: GET_VAR 'deps: com.bandlab.common.android.pager.screen.di.PageGraphDependencies declared in <root>.MyPage.injectViewModel' type=com.bandlab.common.android.pager.screen.di.PageGraphDependencies origin=null
+            ARG deps: GET_VAR 'deps: com.bandlab.uikit.api.page.PageGraphDependencies declared in <root>.MyPage.injectViewModel' type=com.bandlab.uikit.api.page.PageGraphDependencies origin=null
             ARG param: GET_VAR 'initialParam: <root>.MyPage.Params declared in <root>.MyPage.injectViewModel' type=<root>.MyPage.Params origin=null
             ARG factory: GET_OBJECT 'CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.GraphFactoryImplClassDeclaration] OBJECT name:Impl modality:FINAL visibility:public superTypes:[<root>.MyPage.FeatureGraph.Factory]' type=<root>.MyPage.FeatureGraph.Factory.Impl
             ARG extraDependencies: GET_OBJECT 'CLASS IR_EXTERNAL_DECLARATION_STUB OBJECT name:EmptyExtraDependencies modality:FINAL visibility:public superTypes:[kotlin.Any]' type=com.bandlab.common.android.di.EmptyExtraDependencies
