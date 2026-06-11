@@ -39,7 +39,7 @@ import kotlin.reflect.KClass
  *   // This extension generates:
  *   @GeneratedByMetroStation
  *   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
- *     val factory = deps.activity.resolveServiceProvider<FeatureExtension.Factory>()
+ *     val factory = (deps as AndroidPageGraphDependencies).activity.resolveServiceProvider<FeatureExtension.Factory>()
  *     return factory.create(this, Unit, deps).getPageViewModel()
  *   }
  *
@@ -56,7 +56,7 @@ import kotlin.reflect.KClass
  *       fun create(
  *         @Provides feature: MyPage,
  *         @Provides param: Unit, // or the actual param type if you're using ParamPage
- *         @Includes pageGraphDependencies: PageGraphDependencies,
+ *         @Includes pageGraphDependencies: AndroidPageGraphDependencies,
  *       ): FeatureExtension
  *     }
  *   }
