@@ -37,6 +37,12 @@ import kotlin.reflect.KClass
  * class MyPage : Page<MyViewModel> {
  *
  *   // This extension generates:
+ *   @GeneratedByMetroStation
+ *   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
+ *     val factory = deps.activity.resolveServiceProvider<FeatureExtension.Factory>()
+ *     return factory.create(this, Unit, deps).getPageViewModel()
+ *   }
+ *
  *   @PageScope
  *   @GraphExtension(
  *     scope = MyPage::class,
@@ -46,10 +52,7 @@ import kotlin.reflect.KClass
  *
  *     @ContributesTo(AppScope::class)
  *     @GraphExtension.Factory
- *     interface Factory {
- *       @Keep // We use reflection to access this method at runtime.
- *       fun create(@Provides feature: MyPage): FeatureExtension
- *     }
+ *     interface Factory : PageGraphExtensionFactory<MyPage, MyViewModel, Unit, FeatureExtension>
  *   }
  *
  *   @IROnlyFactories
@@ -58,19 +61,21 @@ import kotlin.reflect.KClass
  *     @Provides
  *     fun provideBaseType(feature: MyPage): Page<*> = feature
  *   }
- *
- *   @IROnlyFactories
- *   @ContributesTo(scope = AppScope::class)
- *   interface ExtensionFactoryContribution {
- *     @Provides
- *     @IntoMap
- *     @ClassKey(MyPage::class)
- *     fun provideFactory(factory: FeatureExtension.Factory): Any = factory
- *   }
  * }
  * ```
  *
  * Same as @MetroStation, we will also provide default dependencies and generate param providers in FeatureBindings if the feature has a param.
+ *
+ * For classes extend `CommonActivity`, we will override the `inject` method like this:
+ * ```kotlin
+ * class MyActivity : CommonActivity<Unit>() {
+ *   @GeneratedByMetroStation
+ *   override fun inject() {
+ *     val factory = applicationContext.resolveServiceProvider<FeatureExtension.Factory>()
+ *     factory.create(this).injector.injectMembers(this)
+ *   }
+ * }
+ * ```
  *
  *  @param parentScope The dependency graph marker to contribute the extension towards, default to [AppScope].
  *  @param graphMarker A marker to aggregate the extension, default to the feature class itself (ex. MyPage).
