@@ -1,5 +1,5 @@
 FILE: basic.kt
-    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|) [evaluated = <getClass>(Q|MyPage.ServiceProvider|)]) public final class MyPage : R|com/bandlab/uikit/api/page/Page<MyViewModel>|, R|com/bandlab/common/android/di/HasServiceProvider| {
+    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|) [evaluated = <getClass>(Q|MyPage.ServiceProvider|)]) public final class MyPage : R|com/bandlab/uikit/api/page/Page<MyViewModel>| {
         public constructor(context: R|android/content/Context|): R|MyPage| {
             super<R|kotlin/Any|>()
         }
@@ -10,17 +10,14 @@ FILE: basic.kt
 
         }
 
-        private final val graphCreator: R|com/bandlab/common/android/pager/screen/di/PageGraphCreator<MyPage.FeatureGraph>|
-            public get(): R|com/bandlab/common/android/pager/screen/di/PageGraphCreator<MyPage.FeatureGraph>|
+        @R|com/bandlab/common/di/GeneratedByMetroStation|() public final override fun injectViewModel(deps: R|com/bandlab/uikit/api/page/PageGraphDependencies|): R|MyViewModel|
 
-        public final override fun <T> resolve(): R|T|
-
-        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|com/bandlab/common/android/pager/screen/di/PageGraphDependenciesModule|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
+        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
             @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyPage|): R|com/bandlab/uikit/api/page/Page<*>|
 
-            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|com/bandlab/common/android/pager/screen/di/PageGraphFactory<MyPage, MyPage.FeatureServiceProvider, com/bandlab/common/android/di/EmptyExtraDependencies, MyPage.FeatureGraph>| {
+            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|com/bandlab/common/android/pager/screen/di/PageGraphFactory<MyPage, MyViewModel, kotlin/Unit, MyPage.FeatureServiceProvider, com/bandlab/common/android/di/EmptyExtraDependencies, MyPage.FeatureGraph>| {
                 @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final object Impl : R|MyPage.FeatureGraph.Factory| {
-                    @R|dev/zacsweers/metro/internal/GraphFactoryInvokeFunctionMarker|() public final override fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() navPageDependencies: R|com/bandlab/common/android/pager/screen/di/NavPageDependencies|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyPage.FeatureServiceProvider|, @R|dev/zacsweers/metro/Includes|() extraDependencies: R|com/bandlab/common/android/di/EmptyExtraDependencies|): R|MyPage.FeatureGraph|
+                    @R|dev/zacsweers/metro/internal/GraphFactoryInvokeFunctionMarker|() public final override fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() param: R|kotlin/Unit|, @R|dev/zacsweers/metro/Includes|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/AndroidPageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyPage.FeatureServiceProvider|, @R|dev/zacsweers/metro/Includes|() extraDependencies: R|com/bandlab/common/android/di/EmptyExtraDependencies|): R|MyPage.FeatureGraph|
 
                     private constructor(): R|MyPage.FeatureGraph.Factory.Impl| {
                         super<R|kotlin/Any|>()
@@ -31,7 +28,7 @@ FILE: basic.kt
             }
 
             @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|MyPage.FeatureGraph| {
-                private constructor(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() navPageDependencies: R|com/bandlab/common/android/pager/screen/di/NavPageDependencies|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyPage.FeatureServiceProvider|, @R|dev/zacsweers/metro/Includes|() extraDependencies: R|com/bandlab/common/android/di/EmptyExtraDependencies|): R|MyPage.FeatureGraph.Impl| {
+                private constructor(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() param: R|kotlin/Unit|, @R|dev/zacsweers/metro/Includes|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/AndroidPageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyPage.FeatureServiceProvider|, @R|dev/zacsweers/metro/Includes|() extraDependencies: R|com/bandlab/common/android/di/EmptyExtraDependencies|): R|MyPage.FeatureGraph.Impl| {
                     super<R|kotlin/Any|>()
                 }
 

@@ -55,12 +55,6 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
-  @TestMetadata("pageMissingContext.kt")
-  public void testPageMissingContext() {
-    run("pageMissingContext.kt");
-  }
-
-  @Test
   @TestMetadata("pageMissingExtraDependencies.kt")
   public void testPageMissingExtraDependencies() {
     run("pageMissingExtraDependencies.kt");

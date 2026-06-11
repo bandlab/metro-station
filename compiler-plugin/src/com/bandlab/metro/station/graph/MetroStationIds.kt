@@ -41,6 +41,11 @@ internal object MetroStationIds {
     val provideParamName = "provideParam".asName()
     val provideParamFlowName = "provideParamFlow".asName()
 
+    // Injection entry points overridden on the annotated class (bodies generated in IR)
+    val injectName = "inject".asName()
+    val injectViewModelName = "injectViewModel".asName()
+    val depsName = "deps".asName()
+
     // Common classes
     private val androidCommon = FqName("com.bandlab.android.common")
     private val androidCommonActivity = FqName("com.bandlab.android.common.activity")
@@ -55,16 +60,21 @@ internal object MetroStationIds {
     val defaultFragmentDeps =
         ClassId(FqName("com.bandlab.android.common.fragment"), "DefaultFragmentDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
+    val graphExtensionFactory = ClassId(commonAndroidDi, "GraphExtensionFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
+    val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
+    val generatedByMetroStation = ClassId(FqName("com.bandlab.common.di"), "GeneratedByMetroStation".asName())
 
     // Page
+    private val pageApi = FqName("com.bandlab.uikit.api.page")
     private val commonPageDi = FqName("com.bandlab.common.android.pager.screen.di")
-    val page = ClassId(FqName("com.bandlab.uikit.api.page"), "Page".asName())
+    val page = ClassId(pageApi, "Page".asName())
+    val pageGraphDependencies = ClassId(pageApi, "PageGraphDependencies".asName())
+    val androidPageGraphDependencies = ClassId(commonPageDi, "AndroidPageGraphDependencies".asName())
     val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
     val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
-    val pageGraphDependencies = ClassId(commonPageDi, "PageGraphDependencies".asName())
-    val pageGraphDependenciesModule = ClassId(commonPageDi, "PageGraphDependenciesModule".asName())
-    val navPageDependencies = ClassId(commonPageDi, "NavPageDependencies".asName())
+    val pageGraphExtensionFactory = ClassId(commonPageDi, "PageGraphExtensionFactory".asName())
+    val createGraphAndInjectViewModel = ClassId(commonPageDi, "createGraphAndInjectViewModel".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
 
     // ParamPage
@@ -78,18 +88,6 @@ internal object MetroStationIds {
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())
     val fragmentScope = ClassId(androidCommon, "FragmentScope".asName())
     val pageScope = ClassId(androidCommon, "PageScope".asName())
-
-    // Graph resolution and supertypes
-    val hasServiceProvider = ClassId(commonAndroidDi, "HasServiceProvider".asName())
-    val resolveName = "resolve".asName()
-    val resolveFromName = "resolveFrom".asName()
-    val graphPropertyName = "graph".asName()
-    val graphCreatorPropertyName = "graphCreator".asName()
-    val pageGraphCreator = ClassId(commonPageDi, "PageGraphCreator".asName())
-    val pageGraphCreatorExtension = ClassId(commonPageDi, "graphCreator".asName())
-    val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
-    val context = ClassId(FqName("android.content"), "Context".asName())
-    val componentActivity = ClassId(FqName("androidx.activity"), "ComponentActivity".asName())
 
     // Service, Worker, BroadcastReceiver
     val androidService = ClassId(FqName("android.app"), "Service".asName())

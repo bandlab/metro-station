@@ -21,12 +21,7 @@ fun box(): String {
     // Fake the param
     myActivity.params = MyActivity.Param("test")
 
-    val graph = createGraphFactory<MyActivity.FeatureGraph.Factory>().create(
-        feature = myActivity,
-        serviceProvider = appGraph,
-        extraDependencies = EmptyExtraDependencies
-    )
-    graph.injector.injectMembers(myActivity)
+    myActivity.setAppGraphAndInject(appGraph)
     assertEquals("test", myActivity.myViewModel.param.id)
     return "OK"
 }

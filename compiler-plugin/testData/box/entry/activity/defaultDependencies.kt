@@ -12,8 +12,7 @@ class MyDependency(val type: String)
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
     val myActivity = MyActivity()
-    val graph = appGraph.asContribution<MyActivity.FeatureExtension.Factory>().create(myActivity)
-    graph.injector.injectMembers(myActivity)
+    myActivity.setAppGraphAndInject(appGraph)
     assertEquals("CommonActivity", myActivity.myDependency.type)
     return "OK"
 }

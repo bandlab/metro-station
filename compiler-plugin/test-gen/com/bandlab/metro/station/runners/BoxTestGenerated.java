@@ -126,12 +126,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
-      @TestMetadata("factoryContribution.kt")
-      public void testFactoryContribution() {
-        run("factoryContribution.kt");
-      }
-
-      @Test
       @TestMetadata("fullFeatures.kt")
       public void testFullFeatures() {
         run("fullFeatures.kt");

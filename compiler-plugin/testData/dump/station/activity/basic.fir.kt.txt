@@ -1,17 +1,10 @@
 // FILE: basic.kt
 
 @MetroStation(appDependencies = ServiceProvider::class)
-class MyActivity : CommonActivity<Unit>, HasServiceProvider {
+class MyActivity : CommonActivity<Unit> {
   lateinit var myDependency: MyDependency
     get
     set
-
-  private val graph: Lazy<FeatureGraph>
-    field = lazy<FeatureGraph>(initializer = local fun <anonymous>(): FeatureGraph {
-      return Impl.create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies)
-    }
-)
-    get
 
   @ActivityScope
   @IROnlyFactories
@@ -188,8 +181,9 @@ class MyActivity : CommonActivity<Unit>, HasServiceProvider {
 
   }
 
-  override fun <T : Any?> resolve(): T {
-    return Companion.resolveFrom<T>(graph = <this>.#graph.<get-value>())
+  @GeneratedByMetroStation
+  override fun inject() {
+    Impl.create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
   }
 
 }

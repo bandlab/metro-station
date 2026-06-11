@@ -1,7 +1,9 @@
 package com.bandlab.common.android.pager.screen
 
 import androidx.savedstate.SavedState
+import com.bandlab.common.di.GeneratedByMetroStation
 import com.bandlab.uikit.api.page.Page
+import com.bandlab.uikit.api.page.PageGraphDependencies
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -20,4 +22,12 @@ interface ParamPage<ViewModel : Any, Param : Any> : Page<ViewModel> {
      * @param savedState the bundle from the intent.
      */
     fun parseParam(savedState: SavedState): Param? = null
+
+    /**
+     * Creates the dependency graph (or graph extension), and returns the ViewModel instance for the page.
+     */
+    @GeneratedByMetroStation
+    fun injectViewModel(deps: PageGraphDependencies, initialParam: Param): ViewModel {
+        throw UnsupportedOperationException("This method will be implemented by the compiler plugin.")
+    }
 }

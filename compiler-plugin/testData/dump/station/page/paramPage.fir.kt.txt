@@ -1,11 +1,7 @@
 // FILE: paramPage.kt
 
 @MetroStation(appDependencies = ServiceProvider::class)
-class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
-  private val graphCreator: PageGraphCreator<FeatureGraph>
-    field = graphCreator<MyPage, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ context = context, factory = Impl, extraDependencies = EmptyExtraDependencies)
-    get
-
+class MyPage : ParamPage<MyViewModel, Params> {
   data class Params {
     val number: Long
       field = number
@@ -51,10 +47,10 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
 
   @PageScope
   @IROnlyFactories
-  @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class])
+  @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class])
   interface FeatureGraph : PageInjector<MyViewModel> {
     @Factory
-    interface Factory : PageGraphFactory<MyPage, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+    interface Factory : PageGraphFactory<MyPage, MyViewModel, Params, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroImplMarker
       object Impl : Factory {
@@ -65,8 +61,8 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
         }
 
         @GraphFactoryInvokeFunctionMarker
-        override fun create(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
-          return Impl(feature = feature, pageGraphDependencies = pageGraphDependencies, navPageDependencies = navPageDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        override fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
+          return Impl(feature = feature, param = param, pageGraphDependencies = pageGraphDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
         }
 
       }
@@ -79,26 +75,21 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
       private val featureInstance: MyPage
         field = feature
 
-      private val pageGraphDependenciesInstance: PageGraphDependencies
-        field = pageGraphDependencies
+      private val paramInstance: Params
+        field = param
 
       private val thisGraphInstance: Impl
         field = <this>
 
-      private constructor(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+      private constructor(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
       }
 
       override fun getPageViewModel(): MyViewModel {
-        return MyViewModel(param = <this>.<get-provideParam>(), paramFlow = <this>.#thisGraphInstance.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.<get-provideParam>()))
+        return MyViewModel(param = <this>.#paramInstance, paramFlow = <this>.#thisGraphInstance.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.#paramInstance))
       }
-
-      private val provideParam: Params
-        private get(): Params {
-          return <this>.#thisGraphInstance.provideParam(pageGraphDependencies = <this>.#pageGraphDependenciesInstance)
-        }
 
     }
 
@@ -211,60 +202,9 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
 
     }
 
-    class ProvideParamMetroFactory : Factory<Params> {
-      private /* final field */ val instance: FeatureGraph = instance
-      private /* final field */ val pageGraphDependencies: Provider<PageGraphDependencies> = pageGraphDependencies
-      companion object Companion {
-        constructor() /* primary */ {
-          super/*Any*/()
-          /* <init>() */
-
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun create(instance: FeatureGraph, pageGraphDependencies: Provider<PageGraphDependencies>): ProvideParamMetroFactory {
-          return ProvideParamMetroFactory(instance = instance, pageGraphDependencies = pageGraphDependencies)
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun provideParam(instance: FeatureGraph, pageGraphDependencies: PageGraphDependencies): Params {
-          return instance.provideParam(pageGraphDependencies = pageGraphDependencies)
-        }
-
-      }
-
-      @HiddenFromObjC
-      private constructor(instance: FeatureGraph, pageGraphDependencies: Provider<PageGraphDependencies>) /* primary */ {
-        super/*Any*/()
-        /* <init>() */
-
-      }
-
-      @HiddenFromObjC
-      override operator fun invoke(): Params {
-        return Companion.provideParam(instance = <this>.#instance, pageGraphDependencies = <this>.#pageGraphDependencies.invoke())
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun mirrorFunction(pageGraphDependencies: PageGraphDependencies): Params {
-        return error(message = "Never called")
-      }
-
-    }
-
     @Provides
     final fun provideBaseType(feature: MyPage): Page<*> {
       return feature
-    }
-
-    @Provides
-    final fun provideParam(pageGraphDependencies: PageGraphDependencies): Params {
-      return pageGraphDependencies.<get-initialParam>() as Params
     }
 
     @Provides
@@ -292,8 +232,9 @@ class MyPage : HasServiceProvider, ParamPage<MyViewModel, Params> {
 
   }
 
-  override fun <T : Any?> resolve(): T {
-    return Companion.resolveFrom<T>(graph = <this>.#graphCreator.<get-value>())
+  @GeneratedByMetroStation
+  override fun injectViewModel(deps: PageGraphDependencies, initialParam: Params): MyViewModel {
+    return createGraphAndInjectViewModel<MyPage, MyViewModel, Params, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ deps = deps, param = initialParam, factory = Impl, extraDependencies = EmptyExtraDependencies)
   }
 
 }

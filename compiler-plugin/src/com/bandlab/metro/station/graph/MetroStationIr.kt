@@ -8,20 +8,16 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.*
+import org.jetbrains.kotlin.ir.builders.declarations.buildField
 import org.jetbrains.kotlin.ir.builders.declarations.buildFun
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
-import org.jetbrains.kotlin.ir.expressions.IrClassReference
 import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionExpressionImpl
-import org.jetbrains.kotlin.ir.types.classOrNull
-import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
-import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -61,12 +57,17 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             Ids.provideParamName -> generateProvideParamBody(pluginContext, declaration)
             Ids.provideBaseTypeName -> generateProvideBaseTypeBody(pluginContext, declaration)
             Ids.provideParamFlowName -> generateProvideParamFlowBody(pluginContext, declaration)
-            Ids.resolveName -> generateResolveBody(declaration)
+            Ids.injectName -> generateInjectBody(declaration)
+            Ids.injectViewModelName -> generateInjectViewModelBody(declaration)
         }
         return super.visitSimpleFunction(declaration)
     }
 
     override fun visitClass(declaration: IrClass): IrStatement {
+        // Synthesize a backing field for extraDependencies if the parameter is not declared as `val`.
+        // This must happen before processing children, since generateInjectViewModelBody needs the field.
+        synthesizeExtraDependenciesFieldIfNeeded(declaration)
+
         // Process all children first (fills in graph property bodies, provideParam, etc.)
         super.visitClass(declaration)
 
@@ -314,6 +315,222 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
     }
 
     /**
+     * Generates the body of the FIR-generated `inject()` override on an annotated activity:
+     * ```
+     * createGraphFactory<FeatureGraph.Factory>()
+     *     .create(this, applicationContext.resolveServiceProvider(), EmptyExtraDependencies)
+     *     .injector
+     *     .injectMembers(this)
+     * ```
+     */
+    private fun generateInjectBody(declaration: IrSimpleFunction) {
+        val irClass = declaration.parentClassOrNull ?: return
+        val thisReceiver = declaration.parameters
+            .firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
+
+        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
+        val injectionCall = generateInjectionCall(builder, irClass, thisReceiver) { b, recv ->
+            generateApplicationContextExpr(b, recv)
+        } ?: return
+
+        declaration.body = builder.irBlockBody {
+            +injectionCall
+        }
+    }
+
+    /**
+     * Generates the body of the FIR-generated `injectViewModel(deps[, initialParam])` override on an
+     * annotated page:
+     * ```
+     * return createGraphAndInjectViewModel(
+     *     deps,
+     *     initialParam | Unit,
+     *     createGraphFactory<FeatureGraph.Factory>(),
+     *     extraDependencies,
+     * )
+     * ```
+     * The 6 type arguments are read off the `PageGraphFactory<...>` supertype of the generated
+     * `FeatureGraph.Factory`, which carries them in the order
+     * `[Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph]` — matching the type parameter
+     * order of `createGraphAndInjectViewModel`.
+     */
+    private fun generateInjectViewModelBody(declaration: IrSimpleFunction) {
+        val irClass = declaration.parentClassOrNull ?: return
+        val thisReceiver = declaration.parameters
+            .firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
+
+        // FeatureGraph.Factory
+        val featureGraphClass = irClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.graphName } ?: return
+        val factoryClass = featureGraphClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.nestedFactoryName } ?: return
+
+        // PageGraphFactory<Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph> supertype
+        val pageGraphFactorySuperType = factoryClass.superTypes
+            .filterIsInstance<IrSimpleType>()
+            .find { it.classOrNull?.owner?.classId == Ids.pageGraphFactory } ?: return
+        val factoryTypeArgs = pageGraphFactorySuperType.arguments.mapNotNull { it.typeOrNull }
+        if (factoryTypeArgs.size < 6) return
+        val extraDependenciesType = factoryTypeArgs[4]
+
+        // createGraphFactory<FeatureGraph.Factory>()
+        val createGraphFactorySymbol = finder
+            .findFunctions(MetroClassIds.createGraphFactory.toCallableId()).firstOrNull() ?: return
+        // createGraphAndInjectViewModel(deps, param, factory, extraDependencies)
+        val createGraphAndInjectViewModelSymbol = finder
+            .findFunctions(Ids.createGraphAndInjectViewModel.toCallableId()).firstOrNull() ?: return
+
+        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
+
+        val createFactoryCall = builder.irCall(createGraphFactorySymbol).apply {
+            typeArguments[0] = factoryClass.symbol.typeWith()
+        }
+
+        val regularParams = declaration.parameters.filter { it.kind == IrParameterKind.Regular }
+        val depsValueParam = regularParams.firstOrNull() ?: return
+        val initialParamValueParam = regularParams.getOrNull(1)
+        // ParamPage passes its initialParam; a plain Page passes Unit.
+        val paramExpr = if (initialParamValueParam != null) {
+            builder.irGet(initialParamValueParam)
+        } else {
+            builder.irGetObject(pluginContext.irBuiltIns.unitClass)
+        }
+
+        val extraDepsExpr =
+            resolveExtraDependenciesExpr(builder, irClass, thisReceiver, extraDependenciesType) ?: return
+
+        val createGraphAndInjectViewModelFn = createGraphAndInjectViewModelSymbol.owner
+        val call = builder.irCall(createGraphAndInjectViewModelSymbol).apply {
+            factoryTypeArgs.take(6).forEachIndexed { index, typeArg -> typeArguments[index] = typeArg }
+            createGraphAndInjectViewModelFn.parameters.forEachIndexed { index, param ->
+                arguments[index] = when {
+                    param.kind == IrParameterKind.ExtensionReceiver -> builder.irGet(thisReceiver)
+                    param.name == Ids.depsName -> builder.irGet(depsValueParam)
+                    param.name == Ids.factoryParamName -> createFactoryCall
+                    param.name == Ids.extraDependenciesName -> extraDepsExpr
+                    else -> paramExpr
+                }
+            }
+        }
+
+        declaration.body = builder.irBlockBody {
+            +irReturn(call)
+        }
+    }
+
+    /**
+     * Resolves the expression passed as `extraDependencies` to `createGraphAndInjectViewModel`:
+     * - the `EmptyExtraDependencies` object when [extraDependenciesType] is that empty marker, or
+     * - the value of the page property whose type matches [extraDependenciesType] otherwise
+     *   (supports both `val` properties and synthesized backing fields).
+     */
+    private fun resolveExtraDependenciesExpr(
+        builder: IrBuilderWithScope,
+        irClass: IrClass,
+        thisReceiver: IrValueParameter,
+        extraDependenciesType: IrType,
+    ): IrExpression? {
+        val extraDepsClassSymbol = extraDependenciesType.classOrNull
+        if (extraDepsClassSymbol?.owner?.classId == Ids.emptyExtraDependencies) {
+            val emptyClass = finder.findClass(Ids.emptyExtraDependencies) ?: return null
+            return builder.irGetObject(emptyClass)
+        }
+        // Try finding a `val` property with getter first
+        val property = irClass.properties.firstOrNull { prop ->
+            prop.backingField?.type?.classOrNull == extraDepsClassSymbol
+        }
+        if (property != null) {
+            val getter = property.getter ?: return null
+            return builder.irCall(getter.symbol).apply {
+                dispatchReceiver = builder.irGet(thisReceiver)
+            }
+        }
+        // Fall back to reading from the synthesized backing field (non-val parameter)
+        val field = irClass.declarations.filterIsInstance<IrField>().firstOrNull { f ->
+            f.type.classOrNull == extraDepsClassSymbol
+        } ?: return null
+        return builder.irGetField(builder.irGet(thisReceiver), field)
+    }
+
+    /**
+     * For classes with a non-empty `extraDependencies` type where the constructor parameter is NOT
+     * declared as `val`, synthesizes a private backing field and initializes it from the constructor
+     * parameter. This allows [resolveExtraDependenciesExpr] to read the value later.
+     */
+    private fun synthesizeExtraDependenciesFieldIfNeeded(irClass: IrClass) {
+        // Check if class has @MetroStation
+        val hasMetroStation = irClass.annotations.any { annotation ->
+            annotation.type.classOrNull?.owner?.classId == Ids.metroStation
+        }
+        if (!hasMetroStation) return
+
+        // Find FeatureGraph.Factory to get the extra deps type
+        val featureGraphClass = irClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.graphName } ?: return
+        val factoryClass = featureGraphClass.declarations.filterIsInstance<IrClass>()
+            .find { it.name == Ids.nestedFactoryName } ?: return
+
+        // Extract extra dependencies type from the factory's supertype
+        val extraDepsType = run {
+            val pageFactorySuperType = factoryClass.superTypes
+                .filterIsInstance<IrSimpleType>()
+                .find { it.classOrNull?.owner?.classId == Ids.pageGraphFactory }
+            if (pageFactorySuperType != null) {
+                val args = pageFactorySuperType.arguments.mapNotNull { it.typeOrNull }
+                if (args.size < 5) return
+                args[4]
+            } else {
+                val graphFactorySuperType = factoryClass.superTypes
+                    .filterIsInstance<IrSimpleType>()
+                    .find { it.classOrNull?.owner?.classId == Ids.graphFactory } ?: return
+                val args = graphFactorySuperType.arguments.mapNotNull { it.typeOrNull }
+                if (args.size < 3) return
+                args[2]
+            }
+        }
+
+        val extraDepsClassSymbol = extraDepsType.classOrNull ?: return
+
+        // If it's EmptyExtraDependencies, no field needed
+        if (extraDepsClassSymbol.owner.classId == Ids.emptyExtraDependencies) return
+
+        // Check if a property already exists for this type (e.g., user declared `val`)
+        val existingProperty = irClass.properties.any { prop ->
+            prop.backingField?.type?.classOrNull == extraDepsClassSymbol
+        }
+        if (existingProperty) return
+
+        // Find the constructor parameter with this type
+        val primaryConstructor = irClass.primaryConstructor ?: return
+        val extraDepsParam = primaryConstructor.parameters.firstOrNull { param ->
+            param.kind == IrParameterKind.Regular && param.type.classOrNull == extraDepsClassSymbol
+        } ?: return
+
+        // Create a backing field
+        val field = pluginContext.irFactory.buildField {
+            name = extraDepsParam.name
+            type = extraDepsParam.type
+            visibility = org.jetbrains.kotlin.descriptors.DescriptorVisibilities.PRIVATE
+            isFinal = true
+            origin = IrDeclarationOrigin.GeneratedByPlugin(MetroStationFir.Key)
+        }.apply {
+            parent = irClass
+        }
+
+        // Add field to class declarations
+        irClass.declarations.add(field)
+
+        // Add initialization in constructor body: this.<field> = param
+        val constructorBody = primaryConstructor.body as? IrBlockBody ?: return
+        val builder = DeclarationIrBuilder(pluginContext, primaryConstructor.symbol)
+        val thisParam = primaryConstructor.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver }
+            ?: irClass.thisReceiver
+            ?: return
+        val setField = builder.irSetField(builder.irGet(thisParam), field, builder.irGet(extraDepsParam))
+        constructorBody.statements.add(setField)
+    }
+
+    /**
      * Generates `this.getApplicationContext()` by looking up the method on the given [classId].
      */
     private fun generateApplicationContextExpr(
@@ -343,322 +560,4 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         }
         return null
     }
-
-    override fun visitProperty(declaration: IrProperty): IrStatement {
-        val origin = declaration.origin
-        if (
-            origin !is IrDeclarationOrigin.GeneratedByPlugin ||
-            origin.pluginKey != MetroStationFir.Key
-        ) {
-            return super.visitProperty(declaration)
-        }
-        when (declaration.name) {
-            Ids.graphPropertyName -> generateGraphPropertyBody(declaration)
-            Ids.graphCreatorPropertyName -> generateGraphCreatorPropertyBody(declaration)
-        }
-        return super.visitProperty(declaration)
-    }
-
-    /**
-     * Generates the graph property getter body with lazy initialization:
-     * ```
-     * = lazy {
-     *     createGraphFactory<FeatureGraph.Factory>()
-     *       .create(this, applicationContext.resolveServiceProvider(), EmptyExtraDependencies)
-     * }
-     * ```
-     */
-    private fun generateGraphPropertyBody(declaration: IrProperty) {
-        val getter = declaration.getter ?: return
-        val backingField = declaration.backingField ?: return
-        val parentClass = declaration.parent as? IrClass ?: return
-        val thisReceiver = parentClass.thisReceiver ?: return
-        val getterThisReceiver = getter.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
-
-        // Reference kotlin.lazy
-        val lazyCallableId = CallableId(FqName("kotlin"), "lazy".asName())
-        val lazyFunctions = finder.findFunctions(lazyCallableId)
-        // Pick the lazy(LazyThreadSafetyMode, () -> T) or lazy(() -> T) overload
-        val lazySymbol =
-            lazyFunctions.firstOrNull { it.owner.parameters.count { p -> p.kind == IrParameterKind.Regular } == 1 }
-                ?: return
-
-        val graphType = declaration.getter!!.returnType
-
-        // Fix backing field type to Lazy<FeatureGraph> since it stores the lazy delegate
-        val lazyClassId = ClassId(FqName("kotlin"), "Lazy".asName())
-        val lazyClassSymbol = finder.findClass(lazyClassId) ?: return
-        val lazyType = lazyClassSymbol.typeWith(graphType)
-        backingField.type = lazyType
-
-        // Build the backing field initializer: lazy { createGraphFactory<Factory>().create(this, applicationContext.resolveServiceProvider(), EmptyExtraDependencies) }
-        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
-
-        backingField.initializer = pluginContext.irFactory.createExpressionBody(
-            builder.irCall(lazySymbol).apply {
-                // Set type argument T = graphType
-                typeArguments[0] = graphType
-
-                // Build the lambda: { createGraphFactory<Factory>().create(this, applicationContext.resolveServiceProvider(), EmptyExtraDependencies) }
-                val lambdaReturnType = graphType
-                val lambdaType = pluginContext.irBuiltIns.functionN(0).typeWith(lambdaReturnType)
-
-                val lambdaFunction = pluginContext.irFactory.buildFun {
-                    name = Name.special("<anonymous>")
-                    returnType = lambdaReturnType
-                    visibility = org.jetbrains.kotlin.descriptors.DescriptorVisibilities.LOCAL
-                    origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA
-                }.apply {
-                    parent = backingField
-
-                    body = DeclarationIrBuilder(pluginContext, symbol).irBlockBody {
-                        val createCall = generateCreateGraphCall(
-                            this, parentClass, thisReceiver
-                        ) { b, recv -> generateApplicationContextExpr(b, recv) }
-                            ?: return@irBlockBody
-                        +irReturn(createCall)
-                    }
-                }
-
-                val lambdaExpression = IrFunctionExpressionImpl(
-                    startOffset = UNDEFINED_OFFSET,
-                    endOffset = UNDEFINED_OFFSET,
-                    type = lambdaType,
-                    function = lambdaFunction,
-                    origin = IrStatementOrigin.LAMBDA,
-                )
-
-                // arguments[0] = lambda (the regular parameter)
-                arguments[lazySymbol.owner.parameters.indexOfFirst { it.kind == IrParameterKind.Regular }] =
-                    lambdaExpression
-            }
-        )
-
-        // Reference Lazy.value getter
-        val lazyClass = finder.findClass(lazyClassId) ?: return
-        val lazyValueGetter = lazyClass.owner.properties.first { it.name.asString() == "value" }.getter!!
-
-        // Generate getter body: return backingField.value
-        getter.body = DeclarationIrBuilder(pluginContext, getter.symbol).irBlockBody {
-            val getLazy = irGetField(irGet(getterThisReceiver), backingField)
-            val getValue = irCall(lazyValueGetter).apply {
-                dispatchReceiver = getLazy
-            }
-            +irReturn(getValue)
-        }
-    }
-
-    /**
-     * Generates the graph property getter body with lazy initialization:
-     * ```
-     * = lazy {
-     *     graphCreator(
-     *         context, // Context, or ComponentActivity
-     *         createGraphFactory<OpenRevisionDialogGraph.Factory>(),
-     *         EmptyExtraDependencies // Or actual extra dependencies if it's presented in the annotation
-     *     )
-     * }
-     * ```
-     */
-    private fun generateGraphCreatorPropertyBody(declaration: IrProperty) {
-        val getter = declaration.getter ?: return
-        val backingField = declaration.backingField ?: return
-        val parentClass = declaration.parent as? IrClass ?: return
-        val getterThisReceiver = getter.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
-
-        // Find FeatureGraph.Factory nested class
-        val featureGraphClass = parentClass.declarations
-            .filterIsInstance<IrClass>()
-            .find { it.name == Ids.graphName } ?: return
-        val factoryClass = featureGraphClass.declarations
-            .filterIsInstance<IrClass>()
-            .find { it.name == Ids.nestedFactoryName } ?: return
-
-        // Find context parameter from the class constructor
-        val contextClass = finder.findClass(Ids.context)
-        val componentActivityClass = finder.findClass(Ids.componentActivity)
-
-        val primaryConstructor = parentClass.declarations
-            .filterIsInstance<IrConstructor>()
-            .firstOrNull { it.isPrimary }
-            ?: error("Cannot find primary constructor for ${parentClass.name}")
-
-        val contextParam = primaryConstructor.parameters
-            .filter { it.kind == IrParameterKind.Regular }
-            .find { param ->
-                val paramClassSymbol = param.type.classOrNull
-                paramClassSymbol == contextClass || paramClassSymbol == componentActivityClass
-            } ?: error("Cannot find Context or ComponentActivity parameter in constructor of ${parentClass.name}")
-
-        // Reference createGraphFactory<FeatureGraph.Factory>()
-        val createGraphFactoryCallableId = MetroClassIds.createGraphFactory.toCallableId()
-        val createGraphFactoryFunctions = finder.findFunctions(createGraphFactoryCallableId)
-        val createGraphFactorySymbol = createGraphFactoryFunctions.firstOrNull() ?: return
-
-        // Reference graphCreator extension function
-        val graphCreatorCallableId = Ids.pageGraphCreatorExtension.toCallableId()
-        val graphCreatorFunctions = finder.findFunctions(graphCreatorCallableId)
-        val graphCreatorSymbol = graphCreatorFunctions.firstOrNull() ?: return
-
-        // Determine extraDependencies: check annotation for extraDependencies parameter
-        // If present, find matching constructor parameter; otherwise use EmptyExtraDependencies
-        val emptyExtraDepsClass = finder.findClass(Ids.emptyExtraDependencies) ?: return
-
-        // Read the @MetroStation annotation from the parent class
-        val metroStationAnnotation = parentClass.annotations.find { annotation ->
-            annotation.type.classOrNull?.owner?.name == Ids.metroStation.shortClassName
-        }
-
-        // Check if extraDependencies is specified (not null/Nothing)
-        val extraDepsClassRef = metroStationAnnotation?.let { annotation ->
-            // Find the extraDependencies parameter index in the full parameters list
-            val extraDepsParamIndex = annotation.symbol.owner.parameters
-                .indexOfFirst { it.kind == IrParameterKind.Regular && it.name == Ids.extraDependenciesName }
-                .takeIf { it >= 0 }
-            extraDepsParamIndex?.let { idx ->
-                val arg = annotation.arguments[idx] ?: return@let null
-                // Filter out Nothing::class (means no extra dependencies specified)
-                val classRef = arg as? IrClassReference
-                if (classRef != null && classRef.classType == pluginContext.irBuiltIns.nothingType) {
-                    null
-                } else {
-                    arg
-                }
-            }
-        }
-
-        // Determine if we have a non-trivial extraDependencies type (non-null means it was specified)
-        val extraDepsRefType = (extraDepsClassRef as? IrClassReference)?.classType
-        val extraDepsConstructorParam = if (extraDepsRefType != null) {
-            primaryConstructor.parameters
-                .filter { it.kind == IrParameterKind.Regular }
-                .find { param -> param.type.classOrNull == extraDepsRefType.classOrNull }
-        } else null
-        val hasExtraDeps = extraDepsConstructorParam != null
-
-        // Find the extra dependencies expression to pass
-        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
-
-        backingField.initializer = pluginContext.irFactory.createExpressionBody(
-            builder.irCall(graphCreatorSymbol).apply {
-                val graphCreatorOwner = graphCreatorSymbol.owner
-                val thisReceiver = parentClass.thisReceiver ?: return
-
-                // Extension receiver = this (the Page)
-                val extensionReceiverIndex =
-                    graphCreatorOwner.parameters.indexOfFirst { it.kind == IrParameterKind.ExtensionReceiver }
-                if (extensionReceiverIndex >= 0) {
-                    arguments[extensionReceiverIndex] = builder.irGet(thisReceiver)
-                }
-
-                // Type arguments: Root, ServiceProvider, ExtraDependencies, Graph
-                val featureServiceProviderClass = parentClass.declarations
-                    .filterIsInstance<IrClass>()
-                    .find { it.name == Ids.featureServiceProviderName }
-                val serviceProviderType = featureServiceProviderClass?.symbol?.typeWith()
-
-                val graphType = featureGraphClass.symbol.typeWith()
-
-                typeArguments[0] = parentClass.symbol.typeWith() // Root
-                if (serviceProviderType != null) typeArguments[1] = serviceProviderType // ServiceProvider
-
-                // Determine extraDependencies type
-                val extraDepsType = if (hasExtraDeps) {
-                    extraDepsConstructorParam.type
-                } else {
-                    emptyExtraDepsClass.typeWith()
-                }
-                typeArguments[2] = extraDepsType // ExtraDependencies
-                typeArguments[3] = graphType // Graph
-
-                // Regular parameters: context, factory, extraDependencies
-                val regularParams = graphCreatorOwner.parameters.filter { it.kind == IrParameterKind.Regular }
-
-                arguments[graphCreatorOwner.parameters.indexOf(regularParams[0])] =
-                    builder.irGet(contextParam)
-
-                // factory = createGraphFactory<FeatureGraph.Factory>()
-                arguments[graphCreatorOwner.parameters.indexOf(regularParams[1])] =
-                    builder.irCall(createGraphFactorySymbol).apply {
-                        typeArguments[0] = factoryClass.symbol.typeWith()
-                    }
-
-                // extraDependencies
-                arguments[graphCreatorOwner.parameters.indexOf(regularParams[2])] = if (hasExtraDeps) {
-                    val thisReceiver2 = parentClass.thisReceiver ?: return
-                    // Access the constructor param stored as a property
-                    val extraDepsProp = parentClass.properties.find { it.name == extraDepsConstructorParam.name }
-                    if (extraDepsProp != null) {
-                        builder.irCall(extraDepsProp.getter!!).apply {
-                            dispatchReceiver = builder.irGet(thisReceiver2)
-                        }
-                    } else {
-                        builder.irGet(extraDepsConstructorParam)
-                    }
-                } else {
-                    builder.irGetObject(emptyExtraDepsClass)
-                }
-            }
-        )
-
-        // Generate getter body: return backingField
-        getter.body = DeclarationIrBuilder(pluginContext, getter.symbol).irBlockBody {
-            +irReturn(irGetField(irGet(getterThisReceiver), backingField))
-        }
-    }
-
-    /**
-     * Generates `return HasServiceProvider.resolveFrom(graph.value)` for Activity.
-     * Generates `return HasServiceProvider.resolveFrom(graphCreator.value)` for Page.
-     */
-    private fun generateResolveBody(declaration: IrSimpleFunction) {
-        val parentClass = declaration.parent as? IrClass ?: return
-        val thisReceiver = declaration.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver } ?: return
-
-        // Reference HasServiceProvider companion object
-        val hasServiceProviderClass = finder.findClass(Ids.hasServiceProvider)?.owner ?: return
-        val companionObject = hasServiceProviderClass.companionObject() ?: return
-
-        // Find resolveFrom function on companion
-        val resolveFromFunction = companionObject.functions.first { it.name == Ids.resolveFromName }
-
-        // Determine whether this is an Activity (graph property) or Page (graphCreator property)
-        val graphProperty = parentClass.properties.find { it.name == Ids.graphPropertyName }
-        val graphCreatorProperty = parentClass.properties.find { it.name == Ids.graphCreatorPropertyName }
-
-        val graphBackingField = (graphProperty ?: graphCreatorProperty)?.backingField ?: return
-
-        // Get the appropriate .value getter
-        val valueGetter = if (graphProperty != null) {
-            // Activity case: Lazy.value
-            val lazyClassId = ClassId(FqName("kotlin"), "Lazy".asName())
-            val lazyClass = finder.findClass(lazyClassId) ?: return
-            lazyClass.owner.properties.first { it.name.asString() == "value" }.getter!!
-        } else {
-            // Page case: PageGraphCreator.value
-            val pageGraphCreatorClass = finder.findClass(Ids.pageGraphCreator) ?: return
-            pageGraphCreatorClass.owner.properties.first { it.name.asString() == "value" }.getter!!
-        }
-
-        declaration.body = DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-            // Get backing field, then call .value
-            val getGraphField = irGetField(irGet(thisReceiver), graphBackingField)
-            val getGraphValue = irCall(valueGetter).apply {
-                dispatchReceiver = getGraphField
-            }
-
-            // HasServiceProvider.resolveFrom(graphValue)
-            val resolveFromCall = irCall(resolveFromFunction).apply {
-                dispatchReceiver = irGetObject(companionObject.symbol)
-                // type argument T
-                typeArguments[0] = declaration.returnType
-                // argument: graph.value or graphCreator.value
-                arguments[resolveFromFunction.parameters.indexOfFirst { it.kind == IrParameterKind.Regular }] =
-                    getGraphValue
-            }
-
-            +irReturn(resolveFromCall)
-        }
-    }
-
 }
