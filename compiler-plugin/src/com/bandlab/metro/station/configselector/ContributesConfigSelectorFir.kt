@@ -125,14 +125,17 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
         return contribution.symbol
     }
 
-    override fun getContributionHints(): List<ContributionHint> {
+    override fun getContributionTargets(): List<ContributionTarget> {
         return session.predicateBasedProvider
             .getSymbolsByPredicate(Ids.predicate)
             .filterIsInstance<FirRegularClassSymbol>()
             .map { classSymbol ->
                 val nestedInterfaceClassId = classSymbol.classId
                     .createNestedClassId(Ids.nestedContributionName)
-                ContributionHint(contributingClassId = nestedInterfaceClassId, scope = ClassIds.appScope)
+                ContributionTarget(
+                    contributingClassId = nestedInterfaceClassId,
+                    scope = ClassIds.appScope
+                )
             }
     }
 

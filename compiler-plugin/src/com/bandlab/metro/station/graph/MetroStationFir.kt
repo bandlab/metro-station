@@ -610,13 +610,13 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         }
     }
 
-    override fun getContributionHints(): List<ContributionHint> {
+    override fun getContributionTargets(): List<ContributionTarget> {
         return session.predicateBasedProvider
             .getSymbolsByPredicate(Ids.metroStationPredicate)
             .filterIsInstance<FirRegularClassSymbol>()
             .map { classSymbol ->
                 val serviceProvider = classSymbol.classId.createNestedClassId(Ids.featureServiceProviderName)
-                ContributionHint(contributingClassId = serviceProvider, scope = ClassIds.appScope)
+                ContributionTarget(contributingClassId = serviceProvider, scope = ClassIds.appScope)
             }
     }
 

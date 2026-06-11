@@ -664,7 +664,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         }
     }
 
-    override fun getContributionHints(): List<ContributionHint> {
+    override fun getContributionTargets(): List<ContributionTarget> {
         return session.predicateBasedProvider
             .getSymbolsByPredicate(Ids.stationEntryPredicate)
             .filterIsInstance<FirRegularClassSymbol>()
@@ -675,9 +675,9 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                     .createNestedClassId(Ids.featureExtensionName)
                     .createNestedClassId(Ids.nestedFactoryName)
                 listOfNotNull(
-                    ContributionHint(contributingClassId = factoryClassId, scope = parentScope),
+                    ContributionTarget(contributingClassId = factoryClassId, scope = parentScope),
                     if (componentType == ComponentType.Fragment) {
-                        ContributionHint(
+                        ContributionTarget(
                             contributingClassId = classSymbol.classId.createNestedClassId(Ids.extensionFactoryContributionName),
                             scope = parentScope
                         )
