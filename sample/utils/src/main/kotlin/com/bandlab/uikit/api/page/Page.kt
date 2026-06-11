@@ -2,7 +2,7 @@ package com.bandlab.uikit.api.page
 
 import androidx.compose.runtime.Composable
 import com.bandlab.common.android.pager.screen.di.PageGraphDependencies
-import com.bandlab.metro.station.GeneratedByMetroStation
+import com.bandlab.common.di.GeneratedByMetroStation
 
 interface Page<ViewModel : Any> {
 

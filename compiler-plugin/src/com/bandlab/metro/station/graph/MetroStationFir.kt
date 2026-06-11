@@ -311,20 +311,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                 provideParamFunction.symbol as FirNamedFunctionSymbol
             }
 
-            is ComponentType.Page if componentType.hasParam -> {
-                // ParamPage<ViewModel, Param> - extract the 2nd type arg (Param)
-                val paramTypeArg = componentType.superTypeRef.unwrapType(1) ?: return null
-                val paramType = paramTypeArg as? ConeKotlinType ?: return null
-
-                val pageGraphDepsType = Ids.pageGraphDependencies.constructClassLikeType()
-                val provideParamFunction =
-                    createMemberFunction(owner, Key, Ids.provideParamName, paramType) {
-                        valueParameter("pageGraphDependencies".asName(), pageGraphDepsType, key = Key)
-                    }
-                provideParamFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
-                provideParamFunction.symbol as FirNamedFunctionSymbol
-            }
-
             is ComponentType.Page, ComponentType.Fragment, ComponentType.Others -> null
         }
     }

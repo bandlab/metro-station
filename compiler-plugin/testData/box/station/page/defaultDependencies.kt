@@ -12,11 +12,8 @@ interface AppGraph
 
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
-    val pageGraph = createGraphFactory<MyPage.FeatureGraph.Factory>().create(
-        feature = MyPage(Context.FAKE),
-        serviceProvider = appGraph,
-        extraDependencies = EmptyExtraDependencies
-    )
-    assertEquals("Page", pageGraph.getPageViewModel().text)
+    val myPage = MyPage(Context.FAKE)
+    val viewModel = myPage.injectViewModel(PageGraphDependencies.fromAppGraph(appGraph))
+    assertEquals("Page", viewModel.text)
     return "OK"
 }

@@ -8,4 +8,13 @@ import com.bandlab.android.common.activity.CommonActivity
 data class PageGraphDependencies(
     val activity: CommonActivity<*>,
     val navPageNavigation: NavPageNavigation = NavPageNavigation.NOOP,
-)
+) {
+    companion object {
+        // A helper for JVM test to wire the AppGraph with the Page graph/ extension.
+        fun fromAppGraph(appGraph: Any): PageGraphDependencies {
+            val activity = object : CommonActivity<Unit>() {}
+            activity.graph = appGraph
+            return PageGraphDependencies(activity)
+        }
+    }
+}

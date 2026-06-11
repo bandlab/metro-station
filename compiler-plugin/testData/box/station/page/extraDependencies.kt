@@ -36,11 +36,8 @@ fun box(): String {
     val extraDependencies = object : MyPage.ExtraDependencies {
         override val boolean: Boolean = true
     }
-    val pageGraph = createGraphFactory<MyPage.FeatureGraph.Factory>().create(
-        feature = MyPage(Context.FAKE, extraDependencies),
-        serviceProvider = appGraph,
-        extraDependencies = extraDependencies
-    )
-    assertEquals("Hello! true 123", pageGraph.getPageViewModel().value)
+    val myPage = MyPage(Context.FAKE, extraDependencies)
+    val viewModel = myPage.injectViewModel(PageGraphDependencies.fromAppGraph(appGraph))
+    assertEquals("Hello! true 123", viewModel.value)
     return "OK"
 }

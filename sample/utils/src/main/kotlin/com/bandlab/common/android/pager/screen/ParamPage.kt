@@ -2,7 +2,7 @@ package com.bandlab.common.android.pager.screen
 
 import androidx.savedstate.SavedState
 import com.bandlab.common.android.pager.screen.di.PageGraphDependencies
-import com.bandlab.metro.station.GeneratedByMetroStation
+import com.bandlab.common.di.GeneratedByMetroStation
 import com.bandlab.uikit.api.page.Page
 import kotlinx.coroutines.flow.Flow
 

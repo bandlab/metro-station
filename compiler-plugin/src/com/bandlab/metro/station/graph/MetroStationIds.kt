@@ -12,7 +12,6 @@ internal object MetroStationIds {
     // MetroStation
     val metroStation = ClassId(metroStationPackage, "MetroStation".asName())
     val metroStationFqName = metroStation.asSingleFqName()
-    val generatedByMetroStation = ClassId(metroStationPackage, "GeneratedByMetroStation".asName())
 
     // StationEntry
     val stationEntry = ClassId(metroStationPackage, "StationEntry".asName())
@@ -64,6 +63,7 @@ internal object MetroStationIds {
     val graphExtensionFactory = ClassId(commonAndroidDi, "GraphExtensionFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
     val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
+    val generatedByMetroStation = ClassId(FqName("com.bandlab.common.di"), "GeneratedByMetroStation".asName())
 
     // Page
     private val commonPageDi = FqName("com.bandlab.common.android.pager.screen.di")

@@ -3,7 +3,7 @@ package com.bandlab.android.common.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
-import com.bandlab.metro.station.GeneratedByMetroStation
+import com.bandlab.common.di.GeneratedByMetroStation
 import com.bandlab.metro.station.sample.utils.ScreenTracker
 
 /**
