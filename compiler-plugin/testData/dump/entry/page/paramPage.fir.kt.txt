@@ -45,83 +45,16 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
   }
 
-  @IROnlyFactories
-  @ContributesTo(scope = AppScope::class)
-  interface ExtensionFactoryContribution {
-    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-    @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeocf15 : ExtensionFactoryContribution {
-    }
-
-    class ProvideFactoryMetroFactory : Factory<Any> {
-      private /* final field */ val instance: ExtensionFactoryContribution = instance
-      private /* final field */ val factory: Provider<Factory> = factory
-      companion object Companion {
-        constructor() /* primary */ {
-          super/*Any*/()
-          /* <init>() */
-
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun create(instance: ExtensionFactoryContribution, factory: Provider<Factory>): ProvideFactoryMetroFactory {
-          return ProvideFactoryMetroFactory(instance = instance, factory = factory)
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun provideFactory(instance: ExtensionFactoryContribution, factory: Factory): Any {
-          return instance.provideFactory(factory = factory)
-        }
-
-      }
-
-      @HiddenFromObjC
-      private constructor(instance: ExtensionFactoryContribution, factory: Provider<Factory>) /* primary */ {
-        super/*Any*/()
-        /* <init>() */
-
-      }
-
-      @HiddenFromObjC
-      override operator fun invoke(): Any {
-        return Companion.provideFactory(instance = <this>.#instance, factory = <this>.#factory.invoke())
-      }
-
-      @IntoMap
-      @ClassKey(value = MyPage::class)
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun mirrorFunction(factory: Factory): Any {
-        return error(message = "Never called")
-      }
-
-    }
-
-    @Provides
-    @IntoMap
-    @ClassKey(value = MyPage::class)
-    final fun provideFactory(factory: Factory): Any {
-      return factory
-    }
-
-  }
-
   @PageScope
-  @GraphExtension(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class, FeatureBindings::class])
+  @GraphExtension(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class])
   interface FeatureExtension : PageInjector<MyViewModel> {
     @ContributesTo(scope = AppScope::class)
     @Factory
-    interface Factory {
+    interface Factory : PageGraphExtensionFactory<MyPage, MyViewModel, Params, FeatureExtension> {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroContribution(scope = AppScope::class)
       interface MetroContributionToDevzacsweersmetroappScopeocf15 : Factory {
       }
-
-      abstract fun create(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension
 
     }
 
@@ -222,51 +155,6 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
     }
 
-    class ProvideParamMetroFactory : Factory<Params> {
-      private /* final field */ val pageGraphDependencies: Provider<PageGraphDependencies> = pageGraphDependencies
-      companion object Companion {
-        constructor() /* primary */ {
-          super/*Any*/()
-          /* <init>() */
-
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun create(pageGraphDependencies: Provider<PageGraphDependencies>): ProvideParamMetroFactory {
-          return ProvideParamMetroFactory(pageGraphDependencies = pageGraphDependencies)
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun provideParam(pageGraphDependencies: PageGraphDependencies): Params {
-          return FeatureBindings.provideParam(pageGraphDependencies = pageGraphDependencies)
-        }
-
-      }
-
-      @HiddenFromObjC
-      private constructor(pageGraphDependencies: Provider<PageGraphDependencies>) /* primary */ {
-        super/*Any*/()
-        /* <init>() */
-
-      }
-
-      @HiddenFromObjC
-      override operator fun invoke(): Params {
-        return Companion.provideParam(pageGraphDependencies = <this>.#pageGraphDependencies.invoke())
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun mirrorFunction(pageGraphDependencies: PageGraphDependencies): Params {
-        return error(message = "Never called")
-      }
-
-    }
-
     private constructor() /* primary */ {
       super/*Any*/()
       /* <init>() */
@@ -276,11 +164,6 @@ class MyPage : ParamPage<MyViewModel, Params> {
     @Provides
     fun provideBaseType(feature: MyPage): Page<*> {
       return feature
-    }
-
-    @Provides
-    fun provideParam(pageGraphDependencies: PageGraphDependencies): Params {
-      return pageGraphDependencies.<get-initialParam>() as Params
     }
 
     @Provides
@@ -294,6 +177,11 @@ class MyPage : ParamPage<MyViewModel, Params> {
     super/*Any*/()
     /* <init>() */
 
+  }
+
+  @GeneratedByMetroStation
+  override fun injectViewModel(deps: PageGraphDependencies, initialParam: Params): MyViewModel {
+    return resolveServiceProvider<Factory>(/* <this> = deps.<get-activity>() */).create(feature = <this>, param = initialParam, pageGraphDependencies = deps).getPageViewModel()
   }
 
 }
@@ -375,14 +263,14 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroContributionToDevzacsweersmetroappScopeocf15, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph {
     private val thisGraphInstance: Impl
       field = <this>
 
-    @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class, FeatureBindings::class])
+    @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class])
     @PageScope
     private class FeatureExtensionImpl : FeatureExtension {
       private val appGraphImpl: Impl
@@ -391,31 +279,18 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroCon
       private val featureInstance: MyPage
         field = feature
 
-      private val pageGraphDependenciesInstance: PageGraphDependencies
-        field = pageGraphDependencies
+      private val paramInstance: Params
+        field = param
 
-      constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies) /* primary */ {
+      constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: PageGraphDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
       }
 
       override fun getPageViewModel(): MyViewModel {
-        return MyViewModel(param = <this>.<get-provideParam>(), paramFlow = FeatureBindings.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.<get-provideParam>()))
+        return MyViewModel(param = <this>.#paramInstance, paramFlow = FeatureBindings.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.#paramInstance))
       }
-
-      private val mapOfKClass___ToAny: Map<KClass<*>, Any>
-        private get(): Map<KClass<*>, Any> {
-          return buildMap<KClass<*>, Any>(capacity = 1, builderAction = local fun MutableMap<KClass<*>, Any>.<anonymous>() {
-            $receiver.put(key = MyPage::class, value = <this>.#appGraphImpl.provideFactory(factory = <this>.#appGraphImpl))
-          }
-)
-        }
-
-      private val provideParam: Params
-        private get(): Params {
-          return FeatureBindings.provideParam(pageGraphDependencies = <this>.#pageGraphDependenciesInstance)
-        }
 
     }
 
@@ -425,22 +300,14 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroCon
 
     }
 
-    override fun create(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies): FeatureExtension {
-      return FeatureExtensionImpl(appGraphImpl = <this>, feature = feature, pageGraphDependencies = pageGraphDependencies, navPageDependencies = navPageDependencies)
+    override fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: PageGraphDependencies): FeatureExtension {
+      return FeatureExtensionImpl(appGraphImpl = <this>, feature = feature, param = param, pageGraphDependencies = pageGraphDependencies)
     }
 
     @Multibinds(allowEmpty = true)
     override val graphExtensionFactories: Map<KClass<*>, Any>
       override get(): Map<KClass<*>, Any> {
-        return <this>.<get-mapOfKClass___ToAny>()
-      }
-
-    private val mapOfKClass___ToAny: Map<KClass<*>, Any>
-      private get(): Map<KClass<*>, Any> {
-        return buildMap<KClass<*>, Any>(capacity = 1, builderAction = local fun MutableMap<KClass<*>, Any>.<anonymous>() {
-          $receiver.put(key = MyPage::class, value = <this>.#thisGraphInstance.provideFactory(factory = <this>.#thisGraphInstance))
-        }
-)
+        return emptyMap<KClass<*>, Any>()
       }
 
   }
@@ -461,13 +328,6 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, MetroCon
 
   }
 
-}
-
-// FILE: myPageExtensionFactoryContributionAppScope.kt
-package metro.hints
-
-fun AppScope(contributed: ExtensionFactoryContribution) {
-  return error(message = "Never called")
 }
 
 // FILE: myPageFeatureExtensionFactoryAppScope.kt

@@ -1,5 +1,5 @@
 FILE: basic.kt
-    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyActivity.ServiceProvider|) [evaluated = <getClass>(Q|MyActivity.ServiceProvider|)]) public final class MyActivity : R|com/bandlab/android/common/activity/CommonActivity<kotlin/Unit>|, R|com/bandlab/common/android/di/HasServiceProvider| {
+    @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyActivity.ServiceProvider|) [evaluated = <getClass>(Q|MyActivity.ServiceProvider|)]) public final class MyActivity : R|com/bandlab/android/common/activity/CommonActivity<kotlin/Unit>| {
         public constructor(): R|MyActivity| {
             super<R|com/bandlab/android/common/activity/CommonActivity<kotlin/Unit>|>()
         }
@@ -14,10 +14,7 @@ FILE: basic.kt
 
         }
 
-        private final val graph: R|MyActivity.FeatureGraph|
-            public get(): R|MyActivity.FeatureGraph|
-
-        public final override fun <T> resolve(): R|T|
+        @R|com/bandlab/common/di/GeneratedByMetroStation|() public final override fun inject(): R|kotlin/Unit|
 
         @R|com/bandlab/android/common/ActivityScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyActivity|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/android/common/activity/DefaultActivityDependencies|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/di/MembersInjectorProvider<MyActivity>| {
             @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyActivity|): R|com/bandlab/android/common/activity/CommonActivity<*>|

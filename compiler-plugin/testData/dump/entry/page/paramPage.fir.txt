@@ -18,10 +18,10 @@ FILE: paramPage.kt
 
         }
 
-        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|com/bandlab/common/android/pager/screen/di/PageGraphDependenciesModule|), <getClass>(Q|MyPage.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
-            @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory {
-                @R|androidx/annotation/Keep|() public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() navPageDependencies: R|com/bandlab/common/android/pager/screen/di/NavPageDependencies|): R|MyPage.FeatureExtension|
+        @R|com/bandlab/common/di/GeneratedByMetroStation|() public final override fun injectViewModel(deps: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|, initialParam: R|MyPage.Params|): R|MyViewModel|
 
+        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/GraphExtension|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|), <getClass>(Q|MyPage.FeatureBindings|))) public abstract interface FeatureExtension : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
+            @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory : R|com/bandlab/common/android/pager/screen/di/PageGraphExtensionFactory<MyPage, MyViewModel, MyPage.Params, MyPage.FeatureExtension>| {
                 @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyPage.FeatureExtension.Factory| {
                 }
 
@@ -29,18 +29,8 @@ FILE: paramPage.kt
 
         }
 
-        @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface ExtensionFactoryContribution {
-            @R|dev/zacsweers/metro/Provides|() @R|dev/zacsweers/metro/IntoMap|() @R|dev/zacsweers/metro/ClassKey|(value = <getClass>(Q|MyPage|)) public final fun provideFactory(factory: R|MyPage.FeatureExtension.Factory|): R|kotlin/Any|
-
-            @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyPage.ExtensionFactoryContribution| {
-            }
-
-        }
-
         @R|dev/zacsweers/metro/BindingContainer|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() public final object FeatureBindings {
             @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyPage|): R|com/bandlab/uikit/api/page/Page<*>|
-
-            @R|dev/zacsweers/metro/Provides|() public final fun provideParam(pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/PageGraphDependencies|): R|MyPage.Params|
 
             @R|dev/zacsweers/metro/Provides|() public final fun provideParamFlow(provider: R|com/bandlab/common/android/pager/screen/PageParamFlowProvider|, feature: R|MyPage|, initialParam: R|MyPage.Params|): R|kotlinx/coroutines/flow/Flow<MyPage.Params>|
 
@@ -82,7 +72,7 @@ FILE: paramPage.kt
         }
 
     }
-    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|) [evaluated = <getClass>(Q|dev/zacsweers/metro/AppScope|)]) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.ExtensionFactoryContribution.MetroContributionToDevzacsweersmetroappScopeocf15|, R|MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|) [evaluated = <getClass>(Q|dev/zacsweers/metro/AppScope|)]) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
         @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|AppGraph| {
             private constructor(): R|AppGraph.Impl| {
                 super<R|kotlin/Any|>()

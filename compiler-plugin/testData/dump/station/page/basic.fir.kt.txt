@@ -1,17 +1,13 @@
 // FILE: basic.kt
 
 @MetroStation(appDependencies = ServiceProvider::class)
-class MyPage : HasServiceProvider, Page<MyViewModel> {
-  private val graphCreator: PageGraphCreator<FeatureGraph>
-    field = graphCreator<MyPage, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ context = context, factory = Impl, extraDependencies = EmptyExtraDependencies)
-    get
-
+class MyPage : Page<MyViewModel> {
   @PageScope
   @IROnlyFactories
-  @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, PageGraphDependenciesModule::class])
+  @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class])
   interface FeatureGraph : PageInjector<MyViewModel> {
     @Factory
-    interface Factory : PageGraphFactory<MyPage, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+    interface Factory : PageGraphFactory<MyPage, MyViewModel, Unit, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroImplMarker
       object Impl : Factory {
@@ -22,8 +18,8 @@ class MyPage : HasServiceProvider, Page<MyViewModel> {
         }
 
         @GraphFactoryInvokeFunctionMarker
-        override fun create(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
-          return Impl(feature = feature, pageGraphDependencies = pageGraphDependencies, navPageDependencies = navPageDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        override fun create(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: PageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
+          return Impl(feature = feature, param = param, pageGraphDependencies = pageGraphDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
         }
 
       }
@@ -42,7 +38,7 @@ class MyPage : HasServiceProvider, Page<MyViewModel> {
         }
 )
 
-      private constructor(@Provides feature: MyPage, @Provides pageGraphDependencies: PageGraphDependencies, @Includes navPageDependencies: NavPageDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+      private constructor(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: PageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
@@ -143,8 +139,9 @@ class MyPage : HasServiceProvider, Page<MyViewModel> {
 
   }
 
-  override fun <T : Any?> resolve(): T {
-    return Companion.resolveFrom<T>(graph = <this>.#graphCreator.<get-value>())
+  @GeneratedByMetroStation
+  override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
+    return createGraphAndInjectViewModel<MyPage, MyViewModel, Unit, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ deps = deps, param = Unit, factory = Impl, extraDependencies = EmptyExtraDependencies)
   }
 
 }
