@@ -1,12 +1,13 @@
 package com.bandlab.common.android.di
 
 import android.content.Context
+import com.bandlab.android.common.activity.CommonActivity
 
 interface HasDependencyGraph {
 
     fun <T> resolve(): T {
         throw UnsupportedOperationException(
-            "resolve is not supported in the JVM box test. Check the sample project about how it works."
+            "This should be implemented by the compiler, unless you manually extend this supertype."
         )
     }
 
@@ -28,7 +29,8 @@ interface HasDependencyGraph {
 }
 
 fun <T> Context.resolveServiceProvider(): T {
-    throw UnsupportedOperationException(
-        "resolveServiceProvider is not supported in the JVM box test. Check the sample project about how it works."
-    )
+    return when {
+        this is CommonActivity<*> -> this.resolve()
+        else -> error("Fail to resolve ServiceProvider from Context")
+    }
 }
