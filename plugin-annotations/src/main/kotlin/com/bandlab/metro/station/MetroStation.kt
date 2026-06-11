@@ -38,9 +38,6 @@ import kotlin.reflect.KClass
  * - For CommonActivity, param type T is available in the graph.
  * - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
  *
- * You'll need to provide either a Context or a ComponentActivity to the Page's primary constructor, and extra
- * dependencies if it's presented. They'll be used by the compiler during the IR phase.
- *
  * ### Android Component Injection
  * We inject known Android components automatically for you:
  * - *Service*: The plugin injects `fun onCreate()` for you, if the `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
