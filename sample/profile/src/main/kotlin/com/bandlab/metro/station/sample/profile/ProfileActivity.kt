@@ -18,6 +18,7 @@ import com.bandlab.android.common.activity.CommonActivity
 import com.bandlab.android.common.activity.CommonActivityDependencies
 import com.bandlab.metro.station.StationEntry
 import com.bandlab.metro.station.sample.profile.content.ProfileContentPage
+import com.bandlab.metro.station.sample.profile.footer.ProfileFooterPage
 import com.bandlab.metro.station.sample.ui.theme.SampleAppTheme
 import com.bandlab.uikit.compose.page.container.PageContainer
 import com.bandlab.uikit.compose.page.container.toPageContainerState
@@ -30,6 +31,7 @@ class ProfileActivity : CommonActivity<Profile>() {
     @Inject override lateinit var dependencies: CommonActivityDependencies
     @Inject private lateinit var viewModel: ProfileViewModel
     @Inject private lateinit var profileContentPage: ProfileContentPage
+    @Inject private lateinit var profileFooterPage: ProfileFooterPage
 
     override fun parseRequiredParams(bundle: Bundle): Profile {
         return Json.decodeFromString(requireNotNull(bundle.getString(ARG_PROFILE)))
@@ -55,6 +57,12 @@ class ProfileActivity : CommonActivity<Profile>() {
                             )
 
                             PageContainer(profileContentPage.toPageContainerState())
+
+                            PageContainer(
+                                profileFooterPage.toPageContainerState(
+                                    ProfileFooterPage.Param(username = "BandLab")
+                                )
+                            )
 
                             Button(onClick = { finish() }) {
                                 Text(text = "Go back")
