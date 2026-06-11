@@ -1,10 +1,8 @@
 package com.bandlab.common.android.pager.screen.di
 
-import com.bandlab.android.common.activity.CommonActivity
 import com.bandlab.common.android.di.GraphExtensionFactory
 import com.bandlab.common.android.di.GraphFactory
 import com.bandlab.common.android.di.resolveServiceProvider
-import com.bandlab.common.android.pager.screen.ParamPage
 import com.bandlab.uikit.api.page.Page
 import dev.zacsweers.metro.Includes
 import dev.zacsweers.metro.Provides
@@ -38,25 +36,6 @@ interface PageGraphExtensionFactory<Feature, VM : Any, Param, Graph : PageInject
         @Provides param: Param,
         @Includes pageGraphDependencies: PageGraphDependencies,
     ): Graph
-}
-
-/**
- * Create the page graph and inject the ViewModel.
- */
-fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageViewModel(
-    initialParam: Param,
-    host: CommonActivity<*>,
-): ViewModel {
-    val pageDependencies = PageGraphDependencies(
-        activity = host,
-    )
-    return if (this is ParamPage<*, *>) {
-        @Suppress("UNCHECKED_CAST")
-        this as ParamPage<ViewModel, Param>
-        injectViewModel(pageDependencies, initialParam)
-    } else {
-        injectViewModel(pageDependencies)
-    }
 }
 
 /**

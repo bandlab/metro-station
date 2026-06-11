@@ -6,7 +6,7 @@ import com.bandlab.common.android.di.GraphExtensionFactory
 import com.bandlab.common.android.di.GraphFactory
 import com.bandlab.common.android.di.resolveServiceProvider
 import com.bandlab.common.android.pager.screen.ParamPage
-import com.bandlab.metro.station.GeneratedByMetroStation
+import com.bandlab.common.di.GeneratedByMetroStation
 import com.bandlab.uikit.api.page.Page
 import dev.zacsweers.metro.Includes
 import dev.zacsweers.metro.Provides

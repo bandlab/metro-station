@@ -68,8 +68,17 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         context: NestedClassGenerationContext
     ): Set<Name> {
         return when {
-            session.predicateBasedProvider.matches(Ids.stationEntryPredicate, classSymbol) ->
-                setOf(Ids.featureExtensionName, Ids.extensionFactoryContributionName, Ids.featureBindingsName)
+            session.predicateBasedProvider.matches(Ids.stationEntryPredicate, classSymbol) -> buildSet {
+                add(Ids.featureExtensionName)
+                add(Ids.featureBindingsName)
+
+                // Generate ExtensionFactoryContribution only for Fragments.
+                // That's legacy solution that requires reflection to find factories.
+                val componentType = resolveComponentType(classSymbol)
+                if (componentType == ComponentType.Fragment) {
+                    add(Ids.extensionFactoryContributionName)
+                }
+            }
 
             classSymbol.origin == Key.origin && classSymbol.classId.shortClassName == Ids.featureExtensionName ->
                 setOf(Ids.nestedFactoryName)
@@ -620,13 +629,20 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             .filterIsInstance<FirRegularClassSymbol>()
             .flatMap { classSymbol ->
                 val parentScope = resolveParentScopeClassId(classSymbol)
-                val contributionClassId = classSymbol.classId.createNestedClassId(Ids.extensionFactoryContributionName)
+                val componentType = resolveComponentType(classSymbol)
                 val factoryClassId = classSymbol.classId
                     .createNestedClassId(Ids.featureExtensionName)
                     .createNestedClassId(Ids.nestedFactoryName)
-                listOf(
-                    ContributionHint(contributingClassId = contributionClassId, scope = parentScope),
+                listOfNotNull(
                     ContributionHint(contributingClassId = factoryClassId, scope = parentScope),
+                    if (componentType == ComponentType.Fragment) {
+                        ContributionHint(
+                            contributingClassId = classSymbol.classId.createNestedClassId(Ids.extensionFactoryContributionName),
+                            scope = parentScope
+                        )
+                    } else {
+                        null
+                    }
                 )
             }
     }

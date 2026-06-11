@@ -20,7 +20,6 @@ internal object MetroStationIds {
     val featureExtensionName = "FeatureExtension".asName()
     val featureBindingsName = "FeatureBindings".asName()
     val extensionFactoryContributionName = "ExtensionFactoryContribution".asName()
-    val keep = ClassId(FqName("androidx.annotation"), "Keep".asName())
     val createName = "create".asName()
     val bindName = "bind".asName()
     val factoryParamName = "factory".asName()
