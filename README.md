@@ -26,10 +26,17 @@ This is a reference example and is not intended for public adoption.
 The benchmark was performed on the BandLab Android app with Gradle Profiler. At the time of benchmarking, 
 BandLab Android app has 1163 modules, and 490 of them are running KSP (3 processors in total).
 
-| Mutation         | KSP 🐢 | Metro Station 🚀 | Delta 📉      |
-|:-----------------|:-------|:-----------------|:--------------|
-| **Root Abi**     | 54.79s | 28.72s           | **-47.57%** ✨ |
-| **Root Non-abi** | 40.26s | 17.14s           | **-57.43%** ✨ |
+| Mutation         | Metro + KSP 🐢 | Metro Station 🚀 | Delta 📉      |
+|:-----------------|:---------------|:-----------------|:--------------|
+| **Root Abi**     | 54.79s         | 28.72s           | **-47.57%** ✨ |
+| **Root Non-abi** | 40.26s         | 17.14s           | **-57.43%** ✨ |
+
+If we take a step back, compare the setup (Dagger KAPT + Anvil KSP) before migrating to Metro, we have sliced the incremental build time by 75% accumulatively!
+
+| Mutation         | Dagger KAPT +<br/> Anvil KSP 🐢 | Metro Station 🚀 | Delta 📉      |
+|:-----------------|:--------------------------------|:-----------------|:--------------|
+| **Root Abi**     | 115.02s                         | 28.72s           | **-75.03%** ✨ |
+| **Root Non-abi** | 77.7s                           | 17.14s           | **-77.94%** ✨ |
 
 ## Use Cases
 
