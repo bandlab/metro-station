@@ -20,7 +20,7 @@ interface PageGraphFactory<
     fun create(
         @Provides feature: Feature,
         @Provides param: Param,
-        @Includes pageGraphDependencies: PageGraphDependencies,
+        @Includes pageGraphDependencies: AndroidPageGraphDependencies,
         @Includes serviceProvider: ServiceProvider,
         @Includes extraDependencies: ExtraDependencies,
     ): Graph
@@ -31,7 +31,7 @@ interface PageGraphFactory<
  */
 fun <Feature : Page<*>, VM : Any, Param, ServiceProvider, ExtraDependencies, Graph : PageInjector<VM>>
     Feature.createGraphAndInjectViewModel(
-    deps: PageGraphDependencies,
+    deps: AndroidPageGraphDependencies,
     param: Param,
     factory: PageGraphFactory<Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph>,
     extraDependencies: ExtraDependencies,

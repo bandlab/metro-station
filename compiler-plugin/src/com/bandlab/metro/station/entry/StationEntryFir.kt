@@ -565,7 +565,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 )
                 valueParameter(
                     "pageGraphDependencies".asName(),
-                    Ids.pageGraphDependencies.constructClassLikeType(),
+                    Ids.androidPageGraphDependencies.constructClassLikeType(),
                     key = Key
                 )
             }

@@ -1,20 +1,20 @@
 package com.bandlab.common.android.pager.screen.di
 
 import com.bandlab.android.common.activity.CommonActivity
+import com.bandlab.uikit.api.page.PageGraphDependencies
 
 /**
  * A set of dependencies that are required to create a page component.
  */
-data class PageGraphDependencies(
+class AndroidPageGraphDependencies(
     val activity: CommonActivity<*>,
-    val navPageNavigation: NavPageNavigation = NavPageNavigation.NOOP,
-) {
+) : PageGraphDependencies {
     companion object {
         // A helper for JVM test to wire the AppGraph with the Page graph/ extension.
-        fun fromAppGraph(appGraph: Any): PageGraphDependencies {
+        fun fromAppGraph(appGraph: Any): AndroidPageGraphDependencies {
             val activity = object : CommonActivity<Unit>() {}
             activity.graph = appGraph
-            return PageGraphDependencies(activity)
+            return AndroidPageGraphDependencies(activity)
         }
     }
 }

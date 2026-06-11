@@ -26,7 +26,7 @@ fun box(): String {
     val appGraph = createGraph<AppGraph>()
     val myPage = MyPage(Context.FAKE)
     val viewModel = myPage.injectViewModel(
-        PageGraphDependencies.fromAppGraph(appGraph),
+        AndroidPageGraphDependencies.fromAppGraph(appGraph),
         MyPage.Params(number = 123L)
     )
     assertEquals(123L, viewModel.number)

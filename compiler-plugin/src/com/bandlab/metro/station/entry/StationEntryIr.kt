@@ -8,6 +8,8 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
+import org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.functions
@@ -178,12 +180,21 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
         val depsValueParam = regularParams.firstOrNull() ?: return
         val initialParamValueParam = regularParams.getOrNull(1)
 
-        // deps.activity expression
-        val depsClass = depsValueParam.type.classOrNull?.owner ?: return
-        val activityGetter = depsClass.properties
+        // deps.activity expression (cast deps to AndroidPageGraphDependencies first)
+        val androidDepsSymbol = finder.findClass(Ids.androidPageGraphDependencies) ?: return
+        val androidDepsClass = androidDepsSymbol.owner
+        val activityGetter = androidDepsClass.properties
             .first { it.name.asString() == "activity" }.getter ?: return
+        val androidDepsType = androidDepsSymbol.typeWith()
+        val depsCastExpr = IrTypeOperatorCallImpl(
+            builder.startOffset, builder.endOffset,
+            androidDepsType,
+            IrTypeOperator.CAST,
+            androidDepsType,
+            builder.irGet(depsValueParam)
+        )
         val depsActivityExpr = builder.irCall(activityGetter).apply {
-            dispatchReceiver = builder.irGet(depsValueParam)
+            dispatchReceiver = depsCastExpr
         }
 
         // deps.activity.resolveServiceProvider<FeatureExtension.Factory>()

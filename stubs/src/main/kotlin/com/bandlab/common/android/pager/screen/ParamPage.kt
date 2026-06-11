@@ -1,8 +1,8 @@
 package com.bandlab.common.android.pager.screen
 
-import com.bandlab.common.android.pager.screen.di.PageGraphDependencies
 import com.bandlab.common.di.GeneratedByMetroStation
 import com.bandlab.uikit.api.page.Page
+import com.bandlab.uikit.api.page.PageGraphDependencies
 import kotlinx.coroutines.flow.Flow
 
 /**

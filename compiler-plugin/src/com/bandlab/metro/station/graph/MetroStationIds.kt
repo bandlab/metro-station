@@ -66,12 +66,14 @@ internal object MetroStationIds {
     val generatedByMetroStation = ClassId(FqName("com.bandlab.common.di"), "GeneratedByMetroStation".asName())
 
     // Page
+    private val pageApi = FqName("com.bandlab.uikit.api.page")
     private val commonPageDi = FqName("com.bandlab.common.android.pager.screen.di")
-    val page = ClassId(FqName("com.bandlab.uikit.api.page"), "Page".asName())
+    val page = ClassId(pageApi, "Page".asName())
+    val pageGraphDependencies = ClassId(pageApi, "PageGraphDependencies".asName())
+    val androidPageGraphDependencies = ClassId(commonPageDi, "AndroidPageGraphDependencies".asName())
     val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
     val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
     val pageGraphExtensionFactory = ClassId(commonPageDi, "PageGraphExtensionFactory".asName())
-    val pageGraphDependencies = ClassId(commonPageDi, "PageGraphDependencies".asName())
     val createGraphAndInjectViewModel = ClassId(commonPageDi, "createGraphAndInjectViewModel".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
 

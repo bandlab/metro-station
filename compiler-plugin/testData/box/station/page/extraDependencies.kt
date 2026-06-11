@@ -37,7 +37,7 @@ fun box(): String {
         override val boolean: Boolean = true
     }
     val myPage = MyPage(Context.FAKE, extraDependencies)
-    val viewModel = myPage.injectViewModel(PageGraphDependencies.fromAppGraph(appGraph))
+    val viewModel = myPage.injectViewModel(AndroidPageGraphDependencies.fromAppGraph(appGraph))
     assertEquals("Hello! true 123", viewModel.value)
     return "OK"
 }

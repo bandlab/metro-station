@@ -24,7 +24,7 @@ interface PageGraphFactory<
     fun create(
         @Provides feature: Feature,
         @Provides param: Param,
-        @Includes pageGraphDependencies: PageGraphDependencies,
+        @Includes pageGraphDependencies: AndroidPageGraphDependencies,
         @Includes serviceProvider: ServiceProvider,
         @Includes extraDependencies: ExtraDependencies,
     ): Graph
@@ -38,7 +38,7 @@ fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageViewModel(
     host: CommonActivity<*>,
     lifecycleOwner: LifecycleOwner,
 ): ViewModel {
-    val pageDependencies = PageGraphDependencies(
+    val pageDependencies = AndroidPageGraphDependencies(
         activity = host,
         lifecycleOwner = lifecycleOwner,
     )
@@ -57,7 +57,7 @@ fun <ViewModel : Any, Param : Any> Page<ViewModel>.createPageViewModel(
  */
 fun <Feature : Page<*>, VM : Any, Param, ServiceProvider, ExtraDependencies, Graph : PageInjector<VM>>
     Feature.createGraphAndInjectViewModel(
-    deps: PageGraphDependencies,
+    deps: AndroidPageGraphDependencies,
     param: Param,
     factory: PageGraphFactory<Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph>,
     extraDependencies: ExtraDependencies,
