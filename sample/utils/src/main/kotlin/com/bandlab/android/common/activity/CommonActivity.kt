@@ -39,7 +39,7 @@ abstract class CommonActivity<Params : Any> : FragmentActivity() {
     }
 
     /**
-     * TODO
+     * Creates the dependency graph (or graph extension), and performs members injection for the Activity.
      */
     @GeneratedByMetroStation
     open fun inject() {

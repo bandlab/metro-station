@@ -10,7 +10,7 @@ interface Page<ViewModel : Any> {
     fun Content(viewModel: ViewModel)
 
     /**
-     * TODO
+     * Creates the dependency graph (or graph extension), and returns the ViewModel instance for the page.
      */
     @GeneratedByMetroStation
     fun injectViewModel(deps: PageGraphDependencies): ViewModel {

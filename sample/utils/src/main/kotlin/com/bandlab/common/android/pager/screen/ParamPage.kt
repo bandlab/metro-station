@@ -24,7 +24,7 @@ interface ParamPage<ViewModel : Any, Param : Any> : Page<ViewModel> {
     fun parseParam(savedState: SavedState): Param? = null
 
     /**
-     * TODO
+     * Creates the dependency graph (or graph extension), and returns the ViewModel instance for the page.
      */
     @GeneratedByMetroStation
     fun injectViewModel(deps: PageGraphDependencies, initialParam: Param): ViewModel {
