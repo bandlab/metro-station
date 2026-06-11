@@ -5,11 +5,7 @@ import com.bandlab.android.common.activity.CommonActivity
 
 interface HasDependencyGraph {
 
-    fun <T> resolve(): T {
-        throw UnsupportedOperationException(
-            "This should be implemented by the compiler, unless you manually extend this supertype."
-        )
-    }
+    fun <T> resolve(): T
 
     companion object {
 
