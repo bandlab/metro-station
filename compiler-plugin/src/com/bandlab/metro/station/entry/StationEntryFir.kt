@@ -454,19 +454,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 provideParamFunction.symbol as FirNamedFunctionSymbol
             }
 
-            is ComponentType.Page if componentType.hasParam -> {
-                val paramTypeArg = componentType.superTypeRef.unwrapType(1) ?: return null
-                val paramType = paramTypeArg as? ConeKotlinType ?: return null
-
-                val pageGraphDepsType = Ids.pageGraphDependencies.constructClassLikeType()
-                val provideParamFunction =
-                    createMemberFunction(owner, Key, Ids.provideParamName, paramType) {
-                        valueParameter("pageGraphDependencies".asName(), pageGraphDepsType, key = Key)
-                    }
-                provideParamFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
-                provideParamFunction.symbol as FirNamedFunctionSymbol
-            }
-
             ComponentType.Fragment, is ComponentType.Page -> null
         }
     }
