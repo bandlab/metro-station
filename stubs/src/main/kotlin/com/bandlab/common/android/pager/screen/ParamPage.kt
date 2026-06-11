@@ -1,7 +1,9 @@
 package com.bandlab.common.android.pager.screen
 
 import com.bandlab.common.android.pager.screen.di.PageGraphDependencies
+import com.bandlab.common.di.GeneratedByMetroStation
 import com.bandlab.uikit.api.page.Page
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Use [ParamPage] if you need params for the page, it also supports param updates similar to Activity's onNewIntent.
@@ -20,6 +22,7 @@ interface ParamPage<ViewModel : Any, Param : Any> : Page<ViewModel> {
      */
     fun parseParam(savedState: SavedState): Param? = null
 
+    @GeneratedByMetroStation
     fun injectViewModel(deps: PageGraphDependencies, initialParam: Param): ViewModel {
         throw UnsupportedOperationException("This method will be implemented by the compiler plugin.")
     }

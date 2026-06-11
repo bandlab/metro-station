@@ -25,12 +25,7 @@ class MyDependency(val int: Int)
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
     val myActivity = MyActivity()
-    val graph = createGraphFactory<MyActivity.FeatureGraph.Factory>().create(
-        feature = myActivity,
-        serviceProvider = appGraph,
-        extraDependencies = EmptyExtraDependencies
-    )
-    graph.injector.injectMembers(myActivity)
+    myActivity.setAppGraphAndInject(appGraph)
     assertEquals(42, myActivity.myDependency.int)
     return "OK"
 }
