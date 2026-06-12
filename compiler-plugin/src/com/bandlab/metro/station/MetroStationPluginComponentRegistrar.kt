@@ -25,7 +25,7 @@ public class MetroStationPluginComponentRegistrar : CompilerPluginRegistrar() {
     override val supportsK2: Boolean get() = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
-        val stationEntriesBaseline = configuration.get(MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE)
+        val stationEntriesBaseline = configuration[MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE]
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(
                 includeBaselineChecker = stationEntriesBaseline != null,

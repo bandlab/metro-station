@@ -12,6 +12,11 @@ import com.bandlab.metro.station.sample.component.LoggerBroadcastReceiver
 import com.bandlab.metro.station.sample.component.LoggerService
 import com.bandlab.metro.station.sample.component.LoggerWithoutOnCreateService
 import com.bandlab.metro.station.sample.component.LoggerWorker
+import com.bandlab.metro.station.sample.main.MainActivity
+import com.bandlab.metro.station.sample.profile.ProfileActivity
+import com.bandlab.metro.station.sample.profile.content.ProfileContentPage
+import com.bandlab.metro.station.sample.profile.footer.ProfileFooterPage
+import dev.zacsweers.metro.asContribution
 import dev.zacsweers.metro.createGraphFactory
 
 class SampleApp : Application(), HasDependencyGraph {
@@ -24,6 +29,13 @@ class SampleApp : Application(), HasDependencyGraph {
 
     override fun onCreate() {
         super.onCreate()
+
+        // Invoke asContribution here to make sure the contributions are processed correctly, and most importantly,
+        // to make it a compiler-time error instead of runtime if something goes wrong.
+        appGraph.asContribution<MainActivity.FeatureServiceProvider>()
+        appGraph.asContribution<ProfileActivity.FeatureExtension.Factory>()
+        appGraph.asContribution<ProfileContentPage.FeatureServiceProvider>()
+        appGraph.asContribution<ProfileFooterPage.FeatureServiceProvider>()
 
         // Start LoggerService
         startService(Intent(this, LoggerService::class.java))

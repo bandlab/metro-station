@@ -3,6 +3,7 @@ package com.bandlab.metro.station.services
 import com.bandlab.metro.station.MetroStationPluginRegistrar
 import com.bandlab.metro.station.entry.StationEntryIr
 import com.bandlab.metro.station.graph.MetroStationIr
+import dev.zacsweers.metro.compiler.MetroCommandLineProcessor
 import dev.zacsweers.metro.compiler.MetroCompilerPluginRegistrar
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
@@ -53,12 +54,23 @@ fun TestConfigurationBuilder.configureImports(
 }
 
 private class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices) {
+
+    private val metroCliProcessor = MetroCommandLineProcessor()
     private val metroRegistrar = MetroCompilerPluginRegistrar()
 
     override fun CompilerPluginRegistrar.ExtensionStorage.registerCompilerExtensions(
         module: TestModule,
         configuration: CompilerConfiguration
     ) {
+        // Configure Metro options from directives before registering
+        if (MetroDirectives.GENERATE_CLASSES_IN_IR in module.directives) {
+            val option =
+                metroCliProcessor.pluginOptions.first {
+                    it.optionName == "generate-classes-in-ir"
+                }
+            metroCliProcessor.processOption(option, "true", configuration)
+        }
+
         val includeBaselineChecker = MetroDirectives.ENABLE_STATION_ENTRIES_BASELINE in module.directives
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(
