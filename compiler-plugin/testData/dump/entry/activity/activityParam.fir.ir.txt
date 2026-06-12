@@ -165,6 +165,8 @@ FILE fqName:<root> fileName:/activityParam.kt
         IROnlyFactories
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureBindings
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] CLASS name:ProvideBaseTypeMetroFactory modality:FINAL visibility:public superTypes:[dev.zacsweers.metro.internal.Factory<com.bandlab.android.common.activity.CommonActivity<*>>]
+        annotations:
+          CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 507, newInstanceName = "provideBaseType")
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory
         FIELD name:feature type:dev.zacsweers.metro.Provider<<root>.MyActivity> visibility:private [final]
           EXPRESSION_BODY
@@ -198,7 +200,7 @@ FILE fqName:<root> fileName:/activityParam.kt
                 CALL 'public final fun provideBaseType (feature: <root>.MyActivity): com.bandlab.android.common.activity.CommonActivity<*> declared in <root>.MyActivity.FeatureBindings' type=com.bandlab.android.common.activity.CommonActivity<*> origin=null
                   ARG <this>: GET_OBJECT 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=<root>.MyActivity.FeatureBindings
                   ARG feature: GET_VAR 'feature: <root>.MyActivity declared in <root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory.Companion.provideBaseType' type=<root>.MyActivity origin=null
-        CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] visibility:private returnType:<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory [primary]
+        CONSTRUCTOR visibility:private returnType:<root>.MyActivity.FeatureBindings.ProvideBaseTypeMetroFactory [primary]
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:0 type:dev.zacsweers.metro.Provider<<root>.MyActivity>
           annotations:
             HiddenFromObjC
@@ -229,6 +231,8 @@ FILE fqName:<root> fileName:/activityParam.kt
               CALL 'public final fun error (message: kotlin.Any): kotlin.Nothing declared in kotlin' type=kotlin.Nothing origin=null
                 ARG message: CONST String type=kotlin.String value="Never called"
       CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] CLASS name:ProvideParamMetroFactory modality:FINAL visibility:public superTypes:[dev.zacsweers.metro.internal.Factory<<root>.MyActivity.Param>]
+        annotations:
+          CallableMetadata(callableName = "provideParam", propertyName = "", startOffset = 348, endOffset = 507, newInstanceName = "provideParam")
         thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory
         FIELD name:feature type:dev.zacsweers.metro.Provider<<root>.MyActivity> visibility:private [final]
           EXPRESSION_BODY
@@ -262,7 +266,7 @@ FILE fqName:<root> fileName:/activityParam.kt
                 CALL 'public final fun provideParam (feature: <root>.MyActivity): <root>.MyActivity.Param declared in <root>.MyActivity.FeatureBindings' type=<root>.MyActivity.Param origin=null
                   ARG <this>: GET_OBJECT 'CLASS GENERATED[com.bandlab.metro.station.entry.StationEntryFir.Key] OBJECT name:FeatureBindings modality:FINAL visibility:public superTypes:[]' type=<root>.MyActivity.FeatureBindings
                   ARG feature: GET_VAR 'feature: <root>.MyActivity declared in <root>.MyActivity.FeatureBindings.ProvideParamMetroFactory.Companion.provideParam' type=<root>.MyActivity origin=null
-        CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.ProviderFactoryClassDeclaration] visibility:private returnType:<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory [primary]
+        CONSTRUCTOR visibility:private returnType:<root>.MyActivity.FeatureBindings.ProvideParamMetroFactory [primary]
           VALUE_PARAMETER GENERATED[dev.zacsweers.metro.compiler.fir.Keys.RegularParameter] kind:Regular name:feature index:0 type:dev.zacsweers.metro.Provider<<root>.MyActivity>
           annotations:
             HiddenFromObjC
@@ -601,7 +605,7 @@ FILE fqName:<root> fileName:/activityParam.kt
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-  CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope; com.bandlab.common.android.di.GraphExtensionFactoriesProvider]
+  CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15; com.bandlab.common.android.di.GraphExtensionFactoriesProvider; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope]
     annotations:
       DependencyGraph(scope = AppScope::class, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph
@@ -753,32 +757,32 @@ FILE fqName:<root> fileName:/activityParam.kt
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
       overridden:
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
-        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
     FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun hashCode (): kotlin.Int declared in kotlin.Any
-        public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+        public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-        public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+        public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
     PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
       annotations:
         Multibinds(allowEmpty = true)
       overridden:
-        public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
         public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+        public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
       FUN FAKE_OVERRIDE name:<get-graphExtensionFactories> visibility:public modality:ABSTRACT returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> [fake_override]
-        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
+        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.di.GraphExtensionFactoriesProvider
         correspondingProperty: PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
         overridden:
-          public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
           public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
+          public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
 FILE fqName:metro.hints fileName:/myActivityFeatureExtensionFactoryAppScope.kt
   FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] name:AppScope visibility:public modality:FINAL returnType:kotlin.Unit
     VALUE_PARAMETER kind:Regular name:contributed index:0 type:<root>.MyActivity.FeatureExtension.Factory

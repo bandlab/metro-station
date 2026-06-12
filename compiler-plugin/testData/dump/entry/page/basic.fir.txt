@@ -46,7 +46,7 @@ FILE: basic.kt
         }
 
     }
-    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|) [evaluated = <getClass>(Q|dev/zacsweers/metro/AppScope|)]) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider| {
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|) [evaluated = <getClass>(Q|dev/zacsweers/metro/AppScope|)]) public abstract interface AppGraph : R|kotlin/Any|, R|MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider|, R|com/bandlab/common/android/di/GraphExtensionFactoriesProvider.MetroContributionToAppScope| {
         @R|dev/zacsweers/metro/Provides|() public open fun provideLong(): R|kotlin/Long| {
             ^provideLong Long(123)
         }

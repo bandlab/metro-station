@@ -108,6 +108,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
     }
 
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 460, endOffset = 669, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<Page<*>> {
       private /* final field */ val instance: FeatureGraph = instance
       private /* final field */ val feature: Provider<MyPage> = feature
@@ -154,6 +155,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
     }
 
+    @CallableMetadata(callableName = "provideParamFlow", propertyName = "", startOffset = 460, endOffset = 669, newInstanceName = "provideParamFlow")
     class ProvideParamFlowMetroFactory : Factory<Flow<Params>> {
       private /* final field */ val instance: FeatureGraph = instance
       private /* final field */ val provider: Provider<PageParamFlowProvider> = provider

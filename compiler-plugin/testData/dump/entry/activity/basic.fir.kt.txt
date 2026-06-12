@@ -26,6 +26,7 @@ class MyActivity : CommonActivity<Unit> {
   @BindingContainer
   @IROnlyFactories
   object FeatureBindings {
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 459, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<CommonActivity<*>> {
       private /* final field */ val feature: Provider<MyActivity> = feature
       companion object Companion {

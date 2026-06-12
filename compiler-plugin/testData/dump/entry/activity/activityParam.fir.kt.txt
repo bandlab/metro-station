@@ -69,6 +69,7 @@ class MyActivity : CommonActivity<Param> {
   @BindingContainer
   @IROnlyFactories
   object FeatureBindings {
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 507, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<CommonActivity<*>> {
       private /* final field */ val feature: Provider<MyActivity> = feature
       companion object Companion {
@@ -114,6 +115,7 @@ class MyActivity : CommonActivity<Param> {
 
     }
 
+    @CallableMetadata(callableName = "provideParam", propertyName = "", startOffset = 348, endOffset = 507, newInstanceName = "provideParam")
     class ProvideParamMetroFactory : Factory<Param> {
       private /* final field */ val feature: Provider<MyActivity> = feature
       companion object Companion {

@@ -70,6 +70,7 @@ class MyActivity : CommonActivity<Unit> {
 
     }
 
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 590, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<CommonActivity<*>> {
       private /* final field */ val instance: FeatureGraph = instance
       private /* final field */ val feature: Provider<MyActivity> = feature
