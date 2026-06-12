@@ -317,7 +317,7 @@ FILE fqName:<root> fileName:/basic.kt
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-  CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15; com.bandlab.common.android.di.GraphExtensionFactoriesProvider; com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope]
+  CLASS INTERFACE name:AppGraph modality:ABSTRACT visibility:public superTypes:[kotlin.Any; <root>.MyPage.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15]
     annotations:
       DependencyGraph(scope = AppScope::class, additionalScopes = <null>, excludes = <null>, bindingContainers = <null>)
     thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph
@@ -419,21 +419,6 @@ FILE fqName:<root> fileName:/basic.kt
               ARG feature: GET_VAR 'feature: <root>.MyPage declared in <root>.AppGraph.Impl.create' type=<root>.MyPage origin=null
               ARG param: GET_VAR 'param: kotlin.Unit declared in <root>.AppGraph.Impl.create' type=kotlin.Unit origin=null
               ARG pageGraphDependencies: GET_VAR 'pageGraphDependencies: com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies declared in <root>.AppGraph.Impl.create' type=com.bandlab.common.android.pager.screen.di.AndroidPageGraphDependencies origin=null
-      PROPERTY name:graphExtensionFactories visibility:public modality:FINAL [val]
-        annotations:
-          Multibinds(allowEmpty = true)
-        overridden:
-          public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
-        FUN name:<get-graphExtensionFactories> visibility:public modality:FINAL returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any>
-          VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph.Impl
-          correspondingProperty: PROPERTY name:graphExtensionFactories visibility:public modality:FINAL [val]
-          overridden:
-            public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph
-          BLOCK_BODY
-            RETURN type=kotlin.Nothing from='public final fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in <root>.AppGraph.Impl'
-              CALL 'public final fun emptyMap <K, V> (): kotlin.collections.Map<K of kotlin.collections.emptyMap, V of kotlin.collections.emptyMap> declared in kotlin.collections' type=kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> origin=null
-                TYPE_ARG K: kotlin.reflect.KClass<*>
-                TYPE_ARG V: kotlin.Any
     CLASS GENERATED[dev.zacsweers.metro.compiler.fir.Keys.MetroGraphCreatorsObjectDeclaration] OBJECT name:Companion modality:FINAL visibility:public [companion] superTypes:[kotlin.Any]
       thisReceiver: VALUE_PARAMETER INSTANCE_RECEIVER kind:DispatchReceiver name:<this> type:<root>.AppGraph.Companion
       CONSTRUCTOR GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] visibility:private returnType:<root>.AppGraph.Companion [primary]
@@ -570,20 +555,14 @@ FILE fqName:<root> fileName:/basic.kt
       VALUE_PARAMETER kind:Regular name:other index:1 type:kotlin.Any?
       overridden:
         public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in kotlin.Any
-        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-        public open fun equals (other: kotlin.Any?): kotlin.Boolean declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
     FUN FAKE_OVERRIDE name:hashCode visibility:public modality:OPEN returnType:kotlin.Int [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun hashCode (): kotlin.Int declared in kotlin.Any
-        public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-        public open fun hashCode (): kotlin.Int declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
     FUN FAKE_OVERRIDE name:toString visibility:public modality:OPEN returnType:kotlin.String [fake_override]
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:kotlin.Any
       overridden:
         public open fun toString (): kotlin.String declared in kotlin.Any
-        public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-        public open fun toString (): kotlin.String declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
     FUN name:provideLong visibility:public modality:OPEN returnType:kotlin.Long
       VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.AppGraph
       annotations:
@@ -591,18 +570,6 @@ FILE fqName:<root> fileName:/basic.kt
       BLOCK_BODY
         RETURN type=kotlin.Nothing from='public open fun provideLong (): kotlin.Long declared in <root>.AppGraph'
           CONST Long type=kotlin.Long value=123
-    PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
-      annotations:
-        Multibinds(allowEmpty = true)
-      overridden:
-        public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-        public abstract graphExtensionFactories: kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
-      FUN FAKE_OVERRIDE name:<get-graphExtensionFactories> visibility:public modality:ABSTRACT returnType:kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> [fake_override]
-        VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-        correspondingProperty: PROPERTY FAKE_OVERRIDE name:graphExtensionFactories visibility:public modality:ABSTRACT [fake_override,val]
-        overridden:
-          public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider
-          public abstract fun <get-graphExtensionFactories> (): kotlin.collections.Map<kotlin.reflect.KClass<*>, kotlin.Any> declared in com.bandlab.common.android.di.GraphExtensionFactoriesProvider.MetroContributionToAppScope
 FILE fqName:metro.hints fileName:/myPageFeatureExtensionFactoryAppScope.kt
   FUN GENERATED[dev.zacsweers.metro.compiler.fir.Keys.Default] name:AppScope visibility:public modality:FINAL returnType:kotlin.Unit
     VALUE_PARAMETER kind:Regular name:contributed index:0 type:<root>.MyPage.FeatureExtension.Factory

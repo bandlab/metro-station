@@ -290,7 +290,7 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, GraphExtensionFactoriesProvider, MetroContributionToAppScope {
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph {
@@ -328,12 +328,6 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15, GraphExt
     override fun create(@Provides feature: MyActivity): FeatureExtension {
       return FeatureExtensionImpl(appGraphImpl = <this>, feature = feature)
     }
-
-    @Multibinds(allowEmpty = true)
-    override val graphExtensionFactories: Map<KClass<*>, Any>
-      override get(): Map<KClass<*>, Any> {
-        return emptyMap<KClass<*>, Any>()
-      }
 
   }
 
