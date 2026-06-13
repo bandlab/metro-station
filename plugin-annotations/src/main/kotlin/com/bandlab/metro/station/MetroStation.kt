@@ -35,7 +35,7 @@ import kotlin.reflect.KClass
  * We also request some common app-level dependencies for you. For screens (page, activity, fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
  *
  * Besides the basic support, we will also generate param providers:
- * - For CommonActivity, param type T is available in the graph.
+ * - For CommonActivity, param type declared as the generic type will be available in the graph.
  * - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
  *
  * ### Android Component Injection

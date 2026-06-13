@@ -38,7 +38,7 @@ import com.bandlab.metro.station.configselector.ContributesConfigSelectorIds as 
 
 /**
  * This FIR declaration generator generates a multibinding contribution for config selectors that are annotated with
- * [Ids.contributesConfigSelectorFqName].
+ * [Ids.contributesConfigSelector].
  */
 public class ContributesConfigSelectorFir(session: FirSession, compatContext: CompatContext) :
     MetroFirDeclarationGenerationExtension(session),

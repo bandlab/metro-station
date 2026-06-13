@@ -31,7 +31,7 @@ BandLab Android app has 1163 modules, and 490 of them are running KSP (3 process
 | **Root Abi**     | 54.79s         | 28.72s           | **-47.57%** ✨ |
 | **Root Non-abi** | 40.26s         | 17.14s           | **-57.43%** ✨ |
 
-If we take a step back, compare the setup (Dagger KAPT + Anvil KSP) before migrating to Metro, we have sliced the incremental build time by 75% accumulatively!
+If we take a step back, compare the setup before migrating to Metro (Dagger KAPT + Anvil KSP), we have sliced the incremental build time by 75% accumulatively by just updating the DI framework!
 
 | Mutation         | Dagger KAPT +<br/> Anvil KSP 🐢 | Metro Station 🚀 | Delta 📉      |
 |:-----------------|:--------------------------------|:-----------------|:--------------|
@@ -103,7 +103,7 @@ We provide common default dependencies to ease the development for you.
 We also request some common app-level dependencies for you. For screens (page, activity, fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
 
 Besides the basic support, we will also generate param providers:
-- For CommonActivity, param type T is available in the graph.
+- For CommonActivity, param type declared as the generic type will be available in the graph.
 - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
 
 ### Android Component Injection

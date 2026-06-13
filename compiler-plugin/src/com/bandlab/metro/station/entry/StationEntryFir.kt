@@ -673,20 +673,14 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     override fun getContributionTargets(): List<ContributionTarget> {
         return annotatedClasses.flatMap { classSymbol ->
             val parentScope = resolveParentScopeClassId(classSymbol)
-            val componentType = resolveComponentType(classSymbol)
             val factoryClassId = classSymbol.classId
                 .createNestedClassId(Ids.featureExtensionName)
                 .createNestedClassId(Ids.nestedFactoryName)
-            listOfNotNull(
+            val extensionFactoryContributionId = classSymbol.classId
+                .createNestedClassId(Ids.extensionFactoryContributionName)
+            listOf(
                 ContributionTarget(contributingClassId = factoryClassId, scope = parentScope),
-                if (componentType == ComponentType.Fragment) {
-                    ContributionTarget(
-                        contributingClassId = classSymbol.classId.createNestedClassId(Ids.extensionFactoryContributionName),
-                        scope = parentScope
-                    )
-                } else {
-                    null
-                }
+                ContributionTarget(contributingClassId = extensionFactoryContributionId, scope = parentScope)
             )
         }
     }
