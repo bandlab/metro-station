@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 @TestMetadata("compiler-plugin/testData/dump")
 @TestDataPath("$PROJECT_ROOT")
-public class FirDumpTestGenerated extends AbstractFirDumpTest {
+public class DumpTestGenerated extends AbstractDumpTest {
   private void run(String fileName) {
     runTest("compiler-plugin/testData/dump/" + fileName);
   }
