@@ -1,0 +1,296 @@
+// FILE: myServiceFeatureServiceProviderAppScope.kt
+package metro.hints
+
+fun AppScope(contributed: FeatureServiceProvider) {
+  return error(message = "Never called")
+}
+
+// FILE: service.kt
+
+@Inject
+class MyDependency {
+  val text: String
+    field = text
+    get
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  class MetroFactory : Factory<MyDependency> {
+    private /* final field */ val text: Provider<String> = text
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun create(text: Provider<String>): MetroFactory {
+        return MetroFactory(text = text)
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun newInstance(text: String): MyDependency {
+        return MyDependency(text = text)
+      }
+
+    }
+
+    @HiddenFromObjC
+    private constructor(text: Provider<String>) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @HiddenFromObjC
+    override operator fun invoke(): MyDependency {
+      return Companion.newInstance(text = <this>.#text.invoke())
+    }
+
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun mirrorFunction(text: String): MyDependency {
+      return error(message = "Never called")
+    }
+
+  }
+
+  constructor(text: String) /* primary */ {
+    super/*Any*/()
+    /* <init>() */
+
+  }
+
+}
+
+@MetroStation(appDependencies = ServiceProvider::class)
+class MyService : Service {
+  lateinit var myDependency: MyDependency
+    get
+    set
+
+  @IROnlyFactories
+  @DependencyGraph(scope = MyService::class, bindingContainers = [])
+  interface FeatureGraph : MembersInjectorProvider<MyService> {
+    @Factory
+    interface Factory : GraphFactory<MyService, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+      @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+      @MetroImplMarker
+      object Impl : Factory {
+        private constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @GraphFactoryInvokeFunctionMarker
+        override fun create(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
+          return Impl(feature = feature, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        }
+
+      }
+
+    }
+
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroImplMarker
+    class Impl : FeatureGraph {
+      private val featureServiceProviderInstance: FeatureServiceProvider
+        field = serviceProvider
+
+      private val featureServiceProviderMyDependencyProvider: Provider<MyDependency>
+        field = provider<MyDependency>(provider = local fun <anonymous>(): MyDependency {
+          return <this>.#featureServiceProviderInstance.<get-myDependency>()
+        }
+)
+
+      private constructor(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      override val injector: MembersInjector<MyService>
+        override get(): MembersInjector<MyService> {
+          return Companion.create(myDependency = <this>.#featureServiceProviderMyDependencyProvider)
+        }
+
+    }
+
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @JvmStatic
+      @JsStatic
+      fun factory(): Factory {
+        return Impl()
+      }
+
+    }
+
+  }
+
+  @ContributesTo(scope = AppScope::class)
+  interface FeatureServiceProvider : ServiceProvider {
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroContribution(scope = AppScope::class)
+    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
+    }
+
+  }
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  class MetroMembersInjector : MembersInjector<MyService> {
+    private /* final field */ val myDependency: Provider<MyDependency> = myDependency
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun create(myDependency: Provider<MyDependency>): MembersInjector<MyService> {
+        return MetroMembersInjector(myDependency = myDependency)
+      }
+
+      @JvmStatic
+      @JsStatic
+      fun injectMyDependency(@Assisted instance: MyService, myDependency: MyDependency) {
+        return instance.#myDependency = myDependency
+      }
+
+    }
+
+    private constructor(myDependency: Provider<MyDependency>) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    override fun injectMembers(instance: MyService) {
+      Companion.injectMyDependency(instance = instance, myDependency = <this>.#myDependency.invoke())
+    }
+
+  }
+
+  interface ServiceProvider {
+    abstract val myDependency: MyDependency
+      abstract get
+
+  }
+
+  constructor() /* primary */ {
+    super/*Service*/()
+    /* <init>() */
+
+  }
+
+  override fun onCreate() {
+    Impl.create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
+    println(message = <this>.<get-myDependency>().<get-text>())
+  }
+
+}
+
+@DependencyGraph(scope = AppScope::class)
+interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  @MetroImplMarker
+  class Impl : AppGraph {
+    private val thisGraphInstance: Impl
+      field = <this>
+
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    override val myDependency: MyDependency
+      override get(): MyDependency {
+        return MyDependency(text = <this>.#thisGraphInstance.provideText())
+      }
+
+  }
+
+  companion object Companion {
+    private constructor() /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @GraphFactoryInvokeFunctionMarker
+    @JvmStatic
+    @JsStatic
+    operator fun invoke(): AppGraph {
+      return Impl()
+    }
+
+  }
+
+  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 737, endOffset = 787, newInstanceName = "provideText")
+  class ProvideTextMetroFactory : Factory<String> {
+    private /* final field */ val instance: AppGraph = instance
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun create(instance: AppGraph): ProvideTextMetroFactory {
+        return ProvideTextMetroFactory(instance = instance)
+      }
+
+      @HiddenFromObjC
+      @JvmStatic
+      @JsStatic
+      fun provideText(instance: AppGraph): String {
+        return instance.provideText()
+      }
+
+    }
+
+    @HiddenFromObjC
+    private constructor(instance: AppGraph) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    @HiddenFromObjC
+    override operator fun invoke(): String {
+      return Companion.provideText(instance = <this>.#instance)
+    }
+
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun mirrorFunction(): String {
+      return error(message = "Never called")
+    }
+
+  }
+
+  @Provides
+  fun provideText(): String {
+    return "Hello!"
+  }
+
+}
+

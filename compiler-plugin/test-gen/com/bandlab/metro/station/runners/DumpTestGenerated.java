@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 @TestMetadata("compiler-plugin/testData/dump")
 @TestDataPath("$PROJECT_ROOT")
-public class FirDumpTestGenerated extends AbstractFirDumpTest {
+public class DumpTestGenerated extends AbstractDumpTest {
   private void run(String fileName) {
     runTest("compiler-plugin/testData/dump/" + fileName);
   }
@@ -141,6 +141,44 @@ public class FirDumpTestGenerated extends AbstractFirDumpTest {
       @TestMetadata("basic.kt")
       public void testBasic() {
         run("basic.kt");
+      }
+    }
+
+    @Nested
+    @TestMetadata("compiler-plugin/testData/dump/station/other")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Other {
+      private void run(String fileName) {
+        runTest("compiler-plugin/testData/dump/station/other/" + fileName);
+      }
+
+      @Test
+      public void testAllFilesPresentInOther() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/dump/station/other"), Pattern.compile("^(.+)\\.kt$"), null, true);
+      }
+
+      @Test
+      @TestMetadata("broadcastReceiver.kt")
+      public void testBroadcastReceiver() {
+        run("broadcastReceiver.kt");
+      }
+
+      @Test
+      @TestMetadata("service.kt")
+      public void testService() {
+        run("service.kt");
+      }
+
+      @Test
+      @TestMetadata("serviceWithoutOnCreate.kt")
+      public void testServiceWithoutOnCreate() {
+        run("serviceWithoutOnCreate.kt");
+      }
+
+      @Test
+      @TestMetadata("worker.kt")
+      public void testWorker() {
+        run("worker.kt");
       }
     }
 
