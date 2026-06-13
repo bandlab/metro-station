@@ -76,6 +76,13 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
 
     private val typeResolverFactory by lazy { MetroFirTypeResolver.Factory(session) }
 
+    private val annotatedClasses by lazy {
+        session.predicateBasedProvider
+            .getSymbolsByPredicate(Ids.metroStationPredicate)
+            .filterIsInstance<FirRegularClassSymbol>()
+            .toList()
+    }
+
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.metroStationPredicate)
     }
@@ -85,9 +92,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         context: NestedClassGenerationContext
     ): Set<Name> {
         return when {
-            session.predicateBasedProvider.matches(Ids.metroStationPredicate, classSymbol) ->
-                setOf(Ids.graphName, Ids.featureServiceProviderName)
-
+            classSymbol in annotatedClasses -> setOf(Ids.graphName, Ids.featureServiceProviderName)
             classSymbol.origin == Key.origin && classSymbol.classId.shortClassName == Ids.graphName ->
                 setOf(Ids.nestedFactoryName)
 
@@ -101,9 +106,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         context: NestedClassGenerationContext,
     ): FirClassLikeSymbol<*>? {
         // Generate FeatureGraph inside the annotated class
-        if (name == Ids.graphName &&
-            session.predicateBasedProvider.matches(Ids.metroStationPredicate, owner)
-        ) {
+        if (name == Ids.graphName && owner in annotatedClasses) {
             return generateFeatureGraph(owner)
         }
         // Generate Factory inside FeatureGraph
@@ -114,9 +117,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             return generateFactory(owner)
         }
         // Generate FeatureServiceProvider inside the annotated class
-        if (name == Ids.featureServiceProviderName &&
-            session.predicateBasedProvider.matches(Ids.metroStationPredicate, owner)
-        ) {
+        if (name == Ids.featureServiceProviderName && owner in annotatedClasses) {
             return generateFeatureServiceProvider(owner)
         }
         return null
@@ -127,7 +128,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         context: MemberGenerationContext
     ): Set<Name> {
         // Generate inject()/injectViewModel() overrides on the annotated class itself
-        if (session.predicateBasedProvider.matches(Ids.metroStationPredicate, classSymbol)) {
+        if (classSymbol in annotatedClasses) {
             return when (resolveComponentType(classSymbol)) {
                 is ComponentType.Activity -> setOf(Ids.injectName)
                 is ComponentType.Page -> setOf(Ids.injectViewModelName)
@@ -149,7 +150,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         val owner = context?.owner ?: return emptyList()
 
         // Generate inject()/injectViewModel() overrides on the annotated class
-        if (session.predicateBasedProvider.matches(Ids.metroStationPredicate, owner)) {
+        if (owner in annotatedClasses) {
             return when (callableId.callableName) {
                 Ids.injectName -> listOfNotNull(generateInjectFunction(owner))
                 Ids.injectViewModelName -> listOfNotNull(generateInjectViewModelFunction(owner))
@@ -616,24 +617,18 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
     }
 
     override fun getContributionTargets(): List<ContributionTarget> {
-        return session.predicateBasedProvider
-            .getSymbolsByPredicate(Ids.metroStationPredicate)
-            .filterIsInstance<FirRegularClassSymbol>()
-            .map { classSymbol ->
-                val serviceProvider = classSymbol.classId.createNestedClassId(Ids.featureServiceProviderName)
-                ContributionTarget(contributingClassId = serviceProvider, scope = ClassIds.appScope)
-            }
+        return annotatedClasses.map { classSymbol ->
+            val serviceProvider = classSymbol.classId.createNestedClassId(Ids.featureServiceProviderName)
+            ContributionTarget(contributingClassId = serviceProvider, scope = ClassIds.appScope)
+        }
     }
 
-    override fun getContributionHints(): List<MetroContributionHintExtension.ContributionHint> {
-        return session.predicateBasedProvider
-            .getSymbolsByPredicate(Ids.metroStationPredicate)
-            .filterIsInstance<FirRegularClassSymbol>()
-            .map { classSymbol ->
-                val serviceProvider = classSymbol.classId
-                    .createNestedClassId(MetroStationIds.featureServiceProviderName)
-                ContributionHint(contributingClassId = serviceProvider, scope = ClassIds.appScope)
-            }
+    override fun getContributionHints(): List<ContributionHint> {
+        return annotatedClasses.map { classSymbol ->
+            val serviceProvider = classSymbol.classId
+                .createNestedClassId(MetroStationIds.featureServiceProviderName)
+            ContributionHint(contributingClassId = serviceProvider, scope = ClassIds.appScope)
+        }
     }
 
     internal object Key : GeneratedDeclarationKey()

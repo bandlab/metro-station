@@ -45,6 +45,13 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
     MetroContributionHintExtension,
     CompatContext by compatContext {
 
+    private val annotatedClasses by lazy {
+        session.predicateBasedProvider
+            .getSymbolsByPredicate(Ids.predicate)
+            .filterIsInstance<FirRegularClassSymbol>()
+            .toList()
+    }
+
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.predicate)
     }
@@ -53,7 +60,7 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
         classSymbol: FirClassSymbol<*>,
         context: NestedClassGenerationContext,
     ): Set<Name> {
-        return if (session.predicateBasedProvider.matches(Ids.predicate, classSymbol)) {
+        return if (classSymbol in annotatedClasses) {
             setOf(Ids.nestedContributionName)
         } else {
             emptySet()
@@ -66,7 +73,7 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
         context: NestedClassGenerationContext,
     ): FirClassLikeSymbol<*>? {
         if (name != Ids.nestedContributionName) return null
-        if (!session.predicateBasedProvider.matches(Ids.predicate, owner)) {
+        if (owner !in annotatedClasses) {
             return null
         }
 
@@ -131,31 +138,25 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
     }
 
     override fun getContributionTargets(): List<ContributionTarget> {
-        return session.predicateBasedProvider
-            .getSymbolsByPredicate(Ids.predicate)
-            .filterIsInstance<FirRegularClassSymbol>()
-            .map { classSymbol ->
-                val nestedInterfaceClassId = classSymbol.classId
-                    .createNestedClassId(Ids.nestedContributionName)
-                ContributionTarget(
-                    contributingClassId = nestedInterfaceClassId,
-                    scope = ClassIds.appScope
-                )
-            }
+        return annotatedClasses.map { classSymbol ->
+            val nestedInterfaceClassId = classSymbol.classId
+                .createNestedClassId(Ids.nestedContributionName)
+            ContributionTarget(
+                contributingClassId = nestedInterfaceClassId,
+                scope = ClassIds.appScope
+            )
+        }
     }
 
     override fun getContributionHints(): List<ContributionHint> {
-        return session.predicateBasedProvider
-            .getSymbolsByPredicate(Ids.predicate)
-            .filterIsInstance<FirRegularClassSymbol>()
-            .map { classSymbol ->
-                val nestedInterfaceClassId = classSymbol.classId
-                    .createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
-                ContributionHint(
-                    contributingClassId = nestedInterfaceClassId,
-                    scope = ClassIds.appScope
-                )
-            }
+        return annotatedClasses.map { classSymbol ->
+            val nestedInterfaceClassId = classSymbol.classId
+                .createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
+            ContributionHint(
+                contributingClassId = nestedInterfaceClassId,
+                scope = ClassIds.appScope
+            )
+        }
     }
 
     private object Key : GeneratedDeclarationKey()
