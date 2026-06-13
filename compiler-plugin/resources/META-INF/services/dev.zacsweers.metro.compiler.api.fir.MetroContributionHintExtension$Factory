@@ -1,3 +1,3 @@
-com.bandlab.metro.station.graph.MetroStationHintExtension$Factory
-com.bandlab.metro.station.entry.StationEntryHintExtension$Factory
-com.bandlab.metro.station.configselector.ContributesConfigSelectorHintExtension$Factory
+com.bandlab.metro.station.graph.MetroStationFir$Factory
+com.bandlab.metro.station.entry.StationEntryFir$Factory
+com.bandlab.metro.station.configselector.ContributesConfigSelectorFir$Factory

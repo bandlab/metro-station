@@ -1,7 +1,10 @@
 package com.bandlab.metro.station.entry
 
+import com.bandlab.metro.station.graph.MetroStationIds
 import com.bandlab.metro.station.utils.*
 import dev.zacsweers.metro.compiler.MetroOptions
+import dev.zacsweers.metro.compiler.api.fir.MetroContributionHintExtension
+import dev.zacsweers.metro.compiler.api.fir.MetroContributionHintExtension.ContributionHint
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
 import dev.zacsweers.metro.compiler.fir.MetroFirTypeResolver
@@ -40,7 +43,9 @@ import com.bandlab.metro.station.graph.MetroStationIds as Ids
  * This FIR declaration generator generates a graph extension for the feature that is annotated with [Ids.stationEntry].
  */
 public class StationEntryFir(session: FirSession, compatContext: CompatContext) :
-    MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
+    MetroFirDeclarationGenerationExtension(session),
+    MetroContributionHintExtension,
+    CompatContext by compatContext {
 
     /**
      * Represents the resolved component type of an annotated class, determined by its super type.
@@ -59,6 +64,13 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
     private val typeResolverFactory by lazy { MetroFirTypeResolver.Factory(session) }
 
+    private val annotatedClasses by lazy {
+        session.predicateBasedProvider
+            .getSymbolsByPredicate(Ids.stationEntryPredicate)
+            .filterIsInstance<FirRegularClassSymbol>()
+            .toList()
+    }
+
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.stationEntryPredicate)
     }
@@ -68,7 +80,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         context: NestedClassGenerationContext
     ): Set<Name> {
         return when {
-            session.predicateBasedProvider.matches(Ids.stationEntryPredicate, classSymbol) -> buildSet {
+            classSymbol in annotatedClasses -> buildSet {
                 add(Ids.featureExtensionName)
                 add(Ids.featureBindingsName)
 
@@ -93,15 +105,11 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         context: NestedClassGenerationContext,
     ): FirClassLikeSymbol<*>? {
         // Generate FeatureExtension inside the annotated class
-        if (name == Ids.featureExtensionName &&
-            session.predicateBasedProvider.matches(Ids.stationEntryPredicate, owner)
-        ) {
+        if (name == Ids.featureExtensionName && owner in annotatedClasses) {
             return generateFeatureExtension(owner)
         }
         // Generate FeatureBindings inside the annotated class
-        if (name == Ids.featureBindingsName &&
-            session.predicateBasedProvider.matches(Ids.stationEntryPredicate, owner)
-        ) {
+        if (name == Ids.featureBindingsName && owner in annotatedClasses) {
             return generateFeatureBindings(owner)
         }
         // Generate Factory inside FeatureExtension
@@ -112,9 +120,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             return generateFactory(owner)
         }
         // Generate ExtensionFactoryContribution inside the annotated class
-        if (name == Ids.extensionFactoryContributionName &&
-            session.predicateBasedProvider.matches(Ids.stationEntryPredicate, owner)
-        ) {
+        if (name == Ids.extensionFactoryContributionName && owner in annotatedClasses) {
             return generateExtensionFactoryContribution(owner)
         }
         return null
@@ -125,7 +131,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         context: MemberGenerationContext
     ): Set<Name> {
         // Generate inject()/injectViewModel() overrides on the annotated class itself
-        if (session.predicateBasedProvider.matches(Ids.stationEntryPredicate, classSymbol)) {
+        if (classSymbol in annotatedClasses) {
             return when (resolveComponentType(classSymbol)) {
                 is ComponentType.Activity -> setOf(Ids.injectName)
                 is ComponentType.Page -> setOf(Ids.injectViewModelName)
@@ -153,7 +159,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         val owner = context?.owner ?: return emptyList()
 
         // Generate inject()/injectViewModel() overrides on the annotated class
-        if (session.predicateBasedProvider.matches(Ids.stationEntryPredicate, owner)) {
+        if (owner in annotatedClasses) {
             return when (callableId.callableName) {
                 Ids.injectName -> listOfNotNull(generateInjectFunction(owner))
                 Ids.injectViewModelName -> listOfNotNull(generateInjectViewModelFunction(owner))
@@ -665,36 +671,45 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     override fun getContributionTargets(): List<ContributionTarget> {
-        return session.predicateBasedProvider
-            .getSymbolsByPredicate(Ids.stationEntryPredicate)
-            .filterIsInstance<FirRegularClassSymbol>()
-            .flatMap { classSymbol ->
-                val parentScope = resolveParentScopeClassId(classSymbol)
-                val componentType = resolveComponentType(classSymbol)
-                val factoryClassId = classSymbol.classId
-                    .createNestedClassId(Ids.featureExtensionName)
-                    .createNestedClassId(Ids.nestedFactoryName)
-                listOfNotNull(
-                    ContributionTarget(contributingClassId = factoryClassId, scope = parentScope),
-                    if (componentType == ComponentType.Fragment) {
-                        ContributionTarget(
-                            contributingClassId = classSymbol.classId.createNestedClassId(Ids.extensionFactoryContributionName),
-                            scope = parentScope
-                        )
-                    } else {
-                        null
-                    }
-                )
-            }
+        return annotatedClasses.flatMap { classSymbol ->
+            val parentScope = resolveParentScopeClassId(classSymbol)
+            val factoryClassId = classSymbol.classId
+                .createNestedClassId(Ids.featureExtensionName)
+                .createNestedClassId(Ids.nestedFactoryName)
+            val extensionFactoryContributionId = classSymbol.classId
+                .createNestedClassId(Ids.extensionFactoryContributionName)
+            listOf(
+                ContributionTarget(contributingClassId = factoryClassId, scope = parentScope),
+                ContributionTarget(contributingClassId = extensionFactoryContributionId, scope = parentScope)
+            )
+        }
+    }
+
+    override fun getContributionHints(): List<ContributionHint> {
+        return annotatedClasses.flatMap { classSymbol ->
+            val parentScope = resolveParentScopeClassId(classSymbol)
+            val factoryClassId = classSymbol.classId
+                .createNestedClassId(MetroStationIds.featureExtensionName)
+                .createNestedClassId(MetroStationIds.nestedFactoryName)
+            val extensionFactoryContributionClassId = classSymbol.classId
+                .createNestedClassId(MetroStationIds.extensionFactoryContributionName)
+
+            // Always emit both hints. If ExtensionFactoryContribution wasn't generated
+            // (non-Fragment types), Metro's hint resolver safely skips non-existent classes.
+            listOf(
+                ContributionHint(contributingClassId = factoryClassId, scope = parentScope),
+                ContributionHint(contributingClassId = extensionFactoryContributionClassId, scope = parentScope),
+            )
+        }
     }
 
     internal object Key : GeneratedDeclarationKey()
 
-    public class Factory : MetroFirDeclarationGenerationExtension.Factory {
+    public class Factory : MetroFirDeclarationGenerationExtension.Factory, MetroContributionHintExtension.Factory {
         override fun create(
             session: FirSession,
             options: MetroOptions,
             compatContext: CompatContext,
-        ): MetroFirDeclarationGenerationExtension = StationEntryFir(session, compatContext)
+        ): StationEntryFir = StationEntryFir(session, compatContext)
     }
 }
