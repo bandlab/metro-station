@@ -1,7 +1,10 @@
 package com.bandlab.metro.station.graph
 
+import com.bandlab.metro.station.graph.MetroStationIds
 import com.bandlab.metro.station.utils.*
 import dev.zacsweers.metro.compiler.MetroOptions
+import dev.zacsweers.metro.compiler.api.fir.MetroContributionHintExtension
+import dev.zacsweers.metro.compiler.api.fir.MetroContributionHintExtension.ContributionHint
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
 import dev.zacsweers.metro.compiler.fir.MetroFirTypeResolver
@@ -47,7 +50,9 @@ import com.bandlab.metro.station.graph.MetroStationIds as Ids
  * This FIR declaration generator generates a dependency graph for the feature that is annotated with [Ids.metroStation].
  */
 public class MetroStationFir(session: FirSession, compatContext: CompatContext) :
-    MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
+    MetroFirDeclarationGenerationExtension(session),
+    MetroContributionHintExtension,
+    CompatContext by compatContext {
 
     /**
      * Represents the resolved component type of an annotated class, determined by its super type.
@@ -620,13 +625,24 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             }
     }
 
+    override fun getContributionHints(): List<MetroContributionHintExtension.ContributionHint> {
+        return session.predicateBasedProvider
+            .getSymbolsByPredicate(Ids.metroStationPredicate)
+            .filterIsInstance<FirRegularClassSymbol>()
+            .map { classSymbol ->
+                val serviceProvider = classSymbol.classId
+                    .createNestedClassId(MetroStationIds.featureServiceProviderName)
+                ContributionHint(contributingClassId = serviceProvider, scope = ClassIds.appScope)
+            }
+    }
+
     internal object Key : GeneratedDeclarationKey()
 
-    public class Factory : MetroFirDeclarationGenerationExtension.Factory {
+    public class Factory : MetroFirDeclarationGenerationExtension.Factory, MetroContributionHintExtension.Factory {
         override fun create(
             session: FirSession,
             options: MetroOptions,
             compatContext: CompatContext,
-        ): MetroFirDeclarationGenerationExtension = MetroStationFir(session, compatContext)
+        ): MetroStationFir = MetroStationFir(session, compatContext)
     }
 }

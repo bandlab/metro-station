@@ -1,10 +1,13 @@
 package com.bandlab.metro.station.configselector
 
+import com.bandlab.metro.station.configselector.ContributesConfigSelectorIds
 import com.bandlab.metro.station.utils.ClassIds
 import com.bandlab.metro.station.utils.buildSimpleAnnotation
 import com.bandlab.metro.station.utils.buildSimpleAnnotationCall
 import com.bandlab.metro.station.utils.getClassCall
 import dev.zacsweers.metro.compiler.MetroOptions
+import dev.zacsweers.metro.compiler.api.fir.MetroContributionHintExtension
+import dev.zacsweers.metro.compiler.api.fir.MetroContributionHintExtension.ContributionHint
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
 import org.jetbrains.kotlin.GeneratedDeclarationKey
@@ -38,7 +41,9 @@ import com.bandlab.metro.station.configselector.ContributesConfigSelectorIds as 
  * [Ids.contributesConfigSelectorFqName].
  */
 public class ContributesConfigSelectorFir(session: FirSession, compatContext: CompatContext) :
-    MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
+    MetroFirDeclarationGenerationExtension(session),
+    MetroContributionHintExtension,
+    CompatContext by compatContext {
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(Ids.predicate)
@@ -139,13 +144,27 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
             }
     }
 
+    override fun getContributionHints(): List<ContributionHint> {
+        return session.predicateBasedProvider
+            .getSymbolsByPredicate(Ids.predicate)
+            .filterIsInstance<FirRegularClassSymbol>()
+            .map { classSymbol ->
+                val nestedInterfaceClassId = classSymbol.classId
+                    .createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
+                ContributionHint(
+                    contributingClassId = nestedInterfaceClassId,
+                    scope = ClassIds.appScope
+                )
+            }
+    }
+
     private object Key : GeneratedDeclarationKey()
 
-    public class Factory : MetroFirDeclarationGenerationExtension.Factory {
+    public class Factory : MetroFirDeclarationGenerationExtension.Factory, MetroContributionHintExtension.Factory {
         override fun create(
             session: FirSession,
             options: MetroOptions,
             compatContext: CompatContext,
-        ): MetroFirDeclarationGenerationExtension = ContributesConfigSelectorFir(session, compatContext)
+        ): ContributesConfigSelectorFir = ContributesConfigSelectorFir(session, compatContext)
     }
 }

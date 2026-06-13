@@ -1,7 +1,10 @@
 package com.bandlab.metro.station.entry
 
+import com.bandlab.metro.station.graph.MetroStationIds
 import com.bandlab.metro.station.utils.*
 import dev.zacsweers.metro.compiler.MetroOptions
+import dev.zacsweers.metro.compiler.api.fir.MetroContributionHintExtension
+import dev.zacsweers.metro.compiler.api.fir.MetroContributionHintExtension.ContributionHint
 import dev.zacsweers.metro.compiler.api.fir.MetroFirDeclarationGenerationExtension
 import dev.zacsweers.metro.compiler.compat.CompatContext
 import dev.zacsweers.metro.compiler.fir.MetroFirTypeResolver
@@ -40,7 +43,9 @@ import com.bandlab.metro.station.graph.MetroStationIds as Ids
  * This FIR declaration generator generates a graph extension for the feature that is annotated with [Ids.stationEntry].
  */
 public class StationEntryFir(session: FirSession, compatContext: CompatContext) :
-    MetroFirDeclarationGenerationExtension(session), CompatContext by compatContext {
+    MetroFirDeclarationGenerationExtension(session),
+    MetroContributionHintExtension,
+    CompatContext by compatContext {
 
     /**
      * Represents the resolved component type of an annotated class, determined by its super type.
@@ -688,13 +693,34 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             }
     }
 
+    override fun getContributionHints(): List<ContributionHint> {
+        return session.predicateBasedProvider
+            .getSymbolsByPredicate(Ids.stationEntryPredicate)
+            .filterIsInstance<FirRegularClassSymbol>()
+            .flatMap { classSymbol ->
+                val parentScope = resolveParentScopeClassId(classSymbol)
+                val factoryClassId = classSymbol.classId
+                    .createNestedClassId(MetroStationIds.featureExtensionName)
+                    .createNestedClassId(MetroStationIds.nestedFactoryName)
+                val extensionFactoryContributionClassId = classSymbol.classId
+                    .createNestedClassId(MetroStationIds.extensionFactoryContributionName)
+
+                // Always emit both hints. If ExtensionFactoryContribution wasn't generated
+                // (non-Fragment types), Metro's hint resolver safely skips non-existent classes.
+                listOf(
+                    ContributionHint(contributingClassId = factoryClassId, scope = parentScope),
+                    ContributionHint(contributingClassId = extensionFactoryContributionClassId, scope = parentScope),
+                )
+            }
+    }
+
     internal object Key : GeneratedDeclarationKey()
 
-    public class Factory : MetroFirDeclarationGenerationExtension.Factory {
+    public class Factory : MetroFirDeclarationGenerationExtension.Factory, MetroContributionHintExtension.Factory {
         override fun create(
             session: FirSession,
             options: MetroOptions,
             compatContext: CompatContext,
-        ): MetroFirDeclarationGenerationExtension = StationEntryFir(session, compatContext)
+        ): StationEntryFir = StationEntryFir(session, compatContext)
     }
 }
