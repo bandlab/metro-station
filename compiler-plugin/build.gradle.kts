@@ -90,6 +90,11 @@ tasks.test {
     useJUnitPlatform()
     workingDir = rootDir
 
+    // Allow snapshot validation to bypass dump tests
+    if (project.hasProperty("excludeDumpTests")) {
+        exclude("**/DumpTestGenerated*")
+    }
+
     systemProperty("annotationsRuntime.jvm.classpath", annotationsJvmRuntimeClasspath.asPath)
     systemProperty("metroRuntime.classpath", metroRuntimeResolvable.asPath)
 
