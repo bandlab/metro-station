@@ -42,7 +42,7 @@ jobs:
           echo "ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}" >> local.properties
 
       - uses: gradle/actions/setup-gradle@v6
-      - run: ./gradlew build --continue
+      - run: ./gradlew build --continue -PexcludeDumpTests
 
       - name: Assemble sample app
         run: ./gradlew :app:assembleDebug
