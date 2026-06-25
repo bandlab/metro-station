@@ -2,10 +2,18 @@
 # https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+registries:
+  maven-bandlab:
+    type: maven-repository
+    url: https://artifactory.bandlab.io/artifactory/libs-release/
+    username: ${{secrets.ARTIFACTORY_USERNAME}}
+    password: ${{secrets.ARTIFACTORY_PASSWORD}}
 updates:
   # Maintain dependencies for Gradle dependencies
   - package-ecosystem: "gradle"
     directory: "/"
+    registries:
+      - maven-bandlab
     schedule:
       interval: "daily"
   # Maintain dependencies for GitHub Actions

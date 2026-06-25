@@ -40,7 +40,7 @@ subprojects {
             repositories {
                 maven {
                     name = "BandLab"
-                    url = uri("https://artifactory.bandlab.io/artifactory/libs-release-local")
+                    url = uri("https://artifactory.bandlab.io/artifactory/libs-release")
                     credentials(PasswordCredentials::class)
                 }
             }
