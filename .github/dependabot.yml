@@ -11,7 +11,9 @@ registries:
 updates:
   # Maintain dependencies for Gradle dependencies
   - package-ecosystem: "gradle"
-    directory: "/"
+    directories:
+      - "/"
+      - "/sample"
     registries:
       - maven-bandlab
     schedule:
