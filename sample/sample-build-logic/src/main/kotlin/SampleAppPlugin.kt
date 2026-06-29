@@ -13,12 +13,12 @@ class SampleAppPlugin : Plugin<Project> {
 
         project.extensions.configure<ApplicationExtension> {
             namespace = "com.bandlab.metro.station.sample"
-            compileSdk = 36
+            compileSdk = 37
 
             defaultConfig {
                 applicationId = "com.bandlab.metro.station.sampleapp"
                 minSdk = 24
-                targetSdk = 36
+                targetSdk = 37
                 versionCode = 1
                 versionName = "1.0"
 

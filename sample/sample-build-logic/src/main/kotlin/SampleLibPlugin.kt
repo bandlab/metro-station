@@ -12,7 +12,7 @@ class SampleLibPlugin : Plugin<Project> {
         project.apply<SetupMetroPlugin>()
 
         project.extensions.configure<LibraryExtension> {
-            compileSdk = 36
+            compileSdk = 37
 
             defaultConfig {
                 minSdk = 24
