@@ -8,6 +8,12 @@ registries:
     url: https://artifactory.bandlab.io/artifactory/libs-release/
     username: ${{secrets.ARTIFACTORY_USERNAME}}
     password: ${{secrets.ARTIFACTORY_PASSWORD}}
+  maven-central:
+    type: maven-repository
+    url: https://repo.maven.apache.org/maven2
+  maven-google:
+    type: maven-repository
+    url: https://maven.google.com
 updates:
   # Maintain dependencies for Gradle dependencies
   - package-ecosystem: "gradle"
@@ -16,6 +22,8 @@ updates:
       - "/sample"
     registries:
       - maven-bandlab
+      - maven-central
+      - maven-google
     schedule:
       interval: "daily"
   # Maintain dependencies for GitHub Actions
