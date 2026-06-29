@@ -12,10 +12,10 @@ class SampleLibPlugin : Plugin<Project> {
         project.apply<SetupMetroPlugin>()
 
         project.extensions.configure<LibraryExtension> {
-            compileSdk = 36
+            compileSdk = project.libs.versions.targetAndroidSdk.get().toInt()
 
             defaultConfig {
-                minSdk = 24
+                minSdk = project.libs.versions.minAndroidSdk.get().toInt()
             }
 
             compileOptions {
