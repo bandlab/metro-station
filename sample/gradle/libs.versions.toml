@@ -12,6 +12,8 @@ metro = "1.2.1"
 fragmentKtx = "1.8.9"
 workKtx = "2.11.2"
 serialization = "1.11.0"
+minAndroidSdk = "24"
+targetAndroidSdk = "37"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
