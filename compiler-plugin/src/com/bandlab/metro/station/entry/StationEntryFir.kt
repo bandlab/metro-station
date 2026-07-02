@@ -662,9 +662,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
                 owner.deepResolveSuperType(Ids.commonFragment, session)
                     ?.let { return@getOrPut ComponentType.Fragment }
-
-                owner.deepResolveSuperType(Ids.commonDialogFragment, session)
-                    ?.let { return@getOrPut ComponentType.Fragment }
             }
             error("StationEntry is deprecated, please use @MetroStation instead")
         }

@@ -568,9 +568,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
 
                 owner.deepResolveSuperType(Ids.commonFragment, session)
                     ?.let { return@getOrPut ComponentType.Fragment }
-
-                owner.deepResolveSuperType(Ids.commonDialogFragment, session)
-                    ?.let { return@getOrPut ComponentType.Fragment }
             }
             ComponentType.Others
         }
