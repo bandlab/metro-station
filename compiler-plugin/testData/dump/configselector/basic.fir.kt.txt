@@ -16,7 +16,9 @@ object FooConfigSelector : DebuggableConfigSelector {
       @Binds
       @IntoSet
       @CallableMetadata(callableName = "bind", propertyName = "", startOffset = -1, endOffset = -1)
-      abstract fun bind_intoset(impl: FooConfigSelector): DebuggableConfigSelector
+      fun bind_intoset(impl: FooConfigSelector): DebuggableConfigSelector {
+        return error(message = "Never called")
+      }
 
     }
 
@@ -42,10 +44,10 @@ object FooConfigSelector : DebuggableConfigSelector {
 
 }
 
-// FILE: fooConfigSelectorMultibindingContributionAppScope.kt
+// FILE: fooConfigSelectorMultibindingContributionDev_zacsweers_metro_AppScope.kt
 package metro.hints
 
-fun AppScope(contributed: MultibindingContribution) {
+fun dev_zacsweers_metro_AppScope(contributed: MultibindingContribution) {
   return error(message = "Never called")
 }
 
