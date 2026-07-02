@@ -1,7 +1,7 @@
-// FILE: myWorkerFeatureServiceProviderAppScope.kt
+// FILE: myWorkerFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
 package metro.hints
 
-fun AppScope(contributed: FeatureServiceProvider) {
+fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
 
@@ -131,7 +131,7 @@ class MyWorker : CoroutineWorker {
       @JvmStatic
       @JsStatic
       fun factory(): Factory {
-        return Impl()
+        return Impl
       }
 
     }
@@ -304,3 +304,4 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
   }
 
 }
+

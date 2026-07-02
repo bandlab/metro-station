@@ -65,7 +65,7 @@ class MyActivity : CommonActivity<Unit> {
       @JvmStatic
       @JsStatic
       fun factory(): Factory {
-        return Impl()
+        return Impl
       }
 
     }
@@ -340,10 +340,10 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
 }
 
-// FILE: myActivityFeatureServiceProviderAppScope.kt
+// FILE: myActivityFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
 package metro.hints
 
-fun AppScope(contributed: FeatureServiceProvider) {
+fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
 

@@ -349,10 +349,10 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
 }
 
-// FILE: myActivityFeatureExtensionFactoryAppScope.kt
+// FILE: myActivityFeatureExtensionFactoryDev_zacsweers_metro_AppScope.kt
 package metro.hints
 
-fun AppScope(contributed: Factory) {
+fun dev_zacsweers_metro_AppScope(contributed: Factory) {
   return error(message = "Never called")
 }
 

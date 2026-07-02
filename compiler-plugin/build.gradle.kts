@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalWasmDsl::class)
+@file:Suppress("UnstableApiUsage")
 
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -33,21 +34,23 @@ idea {
     module.generatedSourceDirs.add(projectDir.resolve("test-gen"))
 }
 
-val testArtifacts: Configuration by configurations.creating
+val testArtifacts: Configuration = configurations.create("testArtifacts")
 
-val annotationsRuntimeClasspath by configurations.dependencyScope("annotationsRuntimeClasspath") {
+val annotationsRuntimeClasspath = configurations.dependencyScope("annotationsRuntimeClasspath") {
     isTransitive = false
-}
-val annotationsJvmRuntimeClasspath by configurations.resolvable("annotationsJvmRuntimeClasspath") {
+}.get()
+
+val annotationsJvmRuntimeClasspath = configurations.resolvable("annotationsJvmRuntimeClasspath") {
     extendsFrom(annotationsRuntimeClasspath)
-}
+}.get()
 
-val metroRuntimeClasspath by configurations.dependencyScope("metroRuntimeClasspath") {
+val metroRuntimeClasspath = configurations.dependencyScope("metroRuntimeClasspath") {
     isTransitive = false
-}
-val metroRuntimeResolvable by configurations.resolvable("metroRuntimeResolvable") {
+}.get()
+
+val metroRuntimeResolvable = configurations.resolvable("metroRuntimeResolvable") {
     extendsFrom(metroRuntimeClasspath)
-}
+}.get()
 
 dependencies {
     compileOnly(libs.kotlin.compiler)
@@ -129,7 +132,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-val generateTests by tasks.registering(JavaExec::class) {
+val generateTests = tasks.register<JavaExec>("generateTests") {
     inputs.dir(layout.projectDirectory.dir("testData"))
         .withPropertyName("testData")
         .withPathSensitivity(PathSensitivity.RELATIVE)
