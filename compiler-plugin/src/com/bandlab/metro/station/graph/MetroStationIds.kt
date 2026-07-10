@@ -56,7 +56,6 @@ internal object MetroStationIds {
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
     val fragment = ClassId(FqName("androidx.fragment.app"), "Fragment".asName())
     val commonFragment = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName())
-    val commonDialogFragment = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonDialogFragment".asName())
     val defaultFragmentDeps =
         ClassId(FqName("com.bandlab.android.common.fragment"), "DefaultFragmentDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
