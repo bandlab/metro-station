@@ -21,13 +21,15 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.AUTO_RELEASE_TOKEN }}
+          persist-credentials: true
 
       - name: Detect new Metro patch version
         id: detect
         run: |
           set -euo pipefail
 
-          CURRENT=$(grep '^metro = ' gradle/libs.versions.toml | sed 's/^metro = "\(.*\)"/\1/')
+          CURRENT=$(grep '^metro = "' gradle/libs.versions.toml | sed 's/^metro = "\(.*\)"/\1/')
           echo "Current Metro version: $CURRENT"
 
           # Only consider stable patch bumps within the same major.minor line.
@@ -113,6 +115,8 @@ jobs:
 
       - name: Commit version bump to main
         if: steps.detect.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_RELEASE_TOKEN }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -125,7 +129,7 @@ jobs:
       - name: Create GitHub release
         if: steps.detect.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AUTO_RELEASE_TOKEN }}
         run: |
           set -euo pipefail
           gh release create "${{ steps.tag.outputs.tag }}" \
