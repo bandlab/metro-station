@@ -1,0 +1,134 @@
+name: Auto Release on Metro Patch
+
+# Detects new stable *patch* releases of Metro (e.g. 1.3.1 -> 1.3.2),
+# runs the full build against it, and — if everything passes — commits the
+# version bump to main and creates a matching GitHub release.
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  auto-release:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Detect new Metro patch version
+        id: detect
+        run: |
+          set -euo pipefail
+
+          CURRENT=$(grep '^metro = ' gradle/libs.versions.toml | sed 's/^metro = "\(.*\)"/\1/')
+          echo "Current Metro version: $CURRENT"
+
+          # Only consider stable patch bumps within the same major.minor line.
+          MAJOR_MINOR=${CURRENT%.*}
+          ESCAPED=$(echo "$MAJOR_MINOR" | sed 's/\./\\./g')
+
+          METADATA=$(curl -s https://repo1.maven.org/maven2/dev/zacsweers/metro/runtime/maven-metadata.xml)
+
+          LATEST=$(echo "$METADATA" \
+            | grep -oE "<version>${ESCAPED}\.[0-9]+</version>" \
+            | sed -E 's/<\/?version>//g' \
+            | sort -V \
+            | tail -1)
+
+          echo "Latest patch in ${MAJOR_MINOR}.x line: $LATEST"
+
+          if [ -z "$LATEST" ]; then
+            echo "Could not resolve latest patch version; skipping."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Only proceed if the latest is strictly newer than current (same major.minor).
+          if [ "$LATEST" != "$CURRENT" ] && [ "$(printf '%s\n%s\n' "$CURRENT" "$LATEST" | sort -V | tail -1)" = "$LATEST" ]; then
+            echo "New Metro patch available: $CURRENT -> $LATEST"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "version=$LATEST" >> "$GITHUB_OUTPUT"
+          else
+            echo "No new patch version. Nothing to do."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compute release tag
+        if: steps.detect.outputs.changed == 'true'
+        id: tag
+        run: |
+          set -euo pipefail
+          VERSION_NAME=$(grep '^VERSION_NAME=' gradle.properties | cut -d'=' -f2)
+          TAG="${VERSION_NAME}-${{ steps.detect.outputs.version }}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          if git ls-remote --tags origin "refs/tags/$TAG" | grep -q "$TAG"; then
+            echo "Tag $TAG already exists; aborting."
+            exit 1
+          fi
+
+      - name: Bump Metro version in version catalogs
+        if: steps.detect.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          NEW="${{ steps.detect.outputs.version }}"
+          sed -i '' "s/^metro = \".*\"/metro = \"$NEW\"/" gradle/libs.versions.toml
+          sed -i '' "s/^metro = \".*\"/metro = \"$NEW\"/" sample/gradle/libs.versions.toml
+
+      - uses: actions/setup-java@v5
+        if: steps.detect.outputs.changed == 'true'
+        with:
+          distribution: 'zulu'
+          java-version: 21
+
+      - name: Write Artifactory credentials to local.properties
+        if: steps.detect.outputs.changed == 'true'
+        run: |
+          echo "ARTIFACTORY_URL=${{ secrets.ARTIFACTORY_URL }}" >> local.properties
+          echo "ARTIFACTORY_USERNAME=${{ secrets.ARTIFACTORY_USERNAME }}" >> local.properties
+          echo "ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}" >> local.properties
+
+      - uses: gradle/actions/setup-gradle@v6
+        if: steps.detect.outputs.changed == 'true'
+
+      - name: Build against new Metro version
+        if: steps.detect.outputs.changed == 'true'
+        run: ./gradlew build --continue
+
+      - name: Assemble sample app
+        if: steps.detect.outputs.changed == 'true'
+        run: ./gradlew :app:assembleDebug
+        working-directory: sample
+
+      - uses: mikepenz/action-junit-report@v6
+        if: (success() || failure()) && steps.detect.outputs.changed == 'true'
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
+      - name: Commit version bump to main
+        if: steps.detect.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout local.properties 2>/dev/null || true
+          git add gradle/libs.versions.toml sample/gradle/libs.versions.toml
+          git commit -m "Bump Metro to ${{ steps.detect.outputs.version }}"
+          git push origin main
+
+      - name: Create GitHub release
+        if: steps.detect.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            --target main \
+            --title "${{ steps.tag.outputs.tag }}" \
+            --notes "Automated release built against Metro ${{ steps.detect.outputs.version }}."
