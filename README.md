@@ -5,7 +5,7 @@
 [![Validate Metro Snapshot](https://github.com/bandlab/metro-station/actions/workflows/validate-metro-snapshot.yml/badge.svg)](https://github.com/bandlab/metro-station/actions/workflows/validate-metro-snapshot.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-This compiler plugin demonstrates how we scale our DI setup in Android monorepo with Metro.
+This compiler plugin demonstrates how we scale our DI setup in BandLab Android monorepo with Metro.
 
 A few years ago, we implemented a bunch of KSP processors based on Dagger and Anvil to generate boilerplate code for our
 DI setup, such as multibinding contributions, dependency graphs, and graph extensions. It was a huge win for DX, but we
@@ -26,21 +26,21 @@ This is a reference example and is not intended for public adoption.
 The benchmark was performed on the BandLab Android app with Gradle Profiler. At the time of benchmarking, 
 BandLab Android app has 1163 modules, and 490 of them are running KSP (3 processors in total).
 
-| Mutation         | Metro + KSP 🐢 | Metro Station 🚀 | Delta 📉      |
-|:-----------------|:---------------|:-----------------|:--------------|
-| **Root Abi**     | 54.79s         | 28.72s           | **-47.57%** ✨ |
-| **Root Non-abi** | 40.26s         | 17.14s           | **-57.43%** ✨ |
+| Mutation         | Metro + KSP | Metro Station 🚀 | Delta 📉       |
+|:-----------------|:------------|:-----------------|:---------------|
+| **Root Abi**     | 54.79s      | 28.72s           | **-47.57%** ✨ |
+| **Root Non-abi** | 40.26s      | 17.14s           | **-57.43%** ✨ |
 
 If we take a step back, compare the setup before migrating to Metro (Dagger KAPT + Anvil KSP), we have sliced the incremental build time by 75% accumulatively by just updating the DI framework!
 
-| Mutation         | Dagger KAPT +<br/> Anvil KSP 🐢 | Metro Station 🚀 | Delta 📉      |
-|:-----------------|:--------------------------------|:-----------------|:--------------|
-| **Root Abi**     | 115.02s                         | 28.72s           | **-75.03%** ✨ |
-| **Root Non-abi** | 77.7s                           | 17.14s           | **-77.94%** ✨ |
+| Mutation         | Dagger KAPT +<br/> Anvil KSP | Metro Station 🚀 | Delta 📉       |
+|:-----------------|:-----------------------------|:-----------------|:---------------|
+| **Root Abi**     | 115.02s                      | 28.72s           | **-75.03%** ✨ |
+| **Root Non-abi** | 77.7s                        | 17.14s           | **-77.94%** ✨ |
 
-## Use Cases
+# Use Cases
 
-### @MetroStation
+## @MetroStation
 
 This annotation generates a Dependency Graph for the feature.
 
@@ -94,11 +94,11 @@ class MyPage : Page<MyViewModel> {
 ```
 Supported types: Page, Activity, Fragment, and any other classes
 
-#### Default Dependencies
-We provide common default dependencies to ease the development for you.
-- *Page*: DefaultPageDependencies.kt
-- *Activity*: DefaultActivityDependencies.kt
-- *Fragment*: DefaultFragmentDependencies.kt
+### Default Dependencies
+We provide common default dependencies, such as `CoroutineScope` and `Lifecycle` to ease the development for you.
+- **Page**: DefaultPageDependencies.kt
+- **Activity**: DefaultActivityDependencies.kt
+- **Fragment**: DefaultFragmentDependencies.kt
 
 We also request some common app-level dependencies for you. For screens (page, activity, fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
 
@@ -107,12 +107,12 @@ Besides the basic support, we will also generate param providers:
 - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
 
 ### Android Component Injection
-We inject known Android components automatically for you:
-- *Service*: The plugin injects `fun onCreate()` for you, if the `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
-- *BroadcastReceiver*: The plugin injects `fun onReceive(context: Context, intent: Intent)` for you.
-- *CoroutineWorker*: The plugin injects `suspend fun doWork(): Result` for you.
+We inject some Android components automatically for you, similar to what Hilt's compiler is doing, but instead of a separate javac call, Metro Station does it within the same kotlinc process:
+- **Service** (`android.app.Service`): The plugin injects `fun onCreate()` for you, if the `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
+- **BroadcastReceiver** (`android.content.BroadcastReceiver`): The plugin injects at the beginning of `fun onReceive(context: Context, intent: Intent)` for you.
+- **CoroutineWorker** (`androidx.work.CoroutineWorker`): The plugin injects at the beginning of `suspend fun doWork(): Result` for you.
 
-### @StationEntry
+## @StationEntry
 
 This annotation generates a Graph Extension for the feature.
 
@@ -168,7 +168,7 @@ Same as @MetroStation, we will also provide default dependencies and generate pa
 
 Supported types: Page, Activity, Fragment
 
-### @ContributesConfigSelector
+## @ContributesConfigSelector
 
 This annotation generates a multibinding contribution for config selectors.
 
@@ -189,6 +189,8 @@ object MyConfigSelector : BooleanConfigSelector {
     }
 }
 ```
+
+---
 
 ## Usage
 

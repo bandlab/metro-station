@@ -3,7 +3,7 @@ package com.bandlab.metro.station
 import kotlin.reflect.KClass
 
 /**
- * ## This annotation generates a Dependency Graph for the feature.
+ * # This annotation generates a Dependency Graph for the feature.
  *
  * Annotate your feature with [MetroStation], provide a dependency contract you need from the AppGraph,
  * and the compiler plugin will generate a standalone dependency graph for you ✨
@@ -26,11 +26,11 @@ import kotlin.reflect.KClass
  * ```
  * Supported types: Page, Activity, Fragment, and any other classes
  *
- * ### Default Dependencies
+ * ## Default Dependencies
  * We provide common default dependencies to ease the development for you.
- * - *Page*: DefaultPageDependencies.kt
- * - *Activity*: DefaultActivityDependencies.kt
- * - *Fragment*: DefaultFragmentDependencies.kt
+ * - **Page**: DefaultPageDependencies.kt
+ * - **Activity**: DefaultActivityDependencies.kt
+ * - **Fragment**: DefaultFragmentDependencies.kt
  *
  * We also request some common app-level dependencies for you. For screens (page, activity, fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
  *
@@ -38,11 +38,11 @@ import kotlin.reflect.KClass
  * - For CommonActivity, param type declared as the generic type will be available in the graph.
  * - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
  *
- * ### Android Component Injection
- * We inject known Android components automatically for you:
- * - *Service*: The plugin injects `fun onCreate()` for you, if the `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
- * - *BroadcastReceiver*: The plugin injects `fun onReceive(context: Context, intent: Intent)` for you.
- * - *CoroutineWorker*: The plugin injects `suspend fun doWork(): Result` for you.
+ * ## Android Component Injection
+ * We inject some Android components automatically for you, similar to what Hilt's compiler is doing, but instead of a separate javac call, Metro Station does it within the same kotlinc process:
+ * - **Service** (`android.app.Service`): The plugin injects `fun onCreate()` for you, if the `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
+ * - **BroadcastReceiver** (`android.content.BroadcastReceiver`): The plugin injects at the beginning of `fun onReceive(context: Context, intent: Intent)` for you.
+ * - **CoroutineWorker** (`androidx.work.CoroutineWorker`): The plugin injects at the beginning of `suspend fun doWork(): Result` for you.
  *
  * ## Under the hood
  *
