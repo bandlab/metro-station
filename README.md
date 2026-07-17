@@ -38,6 +38,16 @@ If we take a step back, compare the setup before migrating to Metro (Dagger KAPT
 | **Root Abi**     | 115.02s                      | 28.72s           | **-75.03%** ✨ |
 | **Root Non-abi** | 77.7s                        | 17.14s           | **-77.94%** ✨ |
 
+## Usage
+
+Apply the Gradle plugin, and it will automatically include annotations to your project.
+
+```kotlin
+plugins {
+    id("com.bandlab.metro.station")
+}
+```
+
 # Use Cases
 
 ## @MetroStation
@@ -191,16 +201,6 @@ object MyConfigSelector : BooleanConfigSelector {
 ```
 
 ---
-
-## Usage
-
-Apply the Gradle plugin, and it will automatically include annotations to your project.
-
-```kotlin
-plugins {
-    id("com.bandlab.metro.station")
-}
-```
 
 ## Project Structure
 
