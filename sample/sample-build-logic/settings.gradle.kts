@@ -1,4 +1,4 @@
-import java.util.Properties
+import java.util.*
 
 val localProperties = Properties().apply {
     val file = File(settingsDir, "../local.properties")
@@ -25,6 +25,9 @@ fun getPropertyOrFail(propertyName: String): String {
 dependencyResolutionManagement {
     repositories {
         google()
+        if (getPropertyOrFail("USE_MAVEN_LOCAL").toBooleanStrict()) {
+            mavenLocal()
+        }
         mavenCentral()
         maven("https://central.sonatype.com/repository/maven-snapshots/")
         gradlePluginPortal()
