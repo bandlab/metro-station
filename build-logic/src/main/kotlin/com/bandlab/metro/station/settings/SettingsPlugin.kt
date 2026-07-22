@@ -25,6 +25,9 @@ class SettingsPlugin : Plugin<Settings> {
         settings.pluginManagement {
             repositories {
                 google()
+                if (getPropertyOrFail("USE_MAVEN_LOCAL").toBooleanStrict()) {
+                    mavenLocal()
+                }
                 mavenCentral()
                 maven("https://central.sonatype.com/repository/maven-snapshots/")
                 if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
@@ -43,6 +46,9 @@ class SettingsPlugin : Plugin<Settings> {
         settings.dependencyResolutionManagement {
             repositories {
                 google()
+                if (getPropertyOrFail("USE_MAVEN_LOCAL").toBooleanStrict()) {
+                    mavenLocal()
+                }
                 mavenCentral()
                 maven("https://central.sonatype.com/repository/maven-snapshots/")
                 if (getPropertyOrFail("USE_INTERNAL_ARTIFACTORY").toBooleanStrict()) {
