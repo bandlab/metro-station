@@ -11,6 +11,8 @@ plugins {
 }
 
 val metroVersion = libs.versions.metro.get()
+val kotlinJvmPlugin = libs.plugins.kotlin.jvm.get()
+val mavenPublishPlugin = libs.plugins.maven.publish.get()
 
 allprojects {
     group = project.property("GROUP") as String
@@ -20,7 +22,7 @@ allprojects {
 }
 
 subprojects {
-    plugins.withId("org.jetbrains.kotlin.jvm") {
+    plugins.withId(kotlinJvmPlugin.pluginId) {
         configure<KotlinJvmExtension> {
             compilerOptions {
                 jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
@@ -32,7 +34,7 @@ subprojects {
             targetCompatibility = javaVersion
         }
     }
-    plugins.withId("com.vanniktech.maven.publish") {
+    plugins.withId(mavenPublishPlugin.pluginId) {
         // This is to make sure publishing picks up the synthetic version we declared above
         extensions.configure<MavenPublishBaseExtension> {
             coordinates(project.group.toString(), project.name, project.version.toString())
