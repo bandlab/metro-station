@@ -23,12 +23,13 @@ subprojects {
     plugins.withId("org.jetbrains.kotlin.jvm") {
         configure<KotlinJvmExtension> {
             compilerOptions {
-                jvmTarget.set(JvmTarget.JVM_17)
+                jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
             }
         }
         configure<JavaPluginExtension> {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
+            val javaVersion = JavaVersion.toVersion(libs.versions.jdk.get())
+            sourceCompatibility = javaVersion
+            targetCompatibility = javaVersion
         }
     }
     plugins.withId("com.vanniktech.maven.publish") {
