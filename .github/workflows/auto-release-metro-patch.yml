@@ -87,7 +87,7 @@ jobs:
         if: steps.detect.outputs.changed == 'true'
         with:
           distribution: 'zulu'
-          java-version: 21
+          java-version-file: .github/workflows/.java-version
 
       - name: Write Artifactory credentials to local.properties
         if: steps.detect.outputs.changed == 'true'
