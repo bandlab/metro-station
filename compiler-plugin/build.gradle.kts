@@ -119,17 +119,13 @@ tasks.test {
 
 kotlin {
     explicitApi()
+    jvmToolchain(libs.versions.jdk.get().toInt())
 
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
         optIn.add("org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
         optIn.add("org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI")
     }
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
 }
 
 val generateTests = tasks.register<JavaExec>("generateTests") {
