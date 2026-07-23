@@ -138,11 +138,6 @@ val generateTests = tasks.register<JavaExec>("generateTests") {
     classpath = sourceSets.testFixtures.get().runtimeClasspath
     mainClass.set("com.bandlab.metro.station.GenerateTestsKt")
     workingDir = rootDir
-    javaLauncher.set(
-        javaToolchains.launcherFor {
-            languageVersion.set(JavaLanguageVersion.of(libs.versions.jdk.get().toInt()))
-        }
-    )
 }
 
 tasks.compileTestKotlin {
