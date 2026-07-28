@@ -34,7 +34,9 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
                 if (BuildConfig.SUPPORTED_METRO_VERSION != metroVersion) {
                     throw GradleException(
                         "Metro Station version (${BuildConfig.KOTLIN_PLUGIN_VERSION}) is incompatible with Metro version ($metroVersion).\n" +
-                            "It might work but it's safer to keep them in sync. Please make a new release of metro station."
+                            "It might work but it's safer to keep them in sync. Please either make a new release of " +
+                            "metro station, or disable the compatibility check by setting a gradle property " +
+                            "com.bandlab.metro.station.metroStrictCompatibility=false."
                     )
                 }
             }
