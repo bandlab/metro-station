@@ -11,7 +11,7 @@ kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
 
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
