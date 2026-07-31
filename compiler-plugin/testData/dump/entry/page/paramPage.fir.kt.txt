@@ -98,15 +98,15 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
       }
 
+      @ComptimeOnly
+      @HiddenFromObjC
+      fun declarationMirror(feature: MyPage): Page<*> {
+        return error(message = "Never called")
+      }
+
       @HiddenFromObjC
       override operator fun invoke(): Page<*> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun mirrorFunction(feature: MyPage): Page<*> {
-        return error(message = "Never called")
       }
 
     }
@@ -146,15 +146,15 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
       }
 
+      @ComptimeOnly
+      @HiddenFromObjC
+      fun declarationMirror(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
+        return error(message = "Never called")
+      }
+
       @HiddenFromObjC
       override operator fun invoke(): Flow<Params> {
         return Companion.provideParamFlow(provider = <this>.#provider.invoke(), feature = <this>.#feature.invoke(), initialParam = <this>.#initialParam.invoke())
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun mirrorFunction(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
-        return error(message = "Never called")
       }
 
     }
@@ -245,15 +245,15 @@ class MyViewModel {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(param: Params, paramFlow: Flow<Params>): MyViewModel {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): MyViewModel {
       return Companion.newInstance(param = <this>.#param.invoke(), paramFlow = <this>.#paramFlow.invoke())
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(param: Params, paramFlow: Flow<Params>): MyViewModel {
-      return error(message = "Never called")
     }
 
   }

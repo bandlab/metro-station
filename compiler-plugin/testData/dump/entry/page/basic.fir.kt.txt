@@ -55,15 +55,15 @@ class MyPage : Page<MyViewModel> {
 
       }
 
+      @ComptimeOnly
+      @HiddenFromObjC
+      fun declarationMirror(feature: MyPage): Page<*> {
+        return error(message = "Never called")
+      }
+
       @HiddenFromObjC
       override operator fun invoke(): Page<*> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun mirrorFunction(feature: MyPage): Page<*> {
-        return error(message = "Never called")
       }
 
     }
@@ -133,15 +133,15 @@ class MyViewModel {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(number: Long): MyViewModel {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): MyViewModel {
       return Companion.newInstance(number = <this>.#number.invoke())
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(number: Long): MyViewModel {
-      return error(message = "Never called")
     }
 
   }
@@ -242,15 +242,15 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(): Long {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): Long {
       return Companion.provideLong(instance = <this>.#instance)
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(): Long {
-      return error(message = "Never called")
     }
 
   }

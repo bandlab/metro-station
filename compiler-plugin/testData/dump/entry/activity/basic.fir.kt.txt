@@ -59,15 +59,15 @@ class MyActivity : CommonActivity<Unit> {
 
       }
 
+      @ComptimeOnly
+      @HiddenFromObjC
+      fun declarationMirror(feature: MyActivity): CommonActivity<*> {
+        return error(message = "Never called")
+      }
+
       @HiddenFromObjC
       override operator fun invoke(): CommonActivity<*> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun mirrorFunction(feature: MyActivity): CommonActivity<*> {
-        return error(message = "Never called")
       }
 
     }
@@ -179,15 +179,15 @@ class MyDependency {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(text: String, int: Int): MyDependency {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): MyDependency {
       return Companion.newInstance(text = <this>.#text.invoke(), int = <this>.#int.invoke())
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(text: String, int: Int): MyDependency {
-      return error(message = "Never called")
     }
 
   }
@@ -292,15 +292,15 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(): Int {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): Int {
       return Companion.provideInt(instance = <this>.#instance)
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(): Int {
-      return error(message = "Never called")
     }
 
   }

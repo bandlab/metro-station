@@ -46,15 +46,15 @@ class MyDependency {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(text: String): MyDependency {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): MyDependency {
       return Companion.newInstance(text = <this>.#text.invoke())
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(text: String): MyDependency {
-      return error(message = "Never called")
     }
 
   }
@@ -102,12 +102,6 @@ class MyWorker : CoroutineWorker {
       private val featureServiceProviderInstance: FeatureServiceProvider
         field = serviceProvider
 
-      private val featureServiceProviderMyDependencyProvider: Provider<MyDependency>
-        field = provider<MyDependency>(provider = local fun <anonymous>(): MyDependency {
-          return <this>.#featureServiceProviderInstance.<get-myDependency>()
-        }
-)
-
       private constructor(@Provides feature: MyWorker, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
@@ -116,7 +110,10 @@ class MyWorker : CoroutineWorker {
 
       override val injector: MembersInjector<MyWorker>
         override get(): MembersInjector<MyWorker> {
-          return Companion.create(myDependency = <this>.#featureServiceProviderMyDependencyProvider)
+          return Companion.create(myDependency = provider<MyDependency>(provider = local fun <anonymous>(): MyDependency {
+            return <this>.#featureServiceProviderInstance.<get-myDependency>()
+          }
+))
         }
 
     }
@@ -285,15 +282,15 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(): String {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): String {
       return Companion.provideText(instance = <this>.#instance)
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(): String {
-      return error(message = "Never called")
     }
 
   }

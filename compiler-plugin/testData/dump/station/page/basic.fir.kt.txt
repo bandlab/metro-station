@@ -32,12 +32,6 @@ class MyPage : Page<MyViewModel> {
       private val featureServiceProviderInstance: FeatureServiceProvider
         field = serviceProvider
 
-      private val featureServiceProviderNumberProvider: Provider<Long>
-        field = provider<Long>(provider = local fun <anonymous>(): Long {
-          return <this>.#featureServiceProviderInstance.<get-number>()
-        }
-)
-
       private constructor(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
@@ -45,7 +39,7 @@ class MyPage : Page<MyViewModel> {
       }
 
       override fun getPageViewModel(): MyViewModel {
-        return MyViewModel(number = <this>.#featureServiceProviderNumberProvider.invoke())
+        return MyViewModel(number = <this>.#featureServiceProviderInstance.<get-number>())
       }
 
     }
@@ -99,15 +93,15 @@ class MyPage : Page<MyViewModel> {
 
       }
 
+      @ComptimeOnly
+      @HiddenFromObjC
+      fun declarationMirror(feature: MyPage): Page<*> {
+        return error(message = "Never called")
+      }
+
       @HiddenFromObjC
       override operator fun invoke(): Page<*> {
         return Companion.provideBaseType(instance = <this>.#instance, feature = <this>.#feature.invoke())
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun mirrorFunction(feature: MyPage): Page<*> {
-        return error(message = "Never called")
       }
 
     }
@@ -186,15 +180,15 @@ class MyViewModel {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(number: Long): MyViewModel {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): MyViewModel {
       return Companion.newInstance(number = <this>.#number.invoke())
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(number: Long): MyViewModel {
-      return error(message = "Never called")
     }
 
   }
@@ -278,15 +272,15 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
     }
 
+    @ComptimeOnly
+    @HiddenFromObjC
+    fun declarationMirror(): Long {
+      return error(message = "Never called")
+    }
+
     @HiddenFromObjC
     override operator fun invoke(): Long {
       return Companion.provideLong(instance = <this>.#instance)
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun mirrorFunction(): Long {
-      return error(message = "Never called")
     }
 
   }
