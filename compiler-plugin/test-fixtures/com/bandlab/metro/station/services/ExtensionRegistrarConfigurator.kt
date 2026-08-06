@@ -64,12 +64,20 @@ private class ExtensionRegistrarConfigurator(testServices: TestServices) : Envir
     ) {
         // Configure Metro options from directives before registering
         if (MetroDirectives.GENERATE_CLASSES_IN_IR in module.directives) {
-            val option =
-                metroCliProcessor.pluginOptions.first {
-                    it.optionName == "generate-classes-in-ir"
-                }
+            val option = metroCliProcessor.pluginOptions.first {
+                it.optionName == "generate-classes-in-ir"
+            }
             metroCliProcessor.processOption(option, "true", configuration)
         }
+
+        // This is required on Kotlin 2.3.20-Beta1+.
+        metroCliProcessor.processOption(
+            metroCliProcessor.pluginOptions.first {
+                it.optionName == "generate-contribution-hints-in-fir"
+            },
+            "true",
+            configuration
+        )
 
         val includeBaselineChecker = MetroDirectives.ENABLE_STATION_ENTRIES_BASELINE in module.directives
         FirExtensionRegistrarAdapter.registerExtension(
