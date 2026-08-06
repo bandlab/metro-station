@@ -287,6 +287,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 // FILE: myBroadcastReceiverFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
 package metro.hints
 
+@Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
