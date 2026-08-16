@@ -7,9 +7,13 @@
 
 This compiler plugin demonstrates how we scale our DI setup in BandLab Android monorepo with Metro.
 
-A few years ago, we implemented a bunch of KSP processors based on Dagger and Anvil to generate boilerplate code for our
-DI setup, such as multibinding contributions, dependency graphs, and graph extensions. It was a huge win for DX, but we
-immediately realized that the tradeoff is noticeable – the KSP performance wasn't good.
+A few years ago, we implemented a bunch of code generators using [Anvil's compiler API][anvil-compiler-api] to generate 
+boilerplate code for our DI setup with Dagger, such as multibinding contributions, dependency graphs, and graph 
+extensions, it was a huge win for DX.
+
+When K2 was released, we migrated to [Zac's anvil-ksp fork][anvil-ksp] and rewrote our code generators to KSP 
+processors, to unblock ourselves for K2. But we immediately realized that the tradeoff is noticeable – the KSP 
+performance wasn't good.
 
 After we adopted metro and saw the capabilities and the performance improvements of a compiler plugin, we decided to
 rewrite our code generation setup to use Metro.
@@ -17,9 +21,9 @@ rewrite our code generation setup to use Metro.
 Please note that we are sharing this repository strictly as a practical demonstration of code generation with Metro. 
 This is a reference example and is not intended for public adoption.
 
-> **⚠️ [Metro's extensions API](https://github.com/ZacSweers/metro/blob/main/compiler/API.md) is highly experimental 
-> and does not accept any FRs and issues. The Kotlin compiler plugin API itself is also constantly changing and lacks
-> documentation. You should be aware of the high-maintenance cost if you decide to follow the same approach.**
+> **⚠️ [Metro Compiler Extension API][metro-compiler-extension-api] is highly experimental and does not accept any FRs 
+> and issues. The Kotlin compiler plugin API itself is also constantly changing and lacks documentation. You should be
+> aware of the high-maintenance cost if you decide to follow the same approach.**
 
 ## Performance Benchmark
 
@@ -266,5 +270,8 @@ License
 [//]: # (Links)
 
 [metro]: https://github.com/ZacSweers/metro
+[metro-compiler-extension-api]: https://github.com/ZacSweers/metro/blob/main/compiler/API.md
+[anvil-compiler-api]: https://github.com/square/anvil/blob/main/compiler-api/README.md
+[anvil-ksp]: https://github.com/ZacSweers/anvil
 [test-framework]: https://github.com/JetBrains/kotlin/blob/master/compiler/test-infrastructure/ReadMe.md
 [test-plugin]: https://github.com/JetBrains/kotlin-compiler-devkit
