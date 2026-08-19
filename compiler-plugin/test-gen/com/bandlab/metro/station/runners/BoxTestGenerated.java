@@ -317,6 +317,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("additionalScopes.kt")
+      public void testAdditionalScopes() {
+        run("additionalScopes.kt");
+      }
+
+      @Test
       public void testAllFilesPresentInPage() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-plugin/testData/box/station/page"), Pattern.compile("^(.+)\\.kt$"), null, true);
       }
@@ -325,6 +331,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("basic.kt")
       public void testBasic() {
         run("basic.kt");
+      }
+
+      @Test
+      @TestMetadata("bindingContainers.kt")
+      public void testBindingContainers() {
+        run("bindingContainers.kt");
       }
 
       @Test
@@ -343,6 +355,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("defaultDependencies.kt")
       public void testDefaultDependencies() {
         run("defaultDependencies.kt");
+      }
+
+      @Test
+      @TestMetadata("excludes.kt")
+      public void testExcludes() {
+        run("excludes.kt");
       }
 
       @Test
