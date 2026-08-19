@@ -16,14 +16,15 @@ processors, to unblock ourselves for K2. But we immediately realized that the tr
 performance wasn't good.
 
 After we adopted metro and saw the capabilities and the performance improvements of a compiler plugin, we decided to
-rewrite our code generation setup to use Metro.
+rewrite our KSP processors using [Metro Compiler Extension API][metro-compiler-extension-api], this helped us get rid of
+KSP usages in our monorepo.
 
 Please note that we are sharing this repository strictly as a practical demonstration of code generation with Metro. 
 This is a reference example and is not intended for public adoption.
 
-> **⚠️ [Metro Compiler Extension API][metro-compiler-extension-api] is highly experimental and does not accept any FRs 
-> and issues. The Kotlin compiler plugin API itself is also constantly changing and lacks documentation. You should be
-> aware of the high-maintenance cost if you decide to follow the same approach.**
+> **⚠️ Metro Compiler Extension API is highly experimental and does not accept any FRs and issues. The Kotlin compiler 
+> plugin API itself is also constantly changing and lacks documentation. You should be aware of the high-maintenance 
+> cost if you decide to follow the same approach.**
 
 ## Performance Benchmark
 

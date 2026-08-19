@@ -20,10 +20,7 @@ import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.origin
-import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
-import org.jetbrains.kotlin.fir.expressions.FirGetClassCall
-import org.jetbrains.kotlin.fir.expressions.FirNamedArgumentExpression
-import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
+import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.expressions.builder.buildArgumentList
 import org.jetbrains.kotlin.fir.expressions.builder.buildCollectionLiteral
@@ -259,49 +256,92 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                     classId = ClassIds.dependencyGraph,
                     argumentMapping =
                         buildAnnotationArgumentMapping {
-                            val graphMarkerExpr =
-                                annotation
-                                    ?.argumentList
-                                    ?.arguments
-                                    ?.filterIsInstance<FirNamedArgumentExpression>()
-                                    ?.find { it.name == Ids.graphMarkerName }
-                                    ?.expression
+                            val graphMarkerExpr = annotation?.findArgument(Ids.graphMarkerName)
 
                             mapping[ClassIds.scopeName] = graphMarkerExpr ?: owner.getClassCall()
-                            mapping[ClassIds.bindingContainersName] = buildCollectionLiteral {
-                                val elementType =
-                                    StandardClassIds.KClass.constructClassLikeType(
-                                        arrayOf(ConeStarProjection)
-                                    )
-                                coneTypeOrNull =
-                                    StandardClassIds.Array.constructClassLikeType(
-                                        arrayOf(elementType)
-                                    )
-                                argumentList = buildArgumentList {
-                                    val defaultDependenciesIds =
-                                        when (componentType) {
-                                            is ComponentType.Activity ->
-                                                setOf(Ids.defaultActivityDeps)
-                                            ComponentType.Fragment -> setOf(Ids.defaultFragmentDeps)
-                                            is ComponentType.Page ->
-                                                setOf(Ids.defaultPageDependencies)
 
-                                            ComponentType.Others -> emptySet()
+                            // Propagate additionalScopes from @MetroStation
+                            resolveClassArrayArguments(annotation, owner, Ids.additionalScopesName)
+                                .takeIf { it.isNotEmpty() }
+                                ?.let {
+                                    mapping[ClassIds.additionalScopesName] =
+                                        buildKClassArrayLiteral(it)
+                                }
+
+                            // Propagate excludes from @MetroStation
+                            resolveClassArrayArguments(annotation, owner, Ids.excludesName)
+                                .takeIf { it.isNotEmpty() }
+                                ?.let {
+                                    mapping[ClassIds.excludesName] = buildKClassArrayLiteral(it)
+                                }
+
+                            mapping[ClassIds.bindingContainersName] =
+                                buildKClassArrayLiteral(
+                                    buildList {
+                                        val defaultDependenciesIds =
+                                            when (componentType) {
+                                                is ComponentType.Activity ->
+                                                    setOf(Ids.defaultActivityDeps)
+                                                ComponentType.Fragment ->
+                                                    setOf(Ids.defaultFragmentDeps)
+                                                is ComponentType.Page ->
+                                                    setOf(Ids.defaultPageDependencies)
+
+                                                ComponentType.Others -> emptySet()
+                                            }
+
+                                        defaultDependenciesIds.forEach { dependenciesId ->
+                                            session.symbolProvider
+                                                .getClassLikeSymbolByClassId(dependenciesId)
+                                                ?.let {
+                                                    add(it.getClassCall())
+                                                }
                                         }
 
-                                    defaultDependenciesIds.forEach { dependenciesId ->
-                                        session.symbolProvider
-                                            .getClassLikeSymbolByClassId(dependenciesId)
-                                            ?.let {
-                                                arguments += it.getClassCall()
-                                            }
+                                        // Propagate bindingContainers from @MetroStation
+                                        addAll(
+                                            resolveClassArrayArguments(
+                                                annotation,
+                                                owner,
+                                                Ids.bindingContainersName,
+                                            )
+                                        )
                                     }
-                                }
-                            }
+                                )
                         },
                 )
         }
         return featureGraph.symbol
+    }
+
+    /**
+     * Resolves each `X::class` element of the named array argument [name] on the given [annotation]
+     * into a fully-resolved `X::class` expression backed by the resolved class symbol. Unresolved
+     * source expressions (e.g. at early FIR phases) are turned into resolved GetClassCalls so that
+     * Metro's aggregator can read them.
+     */
+    private fun resolveClassArrayArguments(
+        annotation: FirAnnotationCall?,
+        owner: FirClassSymbol<*>,
+        name: Name,
+    ): List<FirExpression> {
+        val elements = annotation?.arrayArgumentElements(name) ?: return emptyList()
+        return elements.map { element ->
+            val getClassCall = element as? FirGetClassCall ?: return@map element
+            val classId =
+                when (val argument = getClassCall.argument) {
+                    is FirResolvedQualifier -> argument.classId
+                    else -> argument.extractClassId(owner.classId, session)
+                } ?: return@map element
+            session.symbolProvider.getClassLikeSymbolByClassId(classId)?.getClassCall() ?: element
+        }
+    }
+
+    private fun buildKClassArrayLiteral(elements: List<FirExpression>) = buildCollectionLiteral {
+        val elementType =
+            StandardClassIds.KClass.constructClassLikeType(arrayOf(ConeStarProjection))
+        coneTypeOrNull = StandardClassIds.Array.constructClassLikeType(arrayOf(elementType))
+        argumentList = buildArgumentList { elements.forEach { arguments += it } }
     }
 
     private fun generateProvideBaseTypeFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
@@ -549,11 +589,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
 
         val rawExpr =
             annotation.argumentMapping.mapping[Ids.extraDependenciesName]
-                ?: (annotation as? FirAnnotationCall)
-                    ?.argumentList
-                    ?.arguments
-                    ?.filterIsInstance<FirNamedArgumentExpression>()
-                    ?.find { it.name == Ids.extraDependenciesName }
+                ?: (annotation as? FirAnnotationCall)?.findArgument(Ids.extraDependenciesName)
                 ?: return Ids.emptyExtraDependencies.constructClassLikeType()
 
         val expr = if (rawExpr is FirNamedArgumentExpression) rawExpr.expression else rawExpr
@@ -664,11 +700,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         // Try resolved argument mapping first, then fall back to argument list
         val rawExpr =
             annotation.argumentMapping.mapping[Ids.appDependenciesName]
-                ?: (annotation as? FirAnnotationCall)
-                    ?.argumentList
-                    ?.arguments
-                    ?.filterIsInstance<FirNamedArgumentExpression>()
-                    ?.find { it.name == Ids.appDependenciesName }
+                ?: (annotation as? FirAnnotationCall)?.findArgument(Ids.appDependenciesName)
                 ?: error("Cannot find @MetroStation.appDependencies argument")
 
         // Unwrap FirNamedArgumentExpression if present

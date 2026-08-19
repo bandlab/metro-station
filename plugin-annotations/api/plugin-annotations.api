@@ -2,7 +2,10 @@ public abstract interface annotation class com/bandlab/metro/station/Contributes
 }
 
 public abstract interface annotation class com/bandlab/metro/station/MetroStation : java/lang/annotation/Annotation {
+	public abstract fun additionalScopes ()[Ljava/lang/Class;
 	public abstract fun appDependencies ()Ljava/lang/Class;
+	public abstract fun bindingContainers ()[Ljava/lang/Class;
+	public abstract fun excludes ()[Ljava/lang/Class;
 	public abstract fun extraDependencies ()Ljava/lang/Class;
 	public abstract fun graphMarker ()Ljava/lang/Class;
 }

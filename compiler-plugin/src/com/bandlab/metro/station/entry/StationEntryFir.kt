@@ -22,7 +22,6 @@ import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.origin
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
-import org.jetbrains.kotlin.fir.expressions.FirNamedArgumentExpression
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.expressions.builder.buildArgumentList
 import org.jetbrains.kotlin.fir.expressions.builder.buildCollectionLiteral
@@ -293,13 +292,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                     classId = ClassIds.graphExtension,
                     argumentMapping =
                         buildAnnotationArgumentMapping {
-                            val graphMarkerExpr =
-                                annotation
-                                    ?.argumentList
-                                    ?.arguments
-                                    ?.filterIsInstance<FirNamedArgumentExpression>()
-                                    ?.find { it.name == Ids.graphMarkerName }
-                                    ?.expression
+                            val graphMarkerExpr = annotation?.findArgument(Ids.graphMarkerName)
 
                             mapping[ClassIds.scopeName] = graphMarkerExpr ?: owner.getClassCall()
                             mapping[ClassIds.bindingContainersName] = buildCollectionLiteral {

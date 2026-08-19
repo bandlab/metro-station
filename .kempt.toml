@@ -9,7 +9,7 @@ insert-blank-lines = false
 [paths]
 # testData contains deliberately malformed Kotlin used as compiler test
 # fixtures; it must not be formatted or given license headers.
-exclude = { extend = ["**/testData/**"] }
+exclude = { extend = ["**/testData/**", "**/test-gen/**"] }
 
 [license-header]
 file = "config/license-header.txt"

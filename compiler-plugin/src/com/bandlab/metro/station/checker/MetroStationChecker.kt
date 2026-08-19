@@ -3,6 +3,7 @@
 package com.bandlab.metro.station.checker
 
 import com.bandlab.metro.station.graph.MetroStationIds as Ids
+import com.bandlab.metro.station.utils.findArgument
 import com.bandlab.metro.station.utils.findSuperTypeRef
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
 import org.jetbrains.kotlin.diagnostics.reportOn
@@ -75,11 +76,7 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
     private fun resolveExtraDependenciesClassId(annotation: FirAnnotation): ClassId? {
         val rawExpr =
             annotation.argumentMapping.mapping[Ids.extraDependenciesName]
-                ?: (annotation as? FirAnnotationCall)
-                    ?.argumentList
-                    ?.arguments
-                    ?.filterIsInstance<FirNamedArgumentExpression>()
-                    ?.find { it.name == Ids.extraDependenciesName }
+                ?: (annotation as? FirAnnotationCall)?.findArgument(Ids.extraDependenciesName)
                 ?: return null
 
         val expr = if (rawExpr is FirNamedArgumentExpression) rawExpr.expression else rawExpr

@@ -113,6 +113,11 @@ import kotlin.reflect.KClass
  *   MyPage).
  * @param extraDependencies External dependency contract you need from the parent Activity, only
  *   Page is supported.
+ * @param additionalScopes Additional scopes this dependency graph aggregates, proxy to Metro's
+ *   DependencyGraph.
+ * @param excludes Optional list of excluded contributing classes, proxy to Metro's DependencyGraph.
+ * @param bindingContainers Optional list of included binding containers, proxy to Metro's
+ *   DependencyGraph.
  * @see [dev.zacsweers.metro.DependencyGraph]
  */
 @Target(AnnotationTarget.CLASS)
@@ -120,4 +125,7 @@ public annotation class MetroStation(
     val appDependencies: KClass<*>,
     val graphMarker: KClass<*> = Nothing::class,
     val extraDependencies: KClass<*> = Nothing::class,
+    val additionalScopes: Array<KClass<*>> = [],
+    val excludes: Array<KClass<*>> = [],
+    val bindingContainers: Array<KClass<*>> = [],
 )
