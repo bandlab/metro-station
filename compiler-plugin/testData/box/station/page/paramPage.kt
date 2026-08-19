@@ -3,7 +3,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 @MetroStation(appDependencies = MyPage.ServiceProvider::class)
-class MyPage(context: Context) : ParamPage<MyViewModel, MyPage.Params> {
+class MyPage : ParamPage<MyViewModel, MyPage.Params> {
 
     data class Params(val number: Long)
 
@@ -24,7 +24,7 @@ interface AppGraph
 
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
-    val myPage = MyPage(Context.FAKE)
+    val myPage = MyPage()
     val viewModel = myPage.injectViewModel(
         AndroidPageGraphDependencies.fromAppGraph(appGraph),
         MyPage.Params(number = 123L)

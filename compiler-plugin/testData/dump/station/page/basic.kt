@@ -1,5 +1,5 @@
 @MetroStation(appDependencies = MyPage.ServiceProvider::class)
-class MyPage(context: Context) : Page<MyViewModel> {
+class MyPage : Page<MyViewModel> {
 
     interface ServiceProvider {
         val number: Long

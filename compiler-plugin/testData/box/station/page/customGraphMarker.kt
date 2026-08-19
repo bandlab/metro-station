@@ -4,7 +4,7 @@ interface MyScope
     appDependencies = MyPage.ServiceProvider::class,
     graphMarker = MyScope::class
 )
-class MyPage(context: Context) : Page<MyViewModel> {
+class MyPage : Page<MyViewModel> {
 
     interface ServiceProvider
 }
@@ -23,7 +23,7 @@ interface AppGraph
 
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
-    val myPage = MyPage(Context.FAKE)
+    val myPage = MyPage()
     val viewModel = myPage.injectViewModel(AndroidPageGraphDependencies.fromAppGraph(appGraph))
     assertEquals(42, viewModel.int)
     return "OK"

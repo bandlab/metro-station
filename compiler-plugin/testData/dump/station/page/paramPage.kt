@@ -3,7 +3,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 @MetroStation(appDependencies = MyPage.ServiceProvider::class)
-class MyPage(context: Context) : ParamPage<MyViewModel, MyPage.Params> {
+class MyPage : ParamPage<MyViewModel, MyPage.Params> {
 
     data class Params(val number: Long)
 
