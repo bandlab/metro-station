@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station
 
 import kotlin.reflect.KClass
@@ -5,8 +7,8 @@ import kotlin.reflect.KClass
 /**
  * # This annotation generates a Dependency Graph for the feature.
  *
- * Annotate your feature with [MetroStation], provide a dependency contract you need from the AppGraph,
- * and the compiler plugin will generate a standalone dependency graph for you ✨
+ * Annotate your feature with [MetroStation], provide a dependency contract you need from the
+ * AppGraph, and the compiler plugin will generate a standalone dependency graph for you ✨
  *
  * Usage:
  * ```kotlin
@@ -24,6 +26,7 @@ import kotlin.reflect.KClass
  *   }
  * }
  * ```
+ *
  * Supported types: Page, Activity, Fragment, and any other classes
  *
  * ## Default Dependencies
@@ -32,17 +35,25 @@ import kotlin.reflect.KClass
  * - **Activity**: DefaultActivityDependencies.kt
  * - **Fragment**: DefaultFragmentDependencies.kt
  *
- * We also request some common app-level dependencies for you. For screens (page, activity, fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
+ * We also request some common app-level dependencies for you. For screens (page, activity,
+ * fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider`
+ * interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
  *
  * Besides the basic support, we will also generate param providers:
  * - For CommonActivity, param type declared as the generic type will be available in the graph.
- * - For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
+ * - For ParamPage, we will provide both the initial param, and a flow of params that listens to the
+ *   host activity's onNewIntent.
  *
  * ## Android Component Injection
- * We inject some Android components automatically for you, similar to what Hilt's compiler is doing, but instead of a separate javac call, Metro Station does it within the same kotlinc process:
- * - **Service** (`android.app.Service`): The plugin injects `fun onCreate()` for you, if the `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
- * - **BroadcastReceiver** (`android.content.BroadcastReceiver`): The plugin injects at the beginning of `fun onReceive(context: Context, intent: Intent)` for you.
- * - **CoroutineWorker** (`androidx.work.CoroutineWorker`): The plugin injects at the beginning of `suspend fun doWork(): Result` for you.
+ * We inject some Android components automatically for you, similar to what Hilt's compiler is
+ * doing, but instead of a separate javac call, Metro Station does it within the same kotlinc
+ * process:
+ * - **Service** (`android.app.Service`): The plugin injects `fun onCreate()` for you, if the
+ *   `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
+ * - **BroadcastReceiver** (`android.content.BroadcastReceiver`): The plugin injects at the
+ *   beginning of `fun onReceive(context: Context, intent: Intent)` for you.
+ * - **CoroutineWorker** (`androidx.work.CoroutineWorker`): The plugin injects at the beginning of
+ *   `suspend fun doWork(): Result` for you.
  *
  * ## Under the hood
  *
@@ -81,8 +92,8 @@ import kotlin.reflect.KClass
  * }
  * ```
  *
- * If `extraDependencies` is presented, the FIR checker will request a param declared in the Page's constructor,
- * and the plugin will pass it while creating the graph.
+ * If `extraDependencies` is presented, the FIR checker will request a param declared in the Page's
+ * constructor, and the plugin will pass it while creating the graph.
  *
  * For classes extend `CommonActivity`, we will override the `inject` method like this:
  * ```kotlin
@@ -98,14 +109,15 @@ import kotlin.reflect.KClass
  * ```
  *
  * @param appDependencies The dependency contract you need the App graph to provide to your feature.
- * @param graphMarker A marker to aggregate a graph, default to the feature class itself (ex. MyPage).
- * @param extraDependencies External dependency contract you need from the parent Activity, only Page is supported.
- *
- * Proxy to Metro's [dev.zacsweers.metro.DependencyGraph] for conveniences.
- * @param additionalScopes Additional scopes this dependency graph aggregates.
- * @param excludes Optional list of excluded contributing classes.
- * @param bindingContainers Optional list of included binding containers.
- *
+ * @param graphMarker A marker to aggregate a graph, default to the feature class itself (ex.
+ *   MyPage).
+ * @param extraDependencies External dependency contract you need from the parent Activity, only
+ *   Page is supported.
+ * @param additionalScopes Additional scopes this dependency graph aggregates, proxy to Metro's
+ *   DependencyGraph.
+ * @param excludes Optional list of excluded contributing classes, proxy to Metro's DependencyGraph.
+ * @param bindingContainers Optional list of included binding containers, proxy to Metro's
+ *   DependencyGraph.
  * @see [dev.zacsweers.metro.DependencyGraph]
  */
 @Target(AnnotationTarget.CLASS)
