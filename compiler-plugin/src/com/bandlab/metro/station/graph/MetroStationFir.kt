@@ -711,7 +711,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
     override fun getContributionHints(): List<ContributionHint> {
         return annotatedClasses.map { classSymbol ->
             val serviceProvider =
-                classSymbol.classId.createNestedClassId(MetroStationIds.featureServiceProviderName)
+                classSymbol.classId.createNestedClassId(Ids.featureServiceProviderName)
             ContributionHint(contributingClassId = serviceProvider, scope = ClassIds.appScope)
         }
     }

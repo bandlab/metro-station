@@ -159,9 +159,7 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
     override fun getContributionHints(): List<ContributionHint> {
         return annotatedClasses.map { classSymbol ->
             val nestedInterfaceClassId =
-                classSymbol.classId.createNestedClassId(
-                    ContributesConfigSelectorIds.nestedContributionName
-                )
+                classSymbol.classId.createNestedClassId(Ids.nestedContributionName)
             ContributionHint(
                 contributingClassId = nestedInterfaceClassId,
                 scope = ClassIds.appScope,
