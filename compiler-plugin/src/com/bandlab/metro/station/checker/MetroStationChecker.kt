@@ -1,5 +1,9 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.checker
 
+import com.bandlab.metro.station.graph.MetroStationIds as Ids
+import com.bandlab.metro.station.utils.findArgument
 import com.bandlab.metro.station.utils.findSuperTypeRef
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
 import org.jetbrains.kotlin.diagnostics.reportOn
@@ -14,12 +18,11 @@ import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.StandardClassIds
-import com.bandlab.metro.station.graph.MetroStationIds as Ids
 
 /**
  * Validates that classes annotated with `@MetroStation` have the required constructor parameters:
- * - If `extraDependencies` is specified (not `Nothing::class`), there must be a constructor parameter
- *   whose type matches the specified extra dependencies class.
+ * - If `extraDependencies` is specified (not `Nothing::class`), there must be a constructor
+ *   parameter whose type matches the specified extra dependencies class.
  */
 internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
 
@@ -31,8 +34,9 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
         val annotation = symbol.getAnnotationByClassId(Ids.metroStation, session) ?: return
         val extraDepsClassId = resolveExtraDependenciesClassId(annotation)
 
-        val isPage = symbol.findSuperTypeRef(Ids.page) != null ||
-            symbol.findSuperTypeRef(Ids.paramPage) != null
+        val isPage =
+            symbol.findSuperTypeRef(Ids.page) != null ||
+                symbol.findSuperTypeRef(Ids.paramPage) != null
 
         if (!isPage) {
             // We still use extraDependencies on Fragments for legacy code
@@ -41,7 +45,7 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
                 reporter.reportOn(
                     declaration.source,
                     MetroStationDiagnostics.EXTRA_DEPENDENCIES_UNSUPPORTED,
-                    "extraDependencies feature is supported only on Pages."
+                    "extraDependencies feature is supported only on Pages.",
                 )
             }
             return
@@ -59,31 +63,31 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
                 reporter.reportOn(
                     declaration.source,
                     MetroStationDiagnostics.MISSING_EXTRA_DEPENDENCIES_PARAMETER,
-                    "${declaration.classId.shortClassName.asString()} must have a ${extraDepsClassId.shortClassName.asString()} in its constructor for the compiler to create the graph."
+                    "${declaration.classId.shortClassName.asString()} must have a ${extraDepsClassId.shortClassName.asString()} in its constructor for the compiler to create the graph.",
                 )
             }
         }
     }
 
     /**
-     * Extracts the ClassId of the extraDependencies parameter from the annotation,
-     * returning null if not specified or if it's Nothing::class.
+     * Extracts the ClassId of the extraDependencies parameter from the annotation, returning null
+     * if not specified or if it's Nothing::class.
      */
     private fun resolveExtraDependenciesClassId(annotation: FirAnnotation): ClassId? {
-        val rawExpr = annotation.argumentMapping.mapping[Ids.extraDependenciesName]
-            ?: (annotation as? FirAnnotationCall)?.argumentList?.arguments
-                ?.filterIsInstance<FirNamedArgumentExpression>()
-                ?.find { it.name == Ids.extraDependenciesName }
-            ?: return null
+        val rawExpr =
+            annotation.argumentMapping.mapping[Ids.extraDependenciesName]
+                ?: (annotation as? FirAnnotationCall)?.findArgument(Ids.extraDependenciesName)
+                ?: return null
 
         val expr = if (rawExpr is FirNamedArgumentExpression) rawExpr.expression else rawExpr
 
         val getClassCall = expr as? FirGetClassCall ?: return null
 
-        val classId = when (val argument = getClassCall.argument) {
-            is FirResolvedQualifier -> argument.classId
-            else -> return null
-        } ?: return null
+        val classId =
+            when (val argument = getClassCall.argument) {
+                is FirResolvedQualifier -> argument.classId
+                else -> return null
+            } ?: return null
 
         return if (classId == StandardClassIds.Nothing) null else classId
     }

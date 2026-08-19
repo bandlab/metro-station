@@ -589,11 +589,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
 
         val rawExpr =
             annotation.argumentMapping.mapping[Ids.extraDependenciesName]
-                ?: (annotation as? FirAnnotationCall)
-                    ?.argumentList
-                    ?.arguments
-                    ?.filterIsInstance<FirNamedArgumentExpression>()
-                    ?.find { it.name == Ids.extraDependenciesName }
+                ?: (annotation as? FirAnnotationCall)?.findArgument(Ids.extraDependenciesName)
                 ?: return Ids.emptyExtraDependencies.constructClassLikeType()
 
         val expr = if (rawExpr is FirNamedArgumentExpression) rawExpr.expression else rawExpr
@@ -704,11 +700,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         // Try resolved argument mapping first, then fall back to argument list
         val rawExpr =
             annotation.argumentMapping.mapping[Ids.appDependenciesName]
-                ?: (annotation as? FirAnnotationCall)
-                    ?.argumentList
-                    ?.arguments
-                    ?.filterIsInstance<FirNamedArgumentExpression>()
-                    ?.find { it.name == Ids.appDependenciesName }
+                ?: (annotation as? FirAnnotationCall)?.findArgument(Ids.appDependenciesName)
                 ?: error("Cannot find @MetroStation.appDependencies argument")
 
         // Unwrap FirNamedArgumentExpression if present
