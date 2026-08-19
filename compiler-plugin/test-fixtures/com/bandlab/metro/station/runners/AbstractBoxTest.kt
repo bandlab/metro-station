@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.runners
 
 import com.bandlab.metro.station.services.configureImports
@@ -17,30 +19,31 @@ open class AbstractBoxTest : AbstractFirBlackBoxCodegenTestBase(FirParser.LightT
         return EnvironmentBasedStandardLibrariesPathProvider
     }
 
-    override fun configure(builder: TestConfigurationBuilder) = with(builder) {
-        super.configure(this)
-        /*
-         * Containers of different directives, which can be used in tests:
-         * - ModuleStructureDirectives
-         * - LanguageSettingsDirectives
-         * - DiagnosticsDirectives
-         * - FirDiagnosticsDirectives
-         * - CodegenTestDirectives
-         * - JvmEnvironmentConfigurationDirectives
-         *
-         * All of them are located in `org.jetbrains.kotlin.test.directives` package
-         */
-        defaultDirectives {
-            JvmEnvironmentConfigurationDirectives.JVM_TARGET.with(JvmTarget.JVM_11)
-            +ConfigurationDirectives.WITH_STDLIB
-            +JvmEnvironmentConfigurationDirectives.FULL_JDK
-            // Comment out dump to avoid too much noise
-            // +FirDiagnosticsDirectives.FIR_DUMP
+    override fun configure(builder: TestConfigurationBuilder) =
+        with(builder) {
+            super.configure(this)
+            /*
+             * Containers of different directives, which can be used in tests:
+             * - ModuleStructureDirectives
+             * - LanguageSettingsDirectives
+             * - DiagnosticsDirectives
+             * - FirDiagnosticsDirectives
+             * - CodegenTestDirectives
+             * - JvmEnvironmentConfigurationDirectives
+             *
+             * All of them are located in `org.jetbrains.kotlin.test.directives` package
+             */
+            defaultDirectives {
+                JvmEnvironmentConfigurationDirectives.JVM_TARGET.with(JvmTarget.JVM_11)
+                +ConfigurationDirectives.WITH_STDLIB
+                +JvmEnvironmentConfigurationDirectives.FULL_JDK
+                // Comment out dump to avoid too much noise
+                // +FirDiagnosticsDirectives.FIR_DUMP
 
-            +CodegenTestDirectives.IGNORE_DEXING // Avoids loading R8 from the classpath.
+                +CodegenTestDirectives.IGNORE_DEXING // Avoids loading R8 from the classpath.
+            }
+
+            configurePlugin()
+            configureImports(addTestImports = true)
         }
-
-        configurePlugin()
-        configureImports(addTestImports = true)
-    }
 }

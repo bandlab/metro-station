@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.profile.footer
 
 import androidx.compose.foundation.background
@@ -21,18 +23,14 @@ class ProfileFooterPage : ParamPage<ProfileFooterViewModel, ProfileFooterPage.Pa
     @Composable
     override fun Content(viewModel: ProfileFooterViewModel) {
         Box(
-            modifier = Modifier
-                .size(300.dp, 100.dp)
-                .background(Purple80),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.size(300.dp, 100.dp).background(Purple80),
+            contentAlignment = Alignment.Center,
         ) {
             Text("Profile Footer for ${viewModel.username}")
         }
     }
 
-    data class Param(
-        val username: String
-    )
+    data class Param(val username: String)
 
     interface ServiceProvider {
         val screenTracker: ScreenTracker

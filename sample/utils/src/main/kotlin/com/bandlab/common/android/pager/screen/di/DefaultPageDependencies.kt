@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.common.android.pager.screen.di
 
 import androidx.lifecycle.Lifecycle
@@ -7,9 +9,7 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.CoroutineScope
 
-/**
- * Provides default dependencies for a Page.
- */
+/** Provides default dependencies for a Page. */
 @BindingContainer
 object DefaultPageDependencies {
 

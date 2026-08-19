@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.component
 
 import android.content.Context
@@ -13,8 +15,7 @@ class LoggerWorker(
     params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
 
-    @Inject
-    private lateinit var logger: Logger
+    @Inject private lateinit var logger: Logger
 
     override suspend fun doWork(): Result {
         logger.log("MetroStation:: LoggerWorker is working")

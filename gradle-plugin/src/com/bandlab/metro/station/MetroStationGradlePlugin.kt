@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station
 
 import com.bandlab.metro.station.BuildConfig.ANNOTATIONS_LIBRARY_COORDINATES
@@ -15,10 +17,11 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun apply(target: Project) {
         target.extensions.create("metroStation", MetroStationExtension::class.java)
 
-        val isMetroStrictCompatibility = target.providers
-            .gradleProperty("com.bandlab.metro.station.metroStrictCompatibility")
-            .map { it.toBoolean() }
-            .getOrElse(true)
+        val isMetroStrictCompatibility =
+            target.providers
+                .gradleProperty("com.bandlab.metro.station.metroStrictCompatibility")
+                .map { it.toBoolean() }
+                .getOrElse(true)
         if (isMetroStrictCompatibility) {
             var metroVersion: String? = null
             target.plugins.withId("dev.zacsweers.metro") {
@@ -47,11 +50,12 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
     override fun getCompilerPluginId(): String = BuildConfig.KOTLIN_PLUGIN_ID
 
-    override fun getPluginArtifact(): SubpluginArtifact = SubpluginArtifact(
-        groupId = BuildConfig.KOTLIN_PLUGIN_GROUP,
-        artifactId = BuildConfig.KOTLIN_PLUGIN_NAME,
-        version = BuildConfig.KOTLIN_PLUGIN_VERSION,
-    )
+    override fun getPluginArtifact(): SubpluginArtifact =
+        SubpluginArtifact(
+            groupId = BuildConfig.KOTLIN_PLUGIN_GROUP,
+            artifactId = BuildConfig.KOTLIN_PLUGIN_NAME,
+            version = BuildConfig.KOTLIN_PLUGIN_VERSION,
+        )
 
     override fun applyToCompilation(
         kotlinCompilation: KotlinCompilation<*>
@@ -69,7 +73,9 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
                 extension.stationEntriesBaseline
                     .getOrElse(emptySet())
                     .takeUnless { it.isEmpty() }
-                    ?.let { SubpluginOption("stationEntriesBaseline", value = it.joinToString(":")) }
+                    ?.let {
+                        SubpluginOption("stationEntriesBaseline", value = it.joinToString(":"))
+                    }
                     ?.let(::add)
             }
         }

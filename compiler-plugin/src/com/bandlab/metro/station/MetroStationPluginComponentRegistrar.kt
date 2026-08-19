@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station
 
 import com.bandlab.metro.station.entry.StationEntryIr
@@ -13,7 +15,9 @@ public class MetroStationPluginComponentRegistrar : CompilerPluginRegistrar() {
         val isIde by lazy {
             try {
                 // Try to look up an IntelliJ-only class
-                Class.forName("org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession")
+                Class.forName(
+                    "org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession"
+                )
                 true
             } catch (_: ClassNotFoundException) {
                 false
@@ -21,15 +25,19 @@ public class MetroStationPluginComponentRegistrar : CompilerPluginRegistrar() {
         }
     }
 
-    override val pluginId: String get() = BuildConfig.KOTLIN_PLUGIN_ID
-    override val supportsK2: Boolean get() = true
+    override val pluginId: String
+        get() = BuildConfig.KOTLIN_PLUGIN_ID
+
+    override val supportsK2: Boolean
+        get() = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
-        val stationEntriesBaseline = configuration[MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE]
+        val stationEntriesBaseline =
+            configuration[MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE]
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(
                 includeBaselineChecker = stationEntriesBaseline != null,
-                stationEntriesBaseline = stationEntriesBaseline.orEmpty()
+                stationEntriesBaseline = stationEntriesBaseline.orEmpty(),
             )
         )
 

@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.component
 
 import android.app.Service
@@ -10,8 +12,7 @@ import dev.zacsweers.metro.Inject
 @MetroStation(appDependencies = LoggerService.ServiceProvider::class)
 class LoggerService : Service() {
 
-    @Inject
-    private lateinit var logger: Logger
+    @Inject private lateinit var logger: Logger
 
     override fun onCreate() {
         super.onCreate()

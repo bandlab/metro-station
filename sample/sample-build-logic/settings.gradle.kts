@@ -1,25 +1,31 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 import java.util.*
 
-val localProperties = Properties().apply {
-    val file = File(settingsDir, "../local.properties")
-    if (file.exists()) {
-        file.inputStream().use { load(it) }
+val localProperties =
+    Properties().apply {
+        val file = File(settingsDir, "../local.properties")
+        if (file.exists()) {
+            file.inputStream().use { load(it) }
+        }
     }
-}
 
-val gradleProperties = Properties().apply {
-    val file = File(settingsDir, "../gradle.properties")
-    if (file.exists()) {
-        file.inputStream().use { load(it) }
+val gradleProperties =
+    Properties().apply {
+        val file = File(settingsDir, "../gradle.properties")
+        if (file.exists()) {
+            file.inputStream().use { load(it) }
+        }
     }
-}
 
 fun getPropertyOrFail(propertyName: String): String {
     return localProperties.getProperty(propertyName)
         ?: gradleProperties.getProperty(propertyName)
         ?: providers.gradleProperty(propertyName).orNull
         ?: System.getenv(propertyName)
-        ?: error("Property $propertyName not found. Please add it to local.properties or gradle.properties.")
+        ?: error(
+            "Property $propertyName not found. Please add it to local.properties or gradle.properties."
+        )
 }
 
 dependencyResolutionManagement {
@@ -49,4 +55,3 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "sample-build-logic"
-

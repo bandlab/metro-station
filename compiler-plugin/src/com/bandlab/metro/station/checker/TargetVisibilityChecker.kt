@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.checker
 
 import com.bandlab.metro.station.configselector.ContributesConfigSelectorIds
@@ -31,16 +33,21 @@ internal object TargetVisibilityChecker : FirDeclarationChecker<FirClass>(MppChe
         val session = context.session
 
         val hasConfigSelector =
-            symbol.getAnnotationByClassId(ContributesConfigSelectorIds.contributesConfigSelector, session) != null
-        val hasComponent = symbol.getAnnotationByClassId(MetroStationIds.metroStation, session) != null
-        val hasInjector = symbol.getAnnotationByClassId(MetroStationIds.stationEntry, session) != null
+            symbol.getAnnotationByClassId(
+                ContributesConfigSelectorIds.contributesConfigSelector,
+                session,
+            ) != null
+        val hasComponent =
+            symbol.getAnnotationByClassId(MetroStationIds.metroStation, session) != null
+        val hasInjector =
+            symbol.getAnnotationByClassId(MetroStationIds.stationEntry, session) != null
         if (!hasConfigSelector && !hasComponent && !hasInjector) return
 
         if (!declaration.visibility.isPublicAPI) {
             reporter.reportOn(
                 declaration.source,
                 MetroStationDiagnostics.TARGET_MUST_BE_PUBLIC,
-                "${declaration.classId.shortClassName.asString()} must be public to be contributed properly."
+                "${declaration.classId.shortClassName.asString()} must be public to be contributed properly.",
             )
         }
     }

@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.uikit.compose.page.container
 
 import androidx.activity.compose.LocalActivity
@@ -10,22 +12,22 @@ import com.bandlab.uikit.api.page.Page
 import com.bandlab.uikit.api.page.PageContainerState
 
 @Suppress("UNCHECKED_CAST")
-fun <T : Any> Page<T>.toPageContainerState(): PageContainerState = DefaultPageContainerState(this as Page<Any>)
+fun <T : Any> Page<T>.toPageContainerState(): PageContainerState =
+    DefaultPageContainerState(this as Page<Any>)
 
 @Suppress("UNCHECKED_CAST")
-fun <T : Any, P : Any> ParamPage<T, P>.toPageContainerState(param: P): PageContainerState = DefaultPageContainerState(
-    page = this as Page<Any>,
-    param = param
-)
+fun <T : Any, P : Any> ParamPage<T, P>.toPageContainerState(param: P): PageContainerState =
+    DefaultPageContainerState(
+        page = this as Page<Any>,
+        param = param,
+    )
 
 private class DefaultPageContainerState(
     override val page: Page<Any>,
     private val param: Any? = null,
 ) : PageContainerState {
 
-    /**
-     * A holder for view model to survive recomposition
-     */
+    /** A holder for view model to survive recomposition */
     private var vmStore: Any? = null
 
     @Composable
@@ -38,11 +40,12 @@ private class DefaultPageContainerState(
                 error("ParamPage requires a parameter. ${this::class.java}")
             }
 
-            vmStore = page.createPageViewModel(
-                initialParam = param ?: Unit,
-                lifecycleOwner = lifecycleOwner,
-                host = host,
-            )
+            vmStore =
+                page.createPageViewModel(
+                    initialParam = param ?: Unit,
+                    lifecycleOwner = lifecycleOwner,
+                    host = host,
+                )
         }
 
         @Suppress("UNCHECKED_CAST")

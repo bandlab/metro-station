@@ -1,0 +1,2 @@
+// Copyright ${YEAR} BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0

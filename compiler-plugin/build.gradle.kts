@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 @file:OptIn(ExperimentalWasmDsl::class)
 @file:Suppress("UnstableApiUsage")
 
@@ -36,44 +38,52 @@ idea {
 
 val testArtifacts: Configuration = configurations.create("testArtifacts")
 
-val annotationsRuntimeClasspath = configurations.dependencyScope("annotationsRuntimeClasspath") {
-    isTransitive = false
-}.get()
+val annotationsRuntimeClasspath =
+    configurations
+        .dependencyScope("annotationsRuntimeClasspath") {
+            isTransitive = false
+        }
+        .get()
 
-val annotationsJvmRuntimeClasspath = configurations.resolvable("annotationsJvmRuntimeClasspath") {
-    extendsFrom(annotationsRuntimeClasspath)
-}.get()
+val annotationsJvmRuntimeClasspath =
+    configurations
+        .resolvable("annotationsJvmRuntimeClasspath") {
+            extendsFrom(annotationsRuntimeClasspath)
+        }
+        .get()
 
-val metroRuntimeClasspath = configurations.dependencyScope("metroRuntimeClasspath") {
-    isTransitive = false
-}.get()
+val metroRuntimeClasspath =
+    configurations
+        .dependencyScope("metroRuntimeClasspath") {
+            isTransitive = false
+        }
+        .get()
 
-val metroRuntimeResolvable = configurations.resolvable("metroRuntimeResolvable") {
-    extendsFrom(metroRuntimeClasspath)
-}.get()
+val metroRuntimeResolvable =
+    configurations
+        .resolvable("metroRuntimeResolvable") {
+            extendsFrom(metroRuntimeClasspath)
+        }
+        .get()
 
 dependencies {
     compileOnly(libs.kotlin.compiler)
     compileOnly(libs.metro.compiler)
-
-    testFixturesApi(libs.kotlin.test.junit5)
-    testFixturesApi(libs.kotlin.test.framework)
-    testFixturesApi(libs.kotlin.compiler)
-    testFixturesApi(libs.metro.compiler)
     testFixturesRuntimeOnly(libs.junit)
-
+    testFixturesApi(libs.kotlin.compiler)
+    testFixturesApi(libs.kotlin.test.framework)
+    testFixturesApi(libs.kotlin.test.junit5)
+    testFixturesApi(libs.metro.compiler)
     annotationsRuntimeClasspath(project(":plugin-annotations"))
     annotationsRuntimeClasspath(project(":stubs"))
     annotationsRuntimeClasspath(libs.coroutines.core)
-
-    // Dependencies required to run the internal test framework.
-    testArtifacts(libs.kotlin.reflect)
-    testArtifacts(libs.kotlin.test)
-    testArtifacts(libs.kotlin.script.runtime)
-    testArtifacts(libs.kotlin.annotations.jvm)
-
     // Metro runtime for running Metro tests
     metroRuntimeClasspath(libs.metro.runtime)
+    testArtifacts(libs.kotlin.annotations.jvm)
+    // Dependencies required to run the internal test framework.
+    testArtifacts(libs.kotlin.reflect)
+    testArtifacts(libs.kotlin.script.runtime)
+    testArtifacts(libs.kotlin.test)
 }
 
 buildConfig {
@@ -128,26 +138,26 @@ kotlin {
     }
 }
 
-val generateTests = tasks.register<JavaExec>("generateTests") {
-    inputs.dir(layout.projectDirectory.dir("testData"))
-        .withPropertyName("testData")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.dir(layout.projectDirectory.dir("test-gen"))
-        .withPropertyName("generatedTests")
+val generateTests =
+    tasks.register<JavaExec>("generateTests") {
+        inputs
+            .dir(layout.projectDirectory.dir("testData"))
+            .withPropertyName("testData")
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+        outputs.dir(layout.projectDirectory.dir("test-gen")).withPropertyName("generatedTests")
 
-    classpath = sourceSets.testFixtures.get().runtimeClasspath
-    mainClass.set("com.bandlab.metro.station.GenerateTestsKt")
-    workingDir = rootDir
-}
+        classpath = sourceSets.testFixtures.get().runtimeClasspath
+        mainClass.set("com.bandlab.metro.station.GenerateTestsKt")
+        workingDir = rootDir
+    }
 
 tasks.compileTestKotlin {
     dependsOn(generateTests)
 }
 
 fun Test.setLibraryProperty(propName: String, jarName: String) {
-    val path = testArtifacts.files
-        .find { """$jarName-\d.*""".toRegex().matches(it.name) }
-        ?.absolutePath
-        ?: return
+    val path =
+        testArtifacts.files.find { """$jarName-\d.*""".toRegex().matches(it.name) }?.absolutePath
+            ?: return
     systemProperty(propName, path)
 }

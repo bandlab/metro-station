@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.android.common.activity
 
 import androidx.activity.ComponentActivity
@@ -9,17 +11,13 @@ import dev.zacsweers.metro.Binds
 import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.CoroutineScope
 
-/**
- *  Default dependencies for all the activities.
- */
+/** Default dependencies for all the activities. */
 @BindingContainer
 interface DefaultActivityDependencies {
 
-    @Binds
-    val CommonActivity<*>.asComponentActivity: ComponentActivity
+    @Binds val CommonActivity<*>.asComponentActivity: ComponentActivity
 
-    @Binds
-    val ComponentActivity.asLifecycleOwner: LifecycleOwner
+    @Binds val ComponentActivity.asLifecycleOwner: LifecycleOwner
 
     companion object {
 

@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.android.common.activity
 
 import android.os.Bundle
@@ -32,18 +34,20 @@ abstract class CommonActivity<Params : Any> : FragmentActivity() {
             return
         }
 
-        @OptIn(GeneratedByMetroStation::class)
-        inject()
+        @OptIn(GeneratedByMetroStation::class) inject()
         super.onCreate(savedInstanceState)
         onCreate()
     }
 
     /**
-     * Creates the dependency graph (or graph extension), and performs members injection for the Activity.
+     * Creates the dependency graph (or graph extension), and performs members injection for the
+     * Activity.
      */
     @GeneratedByMetroStation
     open fun inject() {
-        throw UnsupportedOperationException("This method will be implemented by the compiler plugin.")
+        throw UnsupportedOperationException(
+            "This method will be implemented by the compiler plugin."
+        )
     }
 
     // Used by the compiler plugin

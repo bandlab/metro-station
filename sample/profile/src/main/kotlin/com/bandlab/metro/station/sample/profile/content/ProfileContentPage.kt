@@ -1,6 +1,7 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.profile.content
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -26,7 +27,7 @@ import dev.zacsweers.metro.Inject
 )
 @Inject
 class ProfileContentPage(
-    private val activityDependencies: ActivityDependencies, /* used by the compiler */
+    private val activityDependencies: ActivityDependencies /* used by the compiler */
 ) : Page<ProfileContentViewModel> {
 
     @Composable
@@ -35,10 +36,8 @@ class ProfileContentPage(
         LaunchedEffect(viewModel) { viewModel.loadUser() }
 
         Box(
-            modifier = Modifier
-                .size(300.dp)
-                .background(Purple80),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.size(300.dp).background(Purple80),
+            contentAlignment = Alignment.Center,
         ) {
             if (username == null) {
                 CircularProgressIndicator()
@@ -52,8 +51,5 @@ class ProfileContentPage(
         val screenTracker: ScreenTracker
     }
 
-    @Inject
-    class ActivityDependencies(
-        val profileService: ProfileService
-    )
+    @Inject class ActivityDependencies(val profileService: ProfileService)
 }

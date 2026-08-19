@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.utils
 
 import android.content.Context
@@ -13,7 +15,6 @@ interface Logger {
 @ContributesBinding(AppScope::class)
 class LoggerImpl(private val context: Context) : Logger {
     override fun log(message: String) {
-        java.util.logging.Logger.getLogger(context.applicationInfo.name)
-            .info(message)
+        java.util.logging.Logger.getLogger(context.applicationInfo.name).info(message)
     }
 }
