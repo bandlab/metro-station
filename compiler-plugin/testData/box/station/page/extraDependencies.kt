@@ -2,10 +2,7 @@
     appDependencies = MyPage.ServiceProvider::class,
     extraDependencies = MyPage.ExtraDependencies::class
 )
-class MyPage(
-    context: Context,
-    extraDependencies: ExtraDependencies
-) : Page<MyViewModel> {
+class MyPage(extraDependencies: ExtraDependencies) : Page<MyViewModel> {
 
     interface ServiceProvider {
         val number: Long
@@ -36,7 +33,7 @@ fun box(): String {
     val extraDependencies = object : MyPage.ExtraDependencies {
         override val boolean: Boolean = true
     }
-    val myPage = MyPage(Context.FAKE, extraDependencies)
+    val myPage = MyPage(extraDependencies)
     val viewModel = myPage.injectViewModel(AndroidPageGraphDependencies.fromAppGraph(appGraph))
     assertEquals("Hello! true 123", viewModel.value)
     return "OK"
