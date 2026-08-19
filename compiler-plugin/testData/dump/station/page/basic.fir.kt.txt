@@ -59,7 +59,7 @@ class MyPage : Page<MyViewModel> {
 
     }
 
-    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 529, newInstanceName = "provideBaseType")
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 511, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<Page<*>> {
       private /* final field */ val instance: FeatureGraph = instance
       private /* final field */ val feature: Provider<MyPage> = feature
@@ -128,7 +128,7 @@ class MyPage : Page<MyViewModel> {
 
   }
 
-  constructor(context: Context) /* primary */ {
+  constructor() /* primary */ {
     super/*Any*/()
     /* <init>() */
 
@@ -239,7 +239,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 636, endOffset = 680, newInstanceName = "provideLong")
+  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 618, endOffset = 662, newInstanceName = "provideLong")
   class ProvideLongMetroFactory : Factory<Long> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
