@@ -1,6 +1,8 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.configselector
 
-import com.bandlab.metro.station.configselector.ContributesConfigSelectorIds
+import com.bandlab.metro.station.configselector.ContributesConfigSelectorIds as Ids
 import com.bandlab.metro.station.utils.ClassIds
 import com.bandlab.metro.station.utils.buildSimpleAnnotation
 import com.bandlab.metro.station.utils.buildSimpleAnnotationCall
@@ -34,11 +36,10 @@ import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.Name
-import com.bandlab.metro.station.configselector.ContributesConfigSelectorIds as Ids
 
 /**
- * This FIR declaration generator generates a multibinding contribution for config selectors that are annotated with
- * [Ids.contributesConfigSelector].
+ * This FIR declaration generator generates a multibinding contribution for config selectors that
+ * are annotated with [Ids.contributesConfigSelector].
  */
 public class ContributesConfigSelectorFir(session: FirSession, compatContext: CompatContext) :
     MetroFirDeclarationGenerationExtension(session),
@@ -84,24 +85,27 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
         // This makes it visible to Metro's getNestedClassifiersNames (which checks for @Binds
         // functions to decide whether to generate BindsMirror).
         val functionSymbol = FirNamedFunctionSymbol(CallableId(nestedClassId, Ids.bindName))
-        val bindsFunction = buildMemberFunction(
-            owner = classSymbol,
-            returnTypeProvider = { Ids.debuggableConfigSelectorClassId.constructClassLikeType() },
-            callableId = functionSymbol.callableId,
-            origin = Key.origin,
-            visibility = Visibilities.Public,
-            modality = Modality.ABSTRACT
-        ) {
-            valueParameters += buildValueParameter {
-                resolvePhase = FirResolvePhase.BODY_RESOLVE
-                moduleData = session.moduleData
-                origin = Key.origin
-                returnTypeRef = owner.defaultType().toFirResolvedTypeRef()
-                this.name = Ids.implName
-                symbol = FirValueParameterSymbol()
-                containingDeclarationSymbol = this@buildMemberFunction.symbol
+        val bindsFunction =
+            buildMemberFunction(
+                owner = classSymbol,
+                returnTypeProvider = {
+                    Ids.debuggableConfigSelectorClassId.constructClassLikeType()
+                },
+                callableId = functionSymbol.callableId,
+                origin = Key.origin,
+                visibility = Visibilities.Public,
+                modality = Modality.ABSTRACT,
+            ) {
+                valueParameters += buildValueParameter {
+                    resolvePhase = FirResolvePhase.BODY_RESOLVE
+                    moduleData = session.moduleData
+                    origin = Key.origin
+                    returnTypeRef = owner.defaultType().toFirResolvedTypeRef()
+                    this.name = Ids.implName
+                    symbol = FirValueParameterSymbol()
+                    containingDeclarationSymbol = this@buildMemberFunction.symbol
+                }
             }
-        }
         bindsFunction.replaceAnnotations(
             listOf(
                 buildSimpleAnnotationCall(session, ClassIds.binds, functionSymbol),
@@ -118,19 +122,23 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
             scopeProvider = session.kotlinScopeProvider
             this.name = nestedClassId.shortClassName
             symbol = classSymbol
-            status = FirResolvedDeclarationStatusImpl(
-                Visibilities.Public,
-                Modality.ABSTRACT,
-                Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
-            )
+            status =
+                FirResolvedDeclarationStatusImpl(
+                    Visibilities.Public,
+                    Modality.ABSTRACT,
+                    Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
+                )
             superTypeRefs += session.builtinTypes.anyType
-            val appScopeSymbol = session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.appScope)!!
-            annotations += buildSimpleAnnotation(
-                classId = ClassIds.contributesTo,
-                argumentMapping = buildAnnotationArgumentMapping {
-                    mapping[ClassIds.scopeName] = appScopeSymbol.getClassCall()
-                }
-            )
+            val appScopeSymbol =
+                session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.appScope)!!
+            annotations +=
+                buildSimpleAnnotation(
+                    classId = ClassIds.contributesTo,
+                    argumentMapping =
+                        buildAnnotationArgumentMapping {
+                            mapping[ClassIds.scopeName] = appScopeSymbol.getClassCall()
+                        },
+                )
             // Add the function directly to the class declarations
             declarations += bindsFunction
         }
@@ -139,29 +147,30 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
 
     override fun getContributionTargets(): List<ContributionTarget> {
         return annotatedClasses.map { classSymbol ->
-            val nestedInterfaceClassId = classSymbol.classId
-                .createNestedClassId(Ids.nestedContributionName)
+            val nestedInterfaceClassId =
+                classSymbol.classId.createNestedClassId(Ids.nestedContributionName)
             ContributionTarget(
                 contributingClassId = nestedInterfaceClassId,
-                scope = ClassIds.appScope
+                scope = ClassIds.appScope,
             )
         }
     }
 
     override fun getContributionHints(): List<ContributionHint> {
         return annotatedClasses.map { classSymbol ->
-            val nestedInterfaceClassId = classSymbol.classId
-                .createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
+            val nestedInterfaceClassId =
+                classSymbol.classId.createNestedClassId(Ids.nestedContributionName)
             ContributionHint(
                 contributingClassId = nestedInterfaceClassId,
-                scope = ClassIds.appScope
+                scope = ClassIds.appScope,
             )
         }
     }
 
     private object Key : GeneratedDeclarationKey()
 
-    public class Factory : MetroFirDeclarationGenerationExtension.Factory, MetroContributionHintExtension.Factory {
+    public class Factory :
+        MetroFirDeclarationGenerationExtension.Factory, MetroContributionHintExtension.Factory {
         override fun create(
             session: FirSession,
             options: MetroOptions,

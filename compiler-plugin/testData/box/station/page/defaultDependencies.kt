@@ -1,5 +1,5 @@
 @MetroStation(appDependencies = MyPage.ServiceProvider::class)
-class MyPage(context: Context) : Page<MyViewModel> {
+class MyPage : Page<MyViewModel> {
 
     interface ServiceProvider
 }
@@ -12,7 +12,7 @@ interface AppGraph
 
 fun box(): String {
     val appGraph = createGraph<AppGraph>()
-    val myPage = MyPage(Context.FAKE)
+    val myPage = MyPage()
     val viewModel = myPage.injectViewModel(AndroidPageGraphDependencies.fromAppGraph(appGraph))
     assertEquals("Page", viewModel.text)
     return "OK"

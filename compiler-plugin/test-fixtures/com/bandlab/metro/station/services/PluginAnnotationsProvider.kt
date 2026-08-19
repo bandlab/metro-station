@@ -1,5 +1,8 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.services
 
+import java.io.File
 import org.jetbrains.kotlin.cli.jvm.config.addJvmClasspathRoots
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.platform.jvm.isJvm
@@ -9,20 +12,24 @@ import org.jetbrains.kotlin.test.services.EnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.RuntimeClasspathProvider
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.targetPlatform
-import java.io.File
 
 fun TestConfigurationBuilder.configureAnnotations() {
     useConfigurators(::PluginAnnotationsProvider)
     useCustomRuntimeClasspathProviders(::PluginAnnotationsClasspathProvider)
 }
 
-private class PluginAnnotationsProvider(testServices: TestServices) : EnvironmentConfigurator(testServices) {
-    override fun configureCompilerConfiguration(configuration: CompilerConfiguration, module: TestModule) {
+private class PluginAnnotationsProvider(testServices: TestServices) :
+    EnvironmentConfigurator(testServices) {
+    override fun configureCompilerConfiguration(
+        configuration: CompilerConfiguration,
+        module: TestModule,
+    ) {
         configuration.addJvmClasspathRoots(annotationsJvmRuntimeClasspath)
     }
 }
 
-private class PluginAnnotationsClasspathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {
+private class PluginAnnotationsClasspathProvider(testServices: TestServices) :
+    RuntimeClasspathProvider(testServices) {
     override fun runtimeClassPaths(module: TestModule): List<File> {
         val targetPlatform = module.targetPlatform(testServices)
         return when {
@@ -35,7 +42,8 @@ private class PluginAnnotationsClasspathProvider(testServices: TestServices) : R
 private val annotationsJvmRuntimeClasspath = classpathFiles("annotationsRuntime.jvm.classpath")
 
 private fun classpathFiles(property: String): List<File> {
-    val property = System.getProperty(property)
-        ?: error("Unable to get a valid classpath from '$property' property")
+    val property =
+        System.getProperty(property)
+            ?: error("Unable to get a valid classpath from '$property' property")
     return property.split(File.pathSeparator).map(::File)
 }

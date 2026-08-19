@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.android.common.activity
 
 import dev.zacsweers.metro.BindingContainer
@@ -6,6 +8,5 @@ import dev.zacsweers.metro.Provides
 @BindingContainer
 object DefaultActivityDependencies {
 
-    @Provides
-    fun provideType(activity: CommonActivity<*>): String = activity.type
+    @Provides fun provideType(activity: CommonActivity<*>): String = activity.type
 }

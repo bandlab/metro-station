@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample
 
 import android.app.Application
@@ -30,7 +32,8 @@ class SampleApp : Application(), HasDependencyGraph {
     override fun onCreate() {
         super.onCreate()
 
-        // Invoke asContribution here to make sure the contributions are processed correctly, and most importantly,
+        // Invoke asContribution here to make sure the contributions are processed correctly, and
+        // most importantly,
         // to make it a compiler-time error instead of runtime if something goes wrong.
         appGraph.asContribution<MainActivity.FeatureServiceProvider>()
         appGraph.asContribution<ProfileActivity.FeatureExtension.Factory>()
@@ -45,9 +48,10 @@ class SampleApp : Application(), HasDependencyGraph {
             Intent(this, LoggerWithoutOnCreateService::class.java),
             object : ServiceConnection {
                 override fun onServiceConnected(name: ComponentName?, service: IBinder?) = Unit
+
                 override fun onServiceDisconnected(name: ComponentName?) = Unit
             },
-            BIND_AUTO_CREATE
+            BIND_AUTO_CREATE,
         )
 
         // Trigger LoggerBroadcastReceiver

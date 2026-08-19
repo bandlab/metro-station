@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.component
 
 import android.content.BroadcastReceiver
@@ -10,8 +12,7 @@ import dev.zacsweers.metro.Inject
 @MetroStation(appDependencies = LoggerBroadcastReceiver.ServiceProvider::class)
 class LoggerBroadcastReceiver : BroadcastReceiver() {
 
-    @Inject
-    private lateinit var logger: Logger
+    @Inject private lateinit var logger: Logger
 
     override fun onReceive(context: Context, intent: Intent?) {
         logger.log("MetroStation:: LoggerBroadcastReceiver received an intent")

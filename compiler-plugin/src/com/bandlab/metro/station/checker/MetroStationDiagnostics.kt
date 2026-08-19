@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.checker
 
 import org.jetbrains.kotlin.diagnostics.KtDiagnosticFactoryToRendererMap
@@ -21,15 +23,16 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
     override fun getRendererFactory(): BaseDiagnosticRendererFactory = RendererFactory
 
     private object RendererFactory : BaseDiagnosticRendererFactory() {
-        override val MAP by KtDiagnosticFactoryToRendererMap("ParamTypeErrors") { map ->
-            map.put(RESTRICTED_PARAM_TYPE, "{0}", STRING)
-            map.put(
-                DEPRECATED_CONTRIBUTES_INJECTOR,
-                "@StationEntry is deprecated. Use @MetroStation instead.",
-            )
-            map.put(TARGET_MUST_BE_PUBLIC, "{0}", STRING)
-            map.put(MISSING_EXTRA_DEPENDENCIES_PARAMETER, "{0}", STRING)
-            map.put(EXTRA_DEPENDENCIES_UNSUPPORTED, "{0}", STRING)
-        }
+        override val MAP by
+            KtDiagnosticFactoryToRendererMap("ParamTypeErrors") { map ->
+                map.put(RESTRICTED_PARAM_TYPE, "{0}", STRING)
+                map.put(
+                    DEPRECATED_CONTRIBUTES_INJECTOR,
+                    "@StationEntry is deprecated. Use @MetroStation instead.",
+                )
+                map.put(TARGET_MUST_BE_PUBLIC, "{0}", STRING)
+                map.put(MISSING_EXTRA_DEPENDENCIES_PARAMETER, "{0}", STRING)
+                map.put(EXTRA_DEPENDENCIES_UNSUPPORTED, "{0}", STRING)
+            }
     }
 }

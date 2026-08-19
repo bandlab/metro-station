@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.profile
 
 import android.os.Bundle
@@ -42,19 +44,13 @@ class ProfileActivity : CommonActivity<Profile>() {
         setContent {
             SampleAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.align(Alignment.Center)
+                            modifier = Modifier.align(Alignment.Center),
                         ) {
-                            Text(
-                                text = "Hello from Profile screen!",
-                            )
+                            Text(text = "Hello from Profile screen!")
 
                             PageContainer(profileContentPage.toPageContainerState())
 

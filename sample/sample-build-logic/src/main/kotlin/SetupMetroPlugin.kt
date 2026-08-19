@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 import dev.zacsweers.metro.gradle.DiagnosticSeverity
 import dev.zacsweers.metro.gradle.MetroPluginExtension
 import org.gradle.api.Plugin
@@ -20,7 +22,7 @@ class SetupMetroPlugin : Plugin<Project> {
             compilerOptions {
                 freeCompilerArgs.add(
                     // Our compiler needs to run before metro during the IR phase.
-                    "-Xcompiler-plugin-order=com.bandlab.metro.station>dev.zacsweers.metro.compiler",
+                    "-Xcompiler-plugin-order=com.bandlab.metro.station>dev.zacsweers.metro.compiler"
                 )
             }
         }

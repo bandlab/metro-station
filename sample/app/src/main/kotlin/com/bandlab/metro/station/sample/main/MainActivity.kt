@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.main
 
 import android.os.Bundle
@@ -34,19 +36,13 @@ class MainActivity : CommonActivity<Unit>() {
         setContent {
             SampleAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.align(Alignment.Center)
+                            modifier = Modifier.align(Alignment.Center),
                         ) {
-                            Text(
-                                text = "Hello from Main screen!",
-                            )
+                            Text(text = "Hello from Main screen!")
 
                             Button(onClick = viewModel::openProfile) {
                                 Text(text = "Open Profile")

@@ -238,16 +238,6 @@ There are a few caveats to be aware of when using the metro extensions API:
 - **Providers for Graph Extensions**: Metro processes graph extensions in IR, if you declare providers in the graph extensions themselves, metro won't see them. You'll need to declare a separate binding container annotated with `@IROnlyFactories` and include it in your extension instead.
 - **Compiler Plugin Ordering**: If your IR extension generates expressions that require metro to process, for example, `createGraph` or `createGraphFactory`, you'll need to specify the compiler flag `-Xcompiler-plugin-order` to _run your plugin before metro_.
 
-## Tests
-
-The [Kotlin compiler test framework][test-framework] is set up for this project.
-To create a new test, add a new `.kt` file in a [compiler-plugin/testData](compiler-plugin/testData) sub-directory:
-`testData/box` for codegen tests and `testData/diagnostics` for diagnostics tests.
-The generated JUnit 5 test classes will be updated automatically when tests are next run.
-They can be manually updated with the `generateTests` Gradle task as well.
-To aid in running tests, it is recommended to install the [Kotlin Compiler DevKit][test-plugin] IntelliJ plugin,
-which is pre-configured in this repository.
-
 ---
 
 License
@@ -274,5 +264,3 @@ License
 [metro-compiler-extension-api]: https://github.com/ZacSweers/metro/blob/main/compiler/API.md
 [anvil-compiler-api]: https://github.com/square/anvil/blob/main/compiler-api/README.md
 [anvil-ksp]: https://github.com/ZacSweers/anvil
-[test-framework]: https://github.com/JetBrains/kotlin/blob/master/compiler/test-infrastructure/ReadMe.md
-[test-plugin]: https://github.com/JetBrains/kotlin-compiler-devkit

@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station
 
 import com.bandlab.metro.station.runners.AbstractBoxTest
@@ -7,7 +9,10 @@ import org.jetbrains.kotlin.generators.dsl.junit5.generateTestGroupSuiteWithJUni
 
 fun main() {
     generateTestGroupSuiteWithJUnit5 {
-        testGroup(testDataRoot = "compiler-plugin/testData", testsRoot = "compiler-plugin/test-gen") {
+        testGroup(
+            testDataRoot = "compiler-plugin/testData",
+            testsRoot = "compiler-plugin/test-gen",
+        ) {
             testClass<AbstractFirDiagnosticTest> { model("diagnostics") }
             testClass<AbstractBoxTest> { model("box") }
             testClass<AbstractDumpTest> { model("dump") }

@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.runners
 
 import com.bandlab.metro.station.services.configureImports
@@ -18,28 +20,29 @@ open class AbstractFirDiagnosticTest : AbstractFirPhasedDiagnosticTest(FirParser
         return EnvironmentBasedStandardLibrariesPathProvider
     }
 
-    override fun configure(builder: TestConfigurationBuilder) = with(builder) {
-        super.configure(builder)
-        /*
-         * Containers of different directives, which can be used in tests:
-         * - ModuleStructureDirectives
-         * - LanguageSettingsDirectives
-         * - DiagnosticsDirectives
-         * - FirDiagnosticsDirectives
-         *
-         * All of them are located in `org.jetbrains.kotlin.test.directives` package
-         */
-        defaultDirectives {
-            +FirDiagnosticsDirectives.DISABLE_GENERATED_FIR_TAGS
-            +JvmEnvironmentConfigurationDirectives.FULL_JDK
+    override fun configure(builder: TestConfigurationBuilder) =
+        with(builder) {
+            super.configure(builder)
+            /*
+             * Containers of different directives, which can be used in tests:
+             * - ModuleStructureDirectives
+             * - LanguageSettingsDirectives
+             * - DiagnosticsDirectives
+             * - FirDiagnosticsDirectives
+             *
+             * All of them are located in `org.jetbrains.kotlin.test.directives` package
+             */
+            defaultDirectives {
+                +FirDiagnosticsDirectives.DISABLE_GENERATED_FIR_TAGS
+                +JvmEnvironmentConfigurationDirectives.FULL_JDK
 
-            +CodegenTestDirectives.IGNORE_DEXING // Avoids loading R8 from the classpath.
+                +CodegenTestDirectives.IGNORE_DEXING // Avoids loading R8 from the classpath.
 
-            // Unless overriden, assume the test will fail within the frontend.
-            RUN_PIPELINE_TILL.with(TestPhase.FRONTEND)
+                // Unless overriden, assume the test will fail within the frontend.
+                RUN_PIPELINE_TILL.with(TestPhase.FRONTEND)
+            }
+
+            configurePlugin()
+            configureImports(addTestImports = false)
         }
-
-        configurePlugin()
-        configureImports(addTestImports = false)
-    }
 }

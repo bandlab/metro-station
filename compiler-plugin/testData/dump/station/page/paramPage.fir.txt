@@ -1,6 +1,6 @@
 FILE: paramPage.kt
     @R|com/bandlab/metro/station/MetroStation|(appDependencies = <getClass>(Q|MyPage.ServiceProvider|) [evaluated = <getClass>(Q|MyPage.ServiceProvider|)]) public final class MyPage : R|com/bandlab/common/android/pager/screen/ParamPage<MyViewModel, MyPage.Params>| {
-        public constructor(context: R|android/content/Context|): R|MyPage| {
+        public constructor(): R|MyPage| {
             super<R|kotlin/Any|>()
         }
 

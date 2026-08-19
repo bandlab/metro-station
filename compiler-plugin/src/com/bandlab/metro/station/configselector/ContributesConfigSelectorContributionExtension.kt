@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.configselector
 
 import com.bandlab.metro.station.utils.ClassIds
@@ -47,10 +49,13 @@ public class ContributesConfigSelectorContributionExtension(private val session:
 
         return annotatedClasses.mapNotNull { parentSymbol ->
             val contributionInterfaceClassId =
-                parentSymbol.classId.createNestedClassId(ContributesConfigSelectorIds.nestedContributionName)
+                parentSymbol.classId.createNestedClassId(
+                    ContributesConfigSelectorIds.nestedContributionName
+                )
 
-            val metroContributionSymbol = contributionInterfaceClassId.findMetroContributionSymbol(session)
-                ?: return@mapNotNull null
+            val metroContributionSymbol =
+                contributionInterfaceClassId.findMetroContributionSymbol(session)
+                    ?: return@mapNotNull null
 
             MetroContributionExtension.Contribution(
                 supertype = metroContributionSymbol.defaultType(),

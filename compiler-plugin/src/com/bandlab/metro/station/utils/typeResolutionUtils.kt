@@ -1,5 +1,8 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.utils
 
+import com.bandlab.metro.station.graph.MetroStationIds as Ids
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirFile
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
@@ -16,11 +19,10 @@ import org.jetbrains.kotlin.fir.types.FirUserTypeRef
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
-import com.bandlab.metro.station.graph.MetroStationIds as Ids
 
 /**
- * Resolves a scope [ClassId] from an annotation's `scope` argument.
- * Returns [defaultScope] if the annotation is missing or the scope argument is not specified.
+ * Resolves a scope [ClassId] from an annotation's `scope` argument. Returns [defaultScope] if the
+ * annotation is missing or the scope argument is not specified.
  */
 internal fun resolveParentScopeClassIdFromAnnotation(
     owner: FirClassSymbol<*>,
@@ -28,23 +30,24 @@ internal fun resolveParentScopeClassIdFromAnnotation(
     session: FirSession,
     defaultScope: ClassId,
 ): ClassId {
-    val annotation = owner.getAnnotationByClassId(annotationClassId, session)
-        ?: return defaultScope
+    val annotation = owner.getAnnotationByClassId(annotationClassId, session) ?: return defaultScope
 
-    val rawExpr = annotation.argumentMapping.mapping[Ids.parentScopeName]
-        ?: (annotation as? FirAnnotationCall)?.argumentList?.arguments?.let { args ->
-            // First try named argument lookup
-            args.filterIsInstance<FirNamedArgumentExpression>()
-                .find { it.name == Ids.parentScopeName }
-            // Then try positional: first argument that is not a named argument (positional scope)
-                ?: args.firstOrNull { it !is FirNamedArgumentExpression }
-        }
-        ?: return defaultScope
+    val rawExpr =
+        annotation.argumentMapping.mapping[Ids.parentScopeName]
+            ?: (annotation as? FirAnnotationCall)?.argumentList?.arguments?.let { args ->
+                // First try named argument lookup
+                args.filterIsInstance<FirNamedArgumentExpression>().find {
+                    it.name == Ids.parentScopeName
+                }
+                    // Then try positional: first argument that is not a named argument (positional
+                    // scope)
+                    ?: args.firstOrNull { it !is FirNamedArgumentExpression }
+            }
+            ?: return defaultScope
 
     val expr = if (rawExpr is FirNamedArgumentExpression) rawExpr.expression else rawExpr
 
-    val getClassCall = expr as? FirGetClassCall
-        ?: return defaultScope
+    val getClassCall = expr as? FirGetClassCall ?: return defaultScope
 
     return when (val argument = getClassCall.argument) {
         is FirResolvedQualifier -> argument.classId ?: defaultScope
@@ -55,15 +58,15 @@ internal fun resolveParentScopeClassIdFromAnnotation(
                 ?: error(
                     "Cannot resolve scope class for ${owner.classId}. " +
                         "The scope class may be in an external module that is not yet resolved. " +
-                        "Ensure the scope class is available on the compilation classpath.",
+                        "Ensure the scope class is available on the compilation classpath."
                 )
         }
     }
 }
 
 /**
- * Resolves the first type argument (ViewModel type) from a Page/ParamPage supertype.
- * Falls back to session-based symbol resolution if [unwrapType] returns null due to unresolved type refs.
+ * Resolves the first type argument (ViewModel type) from a Page/ParamPage supertype. Falls back to
+ * session-based symbol resolution if [unwrapType] returns null due to unresolved type refs.
  */
 internal fun resolvePageViewModelType(
     superTypeRef: FirTypeRef,
@@ -76,8 +79,8 @@ internal fun resolvePageViewModelType(
 }
 
 /**
- * Resolves a type argument from an unresolved [FirUserTypeRef] by looking up the type name
- * via the session's symbol provider using the owner's package as context.
+ * Resolves a type argument from an unresolved [FirUserTypeRef] by looking up the type name via the
+ * session's symbol provider using the owner's package as context.
  */
 private fun resolveUnresolvedTypeArg(
     typeRef: FirTypeRef?,
@@ -171,9 +174,7 @@ private fun resolveClassIdFromUserTypeRef(
     return null
 }
 
-/**
- * Attempts to find the [FirFile] containing the given [owner].
- */
+/** Attempts to find the [FirFile] containing the given [owner]. */
 private fun findContainingFile(owner: FirClassSymbol<*>, session: FirSession): FirFile? {
     return try {
         session.firProvider.getFirClassifierContainerFileIfAny(owner.classId)
