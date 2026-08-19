@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.component
 
 import android.app.Service
@@ -10,8 +12,7 @@ import dev.zacsweers.metro.Inject
 @MetroStation(appDependencies = LoggerWithoutOnCreateService.ServiceProvider::class)
 class LoggerWithoutOnCreateService : Service() {
 
-    @Inject
-    private lateinit var logger: Logger
+    @Inject private lateinit var logger: Logger
 
     override fun onBind(intent: Intent?): IBinder? {
         logger.log("MetroStation:: LoggerWithoutOnCreateService is bound")

@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.checker
 
 import org.jetbrains.kotlin.fir.FirSession
@@ -10,15 +12,16 @@ internal class MetroStationFirCheckers(
     private val stationEntriesBaseline: Set<String>,
 ) : FirAdditionalCheckersExtension(session) {
 
-    override val declarationCheckers = object : DeclarationCheckers() {
-        override val classCheckers = buildSet {
-            add(ParamTypeClassChecker)
-            add(TargetVisibilityChecker)
-            add(MetroStationChecker)
+    override val declarationCheckers =
+        object : DeclarationCheckers() {
+            override val classCheckers = buildSet {
+                add(ParamTypeClassChecker)
+                add(TargetVisibilityChecker)
+                add(MetroStationChecker)
 
-            if (includeBaselineChecker) {
-                add(StationEntryBaselineChecker(stationEntriesBaseline))
+                if (includeBaselineChecker) {
+                    add(StationEntryBaselineChecker(stationEntriesBaseline))
+                }
             }
         }
-    }
 }

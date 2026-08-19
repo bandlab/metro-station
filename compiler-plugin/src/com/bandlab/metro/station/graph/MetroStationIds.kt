@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.graph
 
 import com.bandlab.metro.station.utils.asName
@@ -51,29 +53,38 @@ internal object MetroStationIds {
     private val androidCommonActivity = FqName("com.bandlab.android.common.activity")
     val membersInjectorProvider = ClassId(commonAndroidDi, "MembersInjectorProvider".asName())
     val commonActivity = ClassId(androidCommonActivity, "CommonActivity".asName())
-    val commonActivityServiceProvider = commonActivity.createNestedClassId("ServiceProvider".asName())
-    val defaultScreenServiceProvider = ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
+    val commonActivityServiceProvider =
+        commonActivity.createNestedClassId("ServiceProvider".asName())
+    val defaultScreenServiceProvider =
+        ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
     val fragment = ClassId(FqName("androidx.fragment.app"), "Fragment".asName())
-    val commonFragment = ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName())
+    val commonFragment =
+        ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName())
     val defaultFragmentDeps =
-        ClassId(FqName("com.bandlab.android.common.fragment"), "DefaultFragmentDependencies".asName())
+        ClassId(
+            FqName("com.bandlab.android.common.fragment"),
+            "DefaultFragmentDependencies".asName(),
+        )
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
     val graphExtensionFactory = ClassId(commonAndroidDi, "GraphExtensionFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
     val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
-    val generatedByMetroStation = ClassId(FqName("com.bandlab.common.di"), "GeneratedByMetroStation".asName())
+    val generatedByMetroStation =
+        ClassId(FqName("com.bandlab.common.di"), "GeneratedByMetroStation".asName())
 
     // Page
     private val pageApi = FqName("com.bandlab.uikit.api.page")
     private val commonPageDi = FqName("com.bandlab.common.android.pager.screen.di")
     val page = ClassId(pageApi, "Page".asName())
     val pageGraphDependencies = ClassId(pageApi, "PageGraphDependencies".asName())
-    val androidPageGraphDependencies = ClassId(commonPageDi, "AndroidPageGraphDependencies".asName())
+    val androidPageGraphDependencies =
+        ClassId(commonPageDi, "AndroidPageGraphDependencies".asName())
     val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
     val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
     val pageGraphExtensionFactory = ClassId(commonPageDi, "PageGraphExtensionFactory".asName())
-    val createGraphAndInjectViewModel = ClassId(commonPageDi, "createGraphAndInjectViewModel".asName())
+    val createGraphAndInjectViewModel =
+        ClassId(commonPageDi, "createGraphAndInjectViewModel".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
 
     // ParamPage

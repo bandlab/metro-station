@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.android.common.activity
 
 import android.content.ContextWrapper
@@ -20,7 +22,9 @@ abstract class CommonActivity<Params : Any> : ContextWrapper(), HasDependencyGra
 
     @GeneratedByMetroStation
     open fun inject() {
-        throw UnsupportedOperationException("This method will be implemented by the compiler plugin.")
+        throw UnsupportedOperationException(
+            "This method will be implemented by the compiler plugin."
+        )
     }
 
     @OptIn(GeneratedByMetroStation::class)

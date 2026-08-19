@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.services
 
 import com.bandlab.metro.station.MetroStationPluginRegistrar
@@ -24,49 +26,49 @@ fun TestConfigurationBuilder.configurePlugin() {
 fun TestConfigurationBuilder.configureImports(
     addCommonImports: Boolean = true,
     addMetroImports: Boolean = true,
-    addTestImports: Boolean
+    addTestImports: Boolean,
 ) {
-    useSourcePreprocessor(
-        { testService ->
-            ImportsPreprocessor(
-                testService,
-                buildSet {
-                    if (addCommonImports) {
-                        addAll(
-                            setOf(
-                                "com.bandlab.metro.station.*",
-                                "com.bandlab.common.android.di.*",
-                                "com.bandlab.common.android.pager.screen.*",
-                                "com.bandlab.common.android.pager.screen.di.*",
-                                "com.bandlab.android.common.activity.*",
-                                "com.bandlab.uikit.api.page.*",
-                                "com.bandlab.config.api.*",
-                                "android.content.Context"
-                            )
+    useSourcePreprocessor({ testService ->
+        ImportsPreprocessor(
+            testService,
+            buildSet {
+                if (addCommonImports) {
+                    addAll(
+                        setOf(
+                            "com.bandlab.metro.station.*",
+                            "com.bandlab.common.android.di.*",
+                            "com.bandlab.common.android.pager.screen.*",
+                            "com.bandlab.common.android.pager.screen.di.*",
+                            "com.bandlab.android.common.activity.*",
+                            "com.bandlab.uikit.api.page.*",
+                            "com.bandlab.config.api.*",
+                            "android.content.Context",
                         )
-                    }
-                    if (addMetroImports) add("dev.zacsweers.metro.*")
-                    if (addTestImports) add("kotlin.test.*")
+                    )
                 }
-            )
-        }
-    )
+                if (addMetroImports) add("dev.zacsweers.metro.*")
+                if (addTestImports) add("kotlin.test.*")
+            },
+        )
+    })
 }
 
-private class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices) {
+private class ExtensionRegistrarConfigurator(testServices: TestServices) :
+    EnvironmentConfigurator(testServices) {
 
     private val metroCliProcessor = MetroCommandLineProcessor()
     private val metroRegistrar = MetroCompilerPluginRegistrar()
 
     override fun CompilerPluginRegistrar.ExtensionStorage.registerCompilerExtensions(
         module: TestModule,
-        configuration: CompilerConfiguration
+        configuration: CompilerConfiguration,
     ) {
         // Configure Metro options from directives before registering
         if (MetroDirectives.GENERATE_CLASSES_IN_IR in module.directives) {
-            val option = metroCliProcessor.pluginOptions.first {
-                it.optionName == "generate-classes-in-ir"
-            }
+            val option =
+                metroCliProcessor.pluginOptions.first {
+                    it.optionName == "generate-classes-in-ir"
+                }
             metroCliProcessor.processOption(option, "true", configuration)
         }
 
@@ -76,14 +78,15 @@ private class ExtensionRegistrarConfigurator(testServices: TestServices) : Envir
                 it.optionName == "generate-contribution-hints-in-fir"
             },
             "true",
-            configuration
+            configuration,
         )
 
-        val includeBaselineChecker = MetroDirectives.ENABLE_STATION_ENTRIES_BASELINE in module.directives
+        val includeBaselineChecker =
+            MetroDirectives.ENABLE_STATION_ENTRIES_BASELINE in module.directives
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(
                 includeBaselineChecker = includeBaselineChecker,
-                stationEntriesBaseline = emptySet()
+                stationEntriesBaseline = emptySet(),
             )
         )
         IrGenerationExtension.registerExtension(MetroStationIr())

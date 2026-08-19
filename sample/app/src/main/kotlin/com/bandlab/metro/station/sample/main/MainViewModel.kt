@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample.main
 
 import android.content.Intent
@@ -7,18 +9,18 @@ import com.bandlab.metro.station.sample.profile.ProfileActivity
 import com.bandlab.metro.station.sample.utils.ScreenTracker
 import com.bandlab.metro.station.sample.utils.Toaster
 import dev.zacsweers.metro.Inject
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import kotlin.time.Duration.Companion.seconds
 
 @Inject
 internal class MainViewModel(
     private val coroutineScope: CoroutineScope,
     private val screenTracker: ScreenTracker,
     private val toaster: Toaster,
-    private val componentActivity: ComponentActivity
+    private val componentActivity: ComponentActivity,
 ) {
 
     fun showToast() {
@@ -33,7 +35,7 @@ internal class MainViewModel(
         val intent = Intent(componentActivity, ProfileActivity::class.java)
         intent.putExtra(
             ProfileActivity.ARG_PROFILE,
-            Json.encodeToString(Profile(id = "001", name = "BandLab"))
+            Json.encodeToString(Profile(id = "001", name = "BandLab")),
         )
         componentActivity.startActivity(intent)
     }

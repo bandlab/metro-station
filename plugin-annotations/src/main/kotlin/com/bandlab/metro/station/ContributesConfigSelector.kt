@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station
 
 /**
@@ -16,5 +18,4 @@ package com.bandlab.metro.station
  * }
  * ```
  */
-@Target(AnnotationTarget.CLASS)
-public annotation class ContributesConfigSelector
+@Target(AnnotationTarget.CLASS) public annotation class ContributesConfigSelector

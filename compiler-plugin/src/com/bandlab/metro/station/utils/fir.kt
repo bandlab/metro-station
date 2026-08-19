@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.utils
 
 import dev.zacsweers.metro.compiler.fir.MetroFirTypeResolver
@@ -27,6 +29,7 @@ import org.jetbrains.kotlin.name.*
 internal fun String.asName(): Name = Name.identifier(this)
 
 internal infix operator fun Name.plus(other: String) = (asString() + other).asName()
+
 internal infix operator fun Name.plus(other: Name) = (asString() + other.asString()).asName()
 
 internal fun ClassId.toCallableId() = CallableId(packageFqName, shortClassName)
@@ -35,20 +38,22 @@ internal fun ClassId.toCallableId() = CallableId(packageFqName, shortClassName)
  * Builds a simple FIR annotation with the specified class ID and argument mapping.
  *
  * @param classId The class ID representing the annotation's type.
- * @param argumentMapping The mapping of arguments for the annotation. Defaults to an empty mapping if not provided.
+ * @param argumentMapping The mapping of arguments for the annotation. Defaults to an empty mapping
+ *   if not provided.
  * @return A [FirAnnotation] instance with the specified type and argument mapping.
  */
 internal fun buildSimpleAnnotation(
     classId: ClassId,
-    argumentMapping: FirAnnotationArgumentMapping = buildAnnotationArgumentMapping()
+    argumentMapping: FirAnnotationArgumentMapping = buildAnnotationArgumentMapping(),
 ): FirAnnotation {
     return buildAnnotation {
         annotationTypeRef =
             ConeClassLikeTypeImpl(
-                ConeClassLikeLookupTagImpl(classId),
-                emptyArray(),
-                isMarkedNullable = false,
-            ).toFirResolvedTypeRef()
+                    ConeClassLikeLookupTagImpl(classId),
+                    emptyArray(),
+                    isMarkedNullable = false,
+                )
+                .toFirResolvedTypeRef()
         this.argumentMapping = argumentMapping
     }
 }
@@ -67,51 +72,49 @@ internal fun buildSimpleAnnotationCall(
     session: FirSession,
     classId: ClassId,
     containingSymbol: FirBasedSymbol<*>,
-    argumentMapping: FirAnnotationArgumentMapping = buildAnnotationArgumentMapping()
+    argumentMapping: FirAnnotationArgumentMapping = buildAnnotationArgumentMapping(),
 ): FirAnnotationCall {
-    val annotationType = ConeClassLikeTypeImpl(
-        ConeClassLikeLookupTagImpl(classId),
-        emptyArray(),
-        isMarkedNullable = false,
-    )
+    val annotationType =
+        ConeClassLikeTypeImpl(
+            ConeClassLikeLookupTagImpl(classId),
+            emptyArray(),
+            isMarkedNullable = false,
+        )
     return buildAnnotationCall {
         annotationTypeRef = annotationType.toFirResolvedTypeRef()
         this.argumentMapping = argumentMapping
         calleeReference = buildResolvedNamedReference {
             name = classId.shortClassName
-            resolvedSymbol = session.symbolProvider.getClassLikeSymbolByClassId(classId)!!.let {
-                (it as FirClassSymbol<*>)
-                    .declarationSymbols
-                    .filterIsInstance<FirConstructorSymbol>()
-                    .first()
-            }
+            resolvedSymbol =
+                session.symbolProvider.getClassLikeSymbolByClassId(classId)!!.let {
+                    (it as FirClassSymbol<*>)
+                        .declarationSymbols
+                        .filterIsInstance<FirConstructorSymbol>()
+                        .first()
+                }
         }
         containingDeclarationSymbol = containingSymbol
         annotationResolvePhase = FirAnnotationResolvePhase.Types
     }
 }
 
-/**
- * Returns a `ClassSymbol::class` expression.
- */
+/** Returns a `ClassSymbol::class` expression. */
 internal fun FirClassLikeSymbol<*>.getClassCall(): FirExpression = buildGetClassCall {
-    argumentList = buildUnaryArgumentList(
-        buildResolvedQualifier {
-            packageFqName = classId.packageFqName
-            relativeClassFqName = classId.relativeClassName
-            symbol = this@getClassCall
-            resolvedToCompanionObject = false
-            coneTypeOrNull = this@getClassCall.defaultType()
-        }
-    )
-    coneTypeOrNull = StandardClassIds.KClass.constructClassLikeType(
-        arrayOf(this@getClassCall.defaultType())
-    )
+    argumentList =
+        buildUnaryArgumentList(
+            buildResolvedQualifier {
+                packageFqName = classId.packageFqName
+                relativeClassFqName = classId.relativeClassName
+                symbol = this@getClassCall
+                resolvedToCompanionObject = false
+                coneTypeOrNull = this@getClassCall.defaultType()
+            }
+        )
+    coneTypeOrNull =
+        StandardClassIds.KClass.constructClassLikeType(arrayOf(this@getClassCall.defaultType()))
 }
 
-/**
- * Marks a function as abstract.
- */
+/** Marks a function as abstract. */
 internal fun FirFunction.markAbstract(owner: FirClassSymbol<*>) {
     replaceStatus(
         FirResolvedDeclarationStatusImpl(
@@ -123,8 +126,8 @@ internal fun FirFunction.markAbstract(owner: FirClassSymbol<*>) {
 }
 
 /**
- * Finds the supertype reference of the class represented by this [FirClassSymbol] that matches
- * the given [supertypeClassId].
+ * Finds the supertype reference of the class represented by this [FirClassSymbol] that matches the
+ * given [supertypeClassId].
  *
  * The method iterates through all supertypes of the class and checks if any has a corresponding
  * [ClassId] matching the specified [supertypeClassId].
@@ -136,7 +139,9 @@ internal fun FirFunction.markAbstract(owner: FirClassSymbol<*>) {
 internal fun FirClassSymbol<*>.findSuperTypeRef(supertypeClassId: ClassId): FirTypeRef? {
     for (ref in fir.superTypeRefs) {
         when (ref) {
-            is FirUserTypeRef if (ref.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName) -> return ref
+            is FirUserTypeRef if
+                (ref.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName)
+             -> return ref
             is FirResolvedTypeRef if (ref.coneType.classId == supertypeClassId) -> return ref
         }
     }
@@ -144,18 +149,21 @@ internal fun FirClassSymbol<*>.findSuperTypeRef(supertypeClassId: ClassId): FirT
 }
 
 /**
- * Resolves the specified supertype of a class symbol by deeply traversing its hierarchy,
- * including supertypes of the current class and their respective supertypes.
+ * Resolves the specified supertype of a class symbol by deeply traversing its hierarchy, including
+ * supertypes of the current class and their respective supertypes.
  *
  * @param supertypeClassId The [ClassId] of the supertype to resolve.
- * @param session The [FirSession] associated with the resolution process,
- *                providing necessary context and symbol resolution capabilities.
- * @return A [FirTypeRef] representing the resolved supertype if found, or `null` if the
- *         specified supertype could not be resolved.
+ * @param session The [FirSession] associated with the resolution process, providing necessary
+ *   context and symbol resolution capabilities.
+ * @return A [FirTypeRef] representing the resolved supertype if found, or `null` if the specified
+ *   supertype could not be resolved.
  */
 @OptIn(SymbolInternals::class)
 context(typeResolver: MetroFirTypeResolver)
-internal fun FirClassSymbol<*>.deepResolveSuperType(supertypeClassId: ClassId, session: FirSession): FirTypeRef? {
+internal fun FirClassSymbol<*>.deepResolveSuperType(
+    supertypeClassId: ClassId,
+    session: FirSession,
+): FirTypeRef? {
     val visited = mutableSetOf<ClassId>()
     val queue = ArrayDeque<FirClassSymbol<*>>()
     queue.add(this)
@@ -168,15 +176,19 @@ internal fun FirClassSymbol<*>.deepResolveSuperType(supertypeClassId: ClassId, s
 
         for (typeRef in current.fir.superTypeRefs) {
             when (typeRef) {
-                is FirUserTypeRef if (typeRef.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName) -> return typeRef
-                is FirResolvedTypeRef if (typeRef.coneType.classId == supertypeClassId) -> return typeRef
+                is FirUserTypeRef if
+                    (typeRef.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName)
+                 -> return typeRef
+                is FirResolvedTypeRef if (typeRef.coneType.classId == supertypeClassId) ->
+                    return typeRef
             }
 
-            val resolvedType = try {
-                typeResolver.resolveType(typeRef)
-            } catch (_: IllegalArgumentException) {
-                continue
-            }
+            val resolvedType =
+                try {
+                    typeResolver.resolveType(typeRef)
+                } catch (_: IllegalArgumentException) {
+                    continue
+                }
             val classId = resolvedType.classId ?: continue
             val symbol = session.symbolProvider.getClassLikeSymbolByClassId(classId)
             if (classId == supertypeClassId) return resolvedType.toFirResolvedTypeRef()
@@ -191,14 +203,17 @@ internal fun FirClassSymbol<*>.deepResolveSuperType(supertypeClassId: ClassId, s
 /**
  * Unwraps the type referenced by the given [FirTypeRef] based on its structure and optional index.
  *
- * @param index An optional index used to retrieve a specific type argument from the type reference. Defaults to 0.
- * @return A [ConeTypeProjection] representing the unwrapped type if applicable, or `null` if the type could not be unwrapped.
+ * @param index An optional index used to retrieve a specific type argument from the type reference.
+ *   Defaults to 0.
+ * @return A [ConeTypeProjection] representing the unwrapped type if applicable, or `null` if the
+ *   type could not be unwrapped.
  */
 internal fun FirTypeRef.unwrapType(index: Int = 0): ConeTypeProjection? {
     return when (this) {
         is FirUserTypeRef -> {
-            val typeArg = qualifier.lastOrNull()?.typeArgumentList?.typeArguments?.getOrNull(index)
-                as? FirTypeProjectionWithVariance
+            val typeArg =
+                qualifier.lastOrNull()?.typeArgumentList?.typeArguments?.getOrNull(index)
+                    as? FirTypeProjectionWithVariance
             val typeRef = typeArg?.typeRef as? FirResolvedTypeRef
             typeRef?.coneType
         }
@@ -230,9 +245,7 @@ internal fun FirTypeRef.typeArgumentSource(index: Int = 0): KtSourceElement? {
     }
 }
 
-/**
- * Recursively extract a [ClassId] from an unresolved property access expression chain.
- */
+/** Recursively extract a [ClassId] from an unresolved property access expression chain. */
 internal fun FirExpression.extractClassId(ownerClassId: ClassId, session: FirSession): ClassId? {
     val names = mutableListOf<String>()
     var current: FirExpression? = this
@@ -262,17 +275,18 @@ internal fun FirExpression.extractClassId(ownerClassId: ClassId, session: FirSes
 
 /**
  * Access the declared member scope to trigger Metro's FIR generator, which creates the
- * MetroContribution nested class inside our MultibindingContribution. Without this, Metro
- * wouldn't see our contribution.
+ * MetroContribution nested class inside our MultibindingContribution. Without this, Metro wouldn't
+ * see our contribution.
  */
 internal fun ClassId.findMetroContributionSymbol(session: FirSession): FirRegularClassSymbol? {
-    val contributionSymbol = session.symbolProvider.getClassLikeSymbolByClassId(this)
-        as? FirRegularClassSymbol ?: return null
+    val contributionSymbol =
+        session.symbolProvider.getClassLikeSymbolByClassId(this) as? FirRegularClassSymbol
+            ?: return null
 
     val scope = contributionSymbol.declaredMemberScope(session, memberRequiredPhase = null)
-    val metroContributionName = scope.getClassifierNames()
-        .firstOrNull { it.identifier.startsWith("MetroContributionTo") }
-        ?: return null
+    val metroContributionName =
+        scope.getClassifierNames().firstOrNull { it.identifier.startsWith("MetroContributionTo") }
+            ?: return null
 
     return scope.getSingleClassifier(metroContributionName) as? FirRegularClassSymbol
 }

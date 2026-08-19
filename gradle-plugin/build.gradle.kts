@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -41,13 +43,18 @@ buildConfig {
     buildConfigField("String", "KOTLIN_PLUGIN_GROUP", "\"${pluginProject.group}\"")
     buildConfigField("String", "KOTLIN_PLUGIN_NAME", "\"${pluginProject.name}\"")
     buildConfigField("String", "KOTLIN_PLUGIN_VERSION", "\"${pluginProject.version}\"")
-    buildConfigField("String", "SUPPORTED_METRO_VERSION", "\"${pluginProject.libs.versions.metro.get()}\"")
+    buildConfigField(
+        "String",
+        "SUPPORTED_METRO_VERSION",
+        "\"${pluginProject.libs.versions.metro.get()}\"",
+    )
 
     val annotationsProject = project(":plugin-annotations")
     buildConfigField(
         type = "String",
         name = "ANNOTATIONS_LIBRARY_COORDINATES",
-        expression = "\"${annotationsProject.group}:${annotationsProject.name}:${annotationsProject.version}\""
+        expression =
+            "\"${annotationsProject.group}:${annotationsProject.name}:${annotationsProject.version}\"",
     )
 }
 
@@ -55,7 +62,8 @@ gradlePlugin {
     plugins {
         register(rootProject.group.toString()) {
             displayName = "MetroStationGraphPlugin"
-            description = "A gradle plugin to configure Metro Station plugin for BandLab Android apps."
+            description =
+                "A gradle plugin to configure Metro Station plugin for BandLab Android apps."
             implementationClass = "com.bandlab.metro.station.MetroStationGradlePlugin"
         }
     }

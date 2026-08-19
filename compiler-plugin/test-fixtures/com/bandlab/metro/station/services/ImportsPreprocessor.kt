@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.services
 
 import org.jetbrains.kotlin.test.model.TestFile
@@ -5,9 +7,7 @@ import org.jetbrains.kotlin.test.services.ReversibleSourceFilePreprocessor
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.isJavaFile
 
-/**
- * Preprocessor that automatically adds a set of imports to test files.
- */
+/** Preprocessor that automatically adds a set of imports to test files. */
 class ImportsPreprocessor(testServices: TestServices, imports: Set<String>) :
     ReversibleSourceFilePreprocessor(testServices) {
 

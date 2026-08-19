@@ -1,3 +1,5 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.sample
 
 import android.content.Context
@@ -10,8 +12,7 @@ import dev.zacsweers.metro.Provides
 @DependencyGraph(AppScope::class)
 interface AppGraph {
 
-    @Binds
-    val SampleApp.context: Context
+    @Binds val SampleApp.context: Context
 
     // Add an accessor here to make sure config selector is not empty
     val configSelectors: Set<DebuggableConfigSelector>

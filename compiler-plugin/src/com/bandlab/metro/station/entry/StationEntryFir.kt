@@ -1,5 +1,8 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.entry
 
+import com.bandlab.metro.station.graph.MetroStationIds as Ids
 import com.bandlab.metro.station.graph.MetroStationIds
 import com.bandlab.metro.station.utils.*
 import dev.zacsweers.metro.compiler.MetroOptions
@@ -37,10 +40,10 @@ import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
 import org.jetbrains.kotlin.name.*
-import com.bandlab.metro.station.graph.MetroStationIds as Ids
 
 /**
- * This FIR declaration generator generates a graph extension for the feature that is annotated with [Ids.stationEntry].
+ * This FIR declaration generator generates a graph extension for the feature that is annotated with
+ * [Ids.stationEntry].
  */
 public class StationEntryFir(session: FirSession, compatContext: CompatContext) :
     MetroFirDeclarationGenerationExtension(session),
@@ -52,6 +55,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
      */
     private sealed interface ComponentType {
         data class Activity(val superTypeRef: FirTypeRef) : ComponentType
+
         data class Page(
             val superTypeRef: FirTypeRef,
             val hasParam: Boolean,
@@ -77,22 +81,24 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
     override fun getNestedClassifiersNames(
         classSymbol: FirClassSymbol<*>,
-        context: NestedClassGenerationContext
+        context: NestedClassGenerationContext,
     ): Set<Name> {
         return when {
-            classSymbol in annotatedClasses -> buildSet {
-                add(Ids.featureExtensionName)
-                add(Ids.featureBindingsName)
+            classSymbol in annotatedClasses ->
+                buildSet {
+                    add(Ids.featureExtensionName)
+                    add(Ids.featureBindingsName)
 
-                // Generate ExtensionFactoryContribution only for Fragments.
-                // That's legacy solution that requires reflection to find factories.
-                val componentType = resolveComponentType(classSymbol)
-                if (componentType == ComponentType.Fragment) {
-                    add(Ids.extensionFactoryContributionName)
+                    // Generate ExtensionFactoryContribution only for Fragments.
+                    // That's legacy solution that requires reflection to find factories.
+                    val componentType = resolveComponentType(classSymbol)
+                    if (componentType == ComponentType.Fragment) {
+                        add(Ids.extensionFactoryContributionName)
+                    }
                 }
-            }
 
-            classSymbol.origin == Key.origin && classSymbol.classId.shortClassName == Ids.featureExtensionName ->
+            classSymbol.origin == Key.origin &&
+                classSymbol.classId.shortClassName == Ids.featureExtensionName ->
                 setOf(Ids.nestedFactoryName)
 
             else -> emptySet()
@@ -113,9 +119,10 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             return generateFeatureBindings(owner)
         }
         // Generate Factory inside FeatureExtension
-        if (name == Ids.nestedFactoryName &&
-            owner.origin == Key.origin &&
-            owner.classId.shortClassName == Ids.featureExtensionName
+        if (
+            name == Ids.nestedFactoryName &&
+                owner.origin == Key.origin &&
+                owner.classId.shortClassName == Ids.featureExtensionName
         ) {
             return generateFactory(owner)
         }
@@ -128,7 +135,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
     override fun getCallableNamesForClass(
         classSymbol: FirClassSymbol<*>,
-        context: MemberGenerationContext
+        context: MemberGenerationContext,
     ): Set<Name> {
         // Generate inject()/injectViewModel() overrides on the annotated class itself
         if (classSymbol in annotatedClasses) {
@@ -140,7 +147,12 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         }
         if (classSymbol.origin != Key.origin) return emptySet()
         if (classSymbol.classId.shortClassName == Ids.featureBindingsName) {
-            return setOf(SpecialNames.INIT, Ids.provideBaseTypeName, Ids.provideParamName, Ids.provideParamFlowName)
+            return setOf(
+                SpecialNames.INIT,
+                Ids.provideBaseTypeName,
+                Ids.provideParamName,
+                Ids.provideParamFlowName,
+            )
         }
         if (classSymbol.classId.shortClassName == Ids.nestedFactoryName) {
             return setOf(Ids.createName)
@@ -170,40 +182,45 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         if (owner.origin != Key.origin) return emptyList()
 
         // Generate "provideBaseType" for FeatureBindings
-        if (callableId.callableName == Ids.provideBaseTypeName &&
-            ownerClassId.shortClassName == Ids.featureBindingsName
+        if (
+            callableId.callableName == Ids.provideBaseTypeName &&
+                ownerClassId.shortClassName == Ids.featureBindingsName
         ) {
             val fn = generateProvideBaseTypeFunction(owner) ?: return emptyList()
             return listOf(fn)
         }
 
         // Generate "provideParam" for FeatureBindings
-        if (callableId.callableName == Ids.provideParamName &&
-            ownerClassId.shortClassName == Ids.featureBindingsName
+        if (
+            callableId.callableName == Ids.provideParamName &&
+                ownerClassId.shortClassName == Ids.featureBindingsName
         ) {
             val fn = generateProvideParamFunction(owner) ?: return emptyList()
             return listOf(fn)
         }
 
         // Generate "provideParamFlow" for FeatureBindings (ParamPage only)
-        if (callableId.callableName == Ids.provideParamFlowName &&
-            ownerClassId.shortClassName == Ids.featureBindingsName
+        if (
+            callableId.callableName == Ids.provideParamFlowName &&
+                ownerClassId.shortClassName == Ids.featureBindingsName
         ) {
             val fn = generateProvideParamFlowFunction(owner) ?: return emptyList()
             return listOf(fn)
         }
 
         // Generate "create" for Factory
-        if (callableId.callableName == Ids.createName &&
-            ownerClassId.shortClassName == Ids.nestedFactoryName
+        if (
+            callableId.callableName == Ids.createName &&
+                ownerClassId.shortClassName == Ids.nestedFactoryName
         ) {
             val fn = generateCreateFunction(owner) ?: return emptyList()
             return listOf(fn)
         }
 
         // Generate "provideFactory" for ExtensionFactoryContribution
-        if (callableId.callableName == Ids.provideFactoryName &&
-            ownerClassId.shortClassName == Ids.extensionFactoryContributionName
+        if (
+            callableId.callableName == Ids.provideFactoryName &&
+                ownerClassId.shortClassName == Ids.extensionFactoryContributionName
         ) {
             val fn = generateProvideFactoryFunction(owner) ?: return emptyList()
             return listOf(fn)
@@ -212,7 +229,9 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         return emptyList()
     }
 
-    override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
+    override fun generateConstructors(
+        context: MemberGenerationContext
+    ): List<FirConstructorSymbol> {
         val owner = context.owner
         if (owner.origin != Key.origin) return emptyList()
         if (owner.classId.shortClassName == Ids.featureBindingsName) {
@@ -224,14 +243,16 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     private fun generateFeatureExtension(owner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
         val nestedClassId = owner.classId.createNestedClassId(Ids.featureExtensionName)
         val classSymbol = FirRegularClassSymbol(nestedClassId)
-        val annotation = owner.getAnnotationByClassId(Ids.stationEntry, session) as? FirAnnotationCall
+        val annotation =
+            owner.getAnnotationByClassId(Ids.stationEntry, session) as? FirAnnotationCall
 
         val componentType = resolveComponentType(owner)
-        val componentScope = when (componentType) {
-            is ComponentType.Activity -> Ids.activityScope
-            is ComponentType.Page -> Ids.pageScope
-            ComponentType.Fragment -> Ids.fragmentScope
-        }
+        val componentScope =
+            when (componentType) {
+                is ComponentType.Activity -> Ids.activityScope
+                is ComponentType.Page -> Ids.pageScope
+                ComponentType.Fragment -> Ids.fragmentScope
+            }
 
         val featureExtension = buildRegularClass {
             resolvePhase = FirResolvePhase.BODY_RESOLVE
@@ -242,72 +263,98 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             scopeProvider = session.kotlinScopeProvider
             this.name = nestedClassId.shortClassName
             symbol = classSymbol
-            status = FirResolvedDeclarationStatusImpl(
-                Visibilities.Public,
-                Modality.ABSTRACT,
-                Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
-            )
+            status =
+                FirResolvedDeclarationStatusImpl(
+                    Visibilities.Public,
+                    Modality.ABSTRACT,
+                    Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
+                )
 
             annotations += buildSimpleAnnotation(componentScope)
 
             if (componentType is ComponentType.Page) {
                 superTypeRefs += buildResolvedTypeRef {
-                    val viewModelType = resolvePageViewModelType(componentType.superTypeRef, owner, session)
+                    val viewModelType =
+                        resolvePageViewModelType(componentType.superTypeRef, owner, session)
                     coneType = Ids.pageInjector.constructClassLikeType(arrayOf(viewModelType))
                 }
             } else {
                 superTypeRefs += buildResolvedTypeRef {
-                    coneType = Ids.membersInjectorProvider.constructClassLikeType(
-                        arrayOf(owner.defaultType())
-                    )
+                    coneType =
+                        Ids.membersInjectorProvider.constructClassLikeType(
+                            arrayOf(owner.defaultType())
+                        )
                 }
             }
 
             // @GraphExtension annotation
-            annotations += buildSimpleAnnotation(
-                classId = ClassIds.graphExtension,
-                argumentMapping = buildAnnotationArgumentMapping {
-                    val graphMarkerExpr = annotation?.argumentList?.arguments
-                        ?.filterIsInstance<FirNamedArgumentExpression>()
-                        ?.find { it.name == Ids.graphMarkerName }
-                        ?.expression
+            annotations +=
+                buildSimpleAnnotation(
+                    classId = ClassIds.graphExtension,
+                    argumentMapping =
+                        buildAnnotationArgumentMapping {
+                            val graphMarkerExpr =
+                                annotation
+                                    ?.argumentList
+                                    ?.arguments
+                                    ?.filterIsInstance<FirNamedArgumentExpression>()
+                                    ?.find { it.name == Ids.graphMarkerName }
+                                    ?.expression
 
-                    mapping[ClassIds.scopeName] = graphMarkerExpr ?: owner.getClassCall()
-                    mapping[ClassIds.bindingContainersName] = buildCollectionLiteral {
-                        val elementType = StandardClassIds.KClass.constructClassLikeType(arrayOf(ConeStarProjection))
-                        coneTypeOrNull = StandardClassIds.Array.constructClassLikeType(arrayOf(elementType))
-                        argumentList = buildArgumentList {
-                            val defaultDependenciesIds = when (componentType) {
-                                is ComponentType.Activity -> setOf(Ids.defaultActivityDeps)
-                                ComponentType.Fragment -> setOf(Ids.defaultFragmentDeps)
-                                is ComponentType.Page -> setOf(Ids.defaultPageDependencies)
-                            }
+                            mapping[ClassIds.scopeName] = graphMarkerExpr ?: owner.getClassCall()
+                            mapping[ClassIds.bindingContainersName] = buildCollectionLiteral {
+                                val elementType =
+                                    StandardClassIds.KClass.constructClassLikeType(
+                                        arrayOf(ConeStarProjection)
+                                    )
+                                coneTypeOrNull =
+                                    StandardClassIds.Array.constructClassLikeType(
+                                        arrayOf(elementType)
+                                    )
+                                argumentList = buildArgumentList {
+                                    val defaultDependenciesIds =
+                                        when (componentType) {
+                                            is ComponentType.Activity ->
+                                                setOf(Ids.defaultActivityDeps)
+                                            ComponentType.Fragment -> setOf(Ids.defaultFragmentDeps)
+                                            is ComponentType.Page ->
+                                                setOf(Ids.defaultPageDependencies)
+                                        }
 
-                            defaultDependenciesIds.forEach { dependenciesId ->
-                                session.symbolProvider.getClassLikeSymbolByClassId(dependenciesId)?.let {
-                                    arguments += it.getClassCall()
+                                    defaultDependenciesIds.forEach { dependenciesId ->
+                                        session.symbolProvider
+                                            .getClassLikeSymbolByClassId(dependenciesId)
+                                            ?.let {
+                                                arguments += it.getClassCall()
+                                            }
+                                    }
+
+                                    // Include the generated FeatureBindings binding container
+                                    val featureBindingsClassId =
+                                        owner.classId.createNestedClassId(Ids.featureBindingsName)
+                                    session.symbolProvider
+                                        .getClassLikeSymbolByClassId(featureBindingsClassId)
+                                        ?.let {
+                                            arguments += it.getClassCall()
+                                        }
                                 }
                             }
-
-                            // Include the generated FeatureBindings binding container
-                            val featureBindingsClassId = owner.classId.createNestedClassId(Ids.featureBindingsName)
-                            session.symbolProvider.getClassLikeSymbolByClassId(featureBindingsClassId)?.let {
-                                arguments += it.getClassCall()
-                            }
-                        }
-                    }
-                }
-            )
+                        },
+                )
         }
         return featureExtension.symbol
     }
 
     /**
-     * Important! FeatureBindings needs to be a separate type than the graph extension, this seems to be the only
-     * way for metro to process those bindings correctly for cross-module compilation.
+     * Important! FeatureBindings needs to be a separate type than the graph extension, this seems
+     * to be the only way for metro to process those bindings correctly for cross-module
+     * compilation.
      */
-    private fun generateFeatureBindings(featureExtensionOwner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
-        val bindingsClassId = featureExtensionOwner.classId.createNestedClassId(Ids.featureBindingsName)
+    private fun generateFeatureBindings(
+        featureExtensionOwner: FirClassSymbol<*>
+    ): FirClassLikeSymbol<*> {
+        val bindingsClassId =
+            featureExtensionOwner.classId.createNestedClassId(Ids.featureBindingsName)
         val classSymbol = FirRegularClassSymbol(bindingsClassId)
 
         val featureBindings = buildRegularClass {
@@ -319,11 +366,15 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             scopeProvider = session.kotlinScopeProvider
             this.name = bindingsClassId.shortClassName
             symbol = classSymbol
-            status = FirResolvedDeclarationStatusImpl(
-                Visibilities.Public,
-                Modality.FINAL,
-                Visibilities.Public.toEffectiveVisibility(featureExtensionOwner, forClass = true),
-            )
+            status =
+                FirResolvedDeclarationStatusImpl(
+                    Visibilities.Public,
+                    Modality.FINAL,
+                    Visibilities.Public.toEffectiveVisibility(
+                        featureExtensionOwner,
+                        forClass = true,
+                    ),
+                )
 
             annotations += buildSimpleAnnotation(ClassIds.bindingContainer)
             annotations += buildSimpleAnnotation(ClassIds.irOnlyFactories)
@@ -332,12 +383,14 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateFactory(featureExtensionOwner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
-        val factoryClassId = featureExtensionOwner.classId.createNestedClassId(Ids.nestedFactoryName)
+        val factoryClassId =
+            featureExtensionOwner.classId.createNestedClassId(Ids.nestedFactoryName)
         val factorySymbol = FirRegularClassSymbol(factoryClassId)
 
         val annotatedClassId = featureExtensionOwner.classId.outerClassId!!
         val annotatedSymbol =
-            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as FirRegularClassSymbol
+            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId)
+                as FirRegularClassSymbol
         val parentScopeId = resolveParentScopeClassId(annotatedSymbol)
 
         val factory = buildRegularClass {
@@ -349,21 +402,28 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             scopeProvider = session.kotlinScopeProvider
             this.name = factoryClassId.shortClassName
             symbol = factorySymbol
-            status = FirResolvedDeclarationStatusImpl(
-                Visibilities.Public,
-                Modality.ABSTRACT,
-                Visibilities.Public.toEffectiveVisibility(featureExtensionOwner, forClass = true),
-            )
+            status =
+                FirResolvedDeclarationStatusImpl(
+                    Visibilities.Public,
+                    Modality.ABSTRACT,
+                    Visibilities.Public.toEffectiveVisibility(
+                        featureExtensionOwner,
+                        forClass = true,
+                    ),
+                )
 
             // @ContributesTo(scope)
-            annotations += buildSimpleAnnotation(
-                classId = ClassIds.contributesTo,
-                argumentMapping = buildAnnotationArgumentMapping {
-                    mapping[ClassIds.scopeName] = session.symbolProvider
-                        .getClassLikeSymbolByClassId(parentScopeId)!!
-                        .getClassCall()
-                }
-            )
+            annotations +=
+                buildSimpleAnnotation(
+                    classId = ClassIds.contributesTo,
+                    argumentMapping =
+                        buildAnnotationArgumentMapping {
+                            mapping[ClassIds.scopeName] =
+                                session.symbolProvider
+                                    .getClassLikeSymbolByClassId(parentScopeId)!!
+                                    .getClassCall()
+                        },
+                )
 
             // @GraphExtension.Factory
             annotations += buildSimpleAnnotation(ClassIds.graphExtensionFactory)
@@ -371,7 +431,9 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         return factory.symbol
     }
 
-    private fun generateExtensionFactoryContribution(owner: FirClassSymbol<*>): FirClassLikeSymbol<*> {
+    private fun generateExtensionFactoryContribution(
+        owner: FirClassSymbol<*>
+    ): FirClassLikeSymbol<*> {
         val nestedClassId = owner.classId.createNestedClassId(Ids.extensionFactoryContributionName)
         val parentScopeId = resolveParentScopeClassId(owner)
 
@@ -384,23 +446,27 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             scopeProvider = session.kotlinScopeProvider
             this.name = nestedClassId.shortClassName
             symbol = FirRegularClassSymbol(nestedClassId)
-            status = FirResolvedDeclarationStatusImpl(
-                Visibilities.Public,
-                Modality.ABSTRACT,
-                Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
-            )
+            status =
+                FirResolvedDeclarationStatusImpl(
+                    Visibilities.Public,
+                    Modality.ABSTRACT,
+                    Visibilities.Public.toEffectiveVisibility(owner, forClass = true),
+                )
 
             annotations += buildSimpleAnnotation(ClassIds.irOnlyFactories)
 
             // @ContributesTo(scope)
-            annotations += buildSimpleAnnotation(
-                classId = ClassIds.contributesTo,
-                argumentMapping = buildAnnotationArgumentMapping {
-                    mapping[ClassIds.scopeName] = session.symbolProvider
-                        .getClassLikeSymbolByClassId(parentScopeId)!!
-                        .getClassCall()
-                }
-            )
+            annotations +=
+                buildSimpleAnnotation(
+                    classId = ClassIds.contributesTo,
+                    argumentMapping =
+                        buildAnnotationArgumentMapping {
+                            mapping[ClassIds.scopeName] =
+                                session.symbolProvider
+                                    .getClassLikeSymbolByClassId(parentScopeId)!!
+                                    .getClassCall()
+                        },
+                )
         }
         return contribution.symbol
     }
@@ -408,24 +474,28 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     private fun generateProvideBaseTypeFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
         val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
-            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
-                ?: return null
+            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId)
+                as? FirRegularClassSymbol ?: return null
 
         val componentType = resolveComponentType(annotatedSymbol)
-        val baseType = when (componentType) {
-            is ComponentType.Activity -> Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
-            is ComponentType.Page -> Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
-            ComponentType.Fragment -> Ids.fragment.constructClassLikeType()
-        }
+        val baseType =
+            when (componentType) {
+                is ComponentType.Activity ->
+                    Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
+                is ComponentType.Page ->
+                    Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
+                ComponentType.Fragment -> Ids.fragment.constructClassLikeType()
+            }
 
-        val provideBaseTypeFunction = createMemberFunction(
-            owner,
-            Key,
-            Ids.provideBaseTypeName,
-            baseType
-        ) {
-            valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
-        }
+        val provideBaseTypeFunction =
+            createMemberFunction(
+                owner,
+                Key,
+                Ids.provideBaseTypeName,
+                baseType,
+            ) {
+                valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
+            }
         provideBaseTypeFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
         return provideBaseTypeFunction.symbol as FirNamedFunctionSymbol
     }
@@ -433,8 +503,8 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     private fun generateProvideParamFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
         val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
-            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
-                ?: return null
+            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId)
+                as? FirRegularClassSymbol ?: return null
 
         return when (val componentType = resolveComponentType(annotatedSymbol)) {
             is ComponentType.Activity -> {
@@ -446,22 +516,26 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                     createMemberFunction(owner, Key, Ids.provideParamName, paramType) {
                         valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
                     }
-                provideParamFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
+                provideParamFunction.replaceAnnotations(
+                    listOf(buildSimpleAnnotation(ClassIds.provides))
+                )
                 provideParamFunction.symbol as FirNamedFunctionSymbol
             }
 
-            ComponentType.Fragment, is ComponentType.Page -> null
+            ComponentType.Fragment,
+            is ComponentType.Page -> null
         }
     }
 
-    private fun generateProvideParamFlowFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
+    private fun generateProvideParamFlowFunction(
+        owner: FirClassSymbol<*>
+    ): FirNamedFunctionSymbol? {
         val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
-            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
-                ?: return null
+            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId)
+                as? FirRegularClassSymbol ?: return null
 
-        val paramPageSuperTypeRef = annotatedSymbol.findSuperTypeRef(Ids.paramPage)
-            ?: return null
+        val paramPageSuperTypeRef = annotatedSymbol.findSuperTypeRef(Ids.paramPage) ?: return null
 
         val paramTypeArg = paramPageSuperTypeRef.unwrapType(1) ?: return null
         val paramType = paramTypeArg as? ConeKotlinType ?: return null
@@ -475,67 +549,80 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
                 valueParameter(Ids.initialParamName, paramType, key = Key)
             }
-        provideParamFlowFunction.replaceAnnotations(listOf(buildSimpleAnnotation(ClassIds.provides)))
+        provideParamFlowFunction.replaceAnnotations(
+            listOf(buildSimpleAnnotation(ClassIds.provides))
+        )
         return provideParamFlowFunction.symbol as FirNamedFunctionSymbol
     }
 
     /**
-     * Generates an `override fun inject()` on the annotated activity class. The body is filled in IR.
+     * Generates an `override fun inject()` on the annotated activity class. The body is filled in
+     * IR.
      *
-     * The overridden [Ids.commonActivity] `inject()` is a `@GeneratedByMetroStation` (opt-in) member,
-     * so the marker is propagated onto the generated override to satisfy the opt-in requirement.
+     * The overridden [Ids.commonActivity] `inject()` is a `@GeneratedByMetroStation` (opt-in)
+     * member, so the marker is propagated onto the generated override to satisfy the opt-in
+     * requirement.
      */
     private fun generateInjectFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol {
-        val injectFunction = createMemberFunction(
-            owner,
-            Key,
-            Ids.injectName,
-            session.builtinTypes.unitType.coneType,
-        ) {
-            status {
-                isOverride = true
+        val injectFunction =
+            createMemberFunction(
+                owner,
+                Key,
+                Ids.injectName,
+                session.builtinTypes.unitType.coneType,
+            ) {
+                status {
+                    isOverride = true
+                }
             }
-        }
-        injectFunction.replaceAnnotations(listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)))
+        injectFunction.replaceAnnotations(
+            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation))
+        )
         return injectFunction.symbol as FirNamedFunctionSymbol
     }
 
     /**
-     * Generates an `override fun injectViewModel(deps[, initialParam])` on the annotated page class,
-     * returning the page's ViewModel type. The second `initialParam` parameter is only generated for
-     * a [ParamPage][Ids.paramPage]. The body is filled in IR.
+     * Generates an `override fun injectViewModel(deps[, initialParam])` on the annotated page
+     * class, returning the page's ViewModel type. The second `initialParam` parameter is only
+     * generated for a [ParamPage][Ids.paramPage]. The body is filled in IR.
      *
-     * The overridden Page/ParamPage `injectViewModel` is a `@GeneratedByMetroStation` (opt-in) member,
-     * so the marker is propagated onto the generated override to satisfy the opt-in requirement.
+     * The overridden Page/ParamPage `injectViewModel` is a `@GeneratedByMetroStation` (opt-in)
+     * member, so the marker is propagated onto the generated override to satisfy the opt-in
+     * requirement.
      */
     private fun generateInjectViewModelFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
         val componentType = resolveComponentType(owner)
         if (componentType !is ComponentType.Page) return null
 
-        val viewModelType = resolvePageViewModelType(componentType.superTypeRef, owner, session) as? ConeKotlinType
-            ?: return null
+        val viewModelType =
+            resolvePageViewModelType(componentType.superTypeRef, owner, session) as? ConeKotlinType
+                ?: return null
         val pageGraphDepsType = Ids.pageGraphDependencies.constructClassLikeType()
-        val paramType = if (componentType.hasParam) {
-            componentType.superTypeRef.unwrapType(1) as? ConeKotlinType ?: return null
-        } else {
-            null
-        }
+        val paramType =
+            if (componentType.hasParam) {
+                componentType.superTypeRef.unwrapType(1) as? ConeKotlinType ?: return null
+            } else {
+                null
+            }
 
-        val injectViewModelFunction = createMemberFunction(
-            owner,
-            Key,
-            Ids.injectViewModelName,
-            viewModelType,
-        ) {
-            status {
-                isOverride = true
+        val injectViewModelFunction =
+            createMemberFunction(
+                owner,
+                Key,
+                Ids.injectViewModelName,
+                viewModelType,
+            ) {
+                status {
+                    isOverride = true
+                }
+                valueParameter(Ids.depsName, pageGraphDepsType, key = Key)
+                if (paramType != null) {
+                    valueParameter(Ids.initialParamName, paramType, key = Key)
+                }
             }
-            valueParameter(Ids.depsName, pageGraphDepsType, key = Key)
-            if (paramType != null) {
-                valueParameter(Ids.initialParamName, paramType, key = Key)
-            }
-        }
-        injectViewModelFunction.replaceAnnotations(listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)))
+        injectViewModelFunction.replaceAnnotations(
+            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation))
+        )
         return injectViewModelFunction.symbol as FirNamedFunctionSymbol
     }
 
@@ -544,44 +631,43 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         val featureExtensionClassId = owner.classId.outerClassId ?: return null
         val annotatedClassId = featureExtensionClassId.outerClassId ?: return null
         val annotatedSymbol =
-            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
-                ?: return null
+            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId)
+                as? FirRegularClassSymbol ?: return null
 
         val featureExtensionType = featureExtensionClassId.constructClassLikeType()
 
         val componentType = resolveComponentType(annotatedSymbol)
-        val createFunction = createMemberFunction(
-            owner,
-            Key,
-            Ids.createName,
-            featureExtensionType
-        ) {
-            valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
+        val createFunction =
+            createMemberFunction(
+                owner,
+                Key,
+                Ids.createName,
+                featureExtensionType,
+            ) {
+                valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
 
-            if (componentType is ComponentType.Page) {
-                valueParameter(
-                    "param".asName(),
-                    if (componentType.hasParam) {
-                        componentType.superTypeRef.unwrapType(1) as? ConeKotlinType
-                            ?: StandardClassIds.Unit.constructClassLikeType()
-                    } else {
-                        StandardClassIds.Unit.constructClassLikeType()
-                    },
-                    key = Key
-                )
-                valueParameter(
-                    "pageGraphDependencies".asName(),
-                    Ids.androidPageGraphDependencies.constructClassLikeType(),
-                    key = Key
-                )
+                if (componentType is ComponentType.Page) {
+                    valueParameter(
+                        "param".asName(),
+                        if (componentType.hasParam) {
+                            componentType.superTypeRef.unwrapType(1) as? ConeKotlinType
+                                ?: StandardClassIds.Unit.constructClassLikeType()
+                        } else {
+                            StandardClassIds.Unit.constructClassLikeType()
+                        },
+                        key = Key,
+                    )
+                    valueParameter(
+                        "pageGraphDependencies".asName(),
+                        Ids.androidPageGraphDependencies.constructClassLikeType(),
+                        key = Key,
+                    )
+                }
             }
-        }
         createFunction.markAbstract(owner)
         if (componentType == ComponentType.Fragment) {
             // We need to add @Keep here because we use reflection to access this method at runtime.
-            createFunction.replaceAnnotations(
-                listOf(buildSimpleAnnotation(Ids.keep))
-            )
+            createFunction.replaceAnnotations(listOf(buildSimpleAnnotation(Ids.keep)))
         }
 
         // Annotate parameters with @Provides or @Includes
@@ -603,26 +689,28 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         // ExtensionFactoryContribution is inside the annotated class
         val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
-            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId) as? FirRegularClassSymbol
-                ?: return null
+            session.symbolProvider.getClassLikeSymbolByClassId(annotatedClassId)
+                as? FirRegularClassSymbol ?: return null
 
         // The parameter type is FeatureExtension.Factory
-        val factoryClassId = annotatedClassId
-            .createNestedClassId(Ids.featureExtensionName)
-            .createNestedClassId(Ids.nestedFactoryName)
+        val factoryClassId =
+            annotatedClassId
+                .createNestedClassId(Ids.featureExtensionName)
+                .createNestedClassId(Ids.nestedFactoryName)
         val factoryType = factoryClassId.constructClassLikeType()
 
         // Return type is Any
         val returnType = session.builtinTypes.anyType.coneType
 
-        val provideFactoryFunction = createMemberFunction(
-            owner,
-            Key,
-            Ids.provideFactoryName,
-            returnType
-        ) {
-            valueParameter(Ids.factoryParamName, factoryType, key = Key)
-        }
+        val provideFactoryFunction =
+            createMemberFunction(
+                owner,
+                Key,
+                Ids.provideFactoryName,
+                returnType,
+            ) {
+                valueParameter(Ids.factoryParamName, factoryType, key = Key)
+            }
 
         provideFactoryFunction.replaceAnnotations(
             listOf(
@@ -630,9 +718,10 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 buildSimpleAnnotation(ClassIds.intoMap),
                 buildSimpleAnnotation(
                     classId = ClassIds.classKey,
-                    argumentMapping = buildAnnotationArgumentMapping {
-                        mapping[ClassIds.valueName] = annotatedSymbol.getClassCall()
-                    }
+                    argumentMapping =
+                        buildAnnotationArgumentMapping {
+                            mapping[ClassIds.valueName] = annotatedSymbol.getClassCall()
+                        },
                 ),
             )
         )
@@ -645,23 +734,32 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
      * Defaults to AppScope if not specified.
      */
     private fun resolveParentScopeClassId(owner: FirClassSymbol<*>): ClassId {
-        return resolveParentScopeClassIdFromAnnotation(owner, Ids.stationEntry, session, ClassIds.appScope)
+        return resolveParentScopeClassIdFromAnnotation(
+            owner,
+            Ids.stationEntry,
+            session,
+            ClassIds.appScope,
+        )
     }
 
     private fun resolveComponentType(owner: FirClassSymbol<*>): ComponentType {
         return componentTypeCache.getOrPut(owner.classId) {
             with(typeResolverFactory.create(owner)!!) {
-                owner.deepResolveSuperType(Ids.commonActivity, session)
-                    ?.let { return@getOrPut ComponentType.Activity(it) }
+                owner.deepResolveSuperType(Ids.commonActivity, session)?.let {
+                    return@getOrPut ComponentType.Activity(it)
+                }
 
-                owner.deepResolveSuperType(Ids.paramPage, session)
-                    ?.let { return@getOrPut ComponentType.Page(it, hasParam = true) }
+                owner.deepResolveSuperType(Ids.paramPage, session)?.let {
+                    return@getOrPut ComponentType.Page(it, hasParam = true)
+                }
 
-                owner.deepResolveSuperType(Ids.page, session)
-                    ?.let { return@getOrPut ComponentType.Page(it, hasParam = false) }
+                owner.deepResolveSuperType(Ids.page, session)?.let {
+                    return@getOrPut ComponentType.Page(it, hasParam = false)
+                }
 
-                owner.deepResolveSuperType(Ids.commonFragment, session)
-                    ?.let { return@getOrPut ComponentType.Fragment }
+                owner.deepResolveSuperType(Ids.commonFragment, session)?.let {
+                    return@getOrPut ComponentType.Fragment
+                }
             }
             error("StationEntry is deprecated, please use @MetroStation instead")
         }
@@ -670,14 +768,18 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     override fun getContributionTargets(): List<ContributionTarget> {
         return annotatedClasses.flatMap { classSymbol ->
             val parentScope = resolveParentScopeClassId(classSymbol)
-            val factoryClassId = classSymbol.classId
-                .createNestedClassId(Ids.featureExtensionName)
-                .createNestedClassId(Ids.nestedFactoryName)
-            val extensionFactoryContributionId = classSymbol.classId
-                .createNestedClassId(Ids.extensionFactoryContributionName)
+            val factoryClassId =
+                classSymbol.classId
+                    .createNestedClassId(Ids.featureExtensionName)
+                    .createNestedClassId(Ids.nestedFactoryName)
+            val extensionFactoryContributionId =
+                classSymbol.classId.createNestedClassId(Ids.extensionFactoryContributionName)
             listOf(
                 ContributionTarget(contributingClassId = factoryClassId, scope = parentScope),
-                ContributionTarget(contributingClassId = extensionFactoryContributionId, scope = parentScope)
+                ContributionTarget(
+                    contributingClassId = extensionFactoryContributionId,
+                    scope = parentScope,
+                ),
             )
         }
     }
@@ -685,24 +787,31 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     override fun getContributionHints(): List<ContributionHint> {
         return annotatedClasses.flatMap { classSymbol ->
             val parentScope = resolveParentScopeClassId(classSymbol)
-            val factoryClassId = classSymbol.classId
-                .createNestedClassId(MetroStationIds.featureExtensionName)
-                .createNestedClassId(MetroStationIds.nestedFactoryName)
-            val extensionFactoryContributionClassId = classSymbol.classId
-                .createNestedClassId(MetroStationIds.extensionFactoryContributionName)
+            val factoryClassId =
+                classSymbol.classId
+                    .createNestedClassId(MetroStationIds.featureExtensionName)
+                    .createNestedClassId(MetroStationIds.nestedFactoryName)
+            val extensionFactoryContributionClassId =
+                classSymbol.classId.createNestedClassId(
+                    MetroStationIds.extensionFactoryContributionName
+                )
 
             // Always emit both hints. If ExtensionFactoryContribution wasn't generated
             // (non-Fragment types), Metro's hint resolver safely skips non-existent classes.
             listOf(
                 ContributionHint(contributingClassId = factoryClassId, scope = parentScope),
-                ContributionHint(contributingClassId = extensionFactoryContributionClassId, scope = parentScope),
+                ContributionHint(
+                    contributingClassId = extensionFactoryContributionClassId,
+                    scope = parentScope,
+                ),
             )
         }
     }
 
     internal object Key : GeneratedDeclarationKey()
 
-    public class Factory : MetroFirDeclarationGenerationExtension.Factory, MetroContributionHintExtension.Factory {
+    public class Factory :
+        MetroFirDeclarationGenerationExtension.Factory, MetroContributionHintExtension.Factory {
         override fun create(
             session: FirSession,
             options: MetroOptions,

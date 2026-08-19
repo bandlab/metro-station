@@ -1,5 +1,8 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.checker
 
+import com.bandlab.metro.station.graph.MetroStationIds as Ids
 import com.bandlab.metro.station.utils.findSuperTypeRef
 import com.bandlab.metro.station.utils.typeArgumentSource
 import com.bandlab.metro.station.utils.unwrapType
@@ -14,29 +17,29 @@ import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.name.StandardClassIds
-import com.bandlab.metro.station.graph.MetroStationIds as Ids
 
 /**
  * A Fir class declaration checker responsible for validating the generic parameter types of
  * specific annotated classes based on predefined restrictions.
  *
- * This checker ensures that classes annotated with either `@MetroStation` or
- * `@StationEntry` do not use restricted types as their parameters. Restricted types
- * include primitive types such as `String`, `Int`, and others defined in the `restrictedParamTypes` set.
+ * This checker ensures that classes annotated with either `@MetroStation` or `@StationEntry` do not
+ * use restricted types as their parameters. Restricted types include primitive types such as
+ * `String`, `Int`, and others defined in the `restrictedParamTypes` set.
  */
 internal object ParamTypeClassChecker : FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
 
-    private val restrictedParamTypes = setOf(
-        StandardClassIds.String,
-        StandardClassIds.Int,
-        StandardClassIds.Long,
-        StandardClassIds.Boolean,
-        StandardClassIds.Float,
-        StandardClassIds.Double,
-        StandardClassIds.Char,
-        StandardClassIds.Byte,
-        StandardClassIds.Short,
-    )
+    private val restrictedParamTypes =
+        setOf(
+            StandardClassIds.String,
+            StandardClassIds.Int,
+            StandardClassIds.Long,
+            StandardClassIds.Boolean,
+            StandardClassIds.Float,
+            StandardClassIds.Double,
+            StandardClassIds.Char,
+            StandardClassIds.Byte,
+            StandardClassIds.Short,
+        )
 
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirClass) {
@@ -71,12 +74,16 @@ internal object ParamTypeClassChecker : FirDeclarationChecker<FirClass>(MppCheck
     }
 
     context(context: CheckerContext, reporter: DiagnosticReporter)
-    private fun checkRestricted(paramType: ConeKotlinType, typeArgSource: KtSourceElement?, declaration: FirClass) {
+    private fun checkRestricted(
+        paramType: ConeKotlinType,
+        typeArgSource: KtSourceElement?,
+        declaration: FirClass,
+    ) {
         if (paramType.classId in restrictedParamTypes) {
             reporter.reportOn(
                 source = typeArgSource ?: declaration.source,
                 factory = MetroStationDiagnostics.RESTRICTED_PARAM_TYPE,
-                "Param type ${paramType.classId} is a restricted primitive type. Use a wrapper class instead."
+                "Param type ${paramType.classId} is a restricted primitive type. Use a wrapper class instead.",
             )
         }
     }

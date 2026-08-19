@@ -1,25 +1,30 @@
+// Copyright 2026 BandLab Singapore Pte Ltd
+// SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station.settings
 
+import java.io.File
+import java.util.*
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.maven
-import java.io.File
-import java.util.*
 
 class SettingsPlugin : Plugin<Settings> {
     override fun apply(settings: Settings) {
-        val localProperties = Properties().apply {
-            val file = File(settings.rootDir, "local.properties")
-            if (file.exists()) {
-                file.inputStream().use { load(it) }
+        val localProperties =
+            Properties().apply {
+                val file = File(settings.rootDir, "local.properties")
+                if (file.exists()) {
+                    file.inputStream().use { load(it) }
+                }
             }
-        }
 
         fun getPropertyOrFail(propertyName: String): String {
             return localProperties.getProperty(propertyName)
                 ?: settings.providers.gradleProperty(propertyName).orNull
                 ?: System.getenv(propertyName)
-                ?: error("Property $propertyName not found. Please add it to local.properties or gradle.properties.")
+                ?: error(
+                    "Property $propertyName not found. Please add it to local.properties or gradle.properties."
+                )
         }
 
         settings.pluginManagement {
