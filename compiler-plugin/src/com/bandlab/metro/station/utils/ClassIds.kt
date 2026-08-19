@@ -25,6 +25,8 @@ internal object ClassIds {
     val irOnlyFactories = ClassId(metroInternalPackageFqName, "IROnlyFactories".asName())
 
     val scopeName = "scope".asName()
+    val additionalScopesName = "additionalScopes".asName()
+    val excludesName = "excludes".asName()
     val bindingContainersName = "bindingContainers".asName()
     val valueName = "value".asName()
 }

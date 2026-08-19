@@ -29,6 +29,9 @@ internal object MetroStationIds {
     val appDependenciesName = "appDependencies".asName()
     val graphMarkerName = "graphMarker".asName()
     val extraDependenciesName = "extraDependencies".asName()
+    val additionalScopesName = "additionalScopes".asName()
+    val excludesName = "excludes".asName()
+    val bindingContainersName = "bindingContainers".asName()
 
     val graphName = "FeatureGraph".asName()
     val nestedFactoryName = "Factory".asName()

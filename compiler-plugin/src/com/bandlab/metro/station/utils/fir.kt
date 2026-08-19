@@ -261,6 +261,31 @@ internal fun FirExpression.extractClassId(ownerClassId: ClassId, session: FirSes
 }
 
 /**
+ * Returns the raw argument expression for the named argument [name] from this annotation call, or
+ * `null` if not present.
+ */
+internal fun FirAnnotationCall.findArgument(name: Name): FirExpression? {
+    return argumentList.arguments
+        .filterIsInstance<FirNamedArgumentExpression>()
+        .find { it.name == name }
+        ?.expression
+}
+
+/**
+ * Returns the individual element expressions of an array/vararg annotation argument, e.g. the
+ * `Foo::class, Bar::class` entries of `argName = [Foo::class, Bar::class]`. Returns an empty list
+ * if the argument is absent or not an array-like expression.
+ */
+internal fun FirAnnotationCall.arrayArgumentElements(name: Name): List<FirExpression> {
+    return when (val expr = findArgument(name)) {
+        is FirVarargArgumentsExpression -> expr.arguments
+        is FirCall -> expr.arguments
+        null -> emptyList()
+        else -> listOf(expr)
+    }
+}
+
+/**
  * Access the declared member scope to trigger Metro's FIR generator, which creates the
  * MetroContribution nested class inside our MultibindingContribution. Without this, Metro
  * wouldn't see our contribution.

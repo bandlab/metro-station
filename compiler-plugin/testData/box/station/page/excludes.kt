@@ -1,6 +1,6 @@
 @MetroStation(
     appDependencies = MyPage.ServiceProvider::class,
-    excludes = [RealStringProvider::class]
+    excludes = [RealNumberProvider::class]
 )
 class MyPage : Page<MyViewModel> {
     interface ServiceProvider
@@ -8,19 +8,19 @@ class MyPage : Page<MyViewModel> {
 
 @Inject
 class MyViewModel(
-    val string: String,
+    val number: Int,
 )
 
 @ContributesTo(MyPage::class)
-interface RealStringProvider {
+interface RealNumberProvider {
     @Provides
-    fun provideString(): String = "real string"
+    fun provideInt(): Int = 123
 }
 
 @ContributesTo(MyPage::class)
-interface FakeStringProvider {
+interface FakeNumberProvider {
     @Provides
-    fun provideString(): String = "fake string"
+    fun provideInt(): Int = 0
 }
 
 @DependencyGraph(AppScope::class)
@@ -30,6 +30,6 @@ fun box(): String {
     val appGraph = createGraph<AppGraph>()
     val myPage = MyPage()
     val viewModel = myPage.injectViewModel(AndroidPageGraphDependencies.fromAppGraph(appGraph))
-    assertEquals("fake string", viewModel.string)
+    assertEquals(0, viewModel.number)
     return "OK"
 }

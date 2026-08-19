@@ -2,7 +2,7 @@
     appDependencies = MyPage.ServiceProvider::class,
     additionalScopes = [
         LongScope::class,
-        StringScope::class
+        BooleanScope::class
     ]
 )
 class MyPage : Page<MyViewModel> {
@@ -12,11 +12,11 @@ class MyPage : Page<MyViewModel> {
 @Inject
 class MyViewModel(
     val number: Long,
-    val string: String
+    val boolean: Boolean,
 )
 
 interface LongScope
-interface StringScope
+interface BooleanScope
 
 @ContributesTo(LongScope::class)
 interface LongProvider {
@@ -24,10 +24,10 @@ interface LongProvider {
     fun provideLong(): Long = 123L
 }
 
-@ContributesTo(StringScope::class)
-interface StringProvider {
+@ContributesTo(BooleanScope::class)
+interface BooleanProvider {
     @Provides
-    fun provideString(): String = "str"
+    fun provideBoolean(): Boolean = true
 }
 
 @DependencyGraph(AppScope::class)
@@ -38,6 +38,6 @@ fun box(): String {
     val myPage = MyPage()
     val viewModel = myPage.injectViewModel(AndroidPageGraphDependencies.fromAppGraph(appGraph))
     assertEquals(123L, viewModel.number)
-    assertEquals("str", viewModel.string)
+    assertEquals(true, viewModel.boolean)
     return "OK"
 }
