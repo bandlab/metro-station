@@ -3,7 +3,7 @@
 ## Tests
 
 The [Kotlin compiler test framework][test-framework] is set up for this project.
-To create a new test, add a new `.kt` file in a [compiler-plugin/testData](compiler-plugin/testData) sub-directory:
+To create a new test, add a new `.kt` file in a [compiler-plugin/testData](/compiler-plugin/testData) sub-directory:
 `testData/box` for codegen tests and `testData/diagnostics` for diagnostics tests.
 The generated JUnit 5 test classes will be updated automatically when tests are next run.
 They can be manually updated with the `generateTests` Gradle task as well.
@@ -13,10 +13,10 @@ which is pre-configured in this repository.
 ## Code style
 
 This repository uses [Kempt](https://github.com/ZacSweers/kempt) to enforce code
-style. Kempt runs [ktfmt](https://github.com/facebook/ktfmt) (`kotlinlang` style)
+style. Kempt runs [ktfmt][ktfmt] (`kotlinlang` style)
 on Kotlin sources, sorts Gradle dependency blocks, normalizes trailing
 whitespace, and inserts Apache 2.0 license headers. Configuration lives in
-[`.kempt.toml`](../.kempt.toml).
+[`.kempt.toml`](/.kempt.toml).
 
 CI runs `kempt check` on every push and pull request via the `format-check` job
 in [`.github/workflows/build.yml`](workflows/build.yml). A pull request will fail
@@ -57,12 +57,13 @@ Because `.git/hooks/` is local Git metadata, every contributor must run
 ### Formatting manually
 
 ```bash
-kempt format        # format all tracked files in place
+kempt format   # format all tracked files in place
 kempt format --staged   # format only staged files
-kempt check         # read-only; exits non-zero if anything needs formatting (what CI runs)
+kempt check   # read-only; exits non-zero if anything needs formatting (what CI runs)
 ```
 
 [//]: # (Links)
 
+[ktfmt]: https://github.com/Kotlin/ktfmt
 [test-framework]: https://github.com/JetBrains/kotlin/blob/master/compiler/test-infrastructure/ReadMe.md
 [test-plugin]: https://github.com/JetBrains/kotlin-compiler-devkit
