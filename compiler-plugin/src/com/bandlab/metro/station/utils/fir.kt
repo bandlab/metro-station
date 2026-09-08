@@ -33,7 +33,6 @@ import org.jetbrains.kotlin.fir.scopes.getSingleClassifier
 import org.jetbrains.kotlin.fir.scopes.impl.declaredMemberScope
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
-import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
@@ -48,7 +47,6 @@ import org.jetbrains.kotlin.fir.types.FirTypeRef
 import org.jetbrains.kotlin.fir.types.FirUserTypeRef
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -77,9 +75,9 @@ internal fun buildSimpleAnnotation(
 ): FirAnnotation {
     return buildAnnotation {
         annotationTypeRef =
-            ConeClassLikeTypeImpl(
-                    ConeClassLikeLookupTagImpl(classId),
-                    emptyArray(),
+            classId
+                .constructClassLikeType(
+                    typeArguments = emptyArray(),
                     isMarkedNullable = false,
                 )
                 .toFirResolvedTypeRef()
@@ -104,9 +102,8 @@ internal fun buildSimpleAnnotationCall(
     argumentMapping: FirAnnotationArgumentMapping = buildAnnotationArgumentMapping(),
 ): FirAnnotationCall {
     val annotationType =
-        ConeClassLikeTypeImpl(
-            ConeClassLikeLookupTagImpl(classId),
-            emptyArray(),
+        classId.constructClassLikeType(
+            typeArguments = emptyArray(),
             isMarkedNullable = false,
         )
     return buildAnnotationCall {
@@ -171,6 +168,7 @@ internal fun FirClassSymbol<*>.findSuperTypeRef(supertypeClassId: ClassId): FirT
             is FirUserTypeRef if
                 (ref.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName)
              -> return ref
+
             is FirResolvedTypeRef if (ref.coneType.classId == supertypeClassId) -> return ref
         }
     }
@@ -208,6 +206,7 @@ internal fun FirClassSymbol<*>.deepResolveSuperType(
                 is FirUserTypeRef if
                     (typeRef.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName)
                  -> return typeRef
+
                 is FirResolvedTypeRef if (typeRef.coneType.classId == supertypeClassId) ->
                     return typeRef
             }
