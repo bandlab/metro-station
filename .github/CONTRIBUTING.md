@@ -12,7 +12,7 @@ which is pre-configured in this repository.
 
 ## Code style
 
-This repository uses [Kempt](https://github.com/ZacSweers/kempt) to enforce code
+This repository uses [Kempt][kempt] to enforce code
 style. Kempt runs [ktfmt][ktfmt] (`kotlinlang` style)
 on Kotlin sources, sorts Gradle dependency blocks, normalizes trailing
 whitespace, and inserts Apache 2.0 license headers. Configuration lives in
@@ -64,6 +64,7 @@ kempt check   # read-only; exits non-zero if anything needs formatting (what CI 
 
 [//]: # (Links)
 
+[kempt]: https://github.com/ZacSweers/kempt
 [ktfmt]: https://github.com/Kotlin/ktfmt
 [test-framework]: https://github.com/JetBrains/kotlin/blob/master/compiler/test-infrastructure/ReadMe.md
 [test-plugin]: https://github.com/JetBrains/kotlin-compiler-devkit
