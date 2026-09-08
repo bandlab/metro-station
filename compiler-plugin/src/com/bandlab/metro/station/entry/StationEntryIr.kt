@@ -12,8 +12,17 @@ import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.builders.*
-import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.builders.irBlockBody
+import org.jetbrains.kotlin.ir.builders.irCall
+import org.jetbrains.kotlin.ir.builders.irCallWithSubstitutedType
+import org.jetbrains.kotlin.ir.builders.irGet
+import org.jetbrains.kotlin.ir.builders.irGetObject
+import org.jetbrains.kotlin.ir.builders.irReturn
+import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
 import org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl
 import org.jetbrains.kotlin.ir.types.classOrNull
@@ -104,10 +113,12 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
 
         // this.resolveServiceProvider<FeatureExtension.Factory>()
         val resolveCall =
-            builder.irCall(resolveServiceProviderSymbol).apply {
-                typeArguments[0] = factoryClass.symbol.typeWith()
-                arguments[0] = builder.irGet(thisReceiver)
-            }
+            builder
+                .irCallWithSubstitutedType(
+                    resolveServiceProviderSymbol,
+                    listOf(factoryClass.symbol.typeWith()),
+                )
+                .apply { arguments[0] = builder.irGet(thisReceiver) }
 
         // factory.create(this)
         val factoryClassOwner =
@@ -129,13 +140,20 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
         val injectorGetter =
             membersInjectorProviderClass.properties.first { it.name == Ids.injectorName }.getter
                 ?: return
+        val membersInjectorClass = finder.findClass(Ids.membersInjector)?.owner ?: return
+        // The `injector` getter returns `MembersInjector<T>` where `T` is
+        // `MembersInjectorProvider`'s class type parameter. The getter itself has no type
+        // parameters, so we substitute `T` manually by giving the call the concrete
+        // `MembersInjector<ThisClass>` return type.
+        val injectedType = thisReceiver.type
+        val membersInjectorType = membersInjectorClass.typeWith(injectedType)
         val getInjector =
-            builder.irCall(injectorGetter).apply {
+            builder.irCall(injectorGetter.symbol, membersInjectorType).apply {
                 dispatchReceiver = createCall
+                type = membersInjectorType
             }
 
         // .injectMembers(this)
-        val membersInjectorClass = finder.findClass(Ids.membersInjector)?.owner ?: return
         val injectMembersFunction =
             membersInjectorClass.functions.first { it.name == Ids.injectMembersName }
         val injectMembersCall =
@@ -213,10 +231,12 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
 
         // deps.activity.resolveServiceProvider<FeatureExtension.Factory>()
         val resolveCall =
-            builder.irCall(resolveServiceProviderSymbol).apply {
-                typeArguments[0] = factoryClass.symbol.typeWith()
-                arguments[0] = depsActivityExpr
-            }
+            builder
+                .irCallWithSubstitutedType(
+                    resolveServiceProviderSymbol,
+                    listOf(factoryClass.symbol.typeWith()),
+                )
+                .apply { arguments[0] = depsActivityExpr }
 
         // factory.create(this, initialParam | Unit, deps)
         val factoryClassOwner =
@@ -252,9 +272,13 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
         val pageInjectorClass = finder.findClass(Ids.pageInjector)?.owner ?: return
         val getPageViewModelFunction =
             pageInjectorClass.functions.first { it.name.asString() == "getPageViewModel" }
+        // `PageInjector<VM>.getPageViewModel()` returns the `VM` class type parameter. The function
+        // itself has no type parameters, so substitute the return type with the concrete view model
+        // type (the enclosing `injectViewModel` override's return type).
         val getViewModelCall =
-            builder.irCall(getPageViewModelFunction).apply {
+            builder.irCall(getPageViewModelFunction.symbol, declaration.returnType).apply {
                 dispatchReceiver = createCall
+                type = declaration.returnType
             }
 
         declaration.body = builder.irBlockBody {

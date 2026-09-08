@@ -1,6 +1,6 @@
 // FILE: paramPage.kt
 
-@StationEntry
+@MetroStation(appDependencies = ServiceProvider::class)
 class MyPage : ParamPage<MyViewModel, Params> {
   data class Params {
     val number: Long
@@ -46,27 +46,71 @@ class MyPage : ParamPage<MyViewModel, Params> {
   }
 
   @PageScope
-  @GraphExtension(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class])
-  interface FeatureExtension : PageInjector<MyViewModel> {
-    @ContributesTo(scope = AppScope::class)
+  @IROnlyFactories
+  @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class])
+  interface FeatureGraph : PageInjector<MyViewModel> {
     @Factory
-    interface Factory {
+    interface Factory : PageGraphFactory<MyPage, MyViewModel, Params, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-      @MetroContribution(scope = AppScope::class)
-      interface MetroContributionToDevzacsweersmetroappScopeocf15 : Factory {
-      }
+      @MetroImplMarker
+      object Impl : Factory {
+        private constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
 
-      abstract fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies): FeatureExtension
+        }
+
+        @GraphFactoryInvokeFunctionMarker
+        override fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
+          return Impl(feature = feature, param = param, pageGraphDependencies = pageGraphDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        }
+
+      }
 
     }
 
-  }
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroImplMarker
+    class Impl : FeatureGraph {
+      private val featureInstance: MyPage
+        field = feature
 
-  @BindingContainer
-  @IROnlyFactories
-  object FeatureBindings {
-    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 460, endOffset = 570, newInstanceName = "provideBaseType")
+      private val paramInstance: Params
+        field = param
+
+      private val thisGraphInstance: Impl
+        field = <this>
+
+      private constructor(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      override fun getPageViewModel(): MyViewModel {
+        return MyViewModel(param = <this>.#paramInstance, paramFlow = <this>.#thisGraphInstance.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.#paramInstance))
+      }
+
+    }
+
+    companion object Companion {
+      private constructor() /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @JvmStatic
+      @JsStatic
+      fun factory(): Factory {
+        return Impl
+      }
+
+    }
+
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 460, endOffset = 651, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<Page<*>> {
+      private /* final field */ val instance: FeatureGraph = instance
       private /* final field */ val feature: Provider<MyPage> = feature
       companion object Companion {
         constructor() /* primary */ {
@@ -78,21 +122,21 @@ class MyPage : ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(feature: Provider<MyPage>): ProvideBaseTypeMetroFactory {
-          return ProvideBaseTypeMetroFactory(feature = feature)
+        fun create(instance: FeatureGraph, feature: Provider<MyPage>): ProvideBaseTypeMetroFactory {
+          return ProvideBaseTypeMetroFactory(instance = instance, feature = feature)
         }
 
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun provideBaseType(feature: MyPage): Page<*> {
-          return FeatureBindings.provideBaseType(feature = feature)
+        fun provideBaseType(instance: FeatureGraph, feature: MyPage): Page<*> {
+          return instance.provideBaseType(feature = feature)
         }
 
       }
 
       @HiddenFromObjC
-      private constructor(feature: Provider<MyPage>) /* primary */ {
+      private constructor(instance: FeatureGraph, feature: Provider<MyPage>) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
@@ -106,13 +150,14 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
       @HiddenFromObjC
       override operator fun invoke(): Page<*> {
-        return Companion.provideBaseType(feature = <this>.#feature.invoke())
+        return Companion.provideBaseType(instance = <this>.#instance, feature = <this>.#feature.invoke())
       }
 
     }
 
-    @CallableMetadata(callableName = "provideParamFlow", propertyName = "", startOffset = 460, endOffset = 570, newInstanceName = "provideParamFlow")
+    @CallableMetadata(callableName = "provideParamFlow", propertyName = "", startOffset = 460, endOffset = 651, newInstanceName = "provideParamFlow")
     class ProvideParamFlowMetroFactory : Factory<Flow<Params>> {
+      private /* final field */ val instance: FeatureGraph = instance
       private /* final field */ val provider: Provider<PageParamFlowProvider> = provider
       private /* final field */ val feature: Provider<MyPage> = feature
       private /* final field */ val initialParam: Provider<Params> = initialParam
@@ -126,21 +171,21 @@ class MyPage : ParamPage<MyViewModel, Params> {
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun create(provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>): ProvideParamFlowMetroFactory {
-          return ProvideParamFlowMetroFactory(provider = provider, feature = feature, initialParam = initialParam)
+        fun create(instance: FeatureGraph, provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>): ProvideParamFlowMetroFactory {
+          return ProvideParamFlowMetroFactory(instance = instance, provider = provider, feature = feature, initialParam = initialParam)
         }
 
         @HiddenFromObjC
         @JvmStatic
         @JsStatic
-        fun provideParamFlow(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
-          return FeatureBindings.provideParamFlow(provider = provider, feature = feature, initialParam = initialParam)
+        fun provideParamFlow(instance: FeatureGraph, provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
+          return instance.provideParamFlow(provider = provider, feature = feature, initialParam = initialParam)
         }
 
       }
 
       @HiddenFromObjC
-      private constructor(provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>) /* primary */ {
+      private constructor(instance: FeatureGraph, provider: Provider<PageParamFlowProvider>, feature: Provider<MyPage>, initialParam: Provider<Params>) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
@@ -154,27 +199,33 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
       @HiddenFromObjC
       override operator fun invoke(): Flow<Params> {
-        return Companion.provideParamFlow(provider = <this>.#provider.invoke(), feature = <this>.#feature.invoke(), initialParam = <this>.#initialParam.invoke())
+        return Companion.provideParamFlow(instance = <this>.#instance, provider = <this>.#provider.invoke(), feature = <this>.#feature.invoke(), initialParam = <this>.#initialParam.invoke())
       }
 
     }
 
-    private constructor() /* primary */ {
-      super/*Any*/()
-      /* <init>() */
-
-    }
-
     @Provides
-    fun provideBaseType(feature: MyPage): Page<*> {
+    final fun provideBaseType(feature: MyPage): Page<*> {
       return feature
     }
 
     @Provides
-    fun provideParamFlow(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
-      return provider.createParamFlow</* null */>(page = feature, initialParam = initialParam)
+    final fun provideParamFlow(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
+      return provider.createParamFlow<Params>(page = feature, initialParam = initialParam)
     }
 
+  }
+
+  @ContributesTo(scope = AppScope::class)
+  interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider {
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
+    @MetroContribution(scope = AppScope::class)
+    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
+    }
+
+  }
+
+  interface ServiceProvider {
   }
 
   constructor() /* primary */ {
@@ -185,7 +236,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
   @GeneratedByMetroStation
   override fun injectViewModel(deps: PageGraphDependencies, initialParam: Params): MyViewModel {
-    return resolveServiceProvider<Factory>(/* <this> = deps as AndroidPageGraphDependencies.<get-activity>() */).create(feature = <this>, param = initialParam, pageGraphDependencies = deps).getPageViewModel()
+    return createGraphAndInjectViewModel<MyPage, MyViewModel, Params, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ deps = deps, param = initialParam, factory = Impl, extraDependencies = EmptyExtraDependencies)
   }
 
 }
@@ -271,41 +322,10 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph {
-    private val thisGraphInstance: Impl
-      field = <this>
-
-    @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class])
-    @PageScope
-    private class FeatureExtensionImpl : FeatureExtension {
-      private val appGraphImpl: Impl
-        field = appGraphImpl
-
-      private val featureInstance: MyPage
-        field = feature
-
-      private val paramInstance: Params
-        field = param
-
-      constructor(appGraphImpl: Impl, @Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies) /* primary */ {
-        super/*Any*/()
-        /* <init>() */
-
-      }
-
-      override fun getPageViewModel(): MyViewModel {
-        return MyViewModel(param = <this>.#paramInstance, paramFlow = FeatureBindings.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.#paramInstance))
-      }
-
-    }
-
     private constructor() /* primary */ {
       super/*Any*/()
       /* <init>() */
 
-    }
-
-    override fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies): FeatureExtension {
-      return FeatureExtensionImpl(appGraphImpl = <this>, feature = feature, param = param, pageGraphDependencies = pageGraphDependencies)
     }
 
   }
@@ -328,11 +348,10 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
 }
 
-// FILE: myPageFeatureExtensionFactoryDev_zacsweers_metro_AppScope.kt
+// FILE: myPageFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-fun dev_zacsweers_metro_AppScope(contributed: Factory) {
+fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
-

@@ -7,6 +7,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irCall
+import org.jetbrains.kotlin.ir.builders.irCallWithSubstitutedType
 import org.jetbrains.kotlin.ir.builders.irGet
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrParameterKind
@@ -101,14 +102,18 @@ internal fun generateProvideParamFlowBody(
     declaration.body =
         DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
             +irReturn(
-                irCall(createParamFlowFunction).apply {
-                    // arguments[0] = dispatch receiver
-                    arguments[0] = irGet(providerParam)
-                    // arguments[1] = page (first value param)
-                    arguments[1] = irGet(featureParam)
-                    // arguments[2] = initialParam (second value param)
-                    arguments[2] = irGet(initialParamParam)
-                }
+                irCallWithSubstitutedType(
+                        createParamFlowFunction.symbol,
+                        listOf(initialParamParam.type),
+                    )
+                    .apply {
+                        // arguments[0] = dispatch receiver
+                        arguments[0] = irGet(providerParam)
+                        // arguments[1] = page (first value param)
+                        arguments[1] = irGet(featureParam)
+                        // arguments[2] = initialParam (second value param)
+                        arguments[2] = irGet(initialParamParam)
+                    }
             )
         }
 }

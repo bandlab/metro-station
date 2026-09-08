@@ -1,10 +1,53 @@
-// FILE: basic.kt
+// FILE: activityParam.kt
 
 @StationEntry
-class MyActivity : CommonActivity<Unit> {
-  lateinit var myDependency: MyDependency
+class MyActivity : CommonActivity<Param> {
+  lateinit var myViewModel: MyViewModel
     get
     set
+
+  data class Param {
+    val id: String
+      field = id
+      get
+
+    constructor(id: String) /* primary */ {
+      super/*Any*/()
+      /* <init>() */
+
+    }
+
+    operator fun component1(): String {
+      return <this>.#id
+    }
+
+    fun copy(id: String = <this>.#id): Param {
+      return Param(id = id)
+    }
+
+    override operator fun equals(other: Any?): Boolean {
+      when {
+        EQEQEQ(arg0 = <this>, arg1 = other) -> return true
+      }
+      when {
+        other !is Param -> return false
+      }
+      val tmp_0: Param = other /*as Param */
+      when {
+        EQEQ(arg0 = <this>.#id, arg1 = tmp_0.#id).not() -> return false
+      }
+      return true
+    }
+
+    override fun hashCode(): Int {
+      return <this>.#id.hashCode()
+    }
+
+    override fun toString(): String {
+      return "Param(" + "id=" + <this>.#id + ")"
+    }
+
+  }
 
   @ActivityScope
   @GraphExtension(scope = MyActivity::class, bindingContainers = [DefaultActivityDependencies::class, FeatureBindings::class])
@@ -26,7 +69,7 @@ class MyActivity : CommonActivity<Unit> {
   @BindingContainer
   @IROnlyFactories
   object FeatureBindings {
-    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 459, newInstanceName = "provideBaseType")
+    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 507, newInstanceName = "provideBaseType")
     class ProvideBaseTypeMetroFactory : Factory<CommonActivity<*>> {
       private /* final field */ val feature: Provider<MyActivity> = feature
       companion object Companion {
@@ -72,6 +115,52 @@ class MyActivity : CommonActivity<Unit> {
 
     }
 
+    @CallableMetadata(callableName = "provideParam", propertyName = "", startOffset = 348, endOffset = 507, newInstanceName = "provideParam")
+    class ProvideParamMetroFactory : Factory<Param> {
+      private /* final field */ val feature: Provider<MyActivity> = feature
+      companion object Companion {
+        constructor() /* primary */ {
+          super/*Any*/()
+          /* <init>() */
+
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun create(feature: Provider<MyActivity>): ProvideParamMetroFactory {
+          return ProvideParamMetroFactory(feature = feature)
+        }
+
+        @HiddenFromObjC
+        @JvmStatic
+        @JsStatic
+        fun provideParam(feature: MyActivity): Param {
+          return FeatureBindings.provideParam(feature = feature)
+        }
+
+      }
+
+      @HiddenFromObjC
+      private constructor(feature: Provider<MyActivity>) /* primary */ {
+        super/*Any*/()
+        /* <init>() */
+
+      }
+
+      @ComptimeOnly
+      @HiddenFromObjC
+      fun declarationMirror(feature: MyActivity): Param {
+        return error(message = "Never called")
+      }
+
+      @HiddenFromObjC
+      override operator fun invoke(): Param {
+        return Companion.provideParam(feature = <this>.#feature.invoke())
+      }
+
+    }
+
     private constructor() /* primary */ {
       super/*Any*/()
       /* <init>() */
@@ -83,11 +172,16 @@ class MyActivity : CommonActivity<Unit> {
       return feature
     }
 
+    @Provides
+    fun provideParam(feature: MyActivity): Param {
+      return feature.<get-params>()
+    }
+
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroMembersInjector : MembersInjector<MyActivity> {
-    private /* final field */ val myDependency: Provider<MyDependency> = myDependency
+    private /* final field */ val myViewModel: Provider<MyViewModel> = myViewModel
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -98,32 +192,32 @@ class MyActivity : CommonActivity<Unit> {
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(myDependency: Provider<MyDependency>): MembersInjector<MyActivity> {
-        return MetroMembersInjector(myDependency = myDependency)
+      fun create(myViewModel: Provider<MyViewModel>): MembersInjector<MyActivity> {
+        return MetroMembersInjector(myViewModel = myViewModel)
       }
 
       @JvmStatic
       @JsStatic
-      fun injectMyDependency(@Assisted instance: MyActivity, myDependency: MyDependency) {
-        return instance.#myDependency = myDependency
+      fun injectMyViewModel(@Assisted instance: MyActivity, myViewModel: MyViewModel) {
+        return instance.#myViewModel = myViewModel
       }
 
     }
 
-    private constructor(myDependency: Provider<MyDependency>) /* primary */ {
+    private constructor(myViewModel: Provider<MyViewModel>) /* primary */ {
       super/*Any*/()
       /* <init>() */
 
     }
 
     override fun injectMembers(instance: MyActivity) {
-      Companion.injectMyDependency(instance = instance, myDependency = <this>.#myDependency.invoke())
+      Companion.injectMyViewModel(instance = instance, myViewModel = <this>.#myViewModel.invoke())
     }
 
   }
 
   constructor() /* primary */ {
-    super/*CommonActivity*/<Unit>()
+    super/*CommonActivity*/<Param>()
     /* <init>() */
 
   }
@@ -136,19 +230,14 @@ class MyActivity : CommonActivity<Unit> {
 }
 
 @Inject
-class MyDependency {
-  val text: String
-    field = text
-    get
-
-  val int: Int
-    field = int
+class MyViewModel {
+  val param: Param
+    field = param
     get
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  class MetroFactory : Factory<MyDependency> {
-    private /* final field */ val text: Provider<String> = text
-    private /* final field */ val int: Provider<Int> = int
+  class MetroFactory : Factory<MyViewModel> {
+    private /* final field */ val param: Provider<Param> = param
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -159,21 +248,21 @@ class MyDependency {
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(text: Provider<String>, int: Provider<Int>): MetroFactory {
-        return MetroFactory(text = text, int = int)
+      fun create(param: Provider<Param>): MetroFactory {
+        return MetroFactory(param = param)
       }
 
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun newInstance(text: String, int: Int): MyDependency {
-        return MyDependency(text = text, int = int)
+      fun newInstance(param: Param): MyViewModel {
+        return MyViewModel(param = param)
       }
 
     }
 
     @HiddenFromObjC
-    private constructor(text: Provider<String>, int: Provider<Int>) /* primary */ {
+    private constructor(param: Provider<Param>) /* primary */ {
       super/*Any*/()
       /* <init>() */
 
@@ -181,18 +270,18 @@ class MyDependency {
 
     @ComptimeOnly
     @HiddenFromObjC
-    fun declarationMirror(text: String, int: Int): MyDependency {
+    fun declarationMirror(param: Param): MyViewModel {
       return error(message = "Never called")
     }
 
     @HiddenFromObjC
-    override operator fun invoke(): MyDependency {
-      return Companion.newInstance(text = <this>.#text.invoke(), int = <this>.#int.invoke())
+    override operator fun invoke(): MyViewModel {
+      return Companion.newInstance(param = <this>.#param.invoke())
     }
 
   }
 
-  constructor(text: String, int: Int) /* primary */ {
+  constructor(param: Param) /* primary */ {
     super/*Any*/()
     /* <init>() */
 
@@ -225,7 +314,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
       override val injector: MembersInjector<MyActivity>
         override get(): MembersInjector<MyActivity> {
-          return Companion.create(myDependency = Companion.create(text = Companion.create(activity = Companion.create(feature = Companion.invoke<MyActivity>(value = <this>.#featureInstance))), int = Companion.create(instance = <this>.#appGraphImpl)))
+          return Companion.create(myViewModel = Companion.create(param = Companion.create(feature = Companion.invoke<MyActivity>(value = <this>.#featureInstance))))
         }
 
     }
@@ -258,58 +347,6 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
   }
 
-  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideInt", propertyName = "", startOffset = 521, endOffset = 562, newInstanceName = "provideInt")
-  class ProvideIntMetroFactory : Factory<Int> {
-    private /* final field */ val instance: AppGraph = instance
-    companion object Companion {
-      private constructor() /* primary */ {
-        super/*Any*/()
-        /* <init>() */
-
-      }
-
-      @HiddenFromObjC
-      @JvmStatic
-      @JsStatic
-      fun create(instance: AppGraph): ProvideIntMetroFactory {
-        return ProvideIntMetroFactory(instance = instance)
-      }
-
-      @HiddenFromObjC
-      @JvmStatic
-      @JsStatic
-      fun provideInt(instance: AppGraph): Int {
-        return instance.provideInt()
-      }
-
-    }
-
-    @HiddenFromObjC
-    private constructor(instance: AppGraph) /* primary */ {
-      super/*Any*/()
-      /* <init>() */
-
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(): Int {
-      return error(message = "Never called")
-    }
-
-    @HiddenFromObjC
-    override operator fun invoke(): Int {
-      return Companion.provideInt(instance = <this>.#instance)
-    }
-
-  }
-
-  @Provides
-  fun provideInt(): Int {
-    return 123
-  }
-
 }
 
 // FILE: myActivityFeatureExtensionFactoryDev_zacsweers_metro_AppScope.kt
@@ -319,4 +356,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: Factory) {
   return error(message = "Never called")
 }
-

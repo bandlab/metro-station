@@ -51,4 +51,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: MultibindingContribution) {
   return error(message = "Never called")
 }
-

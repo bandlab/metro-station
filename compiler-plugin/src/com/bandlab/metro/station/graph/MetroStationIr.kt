@@ -3,23 +3,53 @@
 package com.bandlab.metro.station.graph
 
 import com.bandlab.metro.station.graph.MetroStationIds as Ids
-import com.bandlab.metro.station.utils.*
 import com.bandlab.metro.station.utils.ClassIds as MetroClassIds
+import com.bandlab.metro.station.utils.asName
+import com.bandlab.metro.station.utils.generateProvideBaseTypeBody
+import com.bandlab.metro.station.utils.generateProvideParamBody
+import com.bandlab.metro.station.utils.generateProvideParamFlowBody
+import com.bandlab.metro.station.utils.toCallableId
 import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
-import org.jetbrains.kotlin.ir.builders.*
+import org.jetbrains.kotlin.ir.builders.IrBuilderWithScope
 import org.jetbrains.kotlin.ir.builders.declarations.buildField
 import org.jetbrains.kotlin.ir.builders.declarations.buildFun
-import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.builders.irBlockBody
+import org.jetbrains.kotlin.ir.builders.irCall
+import org.jetbrains.kotlin.ir.builders.irCallWithSubstitutedType
+import org.jetbrains.kotlin.ir.builders.irGet
+import org.jetbrains.kotlin.ir.builders.irGetField
+import org.jetbrains.kotlin.ir.builders.irGetObject
+import org.jetbrains.kotlin.ir.builders.irReturn
+import org.jetbrains.kotlin.ir.builders.irSetField
+import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrField
+import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.types.*
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.types.IrSimpleType
+import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.IrTypeProjection
+import org.jetbrains.kotlin.ir.types.classOrNull
+import org.jetbrains.kotlin.ir.types.typeOrNull
+import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.util.classId
+import org.jetbrains.kotlin.ir.util.copyTo
+import org.jetbrains.kotlin.ir.util.functions
+import org.jetbrains.kotlin.ir.util.getSimpleFunction
+import org.jetbrains.kotlin.ir.util.isSubclassOf
+import org.jetbrains.kotlin.ir.util.parentClassOrNull
+import org.jetbrains.kotlin.ir.util.primaryConstructor
+import org.jetbrains.kotlin.ir.util.properties
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 import org.jetbrains.kotlin.name.ClassId
@@ -287,9 +317,10 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
 
         // createGraphFactory<FeatureGraph.Factory>()
         val createFactoryCall =
-            builder.irCall(createGraphFactorySymbol).apply {
-                typeArguments[0] = factoryClass.symbol.typeWith()
-            }
+            builder.irCallWithSubstitutedType(
+                createGraphFactorySymbol,
+                listOf(factoryClass.symbol.typeWith()),
+            )
 
         // Find GraphFactory.create function
         val factoryClassOwner =
@@ -297,20 +328,35 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
                 .mapNotNull { it.classOrNull?.owner }
                 .find { it.functions.any { f -> f.name == Ids.createName } } ?: factoryClass
         val createFunction = factoryClassOwner.functions.first { it.name == Ids.createName }
+        // `GraphFactory<Feature, ServiceProvider, ExtraDependencies, Graph>.create()` returns the
+        // `Graph` type parameter. Resolve the concrete `Graph` type from `factoryClass`'s
+        // `GraphFactory` supertype so the call's return type is properly substituted.
+        val graphFactorySupertype =
+            factoryClass.superTypes.firstOrNull { it.classOrNull?.owner == factoryClassOwner }
+                as? IrSimpleType
+        val concreteGraphType =
+            (graphFactorySupertype?.arguments?.lastOrNull() as? IrTypeProjection)?.type
+                ?: createFunction.returnType
 
         // .create(this, context.resolveServiceProvider(), EmptyExtraDependencies)
-        return builder.irCall(createFunction).apply {
+        return builder.irCall(createFunction.symbol, concreteGraphType).apply {
             dispatchReceiver = createFactoryCall
+            type = concreteGraphType
             // feature = this
             arguments[1] = builder.irGet(thisReceiver)
             // serviceProvider = context.resolveServiceProvider()
             arguments[2] =
-                builder.irCall(resolveServiceProviderSymbol).apply {
-                    if (serviceProviderType != null) {
-                        typeArguments[0] = serviceProviderType
+                if (serviceProviderType != null) {
+                    builder
+                        .irCallWithSubstitutedType(
+                            resolveServiceProviderSymbol,
+                            listOf(serviceProviderType),
+                        )
+                        .apply { arguments[0] = contextExprProvider(builder, thisReceiver) }
+                } else {
+                    builder.irCall(resolveServiceProviderSymbol).apply {
+                        arguments[0] = contextExprProvider(builder, thisReceiver)
                     }
-                    // extension receiver = context expression
-                    arguments[0] = contextExprProvider(builder, thisReceiver)
                 }
             // extraDependencies = EmptyExtraDependencies
             arguments[3] = builder.irGetObject(emptyExtraDepsClass)
@@ -333,13 +379,20 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         val injectorGetter =
             membersInjectorProviderClass.properties.first { it.name == Ids.injectorName }.getter
                 ?: return null
+        val membersInjectorClass = finder.findClass(Ids.membersInjector)?.owner ?: return null
+        // The `injector` getter returns `MembersInjector<T>` where `T` is
+        // `MembersInjectorProvider`'s class type parameter. The getter itself has no type
+        // parameters, so we substitute `T` manually by giving the call the concrete
+        // `MembersInjector<ThisClass>` return type.
         val getInjector =
-            builder.irCall(injectorGetter).apply {
-                dispatchReceiver = createCall
-            }
+            builder
+                .irCall(
+                    injectorGetter.symbol,
+                    membersInjectorClass.typeWith(thisReceiver.type),
+                )
+                .apply { dispatchReceiver = createCall }
 
         // .injectMembers(this)
-        val membersInjectorClass = finder.findClass(Ids.membersInjector)?.owner ?: return null
         val injectMembersFunction =
             membersInjectorClass.functions.first { it.name == Ids.injectMembersName }
         return builder.irCall(injectMembersFunction).apply {
@@ -429,9 +482,10 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
 
         val createFactoryCall =
-            builder.irCall(createGraphFactorySymbol).apply {
-                typeArguments[0] = factoryClass.symbol.typeWith()
-            }
+            builder.irCallWithSubstitutedType(
+                createGraphFactorySymbol,
+                listOf(factoryClass.symbol.typeWith()),
+            )
 
         val regularParams = declaration.parameters.filter { it.kind == IrParameterKind.Regular }
         val depsValueParam = regularParams.firstOrNull() ?: return
@@ -450,22 +504,24 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
 
         val createGraphAndInjectViewModelFn = createGraphAndInjectViewModelSymbol.owner
         val call =
-            builder.irCall(createGraphAndInjectViewModelSymbol).apply {
-                factoryTypeArgs.take(6).forEachIndexed { index, typeArg ->
-                    typeArguments[index] = typeArg
+            builder
+                .irCallWithSubstitutedType(
+                    createGraphAndInjectViewModelSymbol,
+                    factoryTypeArgs.take(6),
+                )
+                .apply {
+                    createGraphAndInjectViewModelFn.parameters.forEachIndexed { index, param ->
+                        arguments[index] =
+                            when {
+                                param.kind == IrParameterKind.ExtensionReceiver ->
+                                    builder.irGet(thisReceiver)
+                                param.name == Ids.depsName -> builder.irGet(depsValueParam)
+                                param.name == Ids.factoryParamName -> createFactoryCall
+                                param.name == Ids.extraDependenciesName -> extraDepsExpr
+                                else -> paramExpr
+                            }
+                    }
                 }
-                createGraphAndInjectViewModelFn.parameters.forEachIndexed { index, param ->
-                    arguments[index] =
-                        when {
-                            param.kind == IrParameterKind.ExtensionReceiver ->
-                                builder.irGet(thisReceiver)
-                            param.name == Ids.depsName -> builder.irGet(depsValueParam)
-                            param.name == Ids.factoryParamName -> createFactoryCall
-                            param.name == Ids.extraDependenciesName -> extraDepsExpr
-                            else -> paramExpr
-                        }
-                }
-            }
 
         declaration.body = builder.irBlockBody {
             +irReturn(call)
