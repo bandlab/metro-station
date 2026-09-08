@@ -1,6 +1,6 @@
 [versions]
 # https://github.com/JetBrains/kotlin
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 # https://github.com/Kotlin/binary-compatibility-validator
 kotlin-binaryCompatibilityValidator = "0.18.2"
 # https://github.com/junit-team/junit4
