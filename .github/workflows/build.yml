@@ -8,7 +8,6 @@ on:
 
 jobs:
   format-check:
-    name: Code format check
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +22,6 @@ jobs:
           cache: true
 
   build:
-    name: Build
     runs-on: macos-latest
 
     steps:
