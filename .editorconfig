@@ -13,3 +13,7 @@ ij_formatter_tags_enabled = false
 ij_smart_tabs = false
 ij_visual_guides = 120
 ij_wrap_on_typing = false
+
+[*.{yml,yaml}]
+indent_size = 2
+tab_width = 2
