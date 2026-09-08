@@ -1,4 +1,4 @@
-// FILE: serviceWithoutOnCreate.kt
+// FILE: worker.kt
 
 @Inject
 class MyDependency {
@@ -9,6 +9,7 @@ class MyDependency {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroFactory : Factory<MyDependency> {
     private /* final field */ val text: Provider<String> = text
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -61,16 +62,16 @@ class MyDependency {
 }
 
 @MetroStation(appDependencies = ServiceProvider::class)
-class MyService : Service {
+class MyWorker : CoroutineWorker {
   lateinit var myDependency: MyDependency
     get
     set
 
   @IROnlyFactories
-  @DependencyGraph(scope = MyService::class, bindingContainers = [])
-  interface FeatureGraph : MembersInjectorProvider<MyService> {
+  @DependencyGraph(scope = MyWorker::class, bindingContainers = [])
+  interface FeatureGraph : MembersInjectorProvider<MyWorker> {
     @Factory
-    interface Factory : GraphFactory<MyService, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+    interface Factory : GraphFactory<MyWorker, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroImplMarker
       object Impl : Factory {
@@ -80,8 +81,7 @@ class MyService : Service {
 
         }
 
-        @GraphFactoryInvokeFunctionMarker
-        override fun create(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
+        override fun create(@Provides feature: MyWorker, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
           return Impl(feature = feature, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
         }
 
@@ -95,14 +95,14 @@ class MyService : Service {
       private val featureServiceProviderInstance: FeatureServiceProvider
         field = serviceProvider
 
-      private constructor(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+      private constructor(@Provides feature: MyWorker, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
       }
 
-      override val injector: MembersInjector<MyService>
-        override get(): MembersInjector<MyService> {
+      override val injector: MembersInjector<MyWorker>
+        override get(): MembersInjector<MyWorker> {
           return Companion.create(myDependency = provider<MyDependency>(provider = local fun <anonymous>(): MyDependency {
             return <this>.#featureServiceProviderInstance.<get-myDependency>()
           }
@@ -130,16 +130,12 @@ class MyService : Service {
 
   @ContributesTo(scope = AppScope::class)
   interface FeatureServiceProvider : ServiceProvider {
-    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-    @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
-    }
-
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  class MetroMembersInjector : MembersInjector<MyService> {
+  class MetroMembersInjector : MembersInjector<MyWorker> {
     private /* final field */ val myDependency: Provider<MyDependency> = myDependency
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -150,13 +146,11 @@ class MyService : Service {
       @HiddenFromObjC
       @JvmStatic
       @JsStatic
-      fun create(myDependency: Provider<MyDependency>): MembersInjector<MyService> {
+      fun create(myDependency: Provider<MyDependency>): MembersInjector<MyWorker> {
         return MetroMembersInjector(myDependency = myDependency)
       }
 
-      @JvmStatic
-      @JsStatic
-      fun injectMyDependency(@Assisted instance: MyService, myDependency: MyDependency) {
+      fun injectMyDependency(instance: MyWorker, myDependency: MyDependency) {
         return instance.#myDependency = myDependency
       }
 
@@ -168,7 +162,7 @@ class MyService : Service {
 
     }
 
-    override fun injectMembers(instance: MyService) {
+    override fun injectMembers(instance: MyWorker) {
       Companion.injectMyDependency(instance = instance, myDependency = <this>.#myDependency.invoke())
     }
 
@@ -181,23 +175,34 @@ class MyService : Service {
   }
 
   constructor() /* primary */ {
-    super/*Service*/()
+    super/*CoroutineWorker*/()
     /* <init>() */
 
   }
 
-  override fun onCreate() {
-    super<Service>.onCreate()
-    Impl.create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
+  override suspend fun doWork(): Result {
+    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
+    return { // BLOCK
+      local class <no name provided> : Result {
+        constructor() /* primary */ {
+          super/*Result*/()
+          /* <init>() */
+
+        }
+
+      }
+
+      <no name provided>()
+    }
   }
 
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
+interface AppGraph : FeatureServiceProvider {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
-  class Impl : AppGraph {
+  class Impl : AppGraph, FeatureServiceProvider {
     private val thisGraphInstance: Impl
       field = <this>
 
@@ -230,12 +235,11 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
   }
 
-  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 665, endOffset = 715, newInstanceName = "provideText")
+  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 810, endOffset = 846, newInstanceName = "provideText")
   class ProvideTextMetroFactory : Factory<String> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
-      private constructor() /* primary */ {
+      constructor() /* primary */ {
         super/*Any*/()
         /* <init>() */
 
@@ -284,7 +288,7 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
 }
 
-// FILE: myServiceFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
+// FILE: myWorkerFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)

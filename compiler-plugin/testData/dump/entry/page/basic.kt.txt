@@ -8,11 +8,6 @@ class MyPage : Page<MyViewModel> {
     @ContributesTo(scope = AppScope::class)
     @Factory
     interface Factory {
-      @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-      @MetroContribution(scope = AppScope::class)
-      interface MetroContributionToDevzacsweersmetroappScopeocf15 : Factory {
-      }
-
       abstract fun create(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: AndroidPageGraphDependencies): FeatureExtension
 
     }
@@ -103,6 +98,7 @@ class MyViewModel {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroFactory : Factory<MyViewModel> {
     private /* final field */ val number: Provider<Long> = number
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -155,10 +151,10 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
+interface AppGraph : Factory {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
-  class Impl : AppGraph {
+  class Impl : AppGraph, Factory {
     private val thisGraphInstance: Impl
       field = <this>
 
@@ -208,12 +204,11 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
   }
 
-  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 501, endOffset = 545, newInstanceName = "provideLong")
+  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 515, endOffset = 545, newInstanceName = "provideLong")
   class ProvideLongMetroFactory : Factory<Long> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
-      private constructor() /* primary */ {
+      constructor() /* primary */ {
         super/*Any*/()
         /* <init>() */
 

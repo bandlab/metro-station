@@ -7,12 +7,6 @@ object FooConfigSelector : DebuggableConfigSelector {
     @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     @ComptimeOnly
     abstract class BindsMirror {
-      private constructor() /* primary */ {
-        super/*Any*/()
-        /* <init>() */
-
-      }
-
       @Binds
       @IntoSet
       @CallableMetadata(callableName = "bind", propertyName = "", startOffset = -1, endOffset = -1)
@@ -20,11 +14,6 @@ object FooConfigSelector : DebuggableConfigSelector {
         return error(message = "Never called")
       }
 
-    }
-
-    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-    @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeocf15 : MultibindingContribution {
     }
 
     @Binds
@@ -51,4 +40,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: MultibindingContribution) {
   return error(message = "Never called")
 }
-

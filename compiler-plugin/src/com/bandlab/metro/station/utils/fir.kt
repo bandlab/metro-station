@@ -10,8 +10,22 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.FirFunction
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
-import org.jetbrains.kotlin.fir.expressions.*
-import org.jetbrains.kotlin.fir.expressions.builder.*
+import org.jetbrains.kotlin.fir.expressions.FirAnnotation
+import org.jetbrains.kotlin.fir.expressions.FirAnnotationArgumentMapping
+import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
+import org.jetbrains.kotlin.fir.expressions.FirAnnotationResolvePhase
+import org.jetbrains.kotlin.fir.expressions.FirCall
+import org.jetbrains.kotlin.fir.expressions.FirExpression
+import org.jetbrains.kotlin.fir.expressions.FirNamedArgumentExpression
+import org.jetbrains.kotlin.fir.expressions.FirPropertyAccessExpression
+import org.jetbrains.kotlin.fir.expressions.FirVarargArgumentsExpression
+import org.jetbrains.kotlin.fir.expressions.arguments
+import org.jetbrains.kotlin.fir.expressions.buildUnaryArgumentList
+import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotation
+import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
+import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationCall
+import org.jetbrains.kotlin.fir.expressions.builder.buildGetClassCall
+import org.jetbrains.kotlin.fir.expressions.builder.buildResolvedQualifier
 import org.jetbrains.kotlin.fir.references.builder.buildResolvedNamedReference
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
@@ -19,12 +33,25 @@ import org.jetbrains.kotlin.fir.scopes.getSingleClassifier
 import org.jetbrains.kotlin.fir.scopes.impl.declaredMemberScope
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
-import org.jetbrains.kotlin.fir.symbols.impl.*
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
-import org.jetbrains.kotlin.fir.types.*
-import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
-import org.jetbrains.kotlin.name.*
+import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.ConeTypeProjection
+import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
+import org.jetbrains.kotlin.fir.types.FirTypeProjectionWithVariance
+import org.jetbrains.kotlin.fir.types.FirTypeRef
+import org.jetbrains.kotlin.fir.types.FirUserTypeRef
+import org.jetbrains.kotlin.fir.types.classId
+import org.jetbrains.kotlin.fir.types.constructClassLikeType
+import org.jetbrains.kotlin.name.CallableId
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.StandardClassIds
 
 internal fun String.asName(): Name = Name.identifier(this)
 
@@ -48,9 +75,9 @@ internal fun buildSimpleAnnotation(
 ): FirAnnotation {
     return buildAnnotation {
         annotationTypeRef =
-            ConeClassLikeTypeImpl(
-                    ConeClassLikeLookupTagImpl(classId),
-                    emptyArray(),
+            classId
+                .constructClassLikeType(
+                    typeArguments = emptyArray(),
                     isMarkedNullable = false,
                 )
                 .toFirResolvedTypeRef()
@@ -75,9 +102,8 @@ internal fun buildSimpleAnnotationCall(
     argumentMapping: FirAnnotationArgumentMapping = buildAnnotationArgumentMapping(),
 ): FirAnnotationCall {
     val annotationType =
-        ConeClassLikeTypeImpl(
-            ConeClassLikeLookupTagImpl(classId),
-            emptyArray(),
+        classId.constructClassLikeType(
+            typeArguments = emptyArray(),
             isMarkedNullable = false,
         )
     return buildAnnotationCall {
@@ -105,7 +131,7 @@ internal fun FirClassLikeSymbol<*>.getClassCall(): FirExpression = buildGetClass
             buildResolvedQualifier {
                 packageFqName = classId.packageFqName
                 relativeClassFqName = classId.relativeClassName
-                symbol = this@getClassCall
+                qualifierSymbol = this@getClassCall
                 resolvedToCompanionObject = false
                 coneTypeOrNull = this@getClassCall.defaultType()
             }
@@ -142,6 +168,7 @@ internal fun FirClassSymbol<*>.findSuperTypeRef(supertypeClassId: ClassId): FirT
             is FirUserTypeRef if
                 (ref.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName)
              -> return ref
+
             is FirResolvedTypeRef if (ref.coneType.classId == supertypeClassId) -> return ref
         }
     }
@@ -179,6 +206,7 @@ internal fun FirClassSymbol<*>.deepResolveSuperType(
                 is FirUserTypeRef if
                     (typeRef.qualifier.lastOrNull()?.name == supertypeClassId.shortClassName)
                  -> return typeRef
+
                 is FirResolvedTypeRef if (typeRef.coneType.classId == supertypeClassId) ->
                     return typeRef
             }

@@ -17,7 +17,6 @@ class MyPage : Page<MyViewModel> {
 
         }
 
-        @GraphFactoryInvokeFunctionMarker
         override fun create(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
           return Impl(feature = feature, param = param, pageGraphDependencies = pageGraphDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
         }
@@ -115,11 +114,6 @@ class MyPage : Page<MyViewModel> {
 
   @ContributesTo(scope = AppScope::class)
   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider {
-    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-    @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
-    }
-
   }
 
   interface ServiceProvider {
@@ -136,7 +130,7 @@ class MyPage : Page<MyViewModel> {
 
   @GeneratedByMetroStation
   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
-    return createGraphAndInjectViewModel<MyPage, MyViewModel, Unit, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ deps = deps, param = Unit, factory = Impl, extraDependencies = EmptyExtraDependencies)
+    return createGraphAndInjectViewModel<MyPage, MyViewModel, Unit, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ deps = deps, param = Unit, factory = Companion.factory(), extraDependencies = EmptyExtraDependencies)
   }
 
 }
@@ -150,6 +144,7 @@ class MyViewModel {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroFactory : Factory<MyViewModel> {
     private /* final field */ val number: Provider<Long> = number
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -202,10 +197,10 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
+interface AppGraph : FeatureServiceProvider {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
-  class Impl : AppGraph {
+  class Impl : AppGraph, FeatureServiceProvider {
     private val thisGraphInstance: Impl
       field = <this>
 
@@ -238,12 +233,11 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
   }
 
-  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 618, endOffset = 662, newInstanceName = "provideLong")
+  @CallableMetadata(callableName = "provideLong", propertyName = "", startOffset = 632, endOffset = 662, newInstanceName = "provideLong")
   class ProvideLongMetroFactory : Factory<Long> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
-      private constructor() /* primary */ {
+      constructor() /* primary */ {
         super/*Any*/()
         /* <init>() */
 

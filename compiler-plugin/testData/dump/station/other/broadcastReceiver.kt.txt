@@ -20,7 +20,6 @@ class MyBroadcastReceiver : BroadcastReceiver {
 
         }
 
-        @GraphFactoryInvokeFunctionMarker
         override fun create(@Provides feature: MyBroadcastReceiver, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
           return Impl(feature = feature, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
         }
@@ -70,16 +69,12 @@ class MyBroadcastReceiver : BroadcastReceiver {
 
   @ContributesTo(scope = AppScope::class)
   interface FeatureServiceProvider : ServiceProvider {
-    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-    @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
-    }
-
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroMembersInjector : MembersInjector<MyBroadcastReceiver> {
     private /* final field */ val myDependency: Provider<MyDependency> = myDependency
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -94,9 +89,7 @@ class MyBroadcastReceiver : BroadcastReceiver {
         return MetroMembersInjector(myDependency = myDependency)
       }
 
-      @JvmStatic
-      @JsStatic
-      fun injectMyDependency(@Assisted instance: MyBroadcastReceiver, myDependency: MyDependency) {
+      fun injectMyDependency(instance: MyBroadcastReceiver, myDependency: MyDependency) {
         return instance.#myDependency = myDependency
       }
 
@@ -127,7 +120,7 @@ class MyBroadcastReceiver : BroadcastReceiver {
   }
 
   override fun onReceive(context: Context, intent: Intent) {
-    Impl.create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = context */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
+    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = context */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
     println(message = <this>.<get-myDependency>().<get-text>())
   }
 
@@ -142,6 +135,7 @@ class MyDependency {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroFactory : Factory<MyDependency> {
     private /* final field */ val text: Provider<String> = text
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -194,10 +188,10 @@ class MyDependency {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
+interface AppGraph : FeatureServiceProvider {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
-  class Impl : AppGraph {
+  class Impl : AppGraph, FeatureServiceProvider {
     private val thisGraphInstance: Impl
       field = <this>
 
@@ -230,12 +224,11 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
   }
 
-  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 846, endOffset = 896, newInstanceName = "provideText")
+  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 860, endOffset = 896, newInstanceName = "provideText")
   class ProvideTextMetroFactory : Factory<String> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
-      private constructor() /* primary */ {
+      constructor() /* primary */ {
         super/*Any*/()
         /* <init>() */
 
