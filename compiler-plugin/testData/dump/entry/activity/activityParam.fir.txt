@@ -28,9 +28,6 @@ FILE: activityParam.kt
             @R|dev/zacsweers/metro/ContributesTo|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) @R|dev/zacsweers/metro/GraphExtension.Factory|() public abstract interface Factory {
                 public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyActivity|): R|MyActivity.FeatureExtension|
 
-                @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroContribution|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|)) public abstract interface MetroContributionToDevzacsweersmetroappScopeocf15 : R|MyActivity.FeatureExtension.Factory| {
-                }
-
             }
 
         }
@@ -46,33 +43,8 @@ FILE: activityParam.kt
 
         }
 
-        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) public final class MetroMembersInjector : R|dev/zacsweers/metro/MembersInjector<MyActivity>| {
-            private constructor(myViewModel: R|dev/zacsweers/metro/Provider<MyViewModel>|): R|MyActivity.MetroMembersInjector| {
-                super<R|kotlin/Any|>()
-            }
-
-            public final companion object Companion : R|kotlin/Any| {
-                @R|kotlin/native/HiddenFromObjC|() @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final fun create(myViewModel: R|dev/zacsweers/metro/Provider<MyViewModel>|): R|dev/zacsweers/metro/MembersInjector<MyActivity>|
-
-                @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final fun injectMyViewModel(@R|dev/zacsweers/metro/Assisted|() instance: R|MyActivity|, myViewModel: R|MyViewModel|): R|kotlin/Unit|
-
-                private constructor(): R|MyActivity.MetroMembersInjector.Companion| {
-                    super<R|kotlin/Any|>()
-                }
-
-            }
-
-        }
-
     }
-    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|) [evaluated = <getClass>(Q|dev/zacsweers/metro/AppScope|)]) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.FeatureExtension.Factory.MetroContributionToDevzacsweersmetroappScopeocf15| {
-        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) @R|dev/zacsweers/metro/internal/MetroImplMarker|() public final class Impl : R|AppGraph| {
-            private constructor(): R|AppGraph.Impl| {
-                super<R|kotlin/Any|>()
-            }
-
-        }
-
+    @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|dev/zacsweers/metro/AppScope|) [evaluated = <getClass>(Q|dev/zacsweers/metro/AppScope|)]) public abstract interface AppGraph : R|kotlin/Any|, R|MyActivity.FeatureExtension.Factory| {
         public final companion object Companion : R|kotlin/Any| {
             @R|dev/zacsweers/metro/internal/GraphFactoryInvokeFunctionMarker|() @R|kotlin/jvm/JvmStatic|() @R|kotlin/js/JsStatic|() public final operator fun invoke(): R|AppGraph|
 
@@ -90,16 +62,6 @@ FILE: activityParam.kt
 
         public final val param: R|MyActivity.Param| = R|<local>/param|
             public get(): R|MyActivity.Param|
-
-        @R|kotlin/Deprecated|(message = String(This synthesized declaration should not be used directly), level = Q|kotlin/DeprecationLevel|.R|kotlin/DeprecationLevel.HIDDEN|) public final class MetroFactory : R|kotlin/Any| {
-            public final companion object Companion : R|kotlin/Any| {
-                private constructor(): R|MyViewModel.MetroFactory.Companion| {
-                    super<R|kotlin/Any|>()
-                }
-
-            }
-
-        }
 
     }
 FILE: metro/hints/myActivityFeatureExtensionFactoryDev_zacsweers_metro_AppScope.kt

@@ -21,7 +21,6 @@ class MyActivity : CommonActivity<Unit> {
 
         }
 
-        @GraphFactoryInvokeFunctionMarker
         override fun create(@Provides feature: MyActivity, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
           return Impl(feature = feature, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
         }
@@ -123,16 +122,12 @@ class MyActivity : CommonActivity<Unit> {
 
   @ContributesTo(scope = AppScope::class)
   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider, ServiceProvider {
-    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-    @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
-    }
-
   }
 
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroMembersInjector : MembersInjector<MyActivity> {
     private /* final field */ val myDependency: Provider<MyDependency> = myDependency
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -147,9 +142,7 @@ class MyActivity : CommonActivity<Unit> {
         return MetroMembersInjector(myDependency = myDependency)
       }
 
-      @JvmStatic
-      @JsStatic
-      fun injectMyDependency(@Assisted instance: MyActivity, myDependency: MyDependency) {
+      fun injectMyDependency(instance: MyActivity, myDependency: MyDependency) {
         return instance.#myDependency = myDependency
       }
 
@@ -181,7 +174,7 @@ class MyActivity : CommonActivity<Unit> {
 
   @GeneratedByMetroStation
   override fun inject() {
-    Impl.create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
+    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
   }
 
 }
@@ -195,6 +188,7 @@ class MyDependency {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroFactory : Factory<MyDependency> {
     private /* final field */ val text: Provider<String> = text
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -247,10 +241,10 @@ class MyDependency {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
+interface AppGraph : FeatureServiceProvider {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
-  class Impl : AppGraph {
+  class Impl : AppGraph, FeatureServiceProvider {
     private val thisGraphInstance: Impl
       field = <this>
 
@@ -283,12 +277,11 @@ interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
 
   }
 
-  @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 652, endOffset = 702, newInstanceName = "provideText")
+  @CallableMetadata(callableName = "provideText", propertyName = "", startOffset = 666, endOffset = 702, newInstanceName = "provideText")
   class ProvideTextMetroFactory : Factory<String> {
     private /* final field */ val instance: AppGraph = instance
     companion object Companion {
-      private constructor() /* primary */ {
+      constructor() /* primary */ {
         super/*Any*/()
         /* <init>() */
 
@@ -344,3 +337,4 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
+

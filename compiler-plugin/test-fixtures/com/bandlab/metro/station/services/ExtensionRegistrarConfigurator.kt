@@ -63,14 +63,12 @@ private class ExtensionRegistrarConfigurator(testServices: TestServices) :
         module: TestModule,
         configuration: CompilerConfiguration,
     ) {
-        // Configure Metro options from directives before registering
-        if (MetroDirectives.GENERATE_CLASSES_IN_IR in module.directives) {
-            val option =
-                metroCliProcessor.pluginOptions.first {
-                    it.optionName == "generate-classes-in-ir"
-                }
-            metroCliProcessor.processOption(option, "true", configuration)
-        }
+        // Metro generates classes in IR (rather than FIR) starting with Kotlin 2.4.20.
+        val option =
+            metroCliProcessor.pluginOptions.first {
+                it.optionName == "generate-classes-in-ir"
+            }
+        metroCliProcessor.processOption(option, "true", configuration)
 
         // This is required on Kotlin 2.3.20-Beta1+.
         metroCliProcessor.processOption(

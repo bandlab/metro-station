@@ -60,7 +60,6 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
         }
 
-        @GraphFactoryInvokeFunctionMarker
         override fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
           return Impl(feature = feature, param = param, pageGraphDependencies = pageGraphDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
         }
@@ -218,11 +217,6 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
   @ContributesTo(scope = AppScope::class)
   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider {
-    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-    @MetroContribution(scope = AppScope::class)
-    interface MetroContributionToDevzacsweersmetroappScopeocf15 : FeatureServiceProvider {
-    }
-
   }
 
   interface ServiceProvider {
@@ -236,7 +230,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
   @GeneratedByMetroStation
   override fun injectViewModel(deps: PageGraphDependencies, initialParam: Params): MyViewModel {
-    return createGraphAndInjectViewModel<MyPage, MyViewModel, Params, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ deps = deps, param = initialParam, factory = Impl, extraDependencies = EmptyExtraDependencies)
+    return createGraphAndInjectViewModel<MyPage, MyViewModel, Params, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ deps = deps, param = initialParam, factory = Companion.factory(), extraDependencies = EmptyExtraDependencies)
   }
 
 }
@@ -266,6 +260,7 @@ class MyViewModel {
   class MetroFactory : Factory<MyViewModel> {
     private /* final field */ val param: Provider<Params> = param
     private /* final field */ val paramFlow: Provider<Flow<Params>> = paramFlow
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -318,10 +313,10 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
+interface AppGraph : FeatureServiceProvider {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
-  class Impl : AppGraph {
+  class Impl : AppGraph, FeatureServiceProvider {
     private constructor() /* primary */ {
       super/*Any*/()
       /* <init>() */
@@ -355,3 +350,4 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
+

@@ -55,11 +55,6 @@ class MyActivity : CommonActivity<Param> {
     @ContributesTo(scope = AppScope::class)
     @Factory
     interface Factory {
-      @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-      @MetroContribution(scope = AppScope::class)
-      interface MetroContributionToDevzacsweersmetroappScopeocf15 : Factory {
-      }
-
       abstract fun create(@Provides feature: MyActivity): FeatureExtension
 
     }
@@ -182,6 +177,7 @@ class MyActivity : CommonActivity<Param> {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroMembersInjector : MembersInjector<MyActivity> {
     private /* final field */ val myViewModel: Provider<MyViewModel> = myViewModel
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -196,9 +192,7 @@ class MyActivity : CommonActivity<Param> {
         return MetroMembersInjector(myViewModel = myViewModel)
       }
 
-      @JvmStatic
-      @JsStatic
-      fun injectMyViewModel(@Assisted instance: MyActivity, myViewModel: MyViewModel) {
+      fun injectMyViewModel(instance: MyActivity, myViewModel: MyViewModel) {
         return instance.#myViewModel = myViewModel
       }
 
@@ -238,6 +232,7 @@ class MyViewModel {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   class MetroFactory : Factory<MyViewModel> {
     private /* final field */ val param: Provider<Param> = param
+    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
     companion object Companion {
       private constructor() /* primary */ {
         super/*Any*/()
@@ -290,10 +285,10 @@ class MyViewModel {
 }
 
 @DependencyGraph(scope = AppScope::class)
-interface AppGraph : MetroContributionToDevzacsweersmetroappScopeocf15 {
+interface AppGraph : Factory {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
-  class Impl : AppGraph {
+  class Impl : AppGraph, Factory {
     private val thisGraphInstance: Impl
       field = <this>
 
@@ -356,3 +351,4 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: Factory) {
   return error(message = "Never called")
 }
+
