@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station
 
+import com.bandlab.metro.station.MetroStationConfigurationKeys.OPTION_ALLOW_STATION_ENTRIES
 import com.bandlab.metro.station.MetroStationConfigurationKeys.OPTION_STATION_ENTRIES_BASELINE
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOption
@@ -15,13 +16,21 @@ public class MetroStationCommandLineProcessor : CommandLineProcessor {
     override val pluginOptions: Collection<CliOption> =
         listOf(
             CliOption(
+                optionName = OPTION_ALLOW_STATION_ENTRIES,
+                valueDescription = "<true|false>",
+                description =
+                    "Whether @StationEntry is allowed. When false, the whole station entry " +
+                        "pipeline is disabled. Defaults to true.",
+                required = false,
+            ),
+            CliOption(
                 optionName = OPTION_STATION_ENTRIES_BASELINE,
                 valueDescription =
                     "A string that represents a set of fully qualified class names, separated by colon",
                 description =
                     "Fully qualified class names to use the deprecated StationEntry feature",
                 required = false,
-            )
+            ),
         )
 
     override fun processOption(
@@ -30,6 +39,12 @@ public class MetroStationCommandLineProcessor : CommandLineProcessor {
         configuration: CompilerConfiguration,
     ) {
         when (option.optionName) {
+            OPTION_ALLOW_STATION_ENTRIES ->
+                configuration.put(
+                    MetroStationConfigurationKeys.ALLOW_STATION_ENTRIES,
+                    value.toBoolean(),
+                )
+
             OPTION_STATION_ENTRIES_BASELINE ->
                 configuration.put(
                     MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE,

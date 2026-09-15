@@ -33,6 +33,7 @@ public class StationEntryContributionExtension(private val session: FirSession) 
     private val predicate = MetroStationIds.stationEntryPredicate
 
     private val annotatedClasses by lazy {
+        if (!session.allowStationEntries) return@lazy emptyList()
         session.predicateBasedProvider
             .getSymbolsByPredicate(predicate)
             .filterIsInstance<FirRegularClassSymbol>()
@@ -40,7 +41,9 @@ public class StationEntryContributionExtension(private val session: FirSession) 
     }
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
-        register(predicate)
+        if (session.allowStationEntries) {
+            register(predicate)
+        }
     }
 
     override fun getContributions(

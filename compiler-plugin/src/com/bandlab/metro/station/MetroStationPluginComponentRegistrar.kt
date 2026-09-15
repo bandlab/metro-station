@@ -32,19 +32,24 @@ public class MetroStationPluginComponentRegistrar : CompilerPluginRegistrar() {
         get() = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
+        val allowStationEntries =
+            configuration[MetroStationConfigurationKeys.ALLOW_STATION_ENTRIES] ?: true
         val stationEntriesBaseline =
             configuration[MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE]
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(
-                includeBaselineChecker = stationEntriesBaseline != null,
-                stationEntriesBaseline = stationEntriesBaseline.orEmpty(),
+                allowStationEntries = allowStationEntries,
+                stationEntriesBaseline = stationEntriesBaseline,
             )
         )
 
         // Do not run IR extensions in IDE
         if (!isIde) {
             IrGenerationExtension.registerExtension(MetroStationIr())
-            IrGenerationExtension.registerExtension(StationEntryIr())
+            // Only run the station entry IR pipeline when @StationEntry is allowed.
+            if (allowStationEntries) {
+                IrGenerationExtension.registerExtension(StationEntryIr())
+            }
         }
     }
 }

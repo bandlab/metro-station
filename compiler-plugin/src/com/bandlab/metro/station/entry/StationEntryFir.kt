@@ -68,6 +68,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     private val typeResolverFactory by lazy { MetroFirTypeResolver.Factory(session) }
 
     private val annotatedClasses by lazy {
+        if (!session.allowStationEntries) return@lazy emptyList()
         session.predicateBasedProvider
             .getSymbolsByPredicate(Ids.stationEntryPredicate)
             .filterIsInstance<FirRegularClassSymbol>()
@@ -75,7 +76,9 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
-        register(Ids.stationEntryPredicate)
+        if (session.allowStationEntries) {
+            register(Ids.stationEntryPredicate)
+        }
     }
 
     override fun getNestedClassifiersNames(
