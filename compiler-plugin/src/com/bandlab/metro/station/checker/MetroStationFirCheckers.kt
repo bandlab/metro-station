@@ -8,8 +8,8 @@ import org.jetbrains.kotlin.fir.analysis.extensions.FirAdditionalCheckersExtensi
 
 internal class MetroStationFirCheckers(
     session: FirSession,
-    private val includeBaselineChecker: Boolean,
-    private val stationEntriesBaseline: Set<String>,
+    private val allowStationEntries: Boolean,
+    private val stationEntriesBaseline: Set<String>?,
 ) : FirAdditionalCheckersExtension(session) {
 
     override val declarationCheckers =
@@ -19,8 +19,13 @@ internal class MetroStationFirCheckers(
                 add(TargetVisibilityChecker)
                 add(MetroStationChecker)
 
-                if (includeBaselineChecker) {
-                    add(StationEntryBaselineChecker(stationEntriesBaseline))
+                if (!allowStationEntries || !stationEntriesBaseline.isNullOrEmpty()) {
+                    add(
+                        StationEntryBaselineChecker(
+                            allowStationEntries,
+                            stationEntriesBaseline.orEmpty(),
+                        )
+                    )
                 }
             }
         }

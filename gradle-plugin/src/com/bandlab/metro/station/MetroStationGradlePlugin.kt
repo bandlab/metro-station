@@ -15,7 +15,9 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 @Suppress("unused")
 public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun apply(target: Project) {
-        target.extensions.create("metroStation", MetroStationExtension::class.java)
+        target.extensions.create("metroStation", MetroStationExtension::class.java).apply {
+            allowStationEntries.convention(true)
+        }
 
         val isMetroStrictCompatibility =
             target.providers
@@ -70,6 +72,12 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
             val extension = project.extensions.getByType(MetroStationExtension::class.java)
 
             buildList {
+                add(
+                    SubpluginOption(
+                        "allowStationEntries",
+                        value = extension.allowStationEntries.getOrElse(true).toString(),
+                    )
+                )
                 extension.stationEntriesBaseline
                     .getOrElse(emptySet())
                     .takeUnless { it.isEmpty() }

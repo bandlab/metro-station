@@ -79,16 +79,17 @@ private class ExtensionRegistrarConfigurator(testServices: TestServices) :
             configuration,
         )
 
-        val includeBaselineChecker =
-            MetroDirectives.ENABLE_STATION_ENTRIES_BASELINE in module.directives
+        val allowStationEntries = MetroDirectives.DISABLE_STATION_ENTRIES !in module.directives
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(
-                includeBaselineChecker = includeBaselineChecker,
-                stationEntriesBaseline = emptySet(),
+                allowStationEntries = allowStationEntries,
+                stationEntriesBaseline = null,
             )
         )
         IrGenerationExtension.registerExtension(MetroStationIr())
-        IrGenerationExtension.registerExtension(StationEntryIr())
+        if (allowStationEntries) {
+            IrGenerationExtension.registerExtension(StationEntryIr())
+        }
         with(metroRegistrar) { registerExtensions(configuration) }
     }
 }

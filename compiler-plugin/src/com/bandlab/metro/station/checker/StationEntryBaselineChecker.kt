@@ -11,8 +11,10 @@ import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirDeclarationChec
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 
-internal class StationEntryBaselineChecker(private val baseline: Set<String>) :
-    FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
+internal class StationEntryBaselineChecker(
+    private val allowStationEntries: Boolean,
+    private val baseline: Set<String>,
+) : FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
 
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirClass) {
@@ -24,10 +26,10 @@ internal class StationEntryBaselineChecker(private val baseline: Set<String>) :
             symbol.getAnnotationByClassId(Ids.stationEntry, session) ?: return
 
         val classFqName = declaration.symbol.classId.asSingleFqName().asString()
-        if (classFqName !in baseline) {
+        if (!allowStationEntries || classFqName !in baseline) {
             reporter.reportOn(
                 source = stationEntryAnnotation.source,
-                factory = MetroStationDiagnostics.DEPRECATED_CONTRIBUTES_INJECTOR,
+                factory = MetroStationDiagnostics.DEPRECATED_STATION_ENTRY,
                 context = context,
             )
         }
