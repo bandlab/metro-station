@@ -14,3 +14,9 @@ class FooActivity : CommonActivity<Unit>() {
 
 <!FORBIDDEN_ACTIVITY_USAGE!>@StationEntry<!>
 class BarActivity : CommonActivity<Unit>()
+
+// Page is not restricted
+@StationEntry
+class FooPage : Page<FooViewModel>
+
+@Inject class FooViewModel
