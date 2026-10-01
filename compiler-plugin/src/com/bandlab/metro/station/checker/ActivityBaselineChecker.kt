@@ -10,6 +10,8 @@ import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
 import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirDeclarationChecker
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
+import org.jetbrains.kotlin.fir.declarations.utils.superConeTypes
+import org.jetbrains.kotlin.fir.types.classId
 
 /**
  * This checker forbids @MetroStation and @StationEntry on Activities that are not in [baseline].
@@ -26,6 +28,8 @@ internal class ActivityBaselineChecker(private val baseline: Set<String>) :
             symbol.getAnnotationByClassId(Ids.metroStation, session)
                 ?: symbol.getAnnotationByClassId(Ids.stationEntry, session)
                 ?: return
+
+        declaration.superConeTypes.firstOrNull { it.classId == Ids.commonActivity } ?: return
 
         val classFqName = declaration.symbol.classId.asSingleFqName().asString()
         if (classFqName !in baseline) {
