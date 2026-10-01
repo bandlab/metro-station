@@ -80,11 +80,15 @@ private class ExtensionRegistrarConfigurator(testServices: TestServices) :
         )
 
         val allowStationEntries = MetroDirectives.DISABLE_STATION_ENTRIES !in module.directives
+        val activityBaseline =
+            module.directives[MetroDirectives.ENABLE_ACTIVITY_BASELINE].toSet().takeIf {
+                MetroDirectives.ENABLE_ACTIVITY_BASELINE in module.directives
+            }
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(
                 allowStationEntries = allowStationEntries,
                 stationEntriesBaseline = null,
-                activityBaseline = null,
+                activityBaseline = activityBaseline,
             )
         )
         IrGenerationExtension.registerExtension(MetroStationIr())
