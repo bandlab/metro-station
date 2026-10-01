@@ -18,4 +18,10 @@ public abstract class MetroStationExtension @Inject constructor(objects: ObjectF
      * when [allowStationEntries] is true.
      */
     public val stationEntriesBaseline: SetProperty<String> = objects.setProperty(String::class.java)
+
+    /**
+     * A baseline of Activities that are allowed to be used. This will only be respected when a set
+     * is presented.
+     */
+    public val activityBaseline: SetProperty<String> = objects.setProperty(String::class.java)
 }

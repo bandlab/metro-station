@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.bandlab.metro.station
 
+import com.bandlab.metro.station.MetroStationConfigurationKeys.OPTION_ACTIVITY_BASELINE
 import com.bandlab.metro.station.MetroStationConfigurationKeys.OPTION_ALLOW_STATION_ENTRIES
 import com.bandlab.metro.station.MetroStationConfigurationKeys.OPTION_STATION_ENTRIES_BASELINE
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
@@ -31,6 +32,13 @@ public class MetroStationCommandLineProcessor : CommandLineProcessor {
                     "Fully qualified class names to use the deprecated StationEntry feature",
                 required = false,
             ),
+            CliOption(
+                optionName = OPTION_ACTIVITY_BASELINE,
+                valueDescription =
+                    "A string that represents a set of fully qualified class names, separated by colon",
+                description = "Allowed Activity use cases in fully qualified class names",
+                required = false,
+            ),
         )
 
     override fun processOption(
@@ -48,6 +56,12 @@ public class MetroStationCommandLineProcessor : CommandLineProcessor {
             OPTION_STATION_ENTRIES_BASELINE ->
                 configuration.put(
                     MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE,
+                    value.split(":").toSet(),
+                )
+
+            OPTION_ACTIVITY_BASELINE ->
+                configuration.put(
+                    MetroStationConfigurationKeys.ACTIVITY_BASELINE,
                     value.split(":").toSet(),
                 )
 

@@ -78,11 +78,20 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
                         value = extension.allowStationEntries.getOrElse(true).toString(),
                     )
                 )
+
                 extension.stationEntriesBaseline
                     .getOrElse(emptySet())
                     .takeUnless { it.isEmpty() }
                     ?.let {
                         SubpluginOption("stationEntriesBaseline", value = it.joinToString(":"))
+                    }
+                    ?.let(::add)
+
+                extension.activityBaseline
+                    .getOrElse(emptySet())
+                    .takeUnless { it.isEmpty() }
+                    ?.let {
+                        SubpluginOption("activityBaseline", value = it.joinToString(":"))
                     }
                     ?.let(::add)
             }

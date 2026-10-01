@@ -36,7 +36,7 @@ public class MetroStationPluginComponentRegistrar : CompilerPluginRegistrar() {
             configuration[MetroStationConfigurationKeys.ALLOW_STATION_ENTRIES] ?: true
         val stationEntriesBaseline =
             configuration[MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE]
-        val activityBaseline = configuration[MetroStationConfigurationKeys.STATION_ENTRIES_BASELINE]
+        val activityBaseline = configuration[MetroStationConfigurationKeys.ACTIVITY_BASELINE]
         FirExtensionRegistrarAdapter.registerExtension(
             MetroStationPluginRegistrar(
                 allowStationEntries = allowStationEntries,
