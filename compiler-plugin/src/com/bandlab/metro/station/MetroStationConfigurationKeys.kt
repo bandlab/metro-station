@@ -10,6 +10,8 @@ internal object MetroStationConfigurationKeys {
 
     const val OPTION_STATION_ENTRIES_BASELINE = "stationEntriesBaseline"
 
+    const val OPTION_ACTIVITY_BASELINE = "activityBaseline"
+
     /**
      * Whether @StationEntry is allowed. When false, the whole station entry pipeline is disabled.
      */
@@ -19,4 +21,8 @@ internal object MetroStationConfigurationKeys {
     /** A baseline of features that are allowed to use @StationEntry. */
     val STATION_ENTRIES_BASELINE: CompilerConfigurationKey<Set<String>> =
         CompilerConfigurationKey.create(OPTION_STATION_ENTRIES_BASELINE)
+
+    /** A baseline of Android activities that are allowed to use @MetroStation or @StationEntry. */
+    val ACTIVITY_BASELINE: CompilerConfigurationKey<Set<String>> =
+        CompilerConfigurationKey.create(OPTION_ACTIVITY_BASELINE)
 }

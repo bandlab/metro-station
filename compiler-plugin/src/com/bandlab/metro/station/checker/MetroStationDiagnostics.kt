@@ -16,9 +16,9 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
     val RESTRICTED_PARAM_TYPE by error1<KtElement, String>(NAME_IDENTIFIER)
     val DEPRECATED_STATION_ENTRY by error0<KtElement>(NAME_IDENTIFIER)
     val TARGET_MUST_BE_PUBLIC by error1<KtElement, String>(NAME_IDENTIFIER)
-    val MISSING_CONTEXT_PARAMETER by error1<KtElement, String>(NAME_IDENTIFIER)
     val MISSING_EXTRA_DEPENDENCIES_PARAMETER by error1<KtElement, String>(NAME_IDENTIFIER)
     val EXTRA_DEPENDENCIES_UNSUPPORTED by error1<KtElement, String>(NAME_IDENTIFIER)
+    val FORBIDDEN_ACTIVITY_USAGE by error0<KtElement>(NAME_IDENTIFIER)
 
     override fun getRendererFactory(): BaseDiagnosticRendererFactory = RendererFactory
 
@@ -33,6 +33,10 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
                 map.put(TARGET_MUST_BE_PUBLIC, "{0}", STRING)
                 map.put(MISSING_EXTRA_DEPENDENCIES_PARAMETER, "{0}", STRING)
                 map.put(EXTRA_DEPENDENCIES_UNSUPPORTED, "{0}", STRING)
+                map.put(
+                    FORBIDDEN_ACTIVITY_USAGE,
+                    "Activity usage is forbidden, please use Page instead.",
+                )
             }
     }
 }

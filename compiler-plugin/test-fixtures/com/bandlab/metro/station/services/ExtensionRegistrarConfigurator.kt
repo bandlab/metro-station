@@ -84,6 +84,7 @@ private class ExtensionRegistrarConfigurator(testServices: TestServices) :
             MetroStationPluginRegistrar(
                 allowStationEntries = allowStationEntries,
                 stationEntriesBaseline = null,
+                activityBaseline = null,
             )
         )
         IrGenerationExtension.registerExtension(MetroStationIr())

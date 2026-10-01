@@ -11,10 +11,16 @@ import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 public class MetroStationPluginRegistrar(
     private val allowStationEntries: Boolean,
     private val stationEntriesBaseline: Set<String>?,
+    private val activityBaseline: Set<String>?,
 ) : FirExtensionRegistrar() {
     override fun ExtensionRegistrarContext.configurePlugin() {
         +FirAdditionalCheckersExtension.Factory { session ->
-            MetroStationFirCheckers(session, allowStationEntries, stationEntriesBaseline)
+            MetroStationFirCheckers(
+                session = session,
+                allowStationEntries = allowStationEntries,
+                stationEntriesBaseline = stationEntriesBaseline,
+                activityBaseline = activityBaseline,
+            )
         }
         +{ session: FirSession -> StationEntrySettings(session, allowStationEntries) }
     }

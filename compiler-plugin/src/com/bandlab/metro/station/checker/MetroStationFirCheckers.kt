@@ -10,6 +10,7 @@ internal class MetroStationFirCheckers(
     session: FirSession,
     private val allowStationEntries: Boolean,
     private val stationEntriesBaseline: Set<String>?,
+    private val activityBaseline: Set<String>?,
 ) : FirAdditionalCheckersExtension(session) {
 
     override val declarationCheckers =
@@ -26,6 +27,10 @@ internal class MetroStationFirCheckers(
                             stationEntriesBaseline.orEmpty(),
                         )
                     )
+                }
+
+                if (!activityBaseline.isNullOrEmpty()) {
+                    add(ActivityBaselineChecker(activityBaseline))
                 }
             }
         }
