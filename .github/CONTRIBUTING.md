@@ -10,6 +10,21 @@ They can be manually updated with the `generateTests` Gradle task as well.
 To aid in running tests, it is recommended to install the [Kotlin Compiler DevKit][test-plugin] IntelliJ plugin,
 which is pre-configured in this repository.
 
+## Local testing
+
+To test changes against another project locally, publish the artifacts to your
+local Maven repository:
+
+```bash
+./gradlew publishToMavenLocal -PVERSION_NAME=0.4.2-LOCAL1
+```
+
+Note that the published version is composite: the Metro version is appended to
+`VERSION_NAME` (see `version` in [`build.gradle.kts`](/build.gradle.kts)). So
+`-PVERSION_NAME=0.4.1-LOCAL1` with Metro `1.4.5` publishes as
+`0.4.1-LOCAL1-1.4.5`. Consume that full version (`0.4.1-LOCAL1-1.4.5`) from a
+project that has `mavenLocal()` in its repositories.
+
 ## Code style
 
 This repository uses [Kempt][kempt] to enforce code
