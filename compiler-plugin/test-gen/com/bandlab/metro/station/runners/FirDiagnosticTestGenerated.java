@@ -49,6 +49,12 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
+  @TestMetadata("newActivityUseCase.kt")
+  public void testNewActivityUseCase() {
+    run("newActivityUseCase.kt");
+  }
+
+  @Test
   @TestMetadata("newStationEntryUseCase.kt")
   public void testNewStationEntryUseCase() {
     run("newStationEntryUseCase.kt");

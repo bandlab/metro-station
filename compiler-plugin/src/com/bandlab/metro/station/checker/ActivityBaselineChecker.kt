@@ -11,26 +11,27 @@ import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirDeclarationChec
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 
-/** This checker forbids @StationEntry use cases that are not in the [baseline]. */
-internal class StationEntryBaselineChecker(
-    private val allowStationEntries: Boolean,
-    private val baseline: Set<String>,
-) : FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
+/**
+ * This checker forbids @MetroStation and @StationEntry on Activities that are not in [baseline].
+ */
+internal class ActivityBaselineChecker(private val baseline: Set<String>) :
+    FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
 
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirClass) {
         val symbol = declaration.symbol
         val session = context.session
 
-        // Only check classes annotated @StationEntry
-        val stationEntryAnnotation =
-            symbol.getAnnotationByClassId(Ids.stationEntry, session) ?: return
+        val stationAnnotation =
+            symbol.getAnnotationByClassId(Ids.metroStation, session)
+                ?: symbol.getAnnotationByClassId(Ids.stationEntry, session)
+                ?: return
 
         val classFqName = declaration.symbol.classId.asSingleFqName().asString()
-        if (!allowStationEntries || classFqName !in baseline) {
+        if (classFqName !in baseline) {
             reporter.reportOn(
-                source = stationEntryAnnotation.source,
-                factory = MetroStationDiagnostics.DEPRECATED_STATION_ENTRY,
+                source = stationAnnotation.source,
+                factory = MetroStationDiagnostics.FORBIDDEN_ACTIVITY_USAGE,
                 context = context,
             )
         }
