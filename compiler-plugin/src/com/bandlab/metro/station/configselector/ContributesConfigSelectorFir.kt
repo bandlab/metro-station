@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusIm
 import org.jetbrains.kotlin.fir.declarations.origin
 import org.jetbrains.kotlin.fir.expressions.builder.buildAnnotationArgumentMapping
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
+import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
 import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.moduleData
@@ -81,38 +82,6 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
         val nestedClassId = owner.classId.createNestedClassId(name)
         val classSymbol = FirRegularClassSymbol(nestedClassId)
 
-        // Build the @Binds function and add it directly to the class declarations.
-        // This makes it visible to Metro's getNestedClassifiersNames (which checks for @Binds
-        // functions to decide whether to generate BindsMirror).
-        val functionSymbol = FirNamedFunctionSymbol(CallableId(nestedClassId, Ids.bindName))
-        val bindsFunction =
-            buildMemberFunction(
-                owner = classSymbol,
-                returnTypeProvider = {
-                    Ids.debuggableConfigSelectorClassId.constructClassLikeType()
-                },
-                callableId = functionSymbol.callableId,
-                origin = Key.origin,
-                visibility = Visibilities.Public,
-                modality = Modality.ABSTRACT,
-            ) {
-                valueParameters += buildValueParameter {
-                    resolvePhase = FirResolvePhase.BODY_RESOLVE
-                    moduleData = session.moduleData
-                    origin = Key.origin
-                    returnTypeRef = owner.defaultType().toFirResolvedTypeRef()
-                    this.name = Ids.implName
-                    symbol = FirValueParameterSymbol()
-                    containingDeclarationSymbol = this@buildMemberFunction.symbol
-                }
-            }
-        bindsFunction.replaceAnnotations(
-            listOf(
-                buildSimpleAnnotationCall(session, ClassIds.binds, functionSymbol),
-                buildSimpleAnnotationCall(session, ClassIds.intoSet, functionSymbol),
-            )
-        )
-
         val contribution = buildRegularClass {
             resolvePhase = FirResolvePhase.BODY_RESOLVE
             moduleData = session.moduleData
@@ -139,10 +108,68 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
                             mapping[ClassIds.scopeName] = appScopeSymbol.getClassCall()
                         },
                 )
-            // Add the function directly to the class declarations
-            declarations += bindsFunction
         }
         return contribution.symbol
+    }
+
+    override fun getCallableNamesForClass(
+        classSymbol: FirClassSymbol<*>,
+        context: MemberGenerationContext,
+    ): Set<Name> {
+        return if (
+            classSymbol.origin == Key.origin &&
+                classSymbol.classId.shortClassName == Ids.nestedContributionName
+        ) {
+            setOf(Ids.bindName)
+        } else {
+            emptySet()
+        }
+    }
+
+    override fun generateFunctions(
+        callableId: CallableId,
+        context: MemberGenerationContext?,
+    ): List<FirNamedFunctionSymbol> {
+        val owner = context?.owner ?: return emptyList()
+        if (
+            owner.origin != Key.origin ||
+                owner.classId.shortClassName != Ids.nestedContributionName ||
+                callableId.callableName != Ids.bindName
+        ) {
+            return emptyList()
+        }
+
+        val selectorSymbol =
+            session.symbolProvider.getClassLikeSymbolByClassId(owner.classId.outerClassId!!)
+                as? FirRegularClassSymbol ?: return emptyList()
+        val bindsFunction =
+            buildMemberFunction(
+                owner = owner,
+                returnTypeProvider = {
+                    Ids.debuggableConfigSelectorClassId.constructClassLikeType()
+                },
+                callableId = callableId,
+                origin = Key.origin,
+                visibility = Visibilities.Public,
+                modality = Modality.ABSTRACT,
+            ) {
+                valueParameters += buildValueParameter {
+                    resolvePhase = FirResolvePhase.BODY_RESOLVE
+                    moduleData = session.moduleData
+                    origin = Key.origin
+                    returnTypeRef = selectorSymbol.defaultType().toFirResolvedTypeRef()
+                    name = Ids.implName
+                    symbol = FirValueParameterSymbol()
+                    containingDeclarationSymbol = this@buildMemberFunction.symbol
+                }
+            }
+        bindsFunction.replaceAnnotations(
+            listOf(
+                buildSimpleAnnotationCall(session, ClassIds.binds, bindsFunction.symbol),
+                buildSimpleAnnotationCall(session, ClassIds.intoSet, bindsFunction.symbol),
+            )
+        )
+        return listOf(bindsFunction.symbol as FirNamedFunctionSymbol)
     }
 
     override fun getContributionTargets(): List<ContributionTarget> {

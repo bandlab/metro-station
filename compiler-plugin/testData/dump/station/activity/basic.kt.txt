@@ -100,12 +100,6 @@ class MyActivity : CommonActivity<Unit> {
 
       }
 
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun declarationMirror(feature: MyActivity): CommonActivity<*> {
-        return error(message = "Never called")
-      }
-
       @HiddenFromObjC
       override operator fun invoke(): CommonActivity<*> {
         return Companion.provideBaseType(instance = <this>.#instance, feature = <this>.#feature.invoke())
@@ -219,12 +213,6 @@ class MyDependency {
 
     }
 
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(text: String): MyDependency {
-      return error(message = "Never called")
-    }
-
     @HiddenFromObjC
     override operator fun invoke(): MyDependency {
       return Companion.newInstance(text = <this>.#text.invoke())
@@ -308,12 +296,6 @@ interface AppGraph : FeatureServiceProvider {
       super/*Any*/()
       /* <init>() */
 
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(): String {
-      return error(message = "Never called")
     }
 
     @HiddenFromObjC

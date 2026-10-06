@@ -97,12 +97,6 @@ class MyActivity : CommonActivity<Param> {
 
       }
 
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun declarationMirror(feature: MyActivity): CommonActivity<*> {
-        return error(message = "Never called")
-      }
-
       @HiddenFromObjC
       override operator fun invoke(): CommonActivity<*> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
@@ -141,12 +135,6 @@ class MyActivity : CommonActivity<Param> {
         super/*Any*/()
         /* <init>() */
 
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun declarationMirror(feature: MyActivity): Param {
-        return error(message = "Never called")
       }
 
       @HiddenFromObjC
@@ -261,12 +249,6 @@ class MyViewModel {
       super/*Any*/()
       /* <init>() */
 
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(param: Param): MyViewModel {
-      return error(message = "Never called")
     }
 
     @HiddenFromObjC
