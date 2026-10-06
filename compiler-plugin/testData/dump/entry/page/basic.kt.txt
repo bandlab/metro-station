@@ -50,12 +50,6 @@ class MyPage : Page<MyViewModel> {
 
       }
 
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun declarationMirror(feature: MyPage): Page<*> {
-        return error(message = "Never called")
-      }
-
       @HiddenFromObjC
       override operator fun invoke(): Page<*> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
@@ -127,12 +121,6 @@ class MyViewModel {
       super/*Any*/()
       /* <init>() */
 
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(number: Long): MyViewModel {
-      return error(message = "Never called")
     }
 
     @HiddenFromObjC
@@ -235,12 +223,6 @@ interface AppGraph : Factory {
       super/*Any*/()
       /* <init>() */
 
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(): Long {
-      return error(message = "Never called")
     }
 
     @HiddenFromObjC

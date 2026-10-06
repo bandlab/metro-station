@@ -4,18 +4,6 @@
 object FooConfigSelector : DebuggableConfigSelector {
   @ContributesTo(scope = AppScope::class)
   interface MultibindingContribution {
-    @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
-    @ComptimeOnly
-    abstract class BindsMirror {
-      @Binds
-      @IntoSet
-      @CallableMetadata(callableName = "bind", propertyName = "", startOffset = -1, endOffset = -1)
-      fun bind_intoset(impl: FooConfigSelector): DebuggableConfigSelector {
-        return error(message = "Never called")
-      }
-
-    }
-
     @Binds
     @IntoSet
     @ComptimeOnly
@@ -40,3 +28,4 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: MultibindingContribution) {
   return error(message = "Never called")
 }
+

@@ -40,12 +40,6 @@ class MyDependency {
 
     }
 
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(text: String): MyDependency {
-      return error(message = "Never called")
-    }
-
     @HiddenFromObjC
     override operator fun invoke(): MyDependency {
       return Companion.newInstance(text = <this>.#text.invoke())
@@ -266,12 +260,6 @@ interface AppGraph : FeatureServiceProvider {
       super/*Any*/()
       /* <init>() */
 
-    }
-
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(): String {
-      return error(message = "Never called")
     }
 
     @HiddenFromObjC
