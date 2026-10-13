@@ -22,7 +22,6 @@ internal object MetroStationIds {
     val featureExtensionName = "FeatureExtension".asName()
     val featureBindingsName = "FeatureBindings".asName()
     val extensionFactoryContributionName = "ExtensionFactoryContribution".asName()
-    val keep = ClassId(FqName("androidx.annotation"), "Keep".asName())
     val createName = "create".asName()
     val bindName = "bind".asName()
     val factoryParamName = "factory".asName()
@@ -61,14 +60,6 @@ internal object MetroStationIds {
     val defaultScreenServiceProvider =
         ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
-    val fragment = ClassId(FqName("androidx.fragment.app"), "Fragment".asName())
-    val commonFragment =
-        ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName())
-    val defaultFragmentDeps =
-        ClassId(
-            FqName("com.bandlab.android.common.fragment"),
-            "DefaultFragmentDependencies".asName(),
-        )
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
     val graphExtensionFactory = ClassId(commonAndroidDi, "GraphExtensionFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
@@ -99,7 +90,6 @@ internal object MetroStationIds {
 
     // Custom feature scopes
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())
-    val fragmentScope = ClassId(androidCommon, "FragmentScope".asName())
     val pageScope = ClassId(androidCommon, "PageScope".asName())
 
     // Service, Worker, BroadcastReceiver

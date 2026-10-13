@@ -27,13 +27,12 @@ import kotlin.reflect.KClass
  * }
  * ```
  *
- * Supported types: Page, Activity, Fragment, and any other classes
+ * Supported types: Page, Activity, and any other classes
  *
  * ## Default Dependencies
  * We provide common default dependencies to ease the development for you.
  * - **Page**: DefaultPageDependencies.kt
  * - **Activity**: DefaultActivityDependencies.kt
- * - **Fragment**: DefaultFragmentDependencies.kt
  *
  * We also request some common app-level dependencies for you. For screens (page, activity,
  * fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider`
