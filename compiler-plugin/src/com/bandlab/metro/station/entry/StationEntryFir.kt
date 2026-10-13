@@ -59,8 +59,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             val superTypeRef: FirTypeRef,
             val hasParam: Boolean,
         ) : ComponentType
-
-        data object Fragment : ComponentType
     }
 
     private val componentTypeCache = mutableMapOf<ClassId, ComponentType>()
@@ -87,18 +85,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     ): Set<Name> {
         return when {
             classSymbol in annotatedClasses ->
-                buildSet {
-                    add(Ids.featureExtensionName)
-                    add(Ids.featureBindingsName)
-
-                    // Generate ExtensionFactoryContribution only for Fragments.
-                    // That's legacy solution that requires reflection to find factories.
-                    val componentType = resolveComponentType(classSymbol)
-                    if (componentType == ComponentType.Fragment) {
-                        add(Ids.extensionFactoryContributionName)
-                    }
-                }
-
+                setOf(Ids.featureExtensionName, Ids.featureBindingsName)
             classSymbol.origin == Key.origin &&
                 classSymbol.classId.shortClassName == Ids.featureExtensionName ->
                 setOf(Ids.nestedFactoryName)
@@ -144,7 +131,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             return when (resolveComponentType(classSymbol)) {
                 is ComponentType.Activity -> setOf(Ids.injectName)
                 is ComponentType.Page -> setOf(Ids.injectViewModelName)
-                ComponentType.Fragment -> emptySet()
             }
         }
         if (classSymbol.origin != Key.origin) return emptySet()
@@ -253,7 +239,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             when (componentType) {
                 is ComponentType.Activity -> Ids.activityScope
                 is ComponentType.Page -> Ids.pageScope
-                ComponentType.Fragment -> Ids.fragmentScope
             }
 
         val featureExtension = buildRegularClass {
@@ -312,7 +297,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                                         when (componentType) {
                                             is ComponentType.Activity ->
                                                 setOf(Ids.defaultActivityDeps)
-                                            ComponentType.Fragment -> setOf(Ids.defaultFragmentDeps)
                                             is ComponentType.Page ->
                                                 setOf(Ids.defaultPageDependencies)
                                         }
@@ -478,9 +462,9 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             when (componentType) {
                 is ComponentType.Activity ->
                     Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
+
                 is ComponentType.Page ->
                     Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
-                ComponentType.Fragment -> Ids.fragment.constructClassLikeType()
             }
 
         val provideBaseTypeFunction =
@@ -518,7 +502,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 provideParamFunction.symbol as FirNamedFunctionSymbol
             }
 
-            ComponentType.Fragment,
             is ComponentType.Page -> null
         }
     }
@@ -661,10 +644,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 }
             }
         createFunction.markAbstract(owner)
-        if (componentType == ComponentType.Fragment) {
-            // We need to add @Keep here because we use reflection to access this method at runtime.
-            createFunction.replaceAnnotations(listOf(buildSimpleAnnotation(Ids.keep)))
-        }
 
         // Annotate parameters with @Provides or @Includes
         val featureParam = createFunction.valueParameters[0]
@@ -751,10 +730,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
 
                 owner.deepResolveSuperType(Ids.page, session)?.let {
                     return@getOrPut ComponentType.Page(it, hasParam = false)
-                }
-
-                owner.deepResolveSuperType(Ids.commonFragment, session)?.let {
-                    return@getOrPut ComponentType.Fragment
                 }
             }
             error("StationEntry is deprecated, please use @MetroStation instead")

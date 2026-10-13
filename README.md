@@ -107,13 +107,12 @@ class MyPage : Page<MyViewModel> {
   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider
 }
 ```
-Supported types: Page, Activity, Fragment, and any other classes
+Supported types: Page, Activity, and any other classes
 
 ### Default Dependencies
 We provide common default dependencies, such as `CoroutineScope` and `Lifecycle` to ease the development for you.
 - **Page**: DefaultPageDependencies.kt
 - **Activity**: DefaultActivityDependencies.kt
-- **Fragment**: DefaultFragmentDependencies.kt
 
 We also request some common app-level dependencies for you. For screens (page, activity, fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
 
@@ -181,7 +180,7 @@ class MyPage : Page<MyViewModel> {
 
 Same as @MetroStation, we will also provide default dependencies and generate param providers in FeatureBindings if the feature has a param.
 
-Supported types: Page, Activity, Fragment
+Supported types: Page, Activity
 
 ## @ContributesConfigSelector
 

@@ -32,7 +32,7 @@ import kotlin.reflect.KClass
  * }
  * ```
  *
- * Supported types: Page, Activity, Fragment
+ * Supported types: Page, Activity
  *
  * ## Under the hood
  *

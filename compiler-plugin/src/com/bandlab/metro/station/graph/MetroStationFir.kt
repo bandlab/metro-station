@@ -64,8 +64,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             val hasParam: Boolean,
         ) : ComponentType
 
-        data object Fragment : ComponentType
-
         data object Others : ComponentType
     }
 
@@ -134,7 +132,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             return when (resolveComponentType(classSymbol)) {
                 is ComponentType.Activity -> setOf(Ids.injectName)
                 is ComponentType.Page -> setOf(Ids.injectViewModelName)
-                ComponentType.Fragment,
                 ComponentType.Others -> emptySet()
             }
         }
@@ -206,7 +203,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             when (componentType) {
                 is ComponentType.Activity -> Ids.activityScope
                 is ComponentType.Page -> Ids.pageScope
-                ComponentType.Fragment -> Ids.fragmentScope
                 ComponentType.Others -> null
             }
 
@@ -282,8 +278,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                                             when (componentType) {
                                                 is ComponentType.Activity ->
                                                     setOf(Ids.defaultActivityDeps)
-                                                ComponentType.Fragment ->
-                                                    setOf(Ids.defaultFragmentDeps)
                                                 is ComponentType.Page ->
                                                     setOf(Ids.defaultPageDependencies)
 
@@ -357,8 +351,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                     Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
                 is ComponentType.Page ->
                     Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
-                is ComponentType.Fragment ->
-                    Ids.fragment.constructClassLikeType(arrayOf(ConeStarProjection))
                 ComponentType.Others -> return null
             }
 
@@ -398,7 +390,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             }
 
             is ComponentType.Page,
-            ComponentType.Fragment,
             ComponentType.Others -> null
         }
     }
@@ -642,11 +633,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             }
 
             // Add DefaultScreenServiceProvider for screens
-            if (
-                componentType is ComponentType.Activity ||
-                    componentType is ComponentType.Fragment ||
-                    componentType is ComponentType.Page
-            ) {
+            if (componentType is ComponentType.Activity || componentType is ComponentType.Page) {
                 superTypeRefs += buildResolvedTypeRef {
                     coneType = Ids.defaultScreenServiceProvider.constructClassLikeType()
                 }
@@ -678,10 +665,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
 
                 owner.deepResolveSuperType(Ids.page, session)?.let {
                     return@getOrPut ComponentType.Page(it, hasParam = false)
-                }
-
-                owner.deepResolveSuperType(Ids.commonFragment, session)?.let {
-                    return@getOrPut ComponentType.Fragment
                 }
             }
             ComponentType.Others

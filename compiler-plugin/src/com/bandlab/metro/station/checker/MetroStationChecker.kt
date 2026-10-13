@@ -38,16 +38,13 @@ internal object MetroStationChecker : FirDeclarationChecker<FirClass>(MppChecker
             symbol.findSuperTypeRef(Ids.page) != null ||
                 symbol.findSuperTypeRef(Ids.paramPage) != null
 
-        if (!isPage) {
-            // We still use extraDependencies on Fragments for legacy code
-            if (extraDepsClassId != null && symbol.findSuperTypeRef(Ids.commonFragment) == null) {
-                // extraDependencies is supported on Pages only (for now)
-                reporter.reportOn(
-                    declaration.source,
-                    MetroStationDiagnostics.EXTRA_DEPENDENCIES_UNSUPPORTED,
-                    "extraDependencies feature is supported only on Pages.",
-                )
-            }
+        if (!isPage && extraDepsClassId != null) {
+            // extraDependencies is supported on Pages only (for now)
+            reporter.reportOn(
+                declaration.source,
+                MetroStationDiagnostics.EXTRA_DEPENDENCIES_UNSUPPORTED,
+                "extraDependencies feature is supported only on Pages.",
+            )
             return
         }
 
