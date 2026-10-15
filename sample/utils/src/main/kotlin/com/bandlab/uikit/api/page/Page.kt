@@ -16,7 +16,7 @@ interface Page<ViewModel : Any> {
     @GeneratedByMetroStation
     fun injectViewModel(deps: PageGraphDependencies): ViewModel {
         throw UnsupportedOperationException(
-            "This method will be implemented by the compiler plugin."
+            "This method will be implemented by the compiler plugin.",
         )
     }
 }

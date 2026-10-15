@@ -29,7 +29,7 @@ interface ParamPage<ViewModel : Any, Param : Any> : Page<ViewModel> {
     @GeneratedByMetroStation
     fun injectViewModel(deps: PageGraphDependencies, initialParam: Param): ViewModel {
         throw UnsupportedOperationException(
-            "This method will be implemented by the compiler plugin."
+            "This method will be implemented by the compiler plugin.",
         )
     }
 }

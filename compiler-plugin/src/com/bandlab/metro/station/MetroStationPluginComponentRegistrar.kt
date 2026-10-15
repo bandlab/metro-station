@@ -16,7 +16,7 @@ public class MetroStationPluginComponentRegistrar : CompilerPluginRegistrar() {
             try {
                 // Try to look up an IntelliJ-only class
                 Class.forName(
-                    "org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession"
+                    "org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession",
                 )
                 true
             } catch (_: ClassNotFoundException) {
@@ -42,7 +42,7 @@ public class MetroStationPluginComponentRegistrar : CompilerPluginRegistrar() {
                 allowStationEntries = allowStationEntries,
                 stationEntriesBaseline = stationEntriesBaseline,
                 activityBaseline = activityBaseline,
-            )
+            ),
         )
 
         // Do not run IR extensions in IDE

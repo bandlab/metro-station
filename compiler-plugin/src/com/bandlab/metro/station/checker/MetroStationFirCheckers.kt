@@ -25,7 +25,7 @@ internal class MetroStationFirCheckers(
                         StationEntryBaselineChecker(
                             allowStationEntries,
                             stationEntriesBaseline.orEmpty(),
-                        )
+                        ),
                     )
                 }
 
