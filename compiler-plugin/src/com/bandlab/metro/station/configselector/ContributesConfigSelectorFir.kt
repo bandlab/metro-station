@@ -110,7 +110,7 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
             listOf(
                 buildSimpleAnnotationCall(session, ClassIds.binds, functionSymbol),
                 buildSimpleAnnotationCall(session, ClassIds.intoSet, functionSymbol),
-            )
+            ),
         )
 
         val contribution = buildRegularClass {

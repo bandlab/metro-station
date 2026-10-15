@@ -218,7 +218,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     override fun generateConstructors(
-        context: MemberGenerationContext
+        context: MemberGenerationContext,
     ): List<FirConstructorSymbol> {
         val owner = context.owner
         if (owner.origin != Key.origin) return emptyList()
@@ -269,7 +269,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 superTypeRefs += buildResolvedTypeRef {
                     coneType =
                         Ids.membersInjectorProvider.constructClassLikeType(
-                            arrayOf(owner.defaultType())
+                            arrayOf(owner.defaultType()),
                         )
                 }
             }
@@ -286,11 +286,11 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                             mapping[ClassIds.bindingContainersName] = buildCollectionLiteral {
                                 val elementType =
                                     StandardClassIds.KClass.constructClassLikeType(
-                                        arrayOf(ConeStarProjection)
+                                        arrayOf(ConeStarProjection),
                                     )
                                 coneTypeOrNull =
                                     StandardClassIds.Array.constructClassLikeType(
-                                        arrayOf(elementType)
+                                        arrayOf(elementType),
                                     )
                                 argumentList = buildArgumentList {
                                     val defaultDependenciesIds =
@@ -331,7 +331,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
      * compilation.
      */
     private fun generateFeatureBindings(
-        featureExtensionOwner: FirClassSymbol<*>
+        featureExtensionOwner: FirClassSymbol<*>,
     ): FirClassLikeSymbol<*> {
         val bindingsClassId =
             featureExtensionOwner.classId.createNestedClassId(Ids.featureBindingsName)
@@ -412,7 +412,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateExtensionFactoryContribution(
-        owner: FirClassSymbol<*>
+        owner: FirClassSymbol<*>,
     ): FirClassLikeSymbol<*> {
         val nestedClassId = owner.classId.createNestedClassId(Ids.extensionFactoryContributionName)
         val parentScopeId = resolveParentScopeClassId(owner)
@@ -497,7 +497,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                         valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
                     }
                 provideParamFunction.replaceAnnotations(
-                    listOf(buildSimpleAnnotation(ClassIds.provides))
+                    listOf(buildSimpleAnnotation(ClassIds.provides)),
                 )
                 provideParamFunction.symbol as FirNamedFunctionSymbol
             }
@@ -507,7 +507,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     }
 
     private fun generateProvideParamFlowFunction(
-        owner: FirClassSymbol<*>
+        owner: FirClassSymbol<*>,
     ): FirNamedFunctionSymbol? {
         val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
@@ -529,7 +529,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 valueParameter(Ids.initialParamName, paramType, key = Key)
             }
         provideParamFlowFunction.replaceAnnotations(
-            listOf(buildSimpleAnnotation(ClassIds.provides))
+            listOf(buildSimpleAnnotation(ClassIds.provides)),
         )
         return provideParamFlowFunction.symbol as FirNamedFunctionSymbol
     }
@@ -555,7 +555,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 }
             }
         injectFunction.replaceAnnotations(
-            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation))
+            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)),
         )
         return injectFunction.symbol as FirNamedFunctionSymbol
     }
@@ -600,7 +600,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 }
             }
         injectViewModelFunction.replaceAnnotations(
-            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation))
+            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)),
         )
         return injectViewModelFunction.symbol as FirNamedFunctionSymbol
     }
@@ -698,7 +698,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                             mapping[ClassIds.valueName] = annotatedSymbol.getClassCall()
                         },
                 ),
-            )
+            ),
         )
 
         return provideFactoryFunction.symbol as FirNamedFunctionSymbol
@@ -764,7 +764,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                     .createNestedClassId(MetroStationIds.nestedFactoryName)
             val extensionFactoryContributionClassId =
                 classSymbol.classId.createNestedClassId(
-                    MetroStationIds.extensionFactoryContributionName
+                    MetroStationIds.extensionFactoryContributionName,
                 )
 
             // Always emit both hints. If ExtensionFactoryContribution wasn't generated

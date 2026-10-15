@@ -23,7 +23,7 @@ abstract class CommonActivity<Params : Any> : ContextWrapper(), HasDependencyGra
     @GeneratedByMetroStation
     open fun inject() {
         throw UnsupportedOperationException(
-            "This method will be implemented by the compiler plugin."
+            "This method will be implemented by the compiler plugin.",
         )
     }
 

@@ -56,8 +56,8 @@ class ProfileActivity : CommonActivity<Profile>() {
 
                             PageContainer(
                                 profileFooterPage.toPageContainerState(
-                                    ProfileFooterPage.Param(username = "BandLab")
-                                )
+                                    ProfileFooterPage.Param(username = "BandLab"),
+                                ),
                             )
 
                             Button(onClick = { finish() }) {

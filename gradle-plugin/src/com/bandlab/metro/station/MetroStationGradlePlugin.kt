@@ -41,7 +41,7 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
                         "Metro Station version (${BuildConfig.KOTLIN_PLUGIN_VERSION}) is incompatible with Metro version ($metroVersion).\n" +
                             "It might work but it's safer to keep them in sync. Please either make a new release of " +
                             "metro station, or disable the compatibility check by setting a gradle property " +
-                            "com.bandlab.metro.station.metroStrictCompatibility=false."
+                            "com.bandlab.metro.station.metroStrictCompatibility=false.",
                     )
                 }
             }
@@ -60,7 +60,7 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
         )
 
     override fun applyToCompilation(
-        kotlinCompilation: KotlinCompilation<*>
+        kotlinCompilation: KotlinCompilation<*>,
     ): Provider<List<SubpluginOption>> {
         val project = kotlinCompilation.target.project
 
@@ -76,7 +76,7 @@ public class MetroStationGradlePlugin : KotlinCompilerPluginSupportPlugin {
                     SubpluginOption(
                         "allowStationEntries",
                         value = extension.allowStationEntries.getOrElse(true).toString(),
-                    )
+                    ),
                 )
 
                 extension.stationEntriesBaseline

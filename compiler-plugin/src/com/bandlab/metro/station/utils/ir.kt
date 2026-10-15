@@ -5,11 +5,7 @@ package com.bandlab.metro.station.utils
 import com.bandlab.metro.station.graph.MetroStationIds as Ids
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
-import org.jetbrains.kotlin.ir.builders.irBlockBody
-import org.jetbrains.kotlin.ir.builders.irCall
-import org.jetbrains.kotlin.ir.builders.irCallWithSubstitutedType
-import org.jetbrains.kotlin.ir.builders.irGet
-import org.jetbrains.kotlin.ir.builders.irReturn
+import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
@@ -55,7 +51,7 @@ internal fun generateProvideParamBody(
                         IrTypeOperator.CAST,
                         returnType,
                         getInitialParam,
-                    )
+                    ),
                 )
             }
     } else {
@@ -66,7 +62,7 @@ internal fun generateProvideParamBody(
                 +irReturn(
                     irCall(paramsGetterSymbol).apply {
                         dispatchReceiver = irGet(firstParam)
-                    }
+                    },
                 )
             }
     }
@@ -113,7 +109,7 @@ internal fun generateProvideParamFlowBody(
                         arguments[1] = irGet(featureParam)
                         // arguments[2] = initialParam (second value param)
                         arguments[2] = irGet(initialParamParam)
-                    }
+                    },
             )
         }
 }

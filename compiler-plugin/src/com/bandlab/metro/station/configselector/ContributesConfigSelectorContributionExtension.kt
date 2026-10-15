@@ -50,7 +50,7 @@ public class ContributesConfigSelectorContributionExtension(private val session:
         return annotatedClasses.mapNotNull { parentSymbol ->
             val contributionInterfaceClassId =
                 parentSymbol.classId.createNestedClassId(
-                    ContributesConfigSelectorIds.nestedContributionName
+                    ContributesConfigSelectorIds.nestedContributionName,
                 )
 
             val metroContributionSymbol =

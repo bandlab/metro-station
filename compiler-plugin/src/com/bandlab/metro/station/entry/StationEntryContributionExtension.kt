@@ -59,7 +59,7 @@ public class StationEntryContributionExtension(private val session: FirSession) 
                         .createNestedClassId(MetroStationIds.nestedFactoryName)
                 val extensionFactoryContributionClassId =
                     parentSymbol.classId.createNestedClassId(
-                        MetroStationIds.extensionFactoryContributionName
+                        MetroStationIds.extensionFactoryContributionName,
                     )
 
                 listOfNotNull(
