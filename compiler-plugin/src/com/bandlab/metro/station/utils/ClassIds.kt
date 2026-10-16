@@ -30,5 +30,6 @@ internal object ClassIds {
     val additionalScopesName = "additionalScopes".asName()
     val excludesName = "excludes".asName()
     val bindingContainersName = "bindingContainers".asName()
+    val includesName = "includes".asName()
     val valueName = "value".asName()
 }

@@ -19,6 +19,7 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
     val MISSING_EXTRA_DEPENDENCIES_PARAMETER by error1<KtElement, String>(NAME_IDENTIFIER)
     val EXTRA_DEPENDENCIES_UNSUPPORTED by error1<KtElement, String>(NAME_IDENTIFIER)
     val FORBIDDEN_ACTIVITY_USAGE by error0<KtElement>(NAME_IDENTIFIER)
+    val FORWARDING_BINDING_CONTAINER by error0<KtElement>(NAME_IDENTIFIER)
 
     override fun getRendererFactory(): BaseDiagnosticRendererFactory = RendererFactory
 
@@ -36,6 +37,10 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
                 map.put(
                     FORBIDDEN_ACTIVITY_USAGE,
                     "Activity usage is forbidden, please use Page instead.",
+                )
+                map.put(
+                    FORWARDING_BINDING_CONTAINER,
+                    "Do not forward binding containers, declare them in either @MetroStation or @DependencyGraph directly.",
                 )
             }
     }
