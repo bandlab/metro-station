@@ -40,7 +40,7 @@ internal object MetroStationDiagnostics : KtDiagnosticsContainer() {
                 )
                 map.put(
                     FORWARDING_BINDING_CONTAINER,
-                    "Do not forward binding containers, declare them in either @MetroStation or @DependencyGraph directly",
+                    "Do not forward binding containers, declare them in either @MetroStation or @DependencyGraph directly.",
                 )
             }
     }

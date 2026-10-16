@@ -28,10 +28,6 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
  * and declare no members of their own (neither in the class body nor in its companion object). Such
  * containers should be replaced by listing the included containers directly in
  * `@MetroStation(bindingContainers = ...)` or `@DependencyGraph(bindingContainers = ...)`.
- *
- * The check deliberately looks for any declared function or property instead of a fixed set of
- * Metro binding annotations: Metro allows custom `@Provides`/`@Binds` annotations through its
- * options and may add new binding annotations.
  */
 internal object ForwardingBindingContainerChecker :
     FirDeclarationChecker<FirClass>(MppCheckerKind.Common) {
