@@ -34,9 +34,9 @@ import kotlin.reflect.KClass
  * - **Page**: DefaultPageDependencies.kt
  * - **Activity**: DefaultActivityDependencies.kt
  *
- * We also request some common app-level dependencies for you. For screens (page, activity,
- * fragment), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider`
- * interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
+ * We also request some common app-level dependencies for you. For screens (page, activity), we
+ * extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For
+ * activities, we extend `CommonActivity.ServiceProvider` additionally.
  *
  * Besides the basic support, we will also generate param providers:
  * - For CommonActivity, param type declared as the generic type will be available in the graph.
@@ -67,7 +67,7 @@ import kotlin.reflect.KClass
  *       deps = deps,
  *       param = Unit, // or the actual param type if you're using ParamPage
  *       factory = createGraphFactory<FeatureGraph.Factory>(),
- *       extraDependencies = ExtraDependencies,
+ *       extraDependencies = EmptyExtraDependencies,
  *     )
  *   }
  *
