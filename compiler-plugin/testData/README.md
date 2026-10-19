@@ -4,11 +4,11 @@ Run these tests from the repository root with `./gradlew :compiler-plugin:test`.
 
 ## Test Suites
 
-| Directory | What it verifies | Expected result |
-| --- | --- | --- |
-| `box/` | Compiles and executes generated code on the JVM | `fun box(): String` completes its assertions and returns `"OK"` |
-| `diagnostics/` | Reports errors for unsupported declarations or project-policy violations | Inline `<!DIAGNOSTIC_NAME!>...<!>` markers match the reported diagnostics |
-| `dump/` | Checks generated declarations and function bodies | Adjacent `.fir.txt` (FIR) and `.kt.txt` (Kotlin-like IR) golden files match the compiler output |
+| Directory      | What it verifies                                                         | Expected result                                                                                 |
+|----------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| `box/`         | Compiles and executes generated code on the JVM                          | `fun box(): String` completes its assertions and returns `"OK"`                                 |
+| `diagnostics/` | Reports errors for unsupported declarations or project-policy violations | Inline `<!DIAGNOSTIC_NAME!>...<!>` markers match the reported diagnostics                       |
+| `dump/`        | Checks generated declarations and function bodies                        | Adjacent `.fir.txt` (FIR) and `.kt.txt` (Kotlin-like IR) golden files match the compiler output |
 
 Within `box/` and `dump/`, `station` covers `@MetroStation` dependency graphs, `entry` covers legacy `@StationEntry` graph extensions, and `configselector` covers `@ContributesConfigSelector` set contributions.
 
