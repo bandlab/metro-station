@@ -2,11 +2,20 @@
 
 ## Tests
 
+Use JDK 25, as declared in [`gradle/libs.versions.toml`](/gradle/libs.versions.toml). From the repository root, run:
+
+```bash
+./gradlew :compiler-plugin:test
+./gradlew build
+```
+
+Compiler tests use JVM stubs and do not require an Android SDK or internal repository credentials with the default settings. The separate Android sample has its own [setup instructions](/sample/README.md).
+
 The [Kotlin compiler test framework][test-framework] is set up for this project.
 To create a new test, add a new `.kt` file in a [compiler-plugin/testData](/compiler-plugin/testData) sub-directory:
-`testData/box` for codegen tests and `testData/diagnostics` for diagnostics tests.
+`testData/box` for runtime codegen tests, `testData/diagnostics` for diagnostics tests, and `testData/dump` for generated FIR/IR snapshots. See the [test-data guide](/compiler-plugin/testData/README.md) for fixture conventions and coverage boundaries.
 The generated JUnit 5 test classes will be updated automatically when tests are next run.
-They can be manually updated with the `generateTests` Gradle task as well.
+They can be manually updated with `./gradlew :compiler-plugin:generateTests` as well. Edit the test-data sources rather than the generated Java runners, and review any `.fir.txt` or `.kt.txt` snapshot changes when updating expected output.
 To aid in running tests, it is recommended to install the [Kotlin Compiler DevKit][test-plugin] IntelliJ plugin,
 which is pre-configured in this repository.
 
@@ -21,8 +30,8 @@ local Maven repository:
 
 Note that the published version is composite: the Metro version is appended to
 `VERSION_NAME` (see `version` in [`build.gradle.kts`](/build.gradle.kts)). So
-`-PVERSION_NAME=0.4.1-LOCAL1` with Metro `1.4.5` publishes as
-`0.4.1-LOCAL1-1.4.5`. Consume that full version (`0.4.1-LOCAL1-1.4.5`) from a
+`-PVERSION_NAME=0.4.2-LOCAL1` with Metro `1.4.5` publishes as
+`0.4.2-LOCAL1-1.4.5`. Consume that full version (`0.4.2-LOCAL1-1.4.5`) from a
 project that has `mavenLocal()` in its repositories.
 
 ## Code style

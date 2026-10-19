@@ -27,7 +27,9 @@ import kotlin.reflect.KClass
  * }
  * ```
  *
- * Supported types: Page, Activity, and any other classes
+ * Supported types: Page, ParamPage, CommonActivity, and other classes.
+ *
+ * Other classes receive a graph and members injector.
  *
  * ## Default Dependencies
  * We provide common default dependencies to ease the development for you.
@@ -40,15 +42,17 @@ import kotlin.reflect.KClass
  *
  * Besides the basic support, we will also generate param providers:
  * - For CommonActivity, param type declared as the generic type will be available in the graph.
- * - For ParamPage, we will provide both the initial param, and a flow of params that listens to the
- *   host activity's onNewIntent.
+ * - For ParamPage, we provide both the initial param and a flow through PageParamFlowProvider. The
+ *   internal implementation listens to the host activity's onNewIntent; the sample and test stubs
+ *   emit only the initial param.
  *
  * ## Android Component Injection
  * We inject some Android components automatically for you, similar to what Hilt's compiler is
  * doing, but instead of a separate javac call, Metro Station does it within the same kotlinc
  * process:
- * - **Service** (`android.app.Service`): The plugin injects `fun onCreate()` for you, if the
- *   `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
+ * - **Service** (`android.app.Service`): Injection precedes a declared `onCreate()` body.
+ *
+ *   A generated override calls `super.onCreate()` before injection.
  * - **BroadcastReceiver** (`android.content.BroadcastReceiver`): The plugin injects at the
  *   beginning of `fun onReceive(context: Context, intent: Intent)` for you.
  * - **CoroutineWorker** (`androidx.work.CoroutineWorker`): The plugin injects at the beginning of
@@ -56,7 +60,7 @@ import kotlin.reflect.KClass
  *
  * ## Under the hood
  *
- * The compiler plugin will generate such FIR structures for you:
+ * The compiler plugin generates declarations in FIR and fills in their bodies in IR:
  * ```kotlin
  * class MyPage : Page<MyViewModel> {
  *
@@ -110,8 +114,8 @@ import kotlin.reflect.KClass
  * @param appDependencies The dependency contract you need the App graph to provide to your feature.
  * @param graphMarker A marker to aggregate a graph, default to the feature class itself (ex.
  *   MyPage).
- * @param extraDependencies External dependency contract you need from the parent Activity, only
- *   Page is supported.
+ * @param extraDependencies External dependencies passed through a matching Page constructor
+ *   parameter and included in the feature graph. Only Page is supported.
  * @param additionalScopes Additional scopes this dependency graph aggregates, proxy to Metro's
  *   DependencyGraph.
  * @param excludes Optional list of excluded contributing classes, proxy to Metro's DependencyGraph.

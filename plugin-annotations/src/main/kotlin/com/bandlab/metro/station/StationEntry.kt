@@ -36,7 +36,7 @@ import kotlin.reflect.KClass
  *
  * ## Under the hood
  *
- * The compiler plugin will generate such FIR structures for you:
+ * The compiler plugin generates declarations in FIR and fills in their bodies in IR:
  * ```kotlin
  * @StationEntry
  * class MyPage : Page<MyViewModel> {

@@ -1,3 +1,5 @@
+// The plain constructor parameter intentionally has no val: the plugin must retain it for
+// injectViewModel and combine its Boolean binding with the app graph's Long binding.
 @MetroStation(
     appDependencies = MyPage.ServiceProvider::class,
     extraDependencies = MyPage.ExtraDependencies::class

@@ -43,19 +43,44 @@ If we take a step back, compare the setup before migrating to Metro (Dagger KAPT
 | **Root Abi**     | 115.02s                      | 28.72s           | **-75.03%** ✨ |
 | **Root Non-abi** | 77.7s                        | 17.14s           | **-77.94%** ✨ |
 
+## Building and Exploring the Repository
+
+Use JDK 25 (the version declared in [`gradle/libs.versions.toml`](gradle/libs.versions.toml)) and the checked-in Gradle wrapper:
+
+```bash
+./gradlew build
+```
+
+The compiler tests run on the JVM and do not require an Android SDK. Public repositories are used by default; internal Artifactory credentials are only needed when `USE_INTERNAL_ARTIFACTORY=true`.
+
+For a runnable Android example, open the separate [`sample/`](sample/README.md) build. See [Contributing](.github/CONTRIBUTING.md) for test conventions and local publishing.
+
 ## Usage
 
-Apply the Gradle plugin, and it will automatically include annotations to your project.
+Apply Metro and Metro Station to your Kotlin project. Metro Station automatically adds its annotations dependency; it does not apply Metro itself. The sample uses a composite build to resolve Metro Station directly from this repository.
 
 ```kotlin
 plugins {
+    id("dev.zacsweers.metro")
     id("com.bandlab.metro.station")
 }
 ```
 
-# Use Cases
+Metro Station must run **before Metro during the IR phase**, so Metro can process the generated `createGraphFactory` calls. Configure Kotlin compilation tasks as shown in [`SetupMetroPlugin.kt`](sample/sample-build-logic/src/main/kotlin/SetupMetroPlugin.kt):
 
-## @MetroStation
+```kotlin
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions.freeCompilerArgs.add(
+        "-Xcompiler-plugin-order=com.bandlab.metro.station>dev.zacsweers.metro.compiler"
+    )
+}
+```
+
+The examples below use BandLab framework types supplied by [`sample/utils`](sample/utils) and mirrored by the JVM test [`stubs`](stubs). Metro Station generates code against these specific contracts and package names; applying the plugin alone does not provide those framework types.
+
+## Use Cases
+
+### @MetroStation
 
 This annotation generates a Dependency Graph for the feature.
 
@@ -107,9 +132,9 @@ class MyPage : Page<MyViewModel> {
   interface FeatureServiceProvider : ServiceProvider, DefaultScreenServiceProvider
 }
 ```
-Supported types: Page, Activity, and any other classes
+Supported types: `Page`, `ParamPage`, `CommonActivity`, and other classes. Other classes receive a graph and members injector; automatic injection is provided for the Android component callbacks listed below.
 
-### Default Dependencies
+#### Default Dependencies
 We provide common default dependencies, such as `CoroutineScope` and `Lifecycle` to ease the development for you.
 - **Page**: DefaultPageDependencies.kt
 - **Activity**: DefaultActivityDependencies.kt
@@ -118,15 +143,15 @@ We also request some common app-level dependencies for you. For screens (page, a
 
 Besides the basic support, we will also generate param providers:
 - For CommonActivity, param type declared as the generic type will be available in the graph.
-- For ParamPage, we will provide both the initial param, and a flow of params that listens to the host activity's onNewIntent.
+- For ParamPage, we provide both the initial param and a flow of params through `PageParamFlowProvider`. The internal implementation listens to the host activity's `onNewIntent`; the sample and test stubs emit only the initial param.
 
-### Android Component Injection
+#### Android Component Injection
 We inject some Android components automatically for you, similar to what Hilt's compiler is doing, but instead of a separate javac call, Metro Station does it within the same kotlinc process:
-- **Service** (`android.app.Service`): The plugin injects `fun onCreate()` for you, if the `onCreate` is not declared, we will generate it and call `super.onCreate` after injection.
+- **Service** (`android.app.Service`): The plugin injects at the beginning of a declared `fun onCreate()`. If `onCreate` is not declared, it generates an override that calls `super.onCreate()` before injection.
 - **BroadcastReceiver** (`android.content.BroadcastReceiver`): The plugin injects at the beginning of `fun onReceive(context: Context, intent: Intent)` for you.
 - **CoroutineWorker** (`androidx.work.CoroutineWorker`): The plugin injects at the beginning of `suspend fun doWork(): Result` for you.
 
-## @StationEntry
+### @StationEntry
 
 This annotation generates a Graph Extension for the feature.
 
@@ -182,7 +207,7 @@ Same as @MetroStation, we will also provide default dependencies and generate pa
 
 Supported types: Page, Activity
 
-## @ContributesConfigSelector
+### @ContributesConfigSelector
 
 This annotation generates a multibinding contribution for config selectors.
 
@@ -220,9 +245,9 @@ This project has four modules:
 Extension point registration:
 
 - K2 Frontend (FIR) extensions can be registered in `MetroStationPluginRegistrar`.
-- All other extensions (including K1 frontend and backend) can be registered in `MetroStationPluginComponentRegistrar`.
+- `MetroStationPluginComponentRegistrar` registers the FIR registrar and IR extensions with the Kotlin compiler.
 
-There is a sample Android app under [`:sample`](sample) that demonstrates how we use the compiler plugin.
+The separate [`sample/`](sample/README.md) Android build demonstrates how we use the compiler plugin.
 
 ## Compatibility with Metro
 

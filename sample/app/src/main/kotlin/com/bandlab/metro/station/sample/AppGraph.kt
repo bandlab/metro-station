@@ -14,7 +14,7 @@ interface AppGraph {
 
     @Binds val SampleApp.context: Context
 
-    // Add an accessor here to make sure config selector is not empty
+    // Request the set so Metro validates the generated config-selector contributions.
     val configSelectors: Set<DebuggableConfigSelector>
 
     @DependencyGraph.Factory

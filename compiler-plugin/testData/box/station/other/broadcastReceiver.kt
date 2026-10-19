@@ -1,3 +1,5 @@
+// Exercises the generated graph and members injector directly. Injection at the start of onReceive
+// is checked by dump/station/other/broadcastReceiver.kt, rather than invoking the callback here.
 import android.content.BroadcastReceiver
 
 @MetroStation(appDependencies = MyBroadcastReceiver.ServiceProvider::class)

@@ -1,3 +1,5 @@
+// These are appDependencies exposed through ServiceProvider, not the Page-only
+// @MetroStation.extraDependencies option (rejected by diagnostics/extraDependenciesOnActivity.kt).
 @MetroStation(appDependencies = MyActivity.ServiceProvider::class)
 class MyActivity : CommonActivity<Unit>() {
     @Inject lateinit var myDependency: MyDependency
