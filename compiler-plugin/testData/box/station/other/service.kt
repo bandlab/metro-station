@@ -1,3 +1,5 @@
+// Exercises the generated graph and members injector directly. Callback injection is checked
+// by dump/station/other/service.kt; this JVM stub does not supply an application graph.
 import android.app.Service
 
 @MetroStation(appDependencies = MyService.ServiceProvider::class)

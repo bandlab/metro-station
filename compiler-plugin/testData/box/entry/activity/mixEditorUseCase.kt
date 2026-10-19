@@ -1,3 +1,5 @@
+// Regression for AppGraph -> MixEditorGraph -> activity extension. Injection must combine
+// app-provided Int, parent-scoped Double, activity-contributed Boolean, and default String bindings.
 import com.bandlab.android.common.ActivityScope
 
 interface MixEditorComponentScope

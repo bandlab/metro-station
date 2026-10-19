@@ -1,3 +1,5 @@
+// Verify both the direct initial-param binding and the flow's initial emission.
+// PageParamFlowProvider is a JVM stub; later host activity updates are not simulated.
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

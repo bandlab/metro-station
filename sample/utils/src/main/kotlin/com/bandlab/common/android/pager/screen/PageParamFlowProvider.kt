@@ -7,14 +7,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 /**
- * A provider for creating a flow of parameters for a page.
+ * Simplified sample provider that emits only the initial page parameter.
  *
- * Handled cases:
- * 1. Initial default parameter
- * 2. Initial deeplink parameter (the page is not created)
- * 2. New param when the page is already created
- * 3. New param when the page is not created
- * 4. Parameter after restoring state
+ * The internal implementation also handles deep links, host activity parameter updates, and
+ * saved-state restoration. Those behaviors are omitted from this sample.
  */
 @Inject
 class PageParamFlowProvider {

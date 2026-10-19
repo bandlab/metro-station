@@ -1,3 +1,5 @@
+// Both providers bind Int. Excluding the real provider must leave only the fake binding;
+// failing to forward excludes would produce a duplicate-binding error.
 @MetroStation(
     appDependencies = MyPage.ServiceProvider::class,
     excludes = [RealNumberProvider::class]
