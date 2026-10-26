@@ -97,12 +97,6 @@ class MyActivity : CommonActivity<Param> {
 
       }
 
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun declarationMirror(feature: MyActivity): CommonActivity<*> {
-        return error(message = "Never called")
-      }
-
       @HiddenFromObjC
       override operator fun invoke(): CommonActivity<*> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
@@ -141,12 +135,6 @@ class MyActivity : CommonActivity<Param> {
         super/*Any*/()
         /* <init>() */
 
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun declarationMirror(feature: MyActivity): Param {
-        return error(message = "Never called")
       }
 
       @HiddenFromObjC
@@ -263,12 +251,6 @@ class MyViewModel {
 
     }
 
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(param: Param): MyViewModel {
-      return error(message = "Never called")
-    }
-
     @HiddenFromObjC
     override operator fun invoke(): MyViewModel {
       return Companion.newInstance(param = <this>.#param.invoke())
@@ -289,9 +271,6 @@ interface AppGraph : Factory {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph, Factory {
-    private val thisGraphInstance: Impl
-      field = <this>
-
     @DependencyGraph(scope = MyActivity::class, bindingContainers = [DefaultActivityDependencies::class, FeatureBindings::class])
     @ActivityScope
     private class FeatureExtensionImpl : FeatureExtension {
@@ -309,7 +288,7 @@ interface AppGraph : Factory {
 
       override val injector: MembersInjector<MyActivity>
         override get(): MembersInjector<MyActivity> {
-          return Companion.create(myViewModel = Companion.create(param = Companion.create(feature = Companion.invoke<MyActivity>(value = <this>.#featureInstance))))
+          return create(myViewModel = create(param = create(feature = providerOf<MyActivity>(value = <this>.#featureInstance))))
         }
 
     }
@@ -344,7 +323,8 @@ interface AppGraph : Factory {
 
 }
 
-// FILE: myActivityFeatureExtensionFactoryDev_zacsweers_metro_AppScope.kt
+// FILE: activityParam.kt
+@file:JvmName(name = "MyActivityFeatureExtensionFactoryDev_zacsweers_metro_AppScopeKt")
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)

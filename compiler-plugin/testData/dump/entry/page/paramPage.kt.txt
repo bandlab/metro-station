@@ -93,12 +93,6 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
       }
 
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun declarationMirror(feature: MyPage): Page<*> {
-        return error(message = "Never called")
-      }
-
       @HiddenFromObjC
       override operator fun invoke(): Page<*> {
         return Companion.provideBaseType(feature = <this>.#feature.invoke())
@@ -139,12 +133,6 @@ class MyPage : ParamPage<MyViewModel, Params> {
         super/*Any*/()
         /* <init>() */
 
-      }
-
-      @ComptimeOnly
-      @HiddenFromObjC
-      fun declarationMirror(provider: PageParamFlowProvider, feature: MyPage, initialParam: Params): Flow<Params> {
-        return error(message = "Never called")
       }
 
       @HiddenFromObjC
@@ -241,12 +229,6 @@ class MyViewModel {
 
     }
 
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(param: Params, paramFlow: Flow<Params>): MyViewModel {
-      return error(message = "Never called")
-    }
-
     @HiddenFromObjC
     override operator fun invoke(): MyViewModel {
       return Companion.newInstance(param = <this>.#param.invoke(), paramFlow = <this>.#paramFlow.invoke())
@@ -267,9 +249,6 @@ interface AppGraph : Factory {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph, Factory {
-    private val thisGraphInstance: Impl
-      field = <this>
-
     @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class])
     @PageScope
     private class FeatureExtensionImpl : FeatureExtension {
@@ -324,7 +303,8 @@ interface AppGraph : Factory {
 
 }
 
-// FILE: myPageFeatureExtensionFactoryDev_zacsweers_metro_AppScope.kt
+// FILE: paramPage.kt
+@file:JvmName(name = "MyPageFeatureExtensionFactoryDev_zacsweers_metro_AppScopeKt")
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)

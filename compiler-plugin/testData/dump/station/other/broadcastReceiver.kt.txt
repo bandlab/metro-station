@@ -42,10 +42,10 @@ class MyBroadcastReceiver : BroadcastReceiver {
 
       override val injector: MembersInjector<MyBroadcastReceiver>
         override get(): MembersInjector<MyBroadcastReceiver> {
-          return Companion.create(myDependency = provider<MyDependency>(provider = local fun <anonymous>(): MyDependency {
+          return create(myDependency = local fun <anonymous>(): MyDependency {
             return <this>.#featureServiceProviderInstance.<get-myDependency>()
           }
-))
+ /*-> Provider<MyDependency> */)
         }
 
     }
@@ -166,12 +166,6 @@ class MyDependency {
 
     }
 
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(text: String): MyDependency {
-      return error(message = "Never called")
-    }
-
     @HiddenFromObjC
     override operator fun invoke(): MyDependency {
       return Companion.newInstance(text = <this>.#text.invoke())
@@ -192,9 +186,6 @@ interface AppGraph : FeatureServiceProvider {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph, FeatureServiceProvider {
-    private val thisGraphInstance: Impl
-      field = <this>
-
     private constructor() /* primary */ {
       super/*Any*/()
       /* <init>() */
@@ -203,7 +194,7 @@ interface AppGraph : FeatureServiceProvider {
 
     override val myDependency: MyDependency
       override get(): MyDependency {
-        return MyDependency(text = <this>.#thisGraphInstance.provideText())
+        return MyDependency(text = <this>.provideText())
       }
 
   }
@@ -257,12 +248,6 @@ interface AppGraph : FeatureServiceProvider {
 
     }
 
-    @ComptimeOnly
-    @HiddenFromObjC
-    fun declarationMirror(): String {
-      return error(message = "Never called")
-    }
-
     @HiddenFromObjC
     override operator fun invoke(): String {
       return Companion.provideText(instance = <this>.#instance)
@@ -277,7 +262,8 @@ interface AppGraph : FeatureServiceProvider {
 
 }
 
-// FILE: myBroadcastReceiverFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
+// FILE: broadcastReceiver.kt
+@file:JvmName(name = "MyBroadcastReceiverFeatureServiceProviderDev_zacsweers_metro_AppScopeKt")
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
