@@ -77,9 +77,6 @@ class MyPage : ParamPage<MyViewModel, Params> {
       private val paramInstance: Params
         field = param
 
-      private val thisGraphInstance: Impl
-        field = <this>
-
       private constructor(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
         super/*Any*/()
         /* <init>() */
@@ -87,7 +84,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
       }
 
       override fun getPageViewModel(): MyViewModel {
-        return MyViewModel(param = <this>.#paramInstance, paramFlow = <this>.#thisGraphInstance.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.#paramInstance))
+        return MyViewModel(param = <this>.#paramInstance, paramFlow = <this>.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.#paramInstance))
       }
 
     }
@@ -325,7 +322,8 @@ interface AppGraph : FeatureServiceProvider {
 
 }
 
-// FILE: myPageFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
+// FILE: paramPage.kt
+@file:JvmName(name = "MyPageFeatureServiceProviderDev_zacsweers_metro_AppScopeKt")
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)

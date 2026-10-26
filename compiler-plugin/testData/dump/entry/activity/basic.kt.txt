@@ -188,9 +188,6 @@ interface AppGraph : Factory {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph, Factory {
-    private val thisGraphInstance: Impl
-      field = <this>
-
     @DependencyGraph(scope = MyActivity::class, bindingContainers = [DefaultActivityDependencies::class, FeatureBindings::class])
     @ActivityScope
     private class FeatureExtensionImpl : FeatureExtension {
@@ -208,7 +205,7 @@ interface AppGraph : Factory {
 
       override val injector: MembersInjector<MyActivity>
         override get(): MembersInjector<MyActivity> {
-          return Companion.create(myDependency = Companion.create(text = Companion.create(activity = Companion.create(feature = Companion.invoke<MyActivity>(value = <this>.#featureInstance))), int = Companion.create(instance = <this>.#appGraphImpl)))
+          return create(myDependency = create(text = create(activity = create(feature = providerOf<MyActivity>(value = <this>.#featureInstance))), int = create(instance = <this>.#appGraphImpl)))
         }
 
     }
@@ -288,7 +285,8 @@ interface AppGraph : Factory {
 
 }
 
-// FILE: myActivityFeatureExtensionFactoryDev_zacsweers_metro_AppScope.kt
+// FILE: basic.kt
+@file:JvmName(name = "MyActivityFeatureExtensionFactoryDev_zacsweers_metro_AppScopeKt")
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)

@@ -189,9 +189,6 @@ interface AppGraph : FeatureServiceProvider {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph, FeatureServiceProvider {
-    private val thisGraphInstance: Impl
-      field = <this>
-
     private constructor() /* primary */ {
       super/*Any*/()
       /* <init>() */
@@ -200,7 +197,7 @@ interface AppGraph : FeatureServiceProvider {
 
     override val number: Long
       override get(): Long {
-        return <this>.#thisGraphInstance.provideLong()
+        return <this>.provideLong()
       }
 
   }
@@ -268,7 +265,8 @@ interface AppGraph : FeatureServiceProvider {
 
 }
 
-// FILE: myPageFeatureServiceProviderDev_zacsweers_metro_AppScope.kt
+// FILE: basic.kt
+@file:JvmName(name = "MyPageFeatureServiceProviderDev_zacsweers_metro_AppScopeKt")
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)

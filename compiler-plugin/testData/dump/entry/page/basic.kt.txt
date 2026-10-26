@@ -143,9 +143,6 @@ interface AppGraph : Factory {
   @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
   @MetroImplMarker
   class Impl : AppGraph, Factory {
-    private val thisGraphInstance: Impl
-      field = <this>
-
     @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class])
     @PageScope
     private class FeatureExtensionImpl : FeatureExtension {
@@ -239,7 +236,8 @@ interface AppGraph : Factory {
 
 }
 
-// FILE: myPageFeatureExtensionFactoryDev_zacsweers_metro_AppScope.kt
+// FILE: basic.kt
+@file:JvmName(name = "MyPageFeatureExtensionFactoryDev_zacsweers_metro_AppScopeKt")
 package metro.hints
 
 @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
