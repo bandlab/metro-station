@@ -167,7 +167,7 @@ public class ContributesConfigSelectorFir(session: FirSession, compatContext: Co
             listOf(
                 buildSimpleAnnotationCall(session, ClassIds.binds, bindsFunction.symbol),
                 buildSimpleAnnotationCall(session, ClassIds.intoSet, bindsFunction.symbol),
-            )
+            ),
         )
         return listOf(bindsFunction.symbol as FirNamedFunctionSymbol)
     }
