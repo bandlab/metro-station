@@ -22,7 +22,7 @@ class SetupMetroPlugin : Plugin<Project> {
             compilerOptions {
                 freeCompilerArgs.add(
                     // Our compiler needs to run before metro during the IR phase.
-                    "-Xcompiler-plugin-order=com.bandlab.metro.station>dev.zacsweers.metro.compiler"
+                    "-Xcompiler-plugin-order=com.bandlab.metro.station>dev.zacsweers.metro.compiler",
                 )
             }
         }

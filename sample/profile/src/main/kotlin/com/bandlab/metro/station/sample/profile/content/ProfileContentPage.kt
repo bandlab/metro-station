@@ -32,7 +32,7 @@ import dev.zacsweers.metro.Inject
 )
 @Inject
 class ProfileContentPage(
-    private val activityDependencies: ActivityDependencies /* used by the compiler */
+    private val activityDependencies: ActivityDependencies, /* used by the compiler */
 ) : Page<ProfileContentViewModel> {
 
     @Composable

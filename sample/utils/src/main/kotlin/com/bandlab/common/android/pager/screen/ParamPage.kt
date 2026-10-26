@@ -9,19 +9,18 @@ import com.bandlab.uikit.api.page.PageGraphDependencies
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Use [ParamPage] if you need params for the page, it also supports param updates similar to
- * Activity's onNewIntent. You can inject a [Flow] of [Param] in your VM, whenever the host
- * onNewIntent is triggered, we will invoke [parseParam] and emit the result to the flow, it will be
- * provided by code generator by default.
+ * Use [ParamPage] if you need params for the page. The compiler plugin provides both [Param] and a
+ * [Flow] of [Param] for injection into your ViewModel.
  *
- * Please note that the [Flow] will include the initial param as well as its first value.
+ * The sample's [PageParamFlowProvider] emits only the initial param. The internal framework also
+ * calls [parseParam] on host activity updates and emits the result; that wiring is omitted here.
  *
  * If you need only the initial param, inject [Param] directly.
  */
 interface ParamPage<ViewModel : Any, Param : Any> : Page<ViewModel> {
 
     /**
-     * Override it if you need to listen to the update from the host's onNewIntent.
+     * Hook used by the internal framework for host onNewIntent updates; not called in this sample.
      *
      * @param savedState the bundle from the intent.
      */
@@ -34,7 +33,7 @@ interface ParamPage<ViewModel : Any, Param : Any> : Page<ViewModel> {
     @GeneratedByMetroStation
     fun injectViewModel(deps: PageGraphDependencies, initialParam: Param): ViewModel {
         throw UnsupportedOperationException(
-            "This method will be implemented by the compiler plugin."
+            "This method will be implemented by the compiler plugin.",
         )
     }
 }

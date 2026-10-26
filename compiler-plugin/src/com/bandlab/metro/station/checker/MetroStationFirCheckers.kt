@@ -19,13 +19,14 @@ internal class MetroStationFirCheckers(
                 add(ParamTypeClassChecker)
                 add(TargetVisibilityChecker)
                 add(MetroStationChecker)
+                add(ForwardingBindingContainerChecker)
 
                 if (!allowStationEntries || !stationEntriesBaseline.isNullOrEmpty()) {
                     add(
                         StationEntryBaselineChecker(
                             allowStationEntries,
                             stationEntriesBaseline.orEmpty(),
-                        )
+                        ),
                     )
                 }
 

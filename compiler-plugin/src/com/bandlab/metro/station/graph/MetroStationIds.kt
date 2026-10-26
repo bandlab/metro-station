@@ -22,7 +22,6 @@ internal object MetroStationIds {
     val featureExtensionName = "FeatureExtension".asName()
     val featureBindingsName = "FeatureBindings".asName()
     val extensionFactoryContributionName = "ExtensionFactoryContribution".asName()
-    val keep = ClassId(FqName("androidx.annotation"), "Keep".asName())
     val createName = "create".asName()
     val bindName = "bind".asName()
     val factoryParamName = "factory".asName()
@@ -61,16 +60,7 @@ internal object MetroStationIds {
     val defaultScreenServiceProvider =
         ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
     val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
-    val fragment = ClassId(FqName("androidx.fragment.app"), "Fragment".asName())
-    val commonFragment =
-        ClassId(FqName("com.bandlab.android.common.fragment"), "CommonFragment".asName())
-    val defaultFragmentDeps =
-        ClassId(
-            FqName("com.bandlab.android.common.fragment"),
-            "DefaultFragmentDependencies".asName(),
-        )
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
-    val graphExtensionFactory = ClassId(commonAndroidDi, "GraphExtensionFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
     val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
     val generatedByMetroStation =
@@ -85,7 +75,6 @@ internal object MetroStationIds {
         ClassId(commonPageDi, "AndroidPageGraphDependencies".asName())
     val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
     val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
-    val pageGraphExtensionFactory = ClassId(commonPageDi, "PageGraphExtensionFactory".asName())
     val createGraphAndInjectViewModel =
         ClassId(commonPageDi, "createGraphAndInjectViewModel".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
@@ -99,16 +88,15 @@ internal object MetroStationIds {
 
     // Custom feature scopes
     val activityScope = ClassId(androidCommon, "ActivityScope".asName())
-    val fragmentScope = ClassId(androidCommon, "FragmentScope".asName())
     val pageScope = ClassId(androidCommon, "PageScope".asName())
 
     // Service, Worker, BroadcastReceiver
     val androidService = ClassId(FqName("android.app"), "Service".asName())
     val coroutineWorker = ClassId(FqName("androidx.work"), "CoroutineWorker".asName())
     val broadcastReceiver = ClassId(FqName("android.content"), "BroadcastReceiver".asName())
-    val onCreateName = "onCreate".asName()
-    val doWorkName = "doWork".asName()
-    val onReceiveName = "onReceive".asName()
+    val onCreateFunctionName = "onCreate".asName()
+    val doWorkFunctionName = "doWork".asName()
+    val onReceiveFunctionName = "onReceive".asName()
 
     // MembersInjector (for .injector.injectMembers)
     val membersInjector = ClassId(FqName("dev.zacsweers.metro"), "MembersInjector".asName())

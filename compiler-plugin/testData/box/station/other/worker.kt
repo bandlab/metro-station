@@ -1,3 +1,5 @@
+// Exercises the generated graph and members injector directly. Injection at the start of doWork
+// is checked by dump/station/other/worker.kt, rather than invoking the callback here.
 import androidx.work.CoroutineWorker
 import androidx.work.Result
 

@@ -28,29 +28,31 @@ fun TestConfigurationBuilder.configureImports(
     addMetroImports: Boolean = true,
     addTestImports: Boolean,
 ) {
-    useSourcePreprocessor({ testService ->
-        ImportsPreprocessor(
-            testService,
-            buildSet {
-                if (addCommonImports) {
-                    addAll(
-                        setOf(
-                            "com.bandlab.metro.station.*",
-                            "com.bandlab.common.android.di.*",
-                            "com.bandlab.common.android.pager.screen.*",
-                            "com.bandlab.common.android.pager.screen.di.*",
-                            "com.bandlab.android.common.activity.*",
-                            "com.bandlab.uikit.api.page.*",
-                            "com.bandlab.config.api.*",
-                            "android.content.Context",
+    useSourcePreprocessor(
+        { testService ->
+            ImportsPreprocessor(
+                testService,
+                buildSet {
+                    if (addCommonImports) {
+                        addAll(
+                            setOf(
+                                "com.bandlab.metro.station.*",
+                                "com.bandlab.common.android.di.*",
+                                "com.bandlab.common.android.pager.screen.*",
+                                "com.bandlab.common.android.pager.screen.di.*",
+                                "com.bandlab.android.common.activity.*",
+                                "com.bandlab.uikit.api.page.*",
+                                "com.bandlab.config.api.*",
+                                "android.content.Context",
+                            ),
                         )
-                    )
-                }
-                if (addMetroImports) add("dev.zacsweers.metro.*")
-                if (addTestImports) add("kotlin.test.*")
-            },
-        )
-    })
+                    }
+                    if (addMetroImports) add("dev.zacsweers.metro.*")
+                    if (addTestImports) add("kotlin.test.*")
+                },
+            )
+        },
+    )
 }
 
 private class ExtensionRegistrarConfigurator(testServices: TestServices) :
@@ -89,7 +91,7 @@ private class ExtensionRegistrarConfigurator(testServices: TestServices) :
                 allowStationEntries = allowStationEntries,
                 stationEntriesBaseline = null,
                 activityBaseline = activityBaseline,
-            )
+            ),
         )
         IrGenerationExtension.registerExtension(MetroStationIr())
         if (allowStationEntries) {

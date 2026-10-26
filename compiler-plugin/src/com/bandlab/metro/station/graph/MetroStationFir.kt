@@ -64,8 +64,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             val hasParam: Boolean,
         ) : ComponentType
 
-        data object Fragment : ComponentType
-
         data object Others : ComponentType
     }
 
@@ -134,7 +132,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             return when (resolveComponentType(classSymbol)) {
                 is ComponentType.Activity -> setOf(Ids.injectName)
                 is ComponentType.Page -> setOf(Ids.injectViewModelName)
-                ComponentType.Fragment,
                 ComponentType.Others -> emptySet()
             }
         }
@@ -206,7 +203,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             when (componentType) {
                 is ComponentType.Activity -> Ids.activityScope
                 is ComponentType.Page -> Ids.pageScope
-                ComponentType.Fragment -> Ids.fragmentScope
                 ComponentType.Others -> null
             }
 
@@ -240,7 +236,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                 superTypeRefs += buildResolvedTypeRef {
                     coneType =
                         Ids.membersInjectorProvider.constructClassLikeType(
-                            arrayOf(owner.defaultType())
+                            arrayOf(owner.defaultType()),
                         )
                 }
             }
@@ -282,8 +278,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                                             when (componentType) {
                                                 is ComponentType.Activity ->
                                                     setOf(Ids.defaultActivityDeps)
-                                                ComponentType.Fragment ->
-                                                    setOf(Ids.defaultFragmentDeps)
                                                 is ComponentType.Page ->
                                                     setOf(Ids.defaultPageDependencies)
 
@@ -304,9 +298,9 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                                                 annotation,
                                                 owner,
                                                 Ids.bindingContainersName,
-                                            )
+                                            ),
                                         )
-                                    }
+                                    },
                                 )
                         },
                 )
@@ -357,8 +351,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                     Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
                 is ComponentType.Page ->
                     Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
-                is ComponentType.Fragment ->
-                    Ids.fragment.constructClassLikeType(arrayOf(ConeStarProjection))
                 ComponentType.Others -> return null
             }
 
@@ -392,19 +384,18 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                         valueParameter(Ids.featureName, annotatedSymbol.defaultType(), key = Key)
                     }
                 provideParamFunction.replaceAnnotations(
-                    listOf(buildSimpleAnnotation(ClassIds.provides))
+                    listOf(buildSimpleAnnotation(ClassIds.provides)),
                 )
                 provideParamFunction.symbol as FirNamedFunctionSymbol
             }
 
             is ComponentType.Page,
-            ComponentType.Fragment,
             ComponentType.Others -> null
         }
     }
 
     private fun generateProvideParamFlowFunction(
-        owner: FirClassSymbol<*>
+        owner: FirClassSymbol<*>,
     ): FirNamedFunctionSymbol? {
         val annotatedClassId = owner.classId.outerClassId ?: return null
         val annotatedSymbol =
@@ -427,7 +418,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                 valueParameter(Ids.initialParamName, paramType, key = Key)
             }
         provideParamFlowFunction.replaceAnnotations(
-            listOf(buildSimpleAnnotation(ClassIds.provides))
+            listOf(buildSimpleAnnotation(ClassIds.provides)),
         )
         return provideParamFlowFunction.symbol as FirNamedFunctionSymbol
     }
@@ -453,7 +444,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                 }
             }
         injectFunction.replaceAnnotations(
-            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation))
+            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)),
         )
         return injectFunction.symbol as FirNamedFunctionSymbol
     }
@@ -498,7 +489,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                 }
             }
         injectViewModelFunction.replaceAnnotations(
-            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation))
+            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)),
         )
         return injectViewModelFunction.symbol as FirNamedFunctionSymbol
     }
@@ -560,7 +551,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                                 serviceProviderType,
                                 extraDependenciesType,
                                 graphType,
-                            )
+                            ),
                         )
                     } else {
                         // GraphFactory<Root, ServiceProvider, ExtraDependencies, Graph>
@@ -570,7 +561,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                                 serviceProviderType,
                                 extraDependenciesType,
                                 graphType,
-                            )
+                            ),
                         )
                     }
             }
@@ -642,11 +633,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
             }
 
             // Add DefaultScreenServiceProvider for screens
-            if (
-                componentType is ComponentType.Activity ||
-                    componentType is ComponentType.Fragment ||
-                    componentType is ComponentType.Page
-            ) {
+            if (componentType is ComponentType.Activity || componentType is ComponentType.Page) {
                 superTypeRefs += buildResolvedTypeRef {
                     coneType = Ids.defaultScreenServiceProvider.constructClassLikeType()
                 }
@@ -679,10 +666,6 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                 owner.deepResolveSuperType(Ids.page, session)?.let {
                     return@getOrPut ComponentType.Page(it, hasParam = false)
                 }
-
-                owner.deepResolveSuperType(Ids.commonFragment, session)?.let {
-                    return@getOrPut ComponentType.Fragment
-                }
             }
             ComponentType.Others
         }
@@ -710,7 +693,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
         val getClassCall =
             expr as? FirGetClassCall
                 ?: error(
-                    "Expected a GetClassCall for appDependencies argument, got: ${expr::class.simpleName}"
+                    "Expected a GetClassCall for appDependencies argument, got: ${expr::class.simpleName}",
                 )
 
         return when (val argument = getClassCall.argument) {
@@ -725,7 +708,7 @@ public class MetroStationFir(session: FirSession, compatContext: CompatContext) 
                 val classId =
                     argument.extractClassId(this.classId, session)
                         ?: error(
-                            "Cannot extract ClassId from GetClassCall argument: ${argument::class.simpleName}"
+                            "Cannot extract ClassId from GetClassCall argument: ${argument::class.simpleName}",
                         )
                 classId.constructClassLikeType()
             }

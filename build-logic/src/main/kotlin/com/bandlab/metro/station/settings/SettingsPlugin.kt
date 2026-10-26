@@ -23,7 +23,7 @@ class SettingsPlugin : Plugin<Settings> {
                 ?: settings.providers.gradleProperty(propertyName).orNull
                 ?: System.getenv(propertyName)
                 ?: error(
-                    "Property $propertyName not found. Please add it to local.properties or gradle.properties."
+                    "Property $propertyName not found. Please add it to local.properties or gradle.properties.",
                 )
         }
 

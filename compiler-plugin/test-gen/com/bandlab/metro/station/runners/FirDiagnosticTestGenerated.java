@@ -31,6 +31,12 @@ public class FirDiagnosticTestGenerated extends AbstractFirDiagnosticTest {
   }
 
   @Test
+  @TestMetadata("forwardingBindingContainer.kt")
+  public void testForwardingBindingContainer() {
+    run("forwardingBindingContainer.kt");
+  }
+
+  @Test
   @TestMetadata("internalConfigSelector.kt")
   public void testInternalConfigSelector() {
     run("internalConfigSelector.kt");

@@ -4,7 +4,7 @@ package com.bandlab.android.common.activity
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 import com.bandlab.common.di.GeneratedByMetroStation
 import com.bandlab.metro.station.sample.utils.ScreenTracker
 
@@ -13,7 +13,7 @@ import com.bandlab.metro.station.sample.utils.ScreenTracker
  *
  * @param Params The type of the parameters required by the activity.
  */
-abstract class CommonActivity<Params : Any> : FragmentActivity() {
+abstract class CommonActivity<Params : Any> : ComponentActivity() {
 
     lateinit var params: Params
         private set
@@ -46,7 +46,7 @@ abstract class CommonActivity<Params : Any> : FragmentActivity() {
     @GeneratedByMetroStation
     open fun inject() {
         throw UnsupportedOperationException(
-            "This method will be implemented by the compiler plugin."
+            "This method will be implemented by the compiler plugin.",
         )
     }
 

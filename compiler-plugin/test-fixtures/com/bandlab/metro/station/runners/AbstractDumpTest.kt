@@ -14,9 +14,7 @@ import org.jetbrains.kotlin.test.runners.ir.AbstractFirLightTreeJvmIrTextTest
 import org.jetbrains.kotlin.test.services.EnvironmentBasedStandardLibrariesPathProvider
 import org.jetbrains.kotlin.test.services.KotlinStandardLibrariesPathProvider
 
-/**
- * Dump test that produces FIR golden files (`.fir.txt`) and Kotlin-like IR dump (`.fir.kt.txt`).
- */
+/** Dump test that produces FIR golden files (`.fir.txt`) and Kotlin-like IR dumps (`.kt.txt`). */
 open class AbstractDumpTest : AbstractFirLightTreeJvmIrTextTest() {
     override fun createKotlinStandardLibrariesPathProvider(): KotlinStandardLibrariesPathProvider {
         return EnvironmentBasedStandardLibrariesPathProvider
