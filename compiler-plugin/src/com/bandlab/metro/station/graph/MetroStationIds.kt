@@ -46,20 +46,15 @@ internal object MetroStationIds {
     val provideParamFlowName = "provideParamFlow".asName()
 
     // Injection entry points overridden on the annotated class (bodies generated in IR)
-    val injectName = "inject".asName()
     val injectViewModelName = "injectViewModel".asName()
+    val injectName = "inject".asName()
     val depsName = "deps".asName()
 
     // Common classes
     private val androidCommon = FqName("com.bandlab.android.common")
-    private val androidCommonActivity = FqName("com.bandlab.android.common.activity")
     val membersInjectorProvider = ClassId(commonAndroidDi, "MembersInjectorProvider".asName())
-    val commonActivity = ClassId(androidCommonActivity, "CommonActivity".asName())
-    val commonActivityServiceProvider =
-        commonActivity.createNestedClassId("ServiceProvider".asName())
     val defaultScreenServiceProvider =
         ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
-    val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
     val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
     val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
     val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
@@ -86,9 +81,16 @@ internal object MetroStationIds {
     val coroutinesFlow = ClassId(FqName("kotlinx.coroutines.flow"), "Flow".asName())
     val initialParamName = "initialParam".asName()
 
+    // Activity
+    private val androidCommonActivity = FqName("com.bandlab.android.common.activity")
+    val commonActivity = ClassId(androidCommonActivity, "CommonActivity".asName())
+    val commonActivityServiceProvider =
+        commonActivity.createNestedClassId("ServiceProvider".asName())
+    val defaultActivityDeps = ClassId(androidCommonActivity, "DefaultActivityDependencies".asName())
+
     // Custom feature scopes
-    val activityScope = ClassId(androidCommon, "ActivityScope".asName())
     val pageScope = ClassId(androidCommon, "PageScope".asName())
+    val activityScope = ClassId(androidCommon, "ActivityScope".asName())
 
     // Service, Worker, BroadcastReceiver
     val androidService = ClassId(FqName("android.app"), "Service".asName())

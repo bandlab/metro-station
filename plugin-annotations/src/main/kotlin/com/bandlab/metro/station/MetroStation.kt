@@ -41,10 +41,10 @@ import kotlin.reflect.KClass
  * activities, we extend `CommonActivity.ServiceProvider` additionally.
  *
  * Besides the basic support, we will also generate param providers:
- * - For CommonActivity, param type declared as the generic type will be available in the graph.
  * - For ParamPage, we provide both the initial param and a flow through PageParamFlowProvider. The
  *   internal implementation listens to the host activity's onNewIntent; the sample and test stubs
  *   emit only the initial param.
+ * - For CommonActivity, param type declared as the generic type will be available in the graph.
  *
  * ## Android Component Injection
  * We inject some Android components automatically for you, similar to what Hilt's compiler is

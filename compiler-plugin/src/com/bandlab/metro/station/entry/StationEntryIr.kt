@@ -12,17 +12,8 @@ import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.builders.irBlockBody
-import org.jetbrains.kotlin.ir.builders.irCall
-import org.jetbrains.kotlin.ir.builders.irCallWithSubstitutedType
-import org.jetbrains.kotlin.ir.builders.irGet
-import org.jetbrains.kotlin.ir.builders.irGetObject
-import org.jetbrains.kotlin.ir.builders.irReturn
-import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
-import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
-import org.jetbrains.kotlin.ir.declarations.IrParameterKind
-import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.builders.*
+import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
 import org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl
 import org.jetbrains.kotlin.ir.types.classOrNull
@@ -66,8 +57,8 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
             Ids.provideBaseTypeName -> generateProvideBaseTypeBody(pluginContext, declaration)
             Ids.provideFactoryName -> generateProvideFactoryBody(declaration)
             Ids.provideParamFlowName -> generateProvideParamFlowBody(pluginContext, declaration)
-            Ids.injectName -> generateInjectBody(declaration)
             Ids.injectViewModelName -> generateInjectViewModelBody(declaration)
+            Ids.injectName -> generateInjectBody(declaration)
         }
         return super.visitSimpleFunction(declaration)
     }
@@ -80,95 +71,6 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
             DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
                 +irReturn(irGet(factoryParameter))
             }
-    }
-
-    /**
-     * Generates the body of the FIR-generated `inject()` override on an annotated activity:
-     * ```
-     * val factory = resolveServiceProvider<FeatureExtension.Factory>()
-     * factory.create(this).injector.injectMembers(this)
-     * ```
-     */
-    private fun generateInjectBody(declaration: IrSimpleFunction) {
-        val irClass = declaration.parentClassOrNull ?: return
-        val thisReceiver =
-            declaration.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver }
-                ?: return
-
-        // FeatureExtension.Factory
-        val featureExtensionClass =
-            irClass.declarations.filterIsInstance<IrClass>().find {
-                it.name == Ids.featureExtensionName
-            } ?: return
-        val factoryClass =
-            featureExtensionClass.declarations.filterIsInstance<IrClass>().find {
-                it.name == Ids.nestedFactoryName
-            } ?: return
-
-        // resolveServiceProvider function
-        val resolveServiceProviderSymbol =
-            finder.findFunctions(Ids.resolveServiceProvider.toCallableId()).firstOrNull() ?: return
-
-        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
-
-        // this.resolveServiceProvider<FeatureExtension.Factory>()
-        val resolveCall =
-            builder
-                .irCallWithSubstitutedType(
-                    resolveServiceProviderSymbol,
-                    listOf(factoryClass.symbol.typeWith()),
-                )
-                .apply { arguments[0] = builder.irGet(thisReceiver) }
-
-        // factory.create(this)
-        val factoryClassOwner =
-            factoryClass.superTypes
-                .mapNotNull { it.classOrNull?.owner }
-                .find { it.functions.any { f -> f.name == Ids.createName } } ?: factoryClass
-        val createFunction = factoryClassOwner.functions.first { it.name == Ids.createName }
-        val createCall =
-            builder.irCall(createFunction).apply {
-                dispatchReceiver = resolveCall
-                val featureParamIndex =
-                    createFunction.parameters.indexOfFirst { it.kind == IrParameterKind.Regular }
-                arguments[featureParamIndex] = builder.irGet(thisReceiver)
-            }
-
-        // .injector
-        val membersInjectorProviderClass =
-            finder.findClass(Ids.membersInjectorProvider)?.owner ?: return
-        val injectorGetter =
-            membersInjectorProviderClass.properties.first { it.name == Ids.injectorName }.getter
-                ?: return
-        val membersInjectorClass = finder.findClass(Ids.membersInjector)?.owner ?: return
-        // The `injector` getter returns `MembersInjector<T>` where `T` is
-        // `MembersInjectorProvider`'s class type parameter. The getter itself has no type
-        // parameters, so we substitute `T` manually by giving the call the concrete
-        // `MembersInjector<ThisClass>` return type.
-        val injectedType = thisReceiver.type
-        val membersInjectorType = membersInjectorClass.typeWith(injectedType)
-        val getInjector =
-            builder.irCall(injectorGetter.symbol, membersInjectorType).apply {
-                dispatchReceiver = createCall
-                type = membersInjectorType
-            }
-
-        // .injectMembers(this)
-        val injectMembersFunction =
-            membersInjectorClass.functions.first { it.name == Ids.injectMembersName }
-        val injectMembersCall =
-            builder.irCall(injectMembersFunction).apply {
-                dispatchReceiver = getInjector
-                val regularParamIndex =
-                    injectMembersFunction.parameters.indexOfFirst {
-                        it.kind == IrParameterKind.Regular
-                    }
-                arguments[regularParamIndex] = builder.irGet(thisReceiver)
-            }
-
-        declaration.body = builder.irBlockBody {
-            +injectMembersCall
-        }
     }
 
     /**
@@ -283,6 +185,95 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
 
         declaration.body = builder.irBlockBody {
             +irReturn(getViewModelCall)
+        }
+    }
+
+    /**
+     * Generates the body of the FIR-generated `inject()` override on an annotated activity:
+     * ```
+     * val factory = resolveServiceProvider<FeatureExtension.Factory>()
+     * factory.create(this).injector.injectMembers(this)
+     * ```
+     */
+    private fun generateInjectBody(declaration: IrSimpleFunction) {
+        val irClass = declaration.parentClassOrNull ?: return
+        val thisReceiver =
+            declaration.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver }
+                ?: return
+
+        // FeatureExtension.Factory
+        val featureExtensionClass =
+            irClass.declarations.filterIsInstance<IrClass>().find {
+                it.name == Ids.featureExtensionName
+            } ?: return
+        val factoryClass =
+            featureExtensionClass.declarations.filterIsInstance<IrClass>().find {
+                it.name == Ids.nestedFactoryName
+            } ?: return
+
+        // resolveServiceProvider function
+        val resolveServiceProviderSymbol =
+            finder.findFunctions(Ids.resolveServiceProvider.toCallableId()).firstOrNull() ?: return
+
+        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
+
+        // this.resolveServiceProvider<FeatureExtension.Factory>()
+        val resolveCall =
+            builder
+                .irCallWithSubstitutedType(
+                    resolveServiceProviderSymbol,
+                    listOf(factoryClass.symbol.typeWith()),
+                )
+                .apply { arguments[0] = builder.irGet(thisReceiver) }
+
+        // factory.create(this)
+        val factoryClassOwner =
+            factoryClass.superTypes
+                .mapNotNull { it.classOrNull?.owner }
+                .find { it.functions.any { f -> f.name == Ids.createName } } ?: factoryClass
+        val createFunction = factoryClassOwner.functions.first { it.name == Ids.createName }
+        val createCall =
+            builder.irCall(createFunction).apply {
+                dispatchReceiver = resolveCall
+                val featureParamIndex =
+                    createFunction.parameters.indexOfFirst { it.kind == IrParameterKind.Regular }
+                arguments[featureParamIndex] = builder.irGet(thisReceiver)
+            }
+
+        // .injector
+        val membersInjectorProviderClass =
+            finder.findClass(Ids.membersInjectorProvider)?.owner ?: return
+        val injectorGetter =
+            membersInjectorProviderClass.properties.first { it.name == Ids.injectorName }.getter
+                ?: return
+        val membersInjectorClass = finder.findClass(Ids.membersInjector)?.owner ?: return
+        // The `injector` getter returns `MembersInjector<T>` where `T` is
+        // `MembersInjectorProvider`'s class type parameter. The getter itself has no type
+        // parameters, so we substitute `T` manually by giving the call the concrete
+        // `MembersInjector<ThisClass>` return type.
+        val injectedType = thisReceiver.type
+        val membersInjectorType = membersInjectorClass.typeWith(injectedType)
+        val getInjector =
+            builder.irCall(injectorGetter.symbol, membersInjectorType).apply {
+                dispatchReceiver = createCall
+                type = membersInjectorType
+            }
+
+        // .injectMembers(this)
+        val injectMembersFunction =
+            membersInjectorClass.functions.first { it.name == Ids.injectMembersName }
+        val injectMembersCall =
+            builder.irCall(injectMembersFunction).apply {
+                dispatchReceiver = getInjector
+                val regularParamIndex =
+                    injectMembersFunction.parameters.indexOfFirst {
+                        it.kind == IrParameterKind.Regular
+                    }
+                arguments[regularParamIndex] = builder.irGet(thisReceiver)
+            }
+
+        declaration.body = builder.irBlockBody {
+            +injectMembersCall
         }
     }
 }

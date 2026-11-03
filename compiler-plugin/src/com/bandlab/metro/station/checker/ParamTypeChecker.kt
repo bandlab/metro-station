@@ -51,23 +51,23 @@ internal object ParamTypeClassChecker : FirDeclarationChecker<FirClass>(MppCheck
         val hasInjector = symbol.getAnnotationByClassId(Ids.stationEntry, session) != null
         if (!hasComponent && !hasInjector) return
 
-        // Check CommonActivity<Param> - param is the first type arg
-        val activitySuperTypeRef = symbol.findSuperTypeRef(Ids.commonActivity)
-        if (activitySuperTypeRef != null) {
-            val paramType = activitySuperTypeRef.unwrapType(0) as? ConeKotlinType
-            if (paramType != null && paramType.classId != StandardClassIds.Unit) {
-                val source = activitySuperTypeRef.typeArgumentSource(0)
-                checkRestricted(paramType, source, declaration)
-            }
-            return
-        }
-
         // Check ParamPage<ViewModel, Param> - param is the second type arg
         val paramPageSuperTypeRef = symbol.findSuperTypeRef(Ids.paramPage)
         if (paramPageSuperTypeRef != null) {
             val paramType = paramPageSuperTypeRef.unwrapType(1) as? ConeKotlinType
             if (paramType != null) {
                 val source = paramPageSuperTypeRef.typeArgumentSource(1)
+                checkRestricted(paramType, source, declaration)
+            }
+            return
+        }
+
+        // Check CommonActivity<Param> - param is the first type arg
+        val activitySuperTypeRef = symbol.findSuperTypeRef(Ids.commonActivity)
+        if (activitySuperTypeRef != null) {
+            val paramType = activitySuperTypeRef.unwrapType(0) as? ConeKotlinType
+            if (paramType != null && paramType.classId != StandardClassIds.Unit) {
+                val source = activitySuperTypeRef.typeArgumentSource(0)
                 checkRestricted(paramType, source, declaration)
             }
         }

@@ -142,8 +142,8 @@ We provide common default dependencies, such as `CoroutineScope` and `Lifecycle`
 We also request some common app-level dependencies for you. For screens (page, activity), we extend `DefaultScreenServiceProvider` to the generated `FeatureServiceProvider` interface. For activities, we extend `CommonActivity.ServiceProvider` additionally.
 
 Besides the basic support, we will also generate param providers:
-- For CommonActivity, param type declared as the generic type will be available in the graph.
 - For ParamPage, we provide both the initial param and a flow of params through `PageParamFlowProvider`. The internal implementation listens to the host activity's `onNewIntent`; the sample and test stubs emit only the initial param.
+- For CommonActivity, param type declared as the generic type will be available in the graph.
 
 #### Android Component Injection
 We inject some Android components automatically for you, similar to what Hilt's compiler is doing, but instead of a separate javac call, Metro Station does it within the same kotlinc process:
