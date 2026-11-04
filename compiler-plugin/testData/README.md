@@ -15,7 +15,7 @@ Within `box/` and `dump/`, `station` covers `@MetroStation` dependency graphs, `
 ## Reading Fixtures
 
 - Common Metro, Metro Station, and BandLab framework imports are added by `configureImports` in `ExtensionRegistrarConfigurator.kt`. Box tests also receive `kotlin.test.*`; the omitted imports are intentional.
-- Framework types come from the JVM-only [`stubs`](../../stubs/README.md) module. `setAppGraphAndInject` installs a graph on the activity stub and invokes the generated injection method. `AndroidPageGraphDependencies.fromAppGraph` supplies a stub host for page injection.
+- Framework types come from the JVM-only [`stubs`](../../stubs/README.md) module. `AndroidPageGraphDependencies.fromAppGraph` supplies a stub host for page injection. `setAppGraphAndInject` installs a graph on the activity stub and invokes the generated injection method.
 - `// MODULE: lib` and `// MODULE: main(lib)` split one fixture into separately compiled modules. These cases check that generated contributions or scope markers remain usable across module boundaries.
 - Directives such as `// DISABLE_STATION_ENTRIES` and `// ENABLE_ACTIVITY_BASELINE: ...` configure project-specific migration policies. They are not general restrictions imposed by Metro.
 - Parameter-flow box tests check the initial parameter and the first flow emission. The stub flow does not simulate later `onNewIntent` updates.

@@ -53,12 +53,12 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
      * Represents the resolved component type of an annotated class, determined by its super type.
      */
     private sealed interface ComponentType {
-        data class Activity(val superTypeRef: FirTypeRef) : ComponentType
-
         data class Page(
             val superTypeRef: FirTypeRef,
             val hasParam: Boolean,
         ) : ComponentType
+
+        data class Activity(val superTypeRef: FirTypeRef) : ComponentType
     }
 
     private val componentTypeCache = mutableMapOf<ClassId, ComponentType>()
@@ -126,11 +126,11 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         classSymbol: FirClassSymbol<*>,
         context: MemberGenerationContext,
     ): Set<Name> {
-        // Generate inject()/injectViewModel() overrides on the annotated class itself
+        // Generate injectViewModel()/inject() overrides on the annotated class itself
         if (classSymbol in annotatedClasses) {
             return when (resolveComponentType(classSymbol)) {
-                is ComponentType.Activity -> setOf(Ids.injectName)
                 is ComponentType.Page -> setOf(Ids.injectViewModelName)
+                is ComponentType.Activity -> setOf(Ids.injectName)
             }
         }
         if (classSymbol.origin != Key.origin) return emptySet()
@@ -158,11 +158,11 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         val ownerClassId = callableId.classId ?: return emptyList()
         val owner = context?.owner ?: return emptyList()
 
-        // Generate inject()/injectViewModel() overrides on the annotated class
+        // Generate injectViewModel()/inject() overrides on the annotated class
         if (owner in annotatedClasses) {
             return when (callableId.callableName) {
-                Ids.injectName -> listOfNotNull(generateInjectFunction(owner))
                 Ids.injectViewModelName -> listOfNotNull(generateInjectViewModelFunction(owner))
+                Ids.injectName -> listOfNotNull(generateInjectFunction(owner))
                 else -> emptyList()
             }
         }
@@ -237,8 +237,8 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         val componentType = resolveComponentType(owner)
         val componentScope =
             when (componentType) {
-                is ComponentType.Activity -> Ids.activityScope
                 is ComponentType.Page -> Ids.pageScope
+                is ComponentType.Activity -> Ids.activityScope
             }
 
         val featureExtension = buildRegularClass {
@@ -295,10 +295,10 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                                 argumentList = buildArgumentList {
                                     val defaultDependenciesIds =
                                         when (componentType) {
-                                            is ComponentType.Activity ->
-                                                setOf(Ids.defaultActivityDeps)
                                             is ComponentType.Page ->
                                                 setOf(Ids.defaultPageDependencies)
+                                            is ComponentType.Activity ->
+                                                setOf(Ids.defaultActivityDeps)
                                         }
 
                                     defaultDependenciesIds.forEach { dependenciesId ->
@@ -460,11 +460,11 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
         val componentType = resolveComponentType(annotatedSymbol)
         val baseType =
             when (componentType) {
-                is ComponentType.Activity ->
-                    Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
-
                 is ComponentType.Page ->
                     Ids.page.constructClassLikeType(arrayOf(ConeStarProjection))
+
+                is ComponentType.Activity ->
+                    Ids.commonActivity.constructClassLikeType(arrayOf(ConeStarProjection))
             }
 
         val provideBaseTypeFunction =
@@ -487,6 +487,7 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 as? FirRegularClassSymbol ?: return null
 
         return when (val componentType = resolveComponentType(annotatedSymbol)) {
+            is ComponentType.Page -> null
             is ComponentType.Activity -> {
                 val typeArg = componentType.superTypeRef.unwrapType(0) ?: return null
                 val paramType = typeArg as? ConeKotlinType ?: return null
@@ -501,8 +502,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
                 )
                 provideParamFunction.symbol as FirNamedFunctionSymbol
             }
-
-            is ComponentType.Page -> null
         }
     }
 
@@ -532,32 +531,6 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             listOf(buildSimpleAnnotation(ClassIds.provides)),
         )
         return provideParamFlowFunction.symbol as FirNamedFunctionSymbol
-    }
-
-    /**
-     * Generates an `override fun inject()` on the annotated activity class. The body is filled in
-     * IR.
-     *
-     * The overridden [Ids.commonActivity] `inject()` is a `@GeneratedByMetroStation` (opt-in)
-     * member, so the marker is propagated onto the generated override to satisfy the opt-in
-     * requirement.
-     */
-    private fun generateInjectFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol {
-        val injectFunction =
-            createMemberFunction(
-                owner,
-                Key,
-                Ids.injectName,
-                session.builtinTypes.unitType.coneType,
-            ) {
-                status {
-                    isOverride = true
-                }
-            }
-        injectFunction.replaceAnnotations(
-            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)),
-        )
-        return injectFunction.symbol as FirNamedFunctionSymbol
     }
 
     /**
@@ -603,6 +576,32 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
             listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)),
         )
         return injectViewModelFunction.symbol as FirNamedFunctionSymbol
+    }
+
+    /**
+     * Generates an `override fun inject()` on the annotated activity class. The body is filled in
+     * IR.
+     *
+     * The overridden [Ids.commonActivity] `inject()` is a `@GeneratedByMetroStation` (opt-in)
+     * member, so the marker is propagated onto the generated override to satisfy the opt-in
+     * requirement.
+     */
+    private fun generateInjectFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol {
+        val injectFunction =
+            createMemberFunction(
+                owner,
+                Key,
+                Ids.injectName,
+                session.builtinTypes.unitType.coneType,
+            ) {
+                status {
+                    isOverride = true
+                }
+            }
+        injectFunction.replaceAnnotations(
+            listOf(buildSimpleAnnotation(Ids.generatedByMetroStation)),
+        )
+        return injectFunction.symbol as FirNamedFunctionSymbol
     }
 
     private fun generateCreateFunction(owner: FirClassSymbol<*>): FirNamedFunctionSymbol? {
@@ -720,16 +719,16 @@ public class StationEntryFir(session: FirSession, compatContext: CompatContext) 
     private fun resolveComponentType(owner: FirClassSymbol<*>): ComponentType {
         return componentTypeCache.getOrPut(owner.classId) {
             with(typeResolverFactory.create(owner)!!) {
-                owner.deepResolveSuperType(Ids.commonActivity, session)?.let {
-                    return@getOrPut ComponentType.Activity(it)
-                }
-
                 owner.deepResolveSuperType(Ids.paramPage, session)?.let {
                     return@getOrPut ComponentType.Page(it, hasParam = true)
                 }
 
                 owner.deepResolveSuperType(Ids.page, session)?.let {
                     return@getOrPut ComponentType.Page(it, hasParam = false)
+                }
+
+                owner.deepResolveSuperType(Ids.commonActivity, session)?.let {
+                    return@getOrPut ComponentType.Activity(it)
                 }
             }
             error("StationEntry is deprecated, please use @MetroStation instead")

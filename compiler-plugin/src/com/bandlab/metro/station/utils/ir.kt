@@ -17,8 +17,8 @@ import org.jetbrains.kotlin.ir.util.getPropertyGetter
 
 /**
  * Generates either:
- * - `return feature.params` (for CommonActivity)
  * - `return pageGraphDependencies.initialParam as ParamType` (for ParamPage)
+ * - `return feature.params` (for CommonActivity)
  */
 internal fun generateProvideParamBody(
     pluginContext: IrPluginContext,

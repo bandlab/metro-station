@@ -58,8 +58,8 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             Ids.provideParamName -> generateProvideParamBody(pluginContext, declaration)
             Ids.provideBaseTypeName -> generateProvideBaseTypeBody(pluginContext, declaration)
             Ids.provideParamFlowName -> generateProvideParamFlowBody(pluginContext, declaration)
-            Ids.injectName -> generateInjectBody(declaration)
             Ids.injectViewModelName -> generateInjectViewModelBody(declaration)
+            Ids.injectName -> generateInjectBody(declaration)
         }
         return super.visitSimpleFunction(declaration)
     }
@@ -374,32 +374,6 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
     }
 
     /**
-     * Generates the body of the FIR-generated `inject()` override on an annotated activity:
-     * ```
-     * createGraphFactory<FeatureGraph.Factory>()
-     *     .create(this, applicationContext.resolveServiceProvider(), EmptyExtraDependencies)
-     *     .injector
-     *     .injectMembers(this)
-     * ```
-     */
-    private fun generateInjectBody(declaration: IrSimpleFunction) {
-        val irClass = declaration.parentClassOrNull ?: return
-        val thisReceiver =
-            declaration.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver }
-                ?: return
-
-        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
-        val injectionCall =
-            generateInjectionCall(builder, irClass, thisReceiver) { b, recv ->
-                generateApplicationContextExpr(b, recv)
-            } ?: return
-
-        declaration.body = builder.irBlockBody {
-            +injectionCall
-        }
-    }
-
-    /**
      * Generates the body of the FIR-generated `injectViewModel(deps[, initialParam])` override on
      * an annotated page:
      * ```
@@ -495,6 +469,32 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
 
         declaration.body = builder.irBlockBody {
             +irReturn(call)
+        }
+    }
+
+    /**
+     * Generates the body of the FIR-generated `inject()` override on an annotated activity:
+     * ```
+     * createGraphFactory<FeatureGraph.Factory>()
+     *     .create(this, applicationContext.resolveServiceProvider(), EmptyExtraDependencies)
+     *     .injector
+     *     .injectMembers(this)
+     * ```
+     */
+    private fun generateInjectBody(declaration: IrSimpleFunction) {
+        val irClass = declaration.parentClassOrNull ?: return
+        val thisReceiver =
+            declaration.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver }
+                ?: return
+
+        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
+        val injectionCall =
+            generateInjectionCall(builder, irClass, thisReceiver) { b, recv ->
+                generateApplicationContextExpr(b, recv)
+            } ?: return
+
+        declaration.body = builder.irBlockBody {
+            +injectionCall
         }
     }
 
