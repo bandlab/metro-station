@@ -21,11 +21,8 @@ internal object MetroStationIds {
     val parentScopeName = "parentScope".asName()
     val featureExtensionName = "FeatureExtension".asName()
     val featureBindingsName = "FeatureBindings".asName()
-    val extensionFactoryContributionName = "ExtensionFactoryContribution".asName()
     val createName = "create".asName()
     val bindName = "bind".asName()
-    val factoryParamName = "factory".asName()
-    val provideFactoryName = "provideFactory".asName()
 
     val appDependenciesName = "appDependencies".asName()
     val graphMarkerName = "graphMarker".asName()
@@ -74,8 +71,6 @@ internal object MetroStationIds {
     val pageGraphDependencies = ClassId(pageApi, "PageGraphDependencies".asName())
     val androidPageGraphDependencies =
         ClassId(commonPageDi, "AndroidPageGraphDependencies".asName())
-    // Only used by @StationEntry; @MetroStation graphs declare a `viewModel` accessor instead.
-    val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
 
     // ParamPage

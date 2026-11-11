@@ -170,7 +170,7 @@ This annotation generates a Graph Extension for the feature.
 > @StationEntry is in maintenance mode as we're shifting towards graph-per-feature, please use @MetroStation instead.
 
 Annotate your feature with @StationEntry, and the compiler plugin will contribute a graph extension towards
-the declared parentScope for you, and contribute the factory to a multibinding to the AppGraph for runtime use.
+the declared parentScope for you. Its factory is contributed to the parentScope graph, which the generated code resolves at runtime.
 
 ```kotlin
 @StationEntry
@@ -185,7 +185,7 @@ class MyPage : Page<MyViewModel> {
   @GeneratedByMetroStation
   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
     val factory = (deps as AndroidPageGraphDependencies).activity.resolveServiceProvider<FeatureExtension.Factory>()
-    return factory.create(this, Unit, deps).getPageViewModel()
+    return factory.create(this, Unit, deps).viewModel
   }
     
   @PageScope
@@ -193,7 +193,8 @@ class MyPage : Page<MyViewModel> {
     scope = MyPage::class,
     bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class]
   )
-  interface FeatureExtension : PageInjector<MyViewModel> {
+  interface FeatureExtension {
+    val viewModel: MyViewModel
 
     @ContributesTo(AppScope::class)
     @GraphExtension.Factory

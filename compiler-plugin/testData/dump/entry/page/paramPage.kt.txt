@@ -47,13 +47,16 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
   @PageScope
   @GraphExtension(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class])
-  interface FeatureExtension : PageInjector<MyViewModel> {
+  interface FeatureExtension {
     @ContributesTo(scope = AppScope::class)
     @Factory
     interface Factory {
       abstract fun create(@Provides feature: MyPage, @Provides param: Params, @Includes pageGraphDependencies: AndroidPageGraphDependencies): FeatureExtension
 
     }
+
+    abstract val viewModel: MyViewModel
+      abstract get
 
   }
 
@@ -168,7 +171,7 @@ class MyPage : ParamPage<MyViewModel, Params> {
 
   @GeneratedByMetroStation
   override fun injectViewModel(deps: PageGraphDependencies, initialParam: Params): MyViewModel {
-    return resolveServiceProvider<Factory>(/* <this> = deps as AndroidPageGraphDependencies.<get-activity>() */).create(feature = <this>, param = initialParam, pageGraphDependencies = deps).getPageViewModel()
+    return resolveServiceProvider<Factory>(/* <this> = deps as AndroidPageGraphDependencies.<get-activity>() */).create(feature = <this>, param = initialParam, pageGraphDependencies = deps).<get-viewModel>()
   }
 
 }
@@ -267,9 +270,10 @@ interface AppGraph : Factory {
 
       }
 
-      override fun getPageViewModel(): MyViewModel {
-        return MyViewModel(param = <this>.#paramInstance, paramFlow = FeatureBindings.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.#paramInstance))
-      }
+      override val viewModel: MyViewModel
+        override get(): MyViewModel {
+          return MyViewModel(param = <this>.#paramInstance, paramFlow = FeatureBindings.provideParamFlow(provider = PageParamFlowProvider(), feature = <this>.#featureInstance, initialParam = <this>.#paramInstance))
+        }
 
     }
 
@@ -311,4 +315,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: Factory) {
   return error(message = "Never called")
 }
-
