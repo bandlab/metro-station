@@ -63,9 +63,9 @@ class MyService : Service {
 
   @IROnlyFactories
   @DependencyGraph(scope = MyService::class, bindingContainers = [])
-  interface FeatureGraph : MembersInjectorProvider<MyService> {
+  interface FeatureGraph {
     @Factory
-    interface Factory : GraphFactory<MyService, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+    interface Factory {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroImplMarker
       object Impl : Factory {
@@ -75,11 +75,13 @@ class MyService : Service {
 
         }
 
-        override fun create(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
-          return Impl(feature = feature, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        override fun create(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider): FeatureGraph {
+          return Impl(feature = feature, serviceProvider = serviceProvider)
         }
 
       }
+
+      abstract fun create(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider): FeatureGraph
 
     }
 
@@ -89,19 +91,15 @@ class MyService : Service {
       private val featureServiceProviderInstance: FeatureServiceProvider
         field = serviceProvider
 
-      private constructor(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+      private constructor(@Provides feature: MyService, @Includes serviceProvider: FeatureServiceProvider) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
       }
 
-      override val injector: MembersInjector<MyService>
-        override get(): MembersInjector<MyService> {
-          return create(myDependency = local fun <anonymous>(): MyDependency {
-            return <this>.#featureServiceProviderInstance.<get-myDependency>()
-          }
- /*-> Provider<MyDependency> */)
-        }
+      override fun inject(target: MyService) {
+        Companion.injectMyDependency(instance = target, myDependency = <this>.#featureServiceProviderInstance.<get-myDependency>())
+      }
 
     }
 
@@ -119,6 +117,8 @@ class MyService : Service {
       }
 
     }
+
+    abstract fun inject(target: MyService)
 
   }
 
@@ -175,7 +175,7 @@ class MyService : Service {
   }
 
   override fun onCreate() {
-    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
+    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */)).inject(target = <this>)
     println(message = <this>.<get-myDependency>().<get-text>())
   }
 
@@ -270,4 +270,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
-

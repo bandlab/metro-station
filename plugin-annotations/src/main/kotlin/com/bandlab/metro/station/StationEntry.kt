@@ -11,8 +11,8 @@ import kotlin.reflect.KClass
  * > [MetroStation] instead.
  *
  * Annotate your feature with [StationEntry], and the compiler plugin will contribute a graph
- * extension towards the [parentScope] for you, and contribute the factory to a multibinding to the
- * AppGraph for runtime use.
+ * extension towards the [parentScope] for you. Its factory is contributed to the [parentScope]
+ * graph, which the generated code resolves at runtime.
  *
  * ```kotlin
  * @StationEntry
@@ -45,7 +45,7 @@ import kotlin.reflect.KClass
  *   @GeneratedByMetroStation
  *   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
  *     val factory = (deps as AndroidPageGraphDependencies).activity.resolveServiceProvider<FeatureExtension.Factory>()
- *     return factory.create(this, Unit, deps).getPageViewModel()
+ *     return factory.create(this, Unit, deps).viewModel
  *   }
  *
  *   @PageScope
@@ -53,7 +53,8 @@ import kotlin.reflect.KClass
  *     scope = MyPage::class,
  *     bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class]
  *   )
- *   interface FeatureExtension : PageInjector<MyViewModel> {
+ *   interface FeatureExtension {
+ *     val viewModel: MyViewModel
  *
  *     @ContributesTo(AppScope::class)
  *     @GraphExtension.Factory

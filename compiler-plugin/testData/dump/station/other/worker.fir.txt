@@ -24,8 +24,12 @@ FILE: worker.kt
 
         }
 
-        @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyWorker|), bindingContainers = <collectionLiteralCall>()) public abstract interface FeatureGraph : R|com/bandlab/common/android/di/MembersInjectorProvider<MyWorker>| {
-            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|com/bandlab/common/android/di/GraphFactory<MyWorker, MyWorker.FeatureServiceProvider, com/bandlab/common/android/di/EmptyExtraDependencies, MyWorker.FeatureGraph>| {
+        @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyWorker|), bindingContainers = <collectionLiteralCall>()) public abstract interface FeatureGraph : R|kotlin/Any| {
+            public abstract fun inject(target: R|MyWorker|): R|kotlin/Unit|
+
+            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|kotlin/Any| {
+                public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyWorker|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyWorker.FeatureServiceProvider|): R|MyWorker.FeatureGraph|
+
             }
 
             public final companion object Companion : R|kotlin/Any| {

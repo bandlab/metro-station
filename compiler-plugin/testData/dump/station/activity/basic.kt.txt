@@ -9,9 +9,9 @@ class MyActivity : CommonActivity<Unit> {
   @ActivityScope
   @IROnlyFactories
   @DependencyGraph(scope = MyActivity::class, bindingContainers = [DefaultActivityDependencies::class])
-  interface FeatureGraph : MembersInjectorProvider<MyActivity> {
+  interface FeatureGraph {
     @Factory
-    interface Factory : GraphFactory<MyActivity, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+    interface Factory {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroImplMarker
       object Impl : Factory {
@@ -21,11 +21,13 @@ class MyActivity : CommonActivity<Unit> {
 
         }
 
-        override fun create(@Provides feature: MyActivity, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
-          return Impl(feature = feature, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        override fun create(@Provides feature: MyActivity, @Includes serviceProvider: FeatureServiceProvider): FeatureGraph {
+          return Impl(feature = feature, serviceProvider = serviceProvider)
         }
 
       }
+
+      abstract fun create(@Provides feature: MyActivity, @Includes serviceProvider: FeatureServiceProvider): FeatureGraph
 
     }
 
@@ -35,19 +37,15 @@ class MyActivity : CommonActivity<Unit> {
       private val featureServiceProviderInstance: FeatureServiceProvider
         field = serviceProvider
 
-      private constructor(@Provides feature: MyActivity, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+      private constructor(@Provides feature: MyActivity, @Includes serviceProvider: FeatureServiceProvider) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
       }
 
-      override val injector: MembersInjector<MyActivity>
-        override get(): MembersInjector<MyActivity> {
-          return create(myDependency = local fun <anonymous>(): MyDependency {
-            return <this>.#featureServiceProviderInstance.<get-myDependency>()
-          }
- /*-> Provider<MyDependency> */)
-        }
+      override fun inject(target: MyActivity) {
+        Companion.injectMyDependency(instance = target, myDependency = <this>.#featureServiceProviderInstance.<get-myDependency>())
+      }
 
     }
 
@@ -66,51 +64,13 @@ class MyActivity : CommonActivity<Unit> {
 
     }
 
-    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 590, newInstanceName = "provideBaseType")
-    class ProvideBaseTypeMetroFactory : Factory<CommonActivity<*>> {
-      private /* final field */ val instance: FeatureGraph = instance
-      private /* final field */ val feature: Provider<MyActivity> = feature
-      companion object Companion {
-        constructor() /* primary */ {
-          super/*Any*/()
-          /* <init>() */
-
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun create(instance: FeatureGraph, feature: Provider<MyActivity>): ProvideBaseTypeMetroFactory {
-          return ProvideBaseTypeMetroFactory(instance = instance, feature = feature)
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun provideBaseType(instance: FeatureGraph, feature: MyActivity): CommonActivity<*> {
-          return instance.provideBaseType(feature = feature)
-        }
-
-      }
-
-      @HiddenFromObjC
-      private constructor(instance: FeatureGraph, feature: Provider<MyActivity>) /* primary */ {
-        super/*Any*/()
-        /* <init>() */
-
-      }
-
-      @HiddenFromObjC
-      override operator fun invoke(): CommonActivity<*> {
-        return Companion.provideBaseType(instance = <this>.#instance, feature = <this>.#feature.invoke())
-      }
-
+    @Binds
+    @ComptimeOnly
+    fun MyActivity.bindBaseType(): CommonActivity<*> {
+      return error(message = "Never called")
     }
 
-    @Provides
-    final fun provideBaseType(feature: MyActivity): CommonActivity<*> {
-      return feature
-    }
+    abstract fun inject(target: MyActivity)
 
   }
 
@@ -168,7 +128,7 @@ class MyActivity : CommonActivity<Unit> {
 
   @GeneratedByMetroStation
   override fun inject() {
-    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
+    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = <this>.getApplicationContext() */)).inject(target = <this>)
   }
 
 }
@@ -317,4 +277,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
-

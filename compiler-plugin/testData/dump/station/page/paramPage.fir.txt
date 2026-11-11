@@ -23,12 +23,17 @@ FILE: paramPage.kt
 
         @R|com/bandlab/common/di/GeneratedByMetroStation|() public final override fun injectViewModel(deps: R|com/bandlab/uikit/api/page/PageGraphDependencies|, initialParam: R|MyPage.Params|): R|MyViewModel|
 
-        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/pager/screen/di/PageInjector<MyViewModel>| {
-            @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyPage|): R|com/bandlab/uikit/api/page/Page<*>|
+        @R|com/bandlab/android/common/PageScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyPage|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/common/android/pager/screen/di/DefaultPageDependencies|))) public abstract interface FeatureGraph : R|kotlin/Any| {
+            @R|dev/zacsweers/metro/Binds|() public abstract fun R|MyPage|.bindBaseType(): R|com/bandlab/uikit/api/page/Page<*>|
 
             @R|dev/zacsweers/metro/Provides|() public final fun provideParamFlow(provider: R|com/bandlab/common/android/pager/screen/PageParamFlowProvider|, feature: R|MyPage|, initialParam: R|MyPage.Params|): R|kotlinx/coroutines/flow/Flow<MyPage.Params>|
 
-            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|com/bandlab/common/android/pager/screen/di/PageGraphFactory<MyPage, MyViewModel, MyPage.Params, MyPage.FeatureServiceProvider, com/bandlab/common/android/di/EmptyExtraDependencies, MyPage.FeatureGraph>| {
+            public abstract val viewModel: R|MyViewModel|
+                public get(): R|MyViewModel|
+
+            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|kotlin/Any| {
+                public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyPage|, @R|dev/zacsweers/metro/Provides|() param: R|MyPage.Params|, @R|dev/zacsweers/metro/Includes|() pageGraphDependencies: R|com/bandlab/common/android/pager/screen/di/AndroidPageGraphDependencies|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyPage.FeatureServiceProvider|): R|MyPage.FeatureGraph|
+
             }
 
             public final companion object Companion : R|kotlin/Any| {

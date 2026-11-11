@@ -1,5 +1,5 @@
-// Exercises the generated graph and members injector directly. Callback injection is checked
-// by dump/station/other/service.kt; this JVM stub does not supply an application graph.
+// Exercises the generated graph and its inject(target) function directly. Callback injection is
+// checked by dump/station/other/service.kt; this JVM stub does not supply an application graph.
 import android.app.Service
 
 @MetroStation(appDependencies = MyService.ServiceProvider::class)
@@ -31,9 +31,8 @@ fun box(): String {
     val graph = createGraphFactory<MyService.FeatureGraph.Factory>().create(
         feature = myService,
         serviceProvider = appGraph,
-        extraDependencies = EmptyExtraDependencies
     )
-    graph.injector.injectMembers(myService)
+    graph.inject(myService)
     assertEquals("Hello!", myService.myDependency.text)
     return "OK"
 }

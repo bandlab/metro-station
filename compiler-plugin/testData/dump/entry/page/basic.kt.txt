@@ -4,13 +4,16 @@
 class MyPage : Page<MyViewModel> {
   @PageScope
   @GraphExtension(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class, FeatureBindings::class])
-  interface FeatureExtension : PageInjector<MyViewModel> {
+  interface FeatureExtension {
     @ContributesTo(scope = AppScope::class)
     @Factory
     interface Factory {
       abstract fun create(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: AndroidPageGraphDependencies): FeatureExtension
 
     }
+
+    abstract val viewModel: MyViewModel
+      abstract get
 
   }
 
@@ -78,7 +81,7 @@ class MyPage : Page<MyViewModel> {
 
   @GeneratedByMetroStation
   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
-    return resolveServiceProvider<Factory>(/* <this> = deps as AndroidPageGraphDependencies.<get-activity>() */).create(feature = <this>, param = Unit, pageGraphDependencies = deps).getPageViewModel()
+    return resolveServiceProvider<Factory>(/* <this> = deps as AndroidPageGraphDependencies.<get-activity>() */).create(feature = <this>, param = Unit, pageGraphDependencies = deps).<get-viewModel>()
   }
 
 }
@@ -155,9 +158,10 @@ interface AppGraph : Factory {
 
       }
 
-      override fun getPageViewModel(): MyViewModel {
-        return MyViewModel(number = <this>.#appGraphImpl.provideLong())
-      }
+      override val viewModel: MyViewModel
+        override get(): MyViewModel {
+          return MyViewModel(number = <this>.#appGraphImpl.provideLong())
+        }
 
     }
 
@@ -244,4 +248,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: Factory) {
   return error(message = "Never called")
 }
-

@@ -1,5 +1,6 @@
-// Exercises the generated graph and members injector directly. Injection at the start of doWork
-// is checked by dump/station/other/worker.kt, rather than invoking the callback here.
+// Exercises the generated graph and its inject(target) function directly. Injection at the
+// start of doWork is checked by dump/station/other/worker.kt, rather than invoking the callback
+// here.
 import androidx.work.CoroutineWorker
 import androidx.work.Result
 
@@ -33,9 +34,8 @@ fun box(): String {
     val graph = createGraphFactory<MyWorker.FeatureGraph.Factory>().create(
         feature = myWorker,
         serviceProvider = appGraph,
-        extraDependencies = EmptyExtraDependencies
     )
-    graph.injector.injectMembers(myWorker)
+    graph.inject(myWorker)
     assertEquals("Hello!", myWorker.myDependency.text)
     return "OK"
 }

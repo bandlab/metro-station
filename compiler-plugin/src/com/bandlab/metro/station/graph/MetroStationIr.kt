@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.*
@@ -53,10 +54,13 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         ) {
             return super.visitSimpleFunction(declaration)
         }
-        if (declaration.body != null) return super.visitSimpleFunction(declaration)
+        // Abstract members (create, viewModel, inject(target), bindBaseType) are implemented by
+        // Metro
+        if (declaration.body != null || declaration.modality == Modality.ABSTRACT) {
+            return super.visitSimpleFunction(declaration)
+        }
         when (declaration.name) {
             Ids.provideParamName -> generateProvideParamBody(pluginContext, declaration)
-            Ids.provideBaseTypeName -> generateProvideBaseTypeBody(pluginContext, declaration)
             Ids.provideParamFlowName -> generateProvideParamFlowBody(pluginContext, declaration)
             Ids.injectViewModelName -> generateInjectViewModelBody(declaration)
             Ids.injectName -> generateInjectBody(declaration)
@@ -110,7 +114,7 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         if (onCreateFunction != null) {
             // Prepend injection to existing onCreate
             prependInjectionToFunction(irClass, onCreateFunction) { builder, thisReceiver ->
-                generateApplicationContextExpr(builder, thisReceiver)
+                generateApplicationContextExpr(builder, builder.irGet(thisReceiver))
             }
         } else {
             // Generate onCreate with super call + injection
@@ -129,7 +133,11 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             } ?: return
 
         prependInjectionToFunction(irClass, doWorkFunction) { builder, thisReceiver ->
-            generateApplicationContextExpr(builder, thisReceiver, Ids.coroutineWorker)
+            generateApplicationContextExpr(
+                builder,
+                builder.irGet(thisReceiver),
+                Ids.coroutineWorker,
+            )
         }
     }
 
@@ -155,9 +163,8 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
      * Generates the injection statement:
      * ```
      * createGraphFactory<FeatureGraph.Factory>()
-     *   .create(this, contextExpr.resolveServiceProvider(), EmptyExtraDependencies)
-     *   .injector
-     *   .injectMembers(this)
+     *   .create(feature = this, serviceProvider = contextExpr.resolveServiceProvider())
+     *   .inject(this)
      * ```
      *
      * and prepends it to the beginning of [function]'s body.
@@ -174,7 +181,7 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
 
         val builder = DeclarationIrBuilder(pluginContext, function.symbol)
         val injectionStatement =
-            generateInjectionCall(builder, irClass, thisReceiver, contextExprProvider) ?: return
+            generateInjectionCall(builder, irClass, thisReceiver, contextExprProvider)
 
         // Prepend the injection statement before existing body statements
         existingBody.statements.add(0, injectionStatement)
@@ -226,12 +233,10 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
                     dispatchReceiver = irGet(thisReceiver)
                 }
 
-            // createGraphFactory<...>().create(...).injector.injectMembers(this)
-            val injectionCall =
-                generateInjectionCall(builder, irClass, thisReceiver) { b, recv ->
-                    generateApplicationContextExpr(b, recv)
-                }
-            if (injectionCall != null) +injectionCall
+            // createGraphFactory<...>().create(...).inject(this)
+            +generateInjectionCall(builder, irClass, thisReceiver) { b, recv ->
+                generateApplicationContextExpr(b, b.irGet(recv))
+            }
         }
 
         // Remove the fake override of onCreate before adding the real implementation
@@ -242,48 +247,38 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
     }
 
     /**
-     * Generates: `createGraphFactory<FeatureGraph.Factory>().create(this,
-     * context.resolveServiceProvider<T>(), EmptyExtraDependencies)`
+     * Generates:
+     * ```
+     * createGraphFactory<FeatureGraph.Factory>().create(
+     *   feature = <featureExpr>,
+     *   serviceProvider = <contextExpr>.resolveServiceProvider<FeatureServiceProvider>(),
+     *   <name> = <expr>, // for each entry of extraArguments
+     * )
+     * ```
      *
-     * @param irClass the class containing the FeatureGraph and FeatureServiceProvider nested
-     *   classes
-     * @param contextExprProvider provides the context expression used as the receiver for
-     *   `resolveServiceProvider()`
+     * Arguments are matched by the parameter names of the FIR-generated `create` function, see
+     * `MetroStationFir.generateCreateFunction`.
      */
     private fun generateCreateGraphCall(
         builder: IrBuilderWithScope,
         irClass: IrClass,
-        thisReceiver: IrValueParameter,
-        contextExprProvider: (IrBuilderWithScope, IrValueParameter) -> IrExpression,
-    ): IrExpression? {
-        // Find FeatureGraph.Factory
-        val featureGraphClass =
-            irClass.declarations.filterIsInstance<IrClass>().find { it.name == Ids.graphName }
-                ?: return null
+        featureExpr: IrExpression,
+        contextExpr: IrExpression,
+        extraArguments: Map<Name, IrExpression> = emptyMap(),
+    ): IrExpression {
         val factoryClass =
-            featureGraphClass.declarations.filterIsInstance<IrClass>().find {
-                it.name == Ids.nestedFactoryName
-            } ?: return null
+            irClass.featureGraphClass()?.nestedFactoryClass()
+                ?: error("Cannot find FeatureGraph.Factory in ${irClass.classIdOrFail}")
+        val createFunction =
+            factoryClass.createFunction()
+                ?: error("Cannot find FeatureGraph.Factory.create in ${irClass.classIdOrFail}")
 
-        // Reference createGraphFactory<FeatureGraph.Factory>()
-        val createGraphFactoryCallableId = MetroClassIds.createGraphFactory.toCallableId()
         val createGraphFactorySymbol =
-            finder.findFunctions(createGraphFactoryCallableId).firstOrNull() ?: return null
-
-        // Reference resolveServiceProvider()
-        val resolveServiceProviderCallableId = Ids.resolveServiceProvider.toCallableId()
+            finder.findFunctions(MetroClassIds.createGraphFactory.toCallableId()).firstOrNull()
+                ?: error("Cannot find ${MetroClassIds.createGraphFactory.asSingleFqName()}")
         val resolveServiceProviderSymbol =
-            finder.findFunctions(resolveServiceProviderCallableId).firstOrNull() ?: return null
-
-        // Reference EmptyExtraDependencies
-        val emptyExtraDepsClass = finder.findClass(Ids.emptyExtraDependencies) ?: return null
-
-        // Find FeatureServiceProvider type
-        val featureServiceProviderClass =
-            irClass.declarations.filterIsInstance<IrClass>().find {
-                it.name == Ids.featureServiceProviderName
-            }
-        val serviceProviderType = featureServiceProviderClass?.symbol?.typeWith()
+            finder.findFunctions(Ids.resolveServiceProvider.toCallableId()).firstOrNull()
+                ?: error("Cannot find ${Ids.resolveServiceProvider.asSingleFqName()}")
 
         // createGraphFactory<FeatureGraph.Factory>()
         val createFactoryCall =
@@ -292,84 +287,67 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
                 listOf(factoryClass.symbol.typeWith()),
             )
 
-        // Find GraphFactory.create function
-        val factoryClassOwner =
-            factoryClass.superTypes
-                .mapNotNull { it.classOrNull?.owner }
-                .find { it.functions.any { f -> f.name == Ids.createName } } ?: factoryClass
-        val createFunction = factoryClassOwner.functions.first { it.name == Ids.createName }
-        // `GraphFactory<Feature, ServiceProvider, ExtraDependencies, Graph>.create()` returns the
-        // `Graph` type parameter. Resolve the concrete `Graph` type from `factoryClass`'s
-        // `GraphFactory` supertype so the call's return type is properly substituted.
-        val graphFactorySupertype =
-            factoryClass.superTypes.firstOrNull { it.classOrNull?.owner == factoryClassOwner }
-                as? IrSimpleType
-        val concreteGraphType =
-            (graphFactorySupertype?.arguments?.lastOrNull() as? IrTypeProjection)?.type
-                ?: createFunction.returnType
-
-        // .create(this, context.resolveServiceProvider(), EmptyExtraDependencies)
-        return builder.irCall(createFunction.symbol, concreteGraphType).apply {
-            dispatchReceiver = createFactoryCall
-            type = concreteGraphType
-            // feature = this
-            arguments[1] = builder.irGet(thisReceiver)
-            // serviceProvider = context.resolveServiceProvider()
-            arguments[2] =
-                if (serviceProviderType != null) {
-                    builder
-                        .irCallWithSubstitutedType(
-                            resolveServiceProviderSymbol,
-                            listOf(serviceProviderType),
-                        )
-                        .apply { arguments[0] = contextExprProvider(builder, thisReceiver) }
-                } else {
-                    builder.irCall(resolveServiceProviderSymbol).apply {
-                        arguments[0] = contextExprProvider(builder, thisReceiver)
+        // .create(...)
+        return builder.irCall(createFunction.symbol).apply {
+            createFunction.parameters.forEachIndexed { index, parameter ->
+                arguments[index] =
+                    when {
+                        parameter.kind == IrParameterKind.DispatchReceiver -> createFactoryCall
+                        parameter.name == Ids.featureName -> featureExpr
+                        parameter.name == Ids.serviceProviderName ->
+                            builder
+                                .irCallWithSubstitutedType(
+                                    resolveServiceProviderSymbol,
+                                    listOf(parameter.type),
+                                )
+                                .apply { arguments[0] = contextExpr }
+                        else ->
+                            extraArguments[parameter.name]
+                                ?: error(
+                                    "No argument for parameter '${parameter.name}' of " +
+                                        "${irClass.classIdOrFail}.FeatureGraph.Factory.create",
+                                )
                     }
-                }
-            // extraDependencies = EmptyExtraDependencies
-            arguments[3] = builder.irGetObject(emptyExtraDepsClass)
+            }
         }
     }
 
+    /**
+     * Generates the member injection statement for activities and other classes:
+     * ```
+     * createGraphFactory<FeatureGraph.Factory>()
+     *   .create(feature = this, serviceProvider = context.resolveServiceProvider())
+     *   .inject(this)
+     * ```
+     */
     private fun generateInjectionCall(
         builder: IrBuilderWithScope,
         irClass: IrClass,
         thisReceiver: IrValueParameter,
         contextExprProvider: (IrBuilderWithScope, IrValueParameter) -> IrExpression,
-    ): IrStatement? {
+    ): IrStatement {
+        val injectFunction =
+            irClass.featureGraphClass()?.functions?.firstOrNull {
+                it.name == Ids.injectName && !it.isFakeOverride
+            } ?: error("Cannot find FeatureGraph.inject in ${irClass.classIdOrFail}")
+
         val createCall =
-            generateCreateGraphCall(builder, irClass, thisReceiver, contextExprProvider)
-                ?: return null
+            generateCreateGraphCall(
+                builder = builder,
+                irClass = irClass,
+                featureExpr = builder.irGet(thisReceiver),
+                contextExpr = contextExprProvider(builder, thisReceiver),
+            )
 
-        // .injector
-        val membersInjectorProviderClass =
-            finder.findClass(Ids.membersInjectorProvider)?.owner ?: return null
-        val injectorGetter =
-            membersInjectorProviderClass.properties.first { it.name == Ids.injectorName }.getter
-                ?: return null
-        val membersInjectorClass = finder.findClass(Ids.membersInjector)?.owner ?: return null
-        // The `injector` getter returns `MembersInjector<T>` where `T` is
-        // `MembersInjectorProvider`'s class type parameter. The getter itself has no type
-        // parameters, so we substitute `T` manually by giving the call the concrete
-        // `MembersInjector<ThisClass>` return type.
-        val getInjector =
-            builder
-                .irCall(
-                    injectorGetter.symbol,
-                    membersInjectorClass.typeWith(thisReceiver.type),
-                )
-                .apply { dispatchReceiver = createCall }
-
-        // .injectMembers(this)
-        val injectMembersFunction =
-            membersInjectorClass.functions.first { it.name == Ids.injectMembersName }
-        return builder.irCall(injectMembersFunction).apply {
-            dispatchReceiver = getInjector
-            val regularParamIndex =
-                injectMembersFunction.parameters.indexOfFirst { it.kind == IrParameterKind.Regular }
-            arguments[regularParamIndex] = builder.irGet(thisReceiver)
+        // .inject(this)
+        return builder.irCall(injectFunction.symbol).apply {
+            injectFunction.parameters.forEachIndexed { index, parameter ->
+                arguments[index] =
+                    when (parameter.kind) {
+                        IrParameterKind.DispatchReceiver -> createCall
+                        else -> builder.irGet(thisReceiver)
+                    }
+            }
         }
     }
 
@@ -377,18 +355,18 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
      * Generates the body of the FIR-generated `injectViewModel(deps[, initialParam])` override on
      * an annotated page:
      * ```
-     * return createGraphAndInjectViewModel(
-     *     deps,
-     *     initialParam | Unit,
-     *     createGraphFactory<FeatureGraph.Factory>(),
-     *     extraDependencies,
-     * )
+     * val pageGraphDependencies = deps as AndroidPageGraphDependencies
+     * return createGraphFactory<FeatureGraph.Factory>()
+     *   .create(
+     *     feature = this,
+     *     param = initialParam,                         // ParamPage only
+     *     pageGraphDependencies = pageGraphDependencies,
+     *     serviceProvider =
+     *       pageGraphDependencies.activity.applicationContext.resolveServiceProvider(),
+     *     extraDependencies = extraDependencies,        // only if declared
+     *   )
+     *   .viewModel
      * ```
-     *
-     * The 6 type arguments are read off the `PageGraphFactory<...>` supertype of the generated
-     * `FeatureGraph.Factory`, which carries them in the order `[Feature, VM, Param,
-     * ServiceProvider, ExtraDependencies, Graph]` — matching the type parameter order of
-     * `createGraphAndInjectViewModel`.
      */
     private fun generateInjectViewModelBody(declaration: IrSimpleFunction) {
         val irClass = declaration.parentClassOrNull ?: return
@@ -396,79 +374,64 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             declaration.parameters.firstOrNull { it.kind == IrParameterKind.DispatchReceiver }
                 ?: return
 
-        // FeatureGraph.Factory
-        val featureGraphClass =
-            irClass.declarations.filterIsInstance<IrClass>().find { it.name == Ids.graphName }
-                ?: return
-        val factoryClass =
-            featureGraphClass.declarations.filterIsInstance<IrClass>().find {
-                it.name == Ids.nestedFactoryName
-            } ?: return
+        val viewModelGetter =
+            irClass
+                .featureGraphClass()
+                ?.properties
+                ?.firstOrNull { it.name == Ids.viewModelName }
+                ?.getter ?: error("Cannot find FeatureGraph.viewModel in ${irClass.classIdOrFail}")
 
-        // PageGraphFactory<Feature, VM, Param, ServiceProvider, ExtraDependencies, Graph> supertype
-        val pageGraphFactorySuperType =
-            factoryClass.superTypes.filterIsInstance<IrSimpleType>().find {
-                it.classOrNull?.owner?.classId == Ids.pageGraphFactory
-            } ?: return
-        val factoryTypeArgs = pageGraphFactorySuperType.arguments.mapNotNull { it.typeOrNull }
-        if (factoryTypeArgs.size < 6) return
-        val extraDependenciesType = factoryTypeArgs[4]
-
-        // createGraphFactory<FeatureGraph.Factory>()
-        val createGraphFactorySymbol =
-            finder.findFunctions(MetroClassIds.createGraphFactory.toCallableId()).firstOrNull()
-                ?: return
-        // createGraphAndInjectViewModel(deps, param, factory, extraDependencies)
-        val createGraphAndInjectViewModelSymbol =
-            finder.findFunctions(Ids.createGraphAndInjectViewModel.toCallableId()).firstOrNull()
-                ?: return
-
-        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
-
-        val createFactoryCall =
-            builder.irCallWithSubstitutedType(
-                createGraphFactorySymbol,
-                listOf(factoryClass.symbol.typeWith()),
-            )
+        val androidPageGraphDependencies =
+            finder.findClass(Ids.androidPageGraphDependencies)
+                ?: error("Cannot find ${Ids.androidPageGraphDependencies.asSingleFqName()}")
+        val activityGetter =
+            androidPageGraphDependencies.owner.getPropertyGetter(Ids.activityName.asString())
+                ?: error("Cannot find AndroidPageGraphDependencies.activity")
 
         val regularParams = declaration.parameters.filter { it.kind == IrParameterKind.Regular }
         val depsValueParam = regularParams.firstOrNull() ?: return
+        // Only ParamPage declares the second `initialParam` parameter.
         val initialParamValueParam = regularParams.getOrNull(1)
-        // ParamPage passes its initialParam; a plain Page passes Unit.
-        val paramExpr =
-            if (initialParamValueParam != null) {
-                builder.irGet(initialParamValueParam)
-            } else {
-                builder.irGetObject(pluginContext.irBuiltIns.unitClass)
+
+        val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
+        declaration.body = builder.irBlockBody {
+            val pageGraphDependencies =
+                irTemporary(
+                    irAs(irGet(depsValueParam), androidPageGraphDependencies.typeWith()),
+                    nameHint = Ids.pageGraphDependenciesName.asString(),
+                )
+            val activity =
+                irCall(activityGetter).apply { dispatchReceiver = irGet(pageGraphDependencies) }
+
+            val extraArguments = buildMap {
+                put(Ids.pageGraphDependenciesName, irGet(pageGraphDependencies))
+                if (initialParamValueParam != null) {
+                    put(Ids.paramName, irGet(initialParamValueParam))
+                }
+                irClass.extraDependenciesType()?.let { extraDependenciesType ->
+                    put(
+                        Ids.extraDependenciesName,
+                        resolveExtraDependenciesExpr(
+                            this@irBlockBody,
+                            irClass,
+                            thisReceiver,
+                            extraDependenciesType,
+                        ),
+                    )
+                }
             }
 
-        val extraDepsExpr =
-            resolveExtraDependenciesExpr(builder, irClass, thisReceiver, extraDependenciesType)
-                ?: return
-
-        val createGraphAndInjectViewModelFn = createGraphAndInjectViewModelSymbol.owner
-        val call =
-            builder
-                .irCallWithSubstitutedType(
-                    createGraphAndInjectViewModelSymbol,
-                    factoryTypeArgs.take(6),
+            val createCall =
+                generateCreateGraphCall(
+                    builder = this,
+                    irClass = irClass,
+                    featureExpr = irGet(thisReceiver),
+                    contextExpr = generateApplicationContextExpr(this, activity),
+                    extraArguments = extraArguments,
                 )
-                .apply {
-                    createGraphAndInjectViewModelFn.parameters.forEachIndexed { index, param ->
-                        arguments[index] =
-                            when {
-                                param.kind == IrParameterKind.ExtensionReceiver ->
-                                    builder.irGet(thisReceiver)
-                                param.name == Ids.depsName -> builder.irGet(depsValueParam)
-                                param.name == Ids.factoryParamName -> createFactoryCall
-                                param.name == Ids.extraDependenciesName -> extraDepsExpr
-                                else -> paramExpr
-                            }
-                    }
-                }
 
-        declaration.body = builder.irBlockBody {
-            +irReturn(call)
+            // .viewModel
+            +irReturn(irCall(viewModelGetter).apply { dispatchReceiver = createCall })
         }
     }
 
@@ -476,9 +439,8 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
      * Generates the body of the FIR-generated `inject()` override on an annotated activity:
      * ```
      * createGraphFactory<FeatureGraph.Factory>()
-     *     .create(this, applicationContext.resolveServiceProvider(), EmptyExtraDependencies)
-     *     .injector
-     *     .injectMembers(this)
+     *   .create(feature = this, serviceProvider = applicationContext.resolveServiceProvider())
+     *   .inject(this)
      * ```
      */
     private fun generateInjectBody(declaration: IrSimpleFunction) {
@@ -490,8 +452,8 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         val builder = DeclarationIrBuilder(pluginContext, declaration.symbol)
         val injectionCall =
             generateInjectionCall(builder, irClass, thisReceiver) { b, recv ->
-                generateApplicationContextExpr(b, recv)
-            } ?: return
+                generateApplicationContextExpr(b, b.irGet(recv))
+            }
 
         declaration.body = builder.irBlockBody {
             +injectionCall
@@ -499,29 +461,25 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
     }
 
     /**
-     * Resolves the expression passed as `extraDependencies` to `createGraphAndInjectViewModel`:
-     * - the `EmptyExtraDependencies` object when [extraDependenciesType] is that empty marker, or
-     * - the value of the page property whose type matches [extraDependenciesType] otherwise
-     *   (supports both `val` properties and synthesized backing fields).
+     * Resolves the expression passed as `extraDependencies` to `FeatureGraph.Factory.create`: the
+     * value of the page property whose type matches [extraDependenciesType] (supports both `val`
+     * properties and synthesized backing fields).
      */
     private fun resolveExtraDependenciesExpr(
         builder: IrBuilderWithScope,
         irClass: IrClass,
         thisReceiver: IrValueParameter,
         extraDependenciesType: IrType,
-    ): IrExpression? {
+    ): IrExpression {
         val extraDepsClassSymbol = extraDependenciesType.classOrNull
-        if (extraDepsClassSymbol?.owner?.classId == Ids.emptyExtraDependencies) {
-            val emptyClass = finder.findClass(Ids.emptyExtraDependencies) ?: return null
-            return builder.irGetObject(emptyClass)
-        }
         // Try finding a `val` property with getter first
-        val property =
-            irClass.properties.firstOrNull { prop ->
-                prop.backingField?.type?.classOrNull == extraDepsClassSymbol
-            }
-        if (property != null) {
-            val getter = property.getter ?: return null
+        val getter =
+            irClass.properties
+                .firstOrNull { prop ->
+                    prop.backingField?.type?.classOrNull == extraDepsClassSymbol
+                }
+                ?.getter
+        if (getter != null) {
             return builder.irCall(getter.symbol).apply {
                 dispatchReceiver = builder.irGet(thisReceiver)
             }
@@ -530,12 +488,16 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         val field =
             irClass.declarations.filterIsInstance<IrField>().firstOrNull { f ->
                 f.type.classOrNull == extraDepsClassSymbol
-            } ?: return null
+            }
+                ?: error(
+                    "Cannot find a constructor property of type " +
+                        "${extraDependenciesType.classFqName} in ${irClass.classIdOrFail}",
+                )
         return builder.irGetField(builder.irGet(thisReceiver), field)
     }
 
     /**
-     * For classes with a non-empty `extraDependencies` type where the constructor parameter is NOT
+     * For classes with a declared `extraDependencies` type where the constructor parameter is NOT
      * declared as `val`, synthesizes a private backing field and initializes it from the
      * constructor parameter. This allows [resolveExtraDependenciesExpr] to read the value later.
      */
@@ -547,40 +509,8 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
             }
         if (!hasMetroStation) return
 
-        // Find FeatureGraph.Factory to get the extra deps type
-        val featureGraphClass =
-            irClass.declarations.filterIsInstance<IrClass>().find { it.name == Ids.graphName }
-                ?: return
-        val factoryClass =
-            featureGraphClass.declarations.filterIsInstance<IrClass>().find {
-                it.name == Ids.nestedFactoryName
-            } ?: return
-
-        // Extract extra dependencies type from the factory's supertype
-        val extraDepsType = run {
-            val pageFactorySuperType =
-                factoryClass.superTypes.filterIsInstance<IrSimpleType>().find {
-                    it.classOrNull?.owner?.classId == Ids.pageGraphFactory
-                }
-            if (pageFactorySuperType != null) {
-                val args = pageFactorySuperType.arguments.mapNotNull { it.typeOrNull }
-                if (args.size < 5) return
-                args[4]
-            } else {
-                val graphFactorySuperType =
-                    factoryClass.superTypes.filterIsInstance<IrSimpleType>().find {
-                        it.classOrNull?.owner?.classId == Ids.graphFactory
-                    } ?: return
-                val args = graphFactorySuperType.arguments.mapNotNull { it.typeOrNull }
-                if (args.size < 3) return
-                args[2]
-            }
-        }
-
-        val extraDepsClassSymbol = extraDepsType.classOrNull ?: return
-
-        // If it's EmptyExtraDependencies, no field needed
-        if (extraDepsClassSymbol.owner.classId == Ids.emptyExtraDependencies) return
+        // Only present when extraDependencies is declared on @MetroStation
+        val extraDepsClassSymbol = irClass.extraDependenciesType()?.classOrNull ?: return
 
         // Check if a property already exists for this type (e.g., user declared `val`)
         val existingProperty =
@@ -626,10 +556,34 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         constructorBody.statements.add(setField)
     }
 
-    /** Generates `this.getApplicationContext()` by looking up the method on the given [classId]. */
+    private fun IrClass.featureGraphClass(): IrClass? =
+        declarations.filterIsInstance<IrClass>().find { it.name == Ids.graphName }
+
+    private fun IrClass.nestedFactoryClass(): IrClass? =
+        declarations.filterIsInstance<IrClass>().find { it.name == Ids.nestedFactoryName }
+
+    private fun IrClass.createFunction(): IrSimpleFunction? = functions.firstOrNull {
+        it.name == Ids.createName && !it.isFakeOverride
+    }
+
+    /**
+     * The type of the `extraDependencies` parameter of the generated `FeatureGraph.Factory.create`,
+     * or null if the feature doesn't declare extra dependencies.
+     */
+    private fun IrClass.extraDependenciesType(): IrType? =
+        featureGraphClass()
+            ?.nestedFactoryClass()
+            ?.createFunction()
+            ?.parameters
+            ?.firstOrNull {
+                it.kind == IrParameterKind.Regular && it.name == Ids.extraDependenciesName
+            }
+            ?.type
+
+    /** Generates `receiver.getApplicationContext()` by looking up the method on [classId]. */
     private fun generateApplicationContextExpr(
         builder: IrBuilderWithScope,
-        thisReceiver: IrValueParameter,
+        receiver: IrExpression,
         classId: ClassId = ClassId(FqName("android.content"), "ContextWrapper".asName()),
     ): IrExpression {
         val ownerClass =
@@ -638,9 +592,7 @@ private class MetroStationIrTransformer(private val pluginContext: IrPluginConte
         val applicationContextGetter =
             ownerClass.getSimpleFunction("getApplicationContext")
                 ?: error("Cannot find getApplicationContext on ${classId.shortClassName}")
-        return builder.irCall(applicationContextGetter).apply {
-            dispatchReceiver = builder.irGet(thisReceiver)
-        }
+        return builder.irCall(applicationContextGetter).apply { dispatchReceiver = receiver }
     }
 
     /** Finds a function by name in the supertype hierarchy of [irClass]. */

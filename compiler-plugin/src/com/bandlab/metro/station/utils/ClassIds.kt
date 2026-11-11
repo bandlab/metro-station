@@ -19,8 +19,6 @@ internal object ClassIds {
     val graphExtensionFactory = graphExtension.createNestedClassId("Factory".asName())
     val provides = ClassId(metroPackageFqName, "Provides".asName())
     val includes = ClassId(metroPackageFqName, "Includes".asName())
-    val intoMap = ClassId(metroPackageFqName, "IntoMap".asName())
-    val classKey = ClassId(metroPackageFqName, "ClassKey".asName())
     val bindingContainer = ClassId(metroPackageFqName, "BindingContainer".asName())
     val createGraphFactory = ClassId(metroPackageFqName, "createGraphFactory".asName())
 
@@ -31,5 +29,4 @@ internal object ClassIds {
     val excludesName = "excludes".asName()
     val bindingContainersName = "bindingContainers".asName()
     val includesName = "includes".asName()
-    val valueName = "value".asName()
 }

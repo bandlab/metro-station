@@ -55,7 +55,6 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
         when (declaration.name) {
             Ids.provideParamName -> generateProvideParamBody(pluginContext, declaration)
             Ids.provideBaseTypeName -> generateProvideBaseTypeBody(pluginContext, declaration)
-            Ids.provideFactoryName -> generateProvideFactoryBody(declaration)
             Ids.provideParamFlowName -> generateProvideParamFlowBody(pluginContext, declaration)
             Ids.injectViewModelName -> generateInjectViewModelBody(declaration)
             Ids.injectName -> generateInjectBody(declaration)
@@ -63,22 +62,12 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
         return super.visitSimpleFunction(declaration)
     }
 
-    /** Generates: `return factory` */
-    private fun generateProvideFactoryBody(declaration: IrSimpleFunction) {
-        val factoryParameter = declaration.parameters.first { it.kind == IrParameterKind.Regular }
-
-        declaration.body =
-            DeclarationIrBuilder(pluginContext, declaration.symbol).irBlockBody {
-                +irReturn(irGet(factoryParameter))
-            }
-    }
-
     /**
      * Generates the body of the FIR-generated `injectViewModel(deps[, initialParam])` override on
      * an annotated page:
      * ```
      * val factory = deps.activity.resolveServiceProvider<FeatureExtension.Factory>()
-     * return factory.create(this, initialParam | Unit, deps).getPageViewModel()
+     * return factory.create(this, initialParam | Unit, deps).viewModel
      * ```
      *
      * A plain [Page][Ids.page] passes `Unit` for the `param` argument; a [ParamPage][Ids.paramPage]
@@ -170,17 +159,13 @@ private class StationEntryIrTransformer(private val pluginContext: IrPluginConte
                     builder.irGet(depsValueParam)
             }
 
-        // .getPageViewModel()
-        val pageInjectorClass = finder.findClass(Ids.pageInjector)?.owner ?: return
-        val getPageViewModelFunction =
-            pageInjectorClass.functions.first { it.name.asString() == "getPageViewModel" }
-        // `PageInjector<VM>.getPageViewModel()` returns the `VM` class type parameter. The function
-        // itself has no type parameters, so substitute the return type with the concrete view model
-        // type (the enclosing `injectViewModel` override's return type).
+        // .viewModel
+        val viewModelGetter =
+            featureExtensionClass.properties.firstOrNull { it.name == Ids.viewModelName }?.getter
+                ?: error("Cannot find FeatureExtension.viewModel in ${irClass.name}")
         val getViewModelCall =
-            builder.irCall(getPageViewModelFunction.symbol, declaration.returnType).apply {
+            builder.irCall(viewModelGetter).apply {
                 dispatchReceiver = createCall
-                type = declaration.returnType
             }
 
         declaration.body = builder.irBlockBody {
