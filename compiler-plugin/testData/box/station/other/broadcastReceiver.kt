@@ -1,5 +1,6 @@
-// Exercises the generated graph and members injector directly. Injection at the start of onReceive
-// is checked by dump/station/other/broadcastReceiver.kt, rather than invoking the callback here.
+// Exercises the generated graph and its inject(target) function directly. Injection at the
+// start of onReceive is checked by dump/station/other/broadcastReceiver.kt, rather than invoking
+// the callback here.
 import android.content.BroadcastReceiver
 
 @MetroStation(appDependencies = MyBroadcastReceiver.ServiceProvider::class)
@@ -31,9 +32,8 @@ fun box(): String {
     val graph = createGraphFactory<MyBroadcastReceiver.FeatureGraph.Factory>().create(
         feature = myReceiver,
         serviceProvider = appGraph,
-        extraDependencies = EmptyExtraDependencies
     )
-    graph.injector.injectMembers(myReceiver)
+    graph.inject(myReceiver)
     assertEquals("Hello!", myReceiver.myDependency.text)
     return "OK"
 }

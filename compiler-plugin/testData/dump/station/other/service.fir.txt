@@ -18,8 +18,12 @@ FILE: service.kt
 
         }
 
-        @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyService|), bindingContainers = <collectionLiteralCall>()) public abstract interface FeatureGraph : R|com/bandlab/common/android/di/MembersInjectorProvider<MyService>| {
-            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|com/bandlab/common/android/di/GraphFactory<MyService, MyService.FeatureServiceProvider, com/bandlab/common/android/di/EmptyExtraDependencies, MyService.FeatureGraph>| {
+        @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyService|), bindingContainers = <collectionLiteralCall>()) public abstract interface FeatureGraph : R|kotlin/Any| {
+            public abstract fun inject(target: R|MyService|): R|kotlin/Unit|
+
+            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|kotlin/Any| {
+                public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyService|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyService.FeatureServiceProvider|): R|MyService.FeatureGraph|
+
             }
 
             public final companion object Companion : R|kotlin/Any| {

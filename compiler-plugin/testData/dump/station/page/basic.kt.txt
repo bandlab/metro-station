@@ -5,9 +5,9 @@ class MyPage : Page<MyViewModel> {
   @PageScope
   @IROnlyFactories
   @DependencyGraph(scope = MyPage::class, bindingContainers = [DefaultPageDependencies::class])
-  interface FeatureGraph : PageInjector<MyViewModel> {
+  interface FeatureGraph {
     @Factory
-    interface Factory : PageGraphFactory<MyPage, MyViewModel, Unit, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+    interface Factory {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroImplMarker
       object Impl : Factory {
@@ -17,11 +17,13 @@ class MyPage : Page<MyViewModel> {
 
         }
 
-        override fun create(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
-          return Impl(feature = feature, param = param, pageGraphDependencies = pageGraphDependencies, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        override fun create(@Provides feature: MyPage, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider): FeatureGraph {
+          return Impl(feature = feature, pageGraphDependencies = pageGraphDependencies, serviceProvider = serviceProvider)
         }
 
       }
+
+      abstract fun create(@Provides feature: MyPage, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider): FeatureGraph
 
     }
 
@@ -31,15 +33,16 @@ class MyPage : Page<MyViewModel> {
       private val featureServiceProviderInstance: FeatureServiceProvider
         field = serviceProvider
 
-      private constructor(@Provides feature: MyPage, @Provides param: Unit, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+      private constructor(@Provides feature: MyPage, @Includes pageGraphDependencies: AndroidPageGraphDependencies, @Includes serviceProvider: FeatureServiceProvider) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
       }
 
-      override fun getPageViewModel(): MyViewModel {
-        return MyViewModel(number = <this>.#featureServiceProviderInstance.<get-number>())
-      }
+      override val viewModel: MyViewModel
+        override get(): MyViewModel {
+          return MyViewModel(number = <this>.#featureServiceProviderInstance.<get-number>())
+        }
 
     }
 
@@ -58,51 +61,14 @@ class MyPage : Page<MyViewModel> {
 
     }
 
-    @CallableMetadata(callableName = "provideBaseType", propertyName = "", startOffset = 348, endOffset = 511, newInstanceName = "provideBaseType")
-    class ProvideBaseTypeMetroFactory : Factory<Page<*>> {
-      private /* final field */ val instance: FeatureGraph = instance
-      private /* final field */ val feature: Provider<MyPage> = feature
-      companion object Companion {
-        constructor() /* primary */ {
-          super/*Any*/()
-          /* <init>() */
-
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun create(instance: FeatureGraph, feature: Provider<MyPage>): ProvideBaseTypeMetroFactory {
-          return ProvideBaseTypeMetroFactory(instance = instance, feature = feature)
-        }
-
-        @HiddenFromObjC
-        @JvmStatic
-        @JsStatic
-        fun provideBaseType(instance: FeatureGraph, feature: MyPage): Page<*> {
-          return instance.provideBaseType(feature = feature)
-        }
-
-      }
-
-      @HiddenFromObjC
-      private constructor(instance: FeatureGraph, feature: Provider<MyPage>) /* primary */ {
-        super/*Any*/()
-        /* <init>() */
-
-      }
-
-      @HiddenFromObjC
-      override operator fun invoke(): Page<*> {
-        return Companion.provideBaseType(instance = <this>.#instance, feature = <this>.#feature.invoke())
-      }
-
+    @Binds
+    @ComptimeOnly
+    fun MyPage.bindBaseType(): Page<*> {
+      return error(message = "Never called")
     }
 
-    @Provides
-    final fun provideBaseType(feature: MyPage): Page<*> {
-      return feature
-    }
+    abstract val viewModel: MyViewModel
+      abstract get
 
   }
 
@@ -124,7 +90,8 @@ class MyPage : Page<MyViewModel> {
 
   @GeneratedByMetroStation
   override fun injectViewModel(deps: PageGraphDependencies): MyViewModel {
-    return createGraphAndInjectViewModel<MyPage, MyViewModel, Unit, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph>(/* <this> = <this>, */ deps = deps, param = Unit, factory = Companion.factory(), extraDependencies = EmptyExtraDependencies)
+    val tmp_0: AndroidPageGraphDependencies = deps as AndroidPageGraphDependencies
+    return Companion.factory().create(feature = <this>, pageGraphDependencies = tmp_0, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = tmp_0.<get-activity>().getApplicationContext() */)).<get-viewModel>()
   }
 
 }
@@ -273,4 +240,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
-

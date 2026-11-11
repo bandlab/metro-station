@@ -8,9 +8,9 @@ class MyBroadcastReceiver : BroadcastReceiver {
 
   @IROnlyFactories
   @DependencyGraph(scope = MyBroadcastReceiver::class, bindingContainers = [])
-  interface FeatureGraph : MembersInjectorProvider<MyBroadcastReceiver> {
+  interface FeatureGraph {
     @Factory
-    interface Factory : GraphFactory<MyBroadcastReceiver, FeatureServiceProvider, EmptyExtraDependencies, FeatureGraph> {
+    interface Factory {
       @Deprecated(message = "This synthesized declaration should not be used directly", level = DeprecationLevel.HIDDEN)
       @MetroImplMarker
       object Impl : Factory {
@@ -20,11 +20,13 @@ class MyBroadcastReceiver : BroadcastReceiver {
 
         }
 
-        override fun create(@Provides feature: MyBroadcastReceiver, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies): FeatureGraph {
-          return Impl(feature = feature, serviceProvider = serviceProvider, extraDependencies = extraDependencies)
+        override fun create(@Provides feature: MyBroadcastReceiver, @Includes serviceProvider: FeatureServiceProvider): FeatureGraph {
+          return Impl(feature = feature, serviceProvider = serviceProvider)
         }
 
       }
+
+      abstract fun create(@Provides feature: MyBroadcastReceiver, @Includes serviceProvider: FeatureServiceProvider): FeatureGraph
 
     }
 
@@ -34,19 +36,15 @@ class MyBroadcastReceiver : BroadcastReceiver {
       private val featureServiceProviderInstance: FeatureServiceProvider
         field = serviceProvider
 
-      private constructor(@Provides feature: MyBroadcastReceiver, @Includes serviceProvider: FeatureServiceProvider, @Includes extraDependencies: EmptyExtraDependencies) /* primary */ {
+      private constructor(@Provides feature: MyBroadcastReceiver, @Includes serviceProvider: FeatureServiceProvider) /* primary */ {
         super/*Any*/()
         /* <init>() */
 
       }
 
-      override val injector: MembersInjector<MyBroadcastReceiver>
-        override get(): MembersInjector<MyBroadcastReceiver> {
-          return create(myDependency = local fun <anonymous>(): MyDependency {
-            return <this>.#featureServiceProviderInstance.<get-myDependency>()
-          }
- /*-> Provider<MyDependency> */)
-        }
+      override fun inject(target: MyBroadcastReceiver) {
+        Companion.injectMyDependency(instance = target, myDependency = <this>.#featureServiceProviderInstance.<get-myDependency>())
+      }
 
     }
 
@@ -64,6 +62,8 @@ class MyBroadcastReceiver : BroadcastReceiver {
       }
 
     }
+
+    abstract fun inject(target: MyBroadcastReceiver)
 
   }
 
@@ -120,7 +120,7 @@ class MyBroadcastReceiver : BroadcastReceiver {
   }
 
   override fun onReceive(context: Context, intent: Intent) {
-    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = context */), extraDependencies = EmptyExtraDependencies).<get-injector>().injectMembers(instance = <this>)
+    Companion.factory().create(feature = <this>, serviceProvider = resolveServiceProvider<FeatureServiceProvider>(/* <this> = context */)).inject(target = <this>)
     println(message = <this>.<get-myDependency>().<get-text>())
   }
 
@@ -270,4 +270,3 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
-

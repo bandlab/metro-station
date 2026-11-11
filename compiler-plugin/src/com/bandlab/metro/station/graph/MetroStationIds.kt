@@ -40,8 +40,15 @@ internal object MetroStationIds {
     val featureServiceProviderName = "FeatureServiceProvider".asName()
 
     val featureName = "feature".asName()
+    val paramName = "param".asName()
+    val pageGraphDependenciesName = "pageGraphDependencies".asName()
+    val activityName = "activity".asName()
+    val targetName = "target".asName()
+    // Accessor generated on the page FeatureGraph
+    val viewModelName = "viewModel".asName()
     val serviceProviderName = "serviceProvider".asName()
     val provideBaseTypeName = "provideBaseType".asName()
+    val bindBaseTypeName = "bindBaseType".asName()
     val provideParamName = "provideParam".asName()
     val provideParamFlowName = "provideParamFlow".asName()
 
@@ -52,11 +59,10 @@ internal object MetroStationIds {
 
     // Common classes
     private val androidCommon = FqName("com.bandlab.android.common")
+    // Only used by @StationEntry; @MetroStation graphs declare `inject(target)` instead.
     val membersInjectorProvider = ClassId(commonAndroidDi, "MembersInjectorProvider".asName())
     val defaultScreenServiceProvider =
         ClassId(androidCommon, "DefaultScreenServiceProvider".asName())
-    val graphFactory = ClassId(commonAndroidDi, "GraphFactory".asName())
-    val emptyExtraDependencies = ClassId(commonAndroidDi, "EmptyExtraDependencies".asName())
     val resolveServiceProvider = ClassId(commonAndroidDi, "resolveServiceProvider".asName())
     val generatedByMetroStation =
         ClassId(FqName("com.bandlab.common.di"), "GeneratedByMetroStation".asName())
@@ -68,10 +74,8 @@ internal object MetroStationIds {
     val pageGraphDependencies = ClassId(pageApi, "PageGraphDependencies".asName())
     val androidPageGraphDependencies =
         ClassId(commonPageDi, "AndroidPageGraphDependencies".asName())
+    // Only used by @StationEntry; @MetroStation graphs declare a `viewModel` accessor instead.
     val pageInjector = ClassId(commonPageDi, "PageInjector".asName())
-    val pageGraphFactory = ClassId(commonPageDi, "PageGraphFactory".asName())
-    val createGraphAndInjectViewModel =
-        ClassId(commonPageDi, "createGraphAndInjectViewModel".asName())
     val defaultPageDependencies = ClassId(commonPageDi, "DefaultPageDependencies".asName())
 
     // ParamPage

@@ -16,10 +16,14 @@ FILE: basic.kt
 
         @R|com/bandlab/common/di/GeneratedByMetroStation|() public final override fun inject(): R|kotlin/Unit|
 
-        @R|com/bandlab/android/common/ActivityScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyActivity|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/android/common/activity/DefaultActivityDependencies|))) public abstract interface FeatureGraph : R|com/bandlab/common/android/di/MembersInjectorProvider<MyActivity>| {
-            @R|dev/zacsweers/metro/Provides|() public final fun provideBaseType(feature: R|MyActivity|): R|com/bandlab/android/common/activity/CommonActivity<*>|
+        @R|com/bandlab/android/common/ActivityScope|() @R|dev/zacsweers/metro/internal/IROnlyFactories|() @R|dev/zacsweers/metro/DependencyGraph|(scope = <getClass>(Q|MyActivity|), bindingContainers = <collectionLiteralCall>(<getClass>(Q|com/bandlab/android/common/activity/DefaultActivityDependencies|))) public abstract interface FeatureGraph : R|kotlin/Any| {
+            @R|dev/zacsweers/metro/Binds|() public abstract fun R|MyActivity|.bindBaseType(): R|com/bandlab/android/common/activity/CommonActivity<*>|
 
-            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|com/bandlab/common/android/di/GraphFactory<MyActivity, MyActivity.FeatureServiceProvider, com/bandlab/common/android/di/EmptyExtraDependencies, MyActivity.FeatureGraph>| {
+            public abstract fun inject(target: R|MyActivity|): R|kotlin/Unit|
+
+            @R|dev/zacsweers/metro/DependencyGraph.Factory|() public abstract interface Factory : R|kotlin/Any| {
+                public abstract fun create(@R|dev/zacsweers/metro/Provides|() feature: R|MyActivity|, @R|dev/zacsweers/metro/Includes|() serviceProvider: R|MyActivity.FeatureServiceProvider|): R|MyActivity.FeatureGraph|
+
             }
 
             public final companion object Companion : R|kotlin/Any| {
