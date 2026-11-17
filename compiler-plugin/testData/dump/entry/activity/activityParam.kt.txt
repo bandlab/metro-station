@@ -180,6 +180,8 @@ class MyActivity : CommonActivity<Param> {
         return MetroMembersInjector(myViewModel = myViewModel)
       }
 
+      @JvmStatic
+      @JsStatic
       fun injectMyViewModel(instance: MyActivity, myViewModel: MyViewModel) {
         return instance.#myViewModel = myViewModel
       }
@@ -280,6 +282,9 @@ interface AppGraph : Factory {
       private val featureInstance: MyActivity
         field = feature
 
+      private val myViewModelProvider: Provider<MyViewModel>
+        field = create(param = create(feature = providerOf<MyActivity>(value = <this>.#featureInstance)))
+
       constructor(appGraphImpl: Impl, @Provides feature: MyActivity) /* primary */ {
         super/*Any*/()
         /* <init>() */
@@ -288,7 +293,7 @@ interface AppGraph : Factory {
 
       override val injector: MembersInjector<MyActivity>
         override get(): MembersInjector<MyActivity> {
-          return create(myViewModel = create(param = create(feature = providerOf<MyActivity>(value = <this>.#featureInstance))))
+          return create(myViewModel = <this>.#myViewModelProvider)
         }
 
     }
