@@ -92,6 +92,8 @@ class MyActivity : CommonActivity<Unit> {
         return MetroMembersInjector(myDependency = myDependency)
       }
 
+      @JvmStatic
+      @JsStatic
       fun injectMyDependency(instance: MyActivity, myDependency: MyDependency) {
         return instance.#myDependency = myDependency
       }
@@ -197,6 +199,9 @@ interface AppGraph : Factory {
       private val featureInstance: MyActivity
         field = feature
 
+      private val myDependencyProvider: Provider<MyDependency>
+        field = create(text = create(activity = create(feature = providerOf<MyActivity>(value = <this>.#featureInstance))), int = create(instance = <this>.#appGraphImpl))
+
       constructor(appGraphImpl: Impl, @Provides feature: MyActivity) /* primary */ {
         super/*Any*/()
         /* <init>() */
@@ -205,7 +210,7 @@ interface AppGraph : Factory {
 
       override val injector: MembersInjector<MyActivity>
         override get(): MembersInjector<MyActivity> {
-          return create(myDependency = create(text = create(activity = create(feature = providerOf<MyActivity>(value = <this>.#featureInstance))), int = create(instance = <this>.#appGraphImpl)))
+          return create(myDependency = <this>.#myDependencyProvider)
         }
 
     }

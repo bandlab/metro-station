@@ -98,7 +98,7 @@ class MyService : Service {
       }
 
       override fun inject(target: MyService) {
-        Companion.injectMyDependency(instance = target, myDependency = <this>.#featureServiceProviderInstance.<get-myDependency>())
+        injectMyDependency(instance = target, myDependency = <this>.#featureServiceProviderInstance.<get-myDependency>())
       }
 
     }
@@ -144,6 +144,8 @@ class MyService : Service {
         return MetroMembersInjector(myDependency = myDependency)
       }
 
+      @JvmStatic
+      @JsStatic
       fun injectMyDependency(instance: MyService, myDependency: MyDependency) {
         return instance.#myDependency = myDependency
       }
@@ -270,3 +272,4 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
+

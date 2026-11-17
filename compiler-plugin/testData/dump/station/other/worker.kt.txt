@@ -98,7 +98,7 @@ class MyWorker : CoroutineWorker {
       }
 
       override fun inject(target: MyWorker) {
-        Companion.injectMyDependency(instance = target, myDependency = <this>.#featureServiceProviderInstance.<get-myDependency>())
+        injectMyDependency(instance = target, myDependency = <this>.#featureServiceProviderInstance.<get-myDependency>())
       }
 
     }
@@ -144,6 +144,8 @@ class MyWorker : CoroutineWorker {
         return MetroMembersInjector(myDependency = myDependency)
       }
 
+      @JvmStatic
+      @JsStatic
       fun injectMyDependency(instance: MyWorker, myDependency: MyDependency) {
         return instance.#myDependency = myDependency
       }
@@ -281,3 +283,4 @@ package metro.hints
 fun dev_zacsweers_metro_AppScope(contributed: FeatureServiceProvider) {
   return error(message = "Never called")
 }
+
