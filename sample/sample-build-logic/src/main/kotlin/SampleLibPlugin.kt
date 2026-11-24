@@ -13,7 +13,12 @@ class SampleLibPlugin : Plugin<Project> {
         project.apply<SetupMetroPlugin>()
 
         project.extensions.configure<LibraryExtension> {
-            compileSdk = project.libs.versions.targetAndroidSdk.get().toInt()
+            compileSdk {
+                version =
+                    release(project.libs.versions.compileAndroidSdk.get().toInt()) {
+                        minorApiLevel = project.libs.versions.compileAndroidSdkMinor.get().toInt()
+                    }
+            }
 
             defaultConfig {
                 minSdk = project.libs.versions.minAndroidSdk.get().toInt()
