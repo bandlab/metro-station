@@ -13,6 +13,8 @@ workKtx = "2.12.0"
 serialization = "1.13.0"
 minAndroidSdk = "24"
 targetAndroidSdk = "37"
+compileAndroidSdk = "37"
+compileAndroidSdkMinor = "2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
